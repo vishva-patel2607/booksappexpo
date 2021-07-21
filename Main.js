@@ -11,21 +11,21 @@ import {
 } from 'react-native';
 
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Card,Avatar, Subheading } from 'react-native-paper'; 
+
+import Bottomnavcomponent from './main pages/Navigation.js'
+
+import { NavigationContainer } from '@react-navigation/native';
+
+import { createStackNavigator } from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
+
+
+import Bookscreen from './Pages/Bookscreen.js';
 import SearchRoute from '/Users/vishvapatel/Desktop/booksapp/booksappexpo/Pages/Search.js';
 import UploadRoute from '/Users/vishvapatel/Desktop/booksapp/booksappexpo/Pages/Upload.js';
 import UserRoute from '/Users/vishvapatel/Desktop/booksapp/booksappexpo/Pages/User.js'
-
-class HomeRoute extends Component{
-
-  render(){
-    return(
-      <SafeAreaView>
-          <Text>Home</Text>
-      </SafeAreaView>
-    )
-  }
-
-}
+import HomeRoute from '/Users/vishvapatel/Desktop/booksapp/booksappexpo/Pages/Home.js';
 
 
 
@@ -35,41 +35,6 @@ class HomeRoute extends Component{
 
 
 
-
-const Bottomnavcomponent = () => {
-  const [index,setIndex] = React.useState(2);
-  const [routes] = React.useState([
-    { key: 'Home', title: 'Home', icon: 'home'  },
-    { key: 'Search', title: 'Search', icon: 'magnify' },
-    { key: 'Upload', title: 'Upload', icon: 'upload' },
-    { key: 'User', title: 'User', icon: 'account' }, 
-  ]);
-
-  const renderScene = BottomNavigation.SceneMap({
-    Home: HomeRoute,
-    Search: SearchRoute,
-    Upload: UploadRoute,
-    User: UserRoute
-  });
-
-  return (
-    <BottomNavigation
-      activeColor = {"white"}
-      inactiveColor = {"white"}
-      style = {{
-        
-      }}
-      
-      labeled = {true}
-      sceneAnimationEnabled = {true}
-      navigationState={{ index, routes }}
-      onIndexChange={setIndex}
-      renderScene={renderScene}
-    />
-  );
-
-
-};
 
 class Loggedin extends Component{
 
@@ -81,8 +46,19 @@ class Loggedin extends Component{
   }
   render(){
     return(
+      <>
+      <NavigationContainer>
+            <Stack.Navigator>
+            <Stack.Screen name="Loggedin" component={Loggedin} />
+            <Stack.Screen name='SearchRoute' component={SearchRoute} />
+            <Stack.Screen name='UplooadRoute' component={UploadRoute} />
+            <Stack.Screen name='UserRoute' component={UserRoute} />
+            <Stack.Screen name='Bookscreen' component={Bookscreen} />
+            </Stack.Navigator>
+            <Bottomnavcomponent/>
+      </NavigationContainer>
       
-      <Bottomnavcomponent />
+      </>
       
     )
   }
