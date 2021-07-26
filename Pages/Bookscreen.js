@@ -10,6 +10,7 @@ import {
   } from 'react-native';
 
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Avatar, Subheading } from 'react-native-paper'; 
+import { TabRouter } from '@react-navigation/routers';
 
 
 class Bookscreen extends Component{
@@ -17,24 +18,26 @@ class Bookscreen extends Component{
     constructor(props){
         super(props);
         this.state = {
-            book : this.props.book,
-        }
+            book : this.props.route.params.book,
+        };
     }
 
     render(){
+      console.log(this.state.book);
         return (
+
             <View style = {styles.cardcontainer}>
                 <View style = {styles.cardcontent}>
-                  <Title>Hello</Title>
-                  <Subheading>how are you</Subheading>
-                  <Paragraph>I am fine</Paragraph>
-                  <Paragraph>2 km away</Paragraph>
-                  <Paragraph>In best condition</Paragraph>
+                  <Title>{this.state.book.book_n}</Title>
+                  <Subheading>{this.state.book.book_a}</Subheading>
+                  <Paragraph>{this.state.book.book_y}</Paragraph>
+                  <Paragraph>{this.state.book.book_d} km away</Paragraph>
+                  <Paragraph>In {this.state.book.book_c} condition</Paragraph>
                 </View>
                 <View style = {styles.cardimage}>
                     <Image 
                       style={{resizeMode:'contain',height:'100%',width:'100%'}}
-                      source={{uri :  "/Users/vishvapatel/Desktop/booksapp/booksappexpo/resources/book1.jpeg"}}
+                      source={{uri : this.state.book.book_i}}
                     />
                 </View>
               </View>

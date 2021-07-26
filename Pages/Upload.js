@@ -15,9 +15,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 import * as Location from 'expo-location';
-import { auto } from 'async';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-import { visible } from 'chalk';
 
 
 const stores = [
@@ -248,6 +247,7 @@ class UploadRoute extends Component{
             condition : "good",
             location : "hello",
             shop : null,
+            photo : false ,
         };
 
         this.getShop = this.getShop.bind(this);
@@ -275,6 +275,8 @@ class UploadRoute extends Component{
         
     }
 
+    
+    
 
 
     render() {
@@ -303,12 +305,16 @@ class UploadRoute extends Component{
                 <ScrollView>
                 <View style={styles.container1}>
                     <View style={styles.container11}>
-                        <IconButton
+                        { this.props.route.params?.photo
+                            ? <Pressable style={{flex:1, height:'100%',width:'100%'}} onPress={() => this.props.navigation.navigate('Camerascreen')}><Image style={{flex:1,resizeMode:'cover',height:'100%',width:'100%'}} source={{uri : this.props.route.params?.photo.uri}}/></Pressable>
+                            : <IconButton
                             icon="image-plus"
                             color = '#EF90A9'
                             size={50}
-                            onPress={() => console.log("Pressed Camera")}
+                            onPress={() => this.props.navigation.navigate('Camerascreen')}
                         />
+                        }
+                        
                     </View>
                     <View style={styles.container12}>
                         <TextInput 
@@ -331,8 +337,10 @@ class UploadRoute extends Component{
                     <TextInput 
                     style = {styles.inputtextbox}
                     label="Year"
-                    value = {this.state.author}
-                    onChangeText = {(text) => this.setState({author : text})}
+                    value = {this.state.year}
+                    onChangeText = {(text) => this.setState({year : text.replace(/[^0-9]/g, '')})}
+                    keyboardType = "number-pad"
+                    maxLength = {4}
                     />
                 </View> 
                     
@@ -482,7 +490,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 5,
         borderTopRightRadius:10,
+    
     },
+
+    
     
 });
 

@@ -77,10 +77,6 @@ class SearchRoute extends Component{
       this.setState({searchQuery : props , testQuery : props})
     }
 
-    gotoBookscreen(){
-      console.log("pressed goto");
-      this.props.navigation.navigate('Booksscreen');
-    }
 
    
   
@@ -103,7 +99,7 @@ class SearchRoute extends Component{
   
             {
             this.state.data.map((book) => (
-              <Pressable onPress={() => this.this.props.navigation.navigate('Booksscreen')} >
+              <Pressable onPress={() => this.props.navigation.navigate('Bookscreen',{ book : book })} >
               <View style = {styles.cardcontainer}>
                 <View style = {styles.cardcontent}>
                   <Title>{book.book_n}</Title>

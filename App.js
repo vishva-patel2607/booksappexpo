@@ -12,7 +12,7 @@ export default function App() {
   return (
     
       <PaperProvider theme={theme} >
-        <Loggedin token={'hello'} />
+        <Loggedin token={"hello"} theme={{theme}} />
       </PaperProvider>
     
   );

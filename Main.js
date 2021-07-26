@@ -18,6 +18,8 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import { createStackNavigator } from '@react-navigation/stack';
 
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+
 const Stack = createStackNavigator();
 
 
@@ -26,7 +28,7 @@ import SearchRoute from '/Users/vishvapatel/Desktop/booksapp/booksappexpo/Pages/
 import UploadRoute from '/Users/vishvapatel/Desktop/booksapp/booksappexpo/Pages/Upload.js';
 import UserRoute from '/Users/vishvapatel/Desktop/booksapp/booksappexpo/Pages/User.js'
 import HomeRoute from '/Users/vishvapatel/Desktop/booksapp/booksappexpo/Pages/Home.js';
-
+import Camerascreen from './Pages/Camerascreen';
 
 
 
@@ -45,17 +47,16 @@ class Loggedin extends Component{
     }
   }
   render(){
+    console.log(this.state.token);
     return(
       <>
-      <NavigationContainer>
-            <Stack.Navigator>
-            <Stack.Screen name="Loggedin" component={Loggedin} />
-            <Stack.Screen name='SearchRoute' component={SearchRoute} />
-            <Stack.Screen name='UplooadRoute' component={UploadRoute} />
-            <Stack.Screen name='UserRoute' component={UserRoute} />
-            <Stack.Screen name='Bookscreen' component={Bookscreen} />
+
+      <NavigationContainer theme={theme}>
+            <Stack.Navigator >
+            <Stack.Screen name="Mainpage" component={Bottomnavcomponent} options={{headerShown: false}}/>
+            <Stack.Screen name='Bookscreen' component={Bookscreen}  />
+            <Stack.Screen name="Camerascreen" component={Camerascreen} />
             </Stack.Navigator>
-            <Bottomnavcomponent/>
       </NavigationContainer>
       
       </>
@@ -236,6 +237,29 @@ const styles = StyleSheet.create({
 
   
 });
+
+
+const theme = {
+
+  ...DefaultTheme,
+  roundness: 5,
+  colors: {
+    ...DefaultTheme.colors,
+  primary : '#7CABF0',
+  accent : "#EF90A9",
+  background : '#FFFFFF',
+  surface : "#EDEDF0",
+  disabled : '#808080',
+  backdrop : '#7CABF0',
+  onSurface : '#EDEDF0',
+  notification : '#EF90A9',
+  
+    
+  },
+};
+
+
+
 
 export default Loggedin;
 
