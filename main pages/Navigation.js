@@ -9,10 +9,10 @@ import { DefaultTheme } from 'react-native-paper';
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
-import SearchRoute from '/Users/vishvapatel/Desktop/booksapp/booksappexpo/Pages/Search.js';
-import UploadRoute from '/Users/vishvapatel/Desktop/booksapp/booksappexpo/Pages/Upload.js';
-import UserRoute from '/Users/vishvapatel/Desktop/booksapp/booksappexpo/Pages/User.js';
-import HomeRoute from '/Users/vishvapatel/Desktop/booksapp/booksappexpo/Pages/Home.js';
+import SearchRoute from '../Pages/Search.js';
+import UploadRoute from '../Pages/Upload.js';
+import UserRoute from '../Pages/User.js';
+import HomeRoute from '../Pages/Home.js';
 import Bookscreen from '../Pages/Bookscreen';
 import Camerascreen from '../Pages/Camerascreen';
 import Changepassword from '../Pages/Changepassword';
