@@ -108,10 +108,10 @@ class Storemodal extends Component{
                 <Modal visible={this.state.visible} dismissable={false} contentContainerStyle={styles.containerStyle} style={styles.modal}>
                     <Title>Select one of the shop</Title>
                     <ScrollView style={{width: "100%",padding:10,paddingTop:0}}>
-                        {this.state.shops.map((props)=>{
+                        {this.state.shops.map((props,idx)=>{
                             if(this.state.selectedShop != null && this.state.selectedShop.shopId === props.shopId){
                                 return(
-                                    <View style={{borderColor:"#EF90A9" , borderWidth : 2 , borderTopRightRadius: 12, borderTopLeftRadius: 12, marginTop: 20,}}>
+                                    <View key={idx} style={{borderColor:"#EF90A9" , borderWidth : 2 , borderTopRightRadius: 12, borderTopLeftRadius: 12, marginTop: 20,}}>
                                         <Storemodalcard 
                                             shopName={props.shopName}
                                             address={props.address}
@@ -124,7 +124,7 @@ class Storemodal extends Component{
                             }
                             else{
                                 return(
-                                    <Pressable onPress={() => this.setState({selectedShop : props })} style={{marginTop : 20}}>
+                                    <Pressable key={idx} onPress={() => this.setState({selectedShop : props })} style={{marginTop : 20}}>
                                         <Storemodalcard 
                                             shopName={props.shopName}
                                             address={props.address}

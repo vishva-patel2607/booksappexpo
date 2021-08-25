@@ -15,6 +15,7 @@ import UserRoute from '/Users/vishvapatel/Desktop/booksapp/booksappexpo/Pages/Us
 import HomeRoute from '/Users/vishvapatel/Desktop/booksapp/booksappexpo/Pages/Home.js';
 import Bookscreen from '../Pages/Bookscreen';
 import Camerascreen from '../Pages/Camerascreen';
+import Changepassword from '../Pages/Changepassword';
 
 import { CommonActions } from '@react-navigation/routers';
 import Login from '../Pages/login';
@@ -46,7 +47,7 @@ const theme = {
 const Bottomnavcomponent = () => {
     return (
       <Tab.Navigator
-        initialRouteName="Search"
+        initialRouteName="Home"
         shifting={true}
         sceneAnimationEnabled={false}
         activeColor = {"white"}
@@ -96,12 +97,12 @@ const Navigation = () => {
   const [isAuthenticated,setisAuthenticated] = useState(false);
 
   const user = useSelector((state) => state.user);
+
   /*useEffect(()=>{
     
-    
-    if (user !== null && user.isAuthenticated == true){
-      
-      var res = fetch('http://127.0.0.1:5000/User', {
+    console.log(user);
+    console.log(user.token);
+      fetch('http://127.0.0.1:5000/Tokencheck', {
         method: 'POST',
           headers: {
             Accept: 'application/json',
@@ -110,26 +111,31 @@ const Navigation = () => {
           },
           body: null,
       })
-      .then((response) => response.json())
-      .then((data) => {return data.response})
-
-      setResponse(res);
-    }
-
-      if(!response){
-        dispatch(setUser(user.accountUsername,user.accountNumber,user.token,res));
-      }
+      .then((response) => {
+            for (var pair of response.headers.entries()) { 
+              if (pair[0] === 'www-authenticate') { 
+                console.log("token not found");
+                dispatch(logoutUser());
+                return (null);
+              }
+            }
+            return response.json();
+          })
+      .then((data) => {if(data!== null){setisAuthenticated(data.response); dispatch(setUser(user.accountUsername,ussr.accountUsernumber,user.token,isAuthenticated))}})
+ 
       
-  });*/
+  },[])*/
 
   
-  if (user.isAuthenticated){
+  if (user.isAuthenticated && user !== null){
+   
     return(
       <NavigationContainer theme={theme}>
             <Stack.Navigator >
-            <Stack.Screen name="Mainpage" component={Bottomnavcomponent} options={{headerShown: false}}/>
-            <Stack.Screen name='Bookscreen' component={Bookscreen}  />
-            <Stack.Screen name="Camerascreen" component={Camerascreen} />
+            <Stack.Screen name="Mainpage" component={Bottomnavcomponent} options={{headerShown: false, title: ''}} />
+            <Stack.Screen name='Bookscreen' component={Bookscreen}  options={{ title: '' }} />
+            <Stack.Screen name="Camerascreen" component={Camerascreen} options={{ title: '' }} />
+            <Stack.Screen name="Changepassword" component={Changepassword} options={{ title: 'Change Password' }}/>
             </Stack.Navigator>
       </NavigationContainer>
     )

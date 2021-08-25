@@ -98,8 +98,8 @@ class SearchRoute extends Component{
   
   
             {
-            this.state.data.map((book) => (
-              <Pressable onPress={() => this.props.navigation.navigate('Bookscreen',{ book : book })} >
+            this.state.data.map((book,idx) => (
+              <Pressable key={idx} onPress={() => this.props.navigation.navigate('Bookscreen',{ book : book })} >
               <View style = {styles.cardcontainer}>
                 <View style = {styles.cardcontent}>
                   <Title>{book.book_n}</Title>

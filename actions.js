@@ -57,7 +57,7 @@ export const getUser = () => async (dispatch) => {
     
     let getuser = await SecureStore.getItemAsync('user');
 
-    let user = JSON.parse(getuser);
+    var user = JSON.parse(getuser);
     
 
     
@@ -72,7 +72,7 @@ export const getUser = () => async (dispatch) => {
 
     else{
         
-        user.isAuthenticated = false;
+        user = initialState;
         dispatch({
             type: 'SET_USER',
             payload : {user : user}

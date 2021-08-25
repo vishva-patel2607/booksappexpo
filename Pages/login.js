@@ -56,7 +56,7 @@ const Login = (props) => {
             }
           }
             return response.json();})
-            .then((data) => dispatch(setUser(username,username,data.token,truevalue)))
+            .then((data) => dispatch(setUser(data.username,data.usernumber,data.token,truevalue)))
             .catch((error) => console.log(error));
         
         

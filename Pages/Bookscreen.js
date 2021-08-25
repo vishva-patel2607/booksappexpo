@@ -1,4 +1,4 @@
-import navigation from '../main pages/Navigation';
+
 import React, { Component,useState } from 'react';
 import {
     SafeAreaView,
