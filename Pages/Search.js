@@ -5,9 +5,12 @@ import {
   View,
   Image,
   StyleSheet,
+  Pressable
 } from 'react-native';
 
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Avatar, Subheading } from 'react-native-paper'; 
+
+import Bookscreen from './Bookscreen';
 
 
 
@@ -18,7 +21,7 @@ var data = [
         book_y : "1992",
         book_d : 5.2,
         book_c : "great",
-        book_i : "/Users/vishvapatel/Desktop/booksappexpo/resources/book1.jpeg",
+        book_i : "/Users/vishvapatel/Desktop/booksapp/booksappexpo/resources/book1.jpeg",
     },
     {
         book_n : "Sapiens",
@@ -26,7 +29,7 @@ var data = [
         book_y : "2002",
         book_d : 10,
         book_c : "good",
-        book_i : "/Users/vishvapatel/Desktop/booksappexpo/resources/book1.jpeg",
+        book_i : "/Users/vishvapatel/Desktop/booksapp/booksappexpo/resources/book1.jpeg",    
     },
     {
         book_n : "Guns Germs and Steel",
@@ -34,24 +37,24 @@ var data = [
         book_y : "1992",
         book_d : 11,
         book_c : "bad",
-        book_i : "/Users/vishvapatel/Desktop/booksappexpo/resources/book1.jpeg",
-    },
+        book_i : "/Users/vishvapatel/Desktop/booksapp/booksappexpo/resources/book1.jpeg",
+      },
     {
         book_n : "Sapiens",
         book_a : "ABC XYZ",
         book_y : "1992",
         book_d : 5.2,
         book_c : "great",
-        book_i : "/Users/vishvapatel/Desktop/booksappexpo/resources/book1.jpeg",
-    },
+        book_i : "/Users/vishvapatel/Desktop/booksapp/booksappexpo/resources/book1.jpeg",
+      },
     {
         book_n : "Sapiens",
         book_a : "ABC XYZ",
         book_y : "1992",
         book_d : 5.2,
         book_c : "great",
-        book_i : "/Users/vishvapatel/Desktop/booksappexpo/resources/book1.jpeg",
-    },
+        book_i : "/Users/vishvapatel/Desktop/booksapp/booksappexpo/resources/book1.jpeg",
+      },
 ];
 
 
@@ -73,8 +76,14 @@ class SearchRoute extends Component{
     onChangeSearch(props){
       this.setState({searchQuery : props , testQuery : props})
     }
+
+
+   
   
     render(){
+      
+      
+
       return(
         <SafeAreaView style={styles.layout}>
             <Searchbar
@@ -89,7 +98,8 @@ class SearchRoute extends Component{
   
   
             {
-            this.state.data.map((book) => (
+            this.state.data.map((book,idx) => (
+              <Pressable key={idx} onPress={() => this.props.navigation.navigate('Bookscreen',{ book : book })} >
               <View style = {styles.cardcontainer}>
                 <View style = {styles.cardcontent}>
                   <Title>{book.book_n}</Title>
@@ -105,6 +115,7 @@ class SearchRoute extends Component{
                     />
                 </View>
               </View>
+              </Pressable>
             ))
             }
   
