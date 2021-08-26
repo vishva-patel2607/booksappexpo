@@ -77,7 +77,7 @@ const theme = {
     ...DefaultTheme.colors,
   primary : '#7CABF0',
   accent : "#EF90A9",
-  background : '#FFFFFF',
+  background : '#000000',
   surface : "#EDEDF0",
   disabled : '#808080',
   backdrop : '#7CABF0',
