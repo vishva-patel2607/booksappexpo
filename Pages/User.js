@@ -18,6 +18,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {logoutUser} from '../actions'
 
 
+
+
 const tempoobj = {
                   username : "hello",
                   email : "hello",
@@ -38,7 +40,7 @@ const Usercard = () =>{
   
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/User',{
+    fetch('https://booksapp2021.herokuapp.com/User',{
       method: 'POST',
       headers: {
               Accept: 'application/json',

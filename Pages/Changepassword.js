@@ -58,7 +58,7 @@ const Changepassword = (props) => {
         }
         else{
 
-            fetch('http://127.0.0.1:5000/changepassword', {
+            fetch('https://booksapp2021.herokuapp.com/changepassword', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
