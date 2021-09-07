@@ -1,6 +1,6 @@
 
-
-
+import { ActivityIndicator, Colors } from 'react-native-paper';
+import { Avatar } from 'react-native-paper';
 import React, { Component,useState,useCallback,useEffect } from 'react';
 import {
   SafeAreaView,
@@ -18,6 +18,7 @@ import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import {logoutUser} from '../actions'
+import { color, set } from 'react-native-reanimated';
 
 
 
@@ -30,18 +31,20 @@ const tempoobj = {
                   year : "2001",
                   month : "January",
                   day : "10",
-                  phonenumber : "+91 7227950335"
+                  phonenumber : "+91 7227950335",
+                  dob: "Mon, 01 Oct 2001 00:00:00 GMT"
                 };
 
 const Usercard = () =>{
-
+  const [LoadingData,setLoadingData] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [userobj,setUserobj] = useState(tempoobj);
-
+  const dateofbirth=userobj.dob.split(" ");
   
 
   useEffect(() => {
+    setLoadingData(false);
     fetch('https://booksapp2021.herokuapp.com/User',{
       method: 'POST',
       headers: {
@@ -61,58 +64,40 @@ const Usercard = () =>{
       }
       return response.json();
     })
-    .then((data) => {console.log(data); setUserobj(data);})
+    .then((data) => {console.log(data); setUserobj(data); setLoadingData(false);})
     .catch((error) => {console.log(error); setUserobj(tempoobj);})
   },[])
-
+  if (LoadingData)
+  {
   return(
     
     <View style={styles.textStyle}>
         
         <Text></Text>
-        <Image
-          source={{
-            uri:
-              'https://media-exp1.licdn.com/dms/image/C5103AQE3hk73-PCrzg/profile-displayphoto-shrink_800_800/0/1548737319263?e=1635379200&v=beta&t=nHHMCygkgluSbKI5p37bryXATv5FIm2Slufqe8MkO3M',
-          }}
-          style={{ width: 100, height: 100, borderRadius: 200 / 2 }}
-        />
+        <Avatar.Text size={80} label={userobj.firstname[0]+userobj.lastname[0]} color='white' />
         <Text></Text>
         <Title>{userobj.firstname + " " + userobj.lastname}</Title>
         <Subheading>{userobj.username}</Subheading>
         <Text></Text>
-        <Subheading><Image
-          source={{
-            uri:
-              'https://www.iconfinder.com/icons/211660/download/png/512',
-          }}
-          style={{ width: 20, height: 20, borderRadius: 200 / 2}}/> {userobj.email}</Subheading>
+        <Subheading>📧 {userobj.email}</Subheading>
         <Text>  </Text>
         <Subheading>
-        <Image
-          source={{
-            uri:
-              'https://www.iconfinder.com/icons/1608790/download/png/512',
-          }}
-          style={{ width: 20, height: 20, borderRadius: 200 / 2}}/>  {userobj.phonenumber}</Subheading>
+        📞 {userobj.phonenumber}</Subheading>
         <Text></Text>
         <Subheading>
-        <Image
-          source={{
-            uri:
-              'https://cdn3.iconfinder.com/data/icons/object-emoji/50/Celebration-1024.png',
-          }}
-          style={{ width: 20, height: 20, borderRadius: 200 / 2}}/> {userobj.day +" "+ userobj.month + " " +userobj.year}</Subheading>
-        <Text></Text>
-        <Text></Text>
-        <Button
-        
-        style={styles.editprofile}>
-        Edit Profile</Button>
+        🎂 {dateofbirth[1]+ " " + dateofbirth[2] + " " + dateofbirth[3]}</Subheading>
         <Text></Text>
     </View>
 
   )
+  }
+  else{
+    return (
+      <View style={styles.activityindicator} >
+      <ActivityIndicator animating={true} size={100} />
+      </View>
+    )
+  }
 
 }
 
@@ -120,7 +105,7 @@ const Usercard = () =>{
 
 const UserRoute = (props) =>{
 
-    
+  
   const dispatch = useDispatch();
 
   
@@ -143,14 +128,19 @@ const UserRoute = (props) =>{
                 style = {styles.logoutbutton}
                 labelStyle = {styles.logoutbutton}
                 onPress = {() => dispatch(logoutUser())}
-                
               >
                 Log out
             </Button>
+            <Button
+        style={styles.editprofile}
+        onPress = {() => props.navigation.navigate("EditPhone")}
+        >
+          <Avatar.Icon size={20} icon="pen" />
+          
+        </Button>
         </SafeAreaView>
         
       )
-    
   
 }
 
@@ -173,20 +163,22 @@ const styles = StyleSheet.create({
     color: "red",
     padding :20,
   },
-
+  activityindicator:{
+    padding: 100,
+    alignSelf: 'center',
+  },
   inputtextbox: {
     margin : 10,
-    
   },
   editprofile: {
-    margin : 50,
     fontSize : 20,
     marginBottom : 10,
-    marginTop: 20,
+    marginTop: -242,
     height: 35,
     width: 150,
-    alignSelf: 'center',
+    alignSelf: 'flex-end',
     borderRadius: 10,
+    marginRight: -10,
     
 
   },

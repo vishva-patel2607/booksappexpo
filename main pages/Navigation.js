@@ -16,11 +16,10 @@ import HomeRoute from '../Pages/Home.js';
 import Bookscreen from '../Pages/Bookscreen';
 import Camerascreen from '../Pages/Camerascreen';
 import Changepassword from '../Pages/Changepassword';
-
 import { CommonActions } from '@react-navigation/routers';
 import Login from '../Pages/login';
 import Signup from '../Pages/signup';
-
+import EditPhone from '../Pages/EditPhone.js';
 import {useSelector, useDispatch} from 'react-redux';
 
 import { getUser, logoutUser , setUser} from '../actions';
@@ -136,6 +135,7 @@ const Navigation = () => {
             <Stack.Screen name='Bookscreen' component={Bookscreen}  options={{ title: '' }} />
             <Stack.Screen name="Camerascreen" component={Camerascreen} options={{ title: '' }} />
             <Stack.Screen name="Changepassword" component={Changepassword} options={{ title: 'Change Password' }}/>
+            <Stack.Screen name="EditPhone" component={EditPhone} options={{title: 'Change Phone'}}/>
             </Stack.Navigator>
       </NavigationContainer>
     )
