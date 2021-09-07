@@ -38,7 +38,7 @@ const Login = (props) => {
         if(username !== "" && password !== ""){
         console.log("API");
         
-        fetch('https://booksapp2021.herokuapp.com/login', {
+        fetch('https://booksapp2021.herokuapp.com/User/Login', {
           method: 'POST',
           headers: {
             Accept: 'application/json',

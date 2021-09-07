@@ -77,7 +77,7 @@ const Signup =  (props)=> {
         else {
 
           
-            fetch('https://booksapp2021.herokuapp.com/signup', {
+            fetch('https://booksapp2021.herokuapp.com/User/Signup', {
             method: 'POST',
             headers: {
               Accept: 'application/json',

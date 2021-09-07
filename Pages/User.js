@@ -35,40 +35,15 @@ const tempoobj = {
                   dob: "Mon, 01 Oct 2001 00:00:00 GMT"
                 };
 
-const Usercard = () =>{
-  const [LoadingData,setLoadingData] = useState(false);
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
-  const [userobj,setUserobj] = useState(tempoobj);
-  const dateofbirth=userobj.dob.split(" ");
+const Usercard = (props) =>{
   
 
-  useEffect(() => {
-    setLoadingData(false);
-    fetch('https://booksapp2021.herokuapp.com/User',{
-      method: 'POST',
-      headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-              'x-access-token' : user.token,
-              },
-      body : null
-    })
-    .then((response) => {
-      for (var pair of response.headers.entries()) { 
-        if (pair[0] === 'www-authenticate') { 
-          console.log("token not found");
-          dispatch(logoutUser());
-          return (tempoobj);
-        }
-      }
-      return response.json();
-    })
-    .then((data) => {console.log(data); setUserobj(data); setLoadingData(false);})
-    .catch((error) => {console.log(error); setUserobj(tempoobj);})
-  },[])
-  if (LoadingData)
-  {
+  const dispatch = useDispatch();
+  
+  const [userobj,setUserobj] = useState(props.user);
+
+  const dateofbirth=userobj.dob.split(" ");
+
   return(
     
     <View style={styles.textStyle}>
@@ -90,14 +65,7 @@ const Usercard = () =>{
     </View>
 
   )
-  }
-  else{
-    return (
-      <View style={styles.activityindicator} >
-      <ActivityIndicator animating={true} size={100} />
-      </View>
-    )
-  }
+  
 
 }
 
@@ -107,40 +75,77 @@ const UserRoute = (props) =>{
 
   
   const dispatch = useDispatch();
+  const [LoadingData,setLoadingData] = useState(false);
+  const [userobj,setUserobj] = useState(tempoobj);
+  const user = useSelector((state) => state.user);
 
-  
+      useEffect(() => {
+          setLoadingData(false);
+          fetch('https://booksapp2021.herokuapp.com/User',{
+            method: 'POST',
+            headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'x-access-token' : user.token,
+                    },
+            body : null
+          })
+          .then((response) => {
+            for (var pair of response.headers.entries()) { 
+              if (pair[0] === 'www-authenticate') { 
+                console.log("token not found");
+                dispatch(logoutUser());
+                return (tempoobj);
+              }
+            }
+            return response.json();
+          })
+          .then((data) => {console.log(data); setUserobj(data); setLoadingData(true);})
+          .catch((error) => {console.log(error); setUserobj(tempoobj);})
+      },[])
 
-
-      return(
-        <SafeAreaView>
-            <Usercard />
-            <Button 
-                mode = "contained"
-                style = {styles.submitbutton}
-                labelStyle = {styles.submitbutton}
-                onPress = {() => props.navigation.navigate("Changepassword")}
-    
-              >
-                Change Password
-            </Button>
-            <Button 
-                mode = "contained"
-                style = {styles.logoutbutton}
-                labelStyle = {styles.logoutbutton}
-                onPress = {() => dispatch(logoutUser())}
-              >
-                Log out
-            </Button>
-            <Button
-        style={styles.editprofile}
-        onPress = {() => props.navigation.navigate("EditPhone")}
-        >
-          <Avatar.Icon size={20} icon="pen" />
+      if(LoadingData){
+        return(
+          <SafeAreaView>
+              <Usercard user={userobj} />
+              <Button 
+                  mode = "contained"
+                  style = {styles.submitbutton}
+                  labelStyle = {styles.submitbutton}
+                  onPress = {() => {props.navigation.navigate("Changepassword");}}
+      
+                >
+                  Change Password
+              </Button>
+              <Button 
+                  mode = "contained"
+                  style = {styles.logoutbutton}
+                  labelStyle = {styles.logoutbutton}
+                  onPress = {() => dispatch(logoutUser())}
+                >
+                  Log out
+              </Button>
+              <Button
+          style={styles.editprofile}
+          onPress = {() => {props.navigation.navigate("EditPhone");}}
+          >
+            <Avatar.Icon size={20} icon="pen" />
+            
+          </Button>
+          </SafeAreaView>
           
-        </Button>
-        </SafeAreaView>
-        
-      )
+        )
+      }
+      else{
+        return(
+          <SafeAreaView>
+              <View style={styles.activityindicator} >
+                <ActivityIndicator animating={true} size={100} />
+              </View>
+          </SafeAreaView>
+          
+        )
+      }
   
 }
 

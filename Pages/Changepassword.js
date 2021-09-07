@@ -58,7 +58,7 @@ const Changepassword = (props) => {
         }
         else{
 
-            fetch('https://booksapp2021.herokuapp.com/changepassword', {
+            fetch('https://booksapp2021.herokuapp.com/User/Changepassword', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -79,8 +79,7 @@ const Changepassword = (props) => {
               else if(pair[0] === 'www-changepassword'){
                 
                 if (pair[1] === 'Password Changed!') {
-                    console.log(pair[0]);
-                    console.log(pair[1]);
+                    
                     setError(pair[1])
                     Alert.alert(
                         error,

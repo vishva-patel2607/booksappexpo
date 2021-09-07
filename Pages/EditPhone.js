@@ -10,11 +10,17 @@ import {
 } from 'react-native';
   
 import {useDispatch, useSelector} from 'react-redux';
+import {logoutUser} from '../actions'
+
   
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,RadioButton, Subheading,IconButton } from 'react-native-paper';
 const EditPhone = (props) => {
+
+    const user = useSelector((state) => state.user);
     const [newphoneno,setNewphoneno] = useState("");
-    
+    const [error,setError] = useState("");
+    const dispatch = useDispatch();
+
 
     const editphone = () => {
         if (newphoneno.length === 0 || !(/^\d+$/.test(newphoneno))){
@@ -23,17 +29,43 @@ const EditPhone = (props) => {
         }
         else{
 
-            fetch('https://booksapp2021.herokuapp.com/changepassword', {
-            method: 'POST',
+            fetch('https://booksapp2021.herokuapp.com/User/Changenumber', {
+            method: 'PUT',
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
               'x-access-token' : user.token,
             },
             body: JSON.stringify({
-              newphoneno : newphoneno,
+              newnumber : newphoneno,
             })
           })
+          .then((response) => {
+            for (var pair of response.headers.entries()) { 
+              if (pair[0] === 'www-authenticate') { 
+                dispatch(logoutUser());
+                return;
+              }
+              else if(pair[0] === 'www-changephonenumber'){
+                
+                if (pair[1] === 'Phone number Changed!') {
+                    setError(pair[1])
+                    Alert.alert(
+                        error,
+                        "Please Login again to continue",
+                        [
+                          { text: "Login", onPress: () => dispatch(logoutUser()) }
+                        ]
+                    );
+                }
+                else {
+                    setError(pair[1])
+                    return;
+                }
+              }
+            }
+            })  
+          .catch((error) => console.log(error));
     }
 }
     return (
