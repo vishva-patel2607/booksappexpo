@@ -19,29 +19,65 @@ class Bookscreen extends Component{
         super(props);
         this.state = {
             book : this.props.route.params.book,
+            textValue: 'Pick Up the Book',
+            count: 0
         };
     }
-
+    
     render(){
       console.log(this.state.book);
         return (
-
+          <View style = {styles.cardimage}>
+          
+          <Image 
+            style={{resizeMode:'contain',height:'30%',width:'100%'}}
+            source={{uri : "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1535115320l/40121378._SY475_.jpg"}}
+          />
+          
             <View style = {styles.cardcontainer}>
-                <View style = {styles.cardcontent}>
-                  <Title>{this.state.book.book_n}</Title>
-                  <Subheading>{this.state.book.book_a}</Subheading>
-                  <Paragraph>{this.state.book.book_y}</Paragraph>
-                  <Paragraph>{this.state.book.book_d} km away</Paragraph>
-                  <Paragraph>In {this.state.book.book_c} condition</Paragraph>
-                </View>
-                <View style = {styles.cardimage}>
-                    <Image 
-                      style={{resizeMode:'contain',height:'100%',width:'100%'}}
-                      source={{uri : this.state.book.book_i}}
-                    />
-                </View>
+              <View style = {styles.cardcontent}>
+                  <Title style={styles.setFontSizeName}>Name of the Book :- {this.state.book.book_n}</Title>
+                  <Text></Text>
+                  <Subheading style={styles.setFontSizeAuthor}>Author :- {this.state.book.book_a}</Subheading>
+                  <Text></Text>
+                  <Subheading style={styles.setFontSizeAuthor}>{this.state.book.book_d} km away</Subheading>
+                  <Text></Text>
+                  <Subheading style={styles.setFontSizeAuthor}> Condition of Book:- In {this.state.book.book_c} condition</Subheading>
+                  <Text></Text>
+                  <Subheading style={styles.setFontSizeAuthor}>Price :- {this.state.book.book_p}</Subheading>
+                  <Text></Text>
+                  <Button 
+                  mode = "contained"
+                  style = {styles.pickupbook}
+                  labelStyle = {styles.pickupbook}
+                  onPress = {this.onPress}
+                  Title = "Hi"
+                  
+                >
+                  {this.state.textValue}
+              </Button>
               </View>
+              
+              </View>
+          </View>
         );
+    }
+    onPress = () => {
+      if (!this.state.count){
+      this.setState({
+        textValue: 'Book added to Pickup',
+        count: 1
+      })
+      alert('Book added to Pickup')
+      
+    }
+    else{
+      this.setState({
+        textValue: 'Pick Up the Book',
+        count: 0
+      })
+      alert('Book removed from Pickup')
+    }
     }
 }
 
@@ -63,18 +99,26 @@ const styles = StyleSheet.create({
       height : '100%',
       margin : 10,
     },
-  
+    setFontSizeName: {
+      fontSize: 20,
+      marginTop: 110,
+    },
+    setFontSizeAuthor: {
+      fontSize: 20,
+    },
+    
   
     cardcontainer : {
-      backgroundColor:'#EDEDF0',
+      
       flex: 1,
       flexDirection : 'row',
       justifyContent : 'center',
       alignContent: 'center',
-      alignItems : 'center',
+      alignItems : 'flex-start',
       marginBottom : 10,
       marginTop : 10,
       borderRadius : 5,
+      
     },
   
     cardcontent : {
@@ -83,7 +127,6 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems:'center', 
       margin : 10,
-      
     },
   
     cardimage : {
@@ -91,9 +134,14 @@ const styles = StyleSheet.create({
       height: 150,
       justifyContent: 'center',
       alignItems:'center', 
-      margin : 10,
-      marginRight :5,
-    }
+    },
+    pickupbook:{
+      alignSelf: 'center',
+      width: 300,
+      fontSize: 20,
+      color: "white",
+      borderRadius: 10,
+    },
     
   });
 

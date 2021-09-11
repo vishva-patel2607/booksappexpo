@@ -17,43 +17,49 @@ import Bookscreen from './Bookscreen';
 var data = [
     {
         book_n : "Guns Germs and Steel",
-        book_a : "ABC XYZ",
+        book_a : "James Clear",
         book_y : "1992",
         book_d : 5.2,
         book_c : "great",
-        book_i : "/Users/vishvapatel/Desktop/booksapp/booksappexpo/resources/book1.jpeg",
+        book_i : "/Users/hitanshushah/Desktop/1.png",
+        book_p : "Rs 150",
     },
     {
         book_n : "Sapiens",
-        book_a : "WYX ASD",
+        book_a : "James Clear",
         book_y : "2002",
         book_d : 10,
         book_c : "good",
-        book_i : "/Users/vishvapatel/Desktop/booksapp/booksappexpo/resources/book1.jpeg",    
+        book_i : "/Users/hitanshushah/Desktop/booksapp/booksappexpo/resources/book1.jpeg",    
+        book_p : "Rs 200",
     },
     {
         book_n : "Guns Germs and Steel",
-        book_a : "ABC XYZ",
+        book_a : "James Clear",
         book_y : "1992",
         book_d : 11,
         book_c : "bad",
         book_i : "/Users/vishvapatel/Desktop/booksapp/booksappexpo/resources/book1.jpeg",
+        book_p : "Rs 250",
       },
     {
         book_n : "Sapiens",
-        book_a : "ABC XYZ",
+        book_a : "James Clear",
         book_y : "1992",
         book_d : 5.2,
         book_c : "great",
         book_i : "/Users/vishvapatel/Desktop/booksapp/booksappexpo/resources/book1.jpeg",
+        book_p : "Rs 300",
+
       },
     {
         book_n : "Sapiens",
-        book_a : "ABC XYZ",
+        book_a : "James Clear",
         book_y : "1992",
         book_d : 5.2,
         book_c : "great",
         book_i : "/Users/vishvapatel/Desktop/booksapp/booksappexpo/resources/book1.jpeg",
+        book_p : "Rs 350"
       },
 ];
 
@@ -107,11 +113,12 @@ class SearchRoute extends Component{
                   <Paragraph>{book.book_y}</Paragraph>
                   <Paragraph>{book.book_d} km away</Paragraph>
                   <Paragraph>In {book.book_c} condition</Paragraph>
+                  <Paragraph>{book.book_p}</Paragraph>
                 </View>
                 <View style = {styles.cardimage}>
                     <Image 
                       style={{resizeMode:'contain',height:'100%',width:'100%'}}
-                      source={{uri : book.book_i}}
+                      source={{uri : "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1535115320l/40121378._SY475_.jpg"}}
                     />
                 </View>
               </View>

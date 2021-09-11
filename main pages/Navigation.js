@@ -23,6 +23,7 @@ import EditPhone from '../Pages/EditPhone.js';
 import {useSelector, useDispatch} from 'react-redux';
 
 import { getUser, logoutUser , setUser} from '../actions';
+import ForgotPassword from '../Pages/Forgotpassword.js';
 
 const theme = {
 
@@ -146,6 +147,7 @@ const Navigation = () => {
             <Stack.Navigator >
             <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
             <Stack.Screen name='Signup' component={Signup}  options={{headerShown: false}}/>
+            <Stack.Screen name="ForgotPassword" component={ForgotPassword} options={{headerShown: false}}/>
             </Stack.Navigator>
       </NavigationContainer>
     )

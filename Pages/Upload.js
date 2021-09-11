@@ -8,7 +8,7 @@ import {
   Alert,
   Pressable
 } from 'react-native';
-
+import {  Platform, StatusBar } from "react-native";
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,RadioButton, Headline,IconButton,Provider,Portal,Modal, Surface,Subheading } from 'react-native-paper'; 
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -167,7 +167,7 @@ class Storemodal extends Component{
                 >
                 Find a Shop
                 </Button>
-
+                
                 
             </View>
         );
@@ -301,7 +301,7 @@ class UploadRoute extends Component{
                         </View>
         }
         return(
-            <SafeAreaView style = {styles.layout}>
+            <SafeAreaView style = {styles.uploadimage}>
                 <ScrollView>
                 <View style={styles.container1}>
                     <View style={styles.container11}>
@@ -343,6 +343,7 @@ class UploadRoute extends Component{
                     maxLength = {4}
                     />
                 </View> 
+                
                     
                     
                 <View style={styles.container3}>
@@ -380,7 +381,16 @@ class UploadRoute extends Component{
                 <Storemodal onSelectShop={this.getShop} />
 
                 {selected}
-
+                <View style={styles.container2}>
+                    <TextInput 
+                    style = {styles.inputtextbox}
+                    label="Price"
+                    value = {this.state.price}
+                    onChangeText = {(text) => this.setState({price : text.replace(/[^0-9]/g, '')})}
+                    keyboardType = "number-pad"
+                    maxLength = {4}
+                    />
+                </View>
                 <Button 
                     mode = "contained"
                     style = {styles.submitbutton}
@@ -425,7 +435,12 @@ const styles = StyleSheet.create({
         color : "white",
     },
   
-  
+    uploadimage: {
+        flex:1,
+        justifyContent: 'center',
+        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+
+    },
     layout: {
       flex:1,
       justifyContent: 'center',
