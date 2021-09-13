@@ -11,9 +11,9 @@ import {
 import {  Platform, StatusBar } from "react-native";
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,RadioButton, Headline,IconButton,Provider,Portal,Modal, Surface,Subheading } from 'react-native-paper'; 
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {logoutUser, setUser} from '../actions'
 
-
-
+import {useDispatch, useSelector} from 'react-redux';
 import * as Location from 'expo-location';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -235,49 +235,47 @@ class Storemodalcard extends Component{
 
 }
 
-class UploadRoute extends Component{ 
+const UploadRoute = (props) => { 
 
-    constructor(props){
-        super(props);
+    
 
-        this.state = {
-            name : "",
-            author : "",
-            year : "",
-            condition : "good",
-            shop : null,
-        };
-
-        this.getShop = this.getShop.bind(this);
-    }
+    const [name,setName] = useState("");
+    const [author,setAuthor] = useState("");
+    const [year,setYear] = useState("");
+    const [condition,setCondition] = useState("good");
+    const [shop,setShop] = useState(null);
+    const [price,setPrice] = useState("");
+    const dispatch = useDispatch();
+    const user = useSelector( (state) => state.user)
 
     getShop = (shopClass) => {
-        this.setState({shop : shopClass});
+        setShop(shopClass);
     }
 
-    uploaddetails = (props) => {
-                if(this.props.route.params?.photo !== null && this.props.route.params?.photo !== undefined){
+    uploaddetails = () => {
+                if(props.route.params?.photo !== null && props.route.params?.photo !== undefined){
                     console.log('Inside upload details');
-                    var photouri = this.props.route.params?.photo.uri;
-                    console.log(this.props.route.params?.photo);
+                    var photouri = props.route.params?.photo.uri;
+                    console.log(props.route.params?.photo);
                     var imagedata = {
                         uri:  photouri,
                         type: "image/jpeg",
                         name: "photo.jpg"
                         };
                     let formData = new FormData();
-                    formData.append('book_name',this.state.name );
-                    formData.append('book_author', this.state.author);
-                    formData.append('book_year', this.state.year);
-                    formData.append('book_condition', this.state.condition);
+                    formData.append('book_name',name );
+                    formData.append('book_author', author);
+                    formData.append('book_year', year);
+                    formData.append('book_condition', condition);
                     formData.append('store_id', 1);
-                    formData.append('book_price',this.state.price);
-                    formData.append('book_img', imagedata.uri,'photo.jpg')
+                    formData.append('book_price',price);
+                    formData.append('book_img', imagedata)
                         fetch('https://booksapp2021.herokuapp.com/Book/upload', {
                             method: 'POST',
                             headers: {
                             Accept: 'application/json',
                             'Content-Type': 'multipart/form-data',
+                            'x-access-token' : user.token,
                             },
                             
                             body: formData
@@ -287,7 +285,8 @@ class UploadRoute extends Component{
                         })
                         .then((data)=>{
                             if(data.status){
-                                console.log(data.response);
+                                console.log(data.response.book);
+
                             }
                             else{
                             if(data.message==='Could not verify'){
@@ -311,38 +310,23 @@ class UploadRoute extends Component{
                
     }
 
-    setLocation = async () => {
-        console.log("at the function");
-        
-            console.log("in the async");
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-              setErrorMsg('Permission to access location was denied');
-              return;
-            }
-            console.log("finished if");
-      
-            let loc = await Location.getCurrentPositionAsync({});
-            this.setState({location : loc.coords });
-            console.log("finishedset");
-        
-    }
+    
     
     
     
 
 
-    render() {
+    
         let selected;
-        if(this.state.shop != null){
+        if(shop != null){
             selected =  
                         <View style={{margin: 10}}>
                             <Storemodalcard 
-                                shopName={this.state.shop.shopName}
-                                address={this.state.shop.address}
-                                area={this.state.shop.area}
-                                pincode={this.state.shop.pincode}
-                                distance = {this.state.shop.distance}
+                                shopName={shop.shopName}
+                                address={shop.address}
+                                area={shop.area}
+                                pincode={shop.pincode}
+                                distance = {shop.distance}
                             />
                         </View>
                         
@@ -353,18 +337,19 @@ class UploadRoute extends Component{
                             <Headline>Select a drop off shop</Headline>
                         </View>
         }
+
         return(
             <SafeAreaView style = {styles.uploadimage}>
                 <ScrollView>
                 <View style={styles.container1}>
                     <View style={styles.container11}>
-                        { this.props.route.params?.photo
-                            ? <Pressable style={{flex:1, height:'100%',width:'100%'}} onPress={() => this.props.navigation.navigate('Camerascreen')}><Image style={{flex:1,resizeMode:'cover',height:'100%',width:'100%'}} source={{uri : this.props.route.params?.photo.uri}}/></Pressable>
+                        { props.route.params?.photo
+                            ? <Pressable style={{flex:1, height:'100%',width:'100%'}} onPress={() => props.navigation.navigate('Camerascreen')}><Image style={{flex:1,resizeMode:'cover',height:'100%',width:'100%'}} source={{uri : props.route.params?.photo.uri}}/></Pressable>
                             : <IconButton
                             icon="image-plus"
                             color = '#EF90A9'
                             size={50}
-                            onPress={() => this.props.navigation.navigate('Camerascreen')}
+                            onPress={() => props.navigation.navigate('Camerascreen')}
                         />
                         }
                         
@@ -373,15 +358,15 @@ class UploadRoute extends Component{
                         <TextInput 
                         style = {styles.inputtextbox}
                         label="Name"
-                        value = {this.state.name}
-                        onChangeText = {(text) => this.setState({name : text})}
+                        value = {name}
+                        onChangeText = {(text) => setName(text)}
                         />
 
                         <TextInput 
                         style = {styles.inputtextbox}
                         label="Author"
-                        value = {this.state.author}
-                        onChangeText = {(text) => this.setState({author : text})}
+                        value = {author}
+                        onChangeText = {(text) => setAuthor(text)}
                         />
                     </View>
                 </View>   
@@ -390,8 +375,8 @@ class UploadRoute extends Component{
                     <TextInput 
                     style = {styles.inputtextbox}
                     label="Year"
-                    value = {this.state.year}
-                    onChangeText = {(text) => this.setState({year : text.replace(/[^0-9]/g, '')})}
+                    value = {year}
+                    onChangeText = {(text) => setYear(text.replace(/[^0-9]/g, ''))}
                     keyboardType = "number-pad"
                     maxLength = {4}
                     />
@@ -402,7 +387,7 @@ class UploadRoute extends Component{
                 <View style={styles.container3}>
                         
                         <Title style={styles.textbox}>Select the condition of your book:</Title>
-                        <RadioButton.Group onValueChange={value => this.setState({condition : value})} value={this.state.condition}>
+                        <RadioButton.Group onValueChange={(value) => setCondition(value)} value={condition}>
                             <View style={{flexDirection:'column'}}>
                             <View style={{flexDirection:'row'}}> 
                             <View style={{flex:1}}>
@@ -431,15 +416,15 @@ class UploadRoute extends Component{
                 
 
                 
-                <Storemodal onSelectShop={this.getShop} />
+                <Storemodal onSelectShop={getShop} />
 
                 {selected}
                 <View style={styles.container2}>
                     <TextInput 
                     style = {styles.inputtextbox}
                     label="Price"
-                    value = {this.state.price}
-                    onChangeText = {(text) => this.setState({price : text.replace(/[^0-9]/g, '')})}
+                    value = {price}
+                    onChangeText = {(text) => setPrice(text.replace(/[^0-9]/g, ''))}
                     keyboardType = "number-pad"
                     maxLength = {4}
                     />
@@ -448,7 +433,7 @@ class UploadRoute extends Component{
                     mode = "contained"
                     style = {styles.submitbutton}
                     labelStyle = {styles.submitbutton}
-                    onPress = {this.uploaddetails}
+                    onPress = {uploaddetails}
                 >
                 Upload
                 </Button>
@@ -456,7 +441,7 @@ class UploadRoute extends Component{
             
             </SafeAreaView>
         );
-    }
+    
   
 }; 
 
