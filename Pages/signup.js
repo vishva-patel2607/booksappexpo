@@ -14,6 +14,7 @@ import {
 
 
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Card,Avatar, Subheading } from 'react-native-paper'; 
+import { setUser } from '../actions';
 
 
 
@@ -96,17 +97,20 @@ const Signup =  (props)=> {
             })
           })
           .then((response) => {
-            for (var pair of response.headers.entries()) { 
-              if (pair[0] === 'www-authenticate') { 
-                setError(pair[1])
+              return response.json();
+          })
+          .then((data) => {
+              if(data.status){
+                setError(data.message);
               }
-            }
-            })  
-          .catch((error) => console.log(error));
-        }
-
-
-        
+              else{
+                setError(data.message);
+              }
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+        }   
     }
 
     const handleChangeDay = (value) => {

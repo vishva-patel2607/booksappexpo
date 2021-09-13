@@ -40,6 +40,32 @@ const EditPhone = (props) => {
               newnumber : newphoneno,
             })
           })
+          .then((response)=>{
+            return response.json();
+          })
+          .then((data)=>{
+            if(data.status){
+              console.log('Status true');
+              setError(data.message);
+              Alert.alert(
+                error,
+                "Please log in again with your new Phone No.",
+                [
+                  {text: "Login", onPress: () => dispatch(logoutUser())}
+                ]
+              );
+            }
+            else{
+              if(data.message=='Could not verify'){
+                dispatch(logoutUser());
+              }
+            }
+          })
+          .catch((error)=>{
+            console.log(error);
+          })
+        }
+          /*
           .then((response) => {
             for (var pair of response.headers.entries()) { 
               if (pair[0] === 'www-authenticate') { 
@@ -67,6 +93,7 @@ const EditPhone = (props) => {
             })  
           .catch((error) => console.log(error));
     }
+    */
 }
     return (
         <SafeAreaView style={styles.layout}>
@@ -81,6 +108,9 @@ const EditPhone = (props) => {
                 maxLength = {20}
                 secureTextEntry = {true}
             />
+            <Text style={styles.error}>
+                {error}
+            </Text>
             <Button 
                 mode = "contained"
                 style = {styles.submitbutton}
@@ -89,6 +119,7 @@ const EditPhone = (props) => {
             >
                 SAVE
             </Button>
+
             </View>
         </SafeAreaView>
     )

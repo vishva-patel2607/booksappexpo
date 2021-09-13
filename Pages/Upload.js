@@ -245,9 +245,7 @@ class UploadRoute extends Component{
             author : "",
             year : "",
             condition : "good",
-            location : "hello",
             shop : null,
-            photo : false ,
         };
 
         this.getShop = this.getShop.bind(this);
@@ -257,6 +255,61 @@ class UploadRoute extends Component{
         this.setState({shop : shopClass});
     }
 
+    uploaddetails = (props) => {
+                if(this.props.route.params?.photo !== null && this.props.route.params?.photo !== undefined){
+                    console.log('Inside upload details');
+                    var photouri = this.props.route.params?.photo.uri;
+                    console.log(this.props.route.params?.photo);
+                    var imagedata = {
+                        uri:  photouri,
+                        type: "image/jpeg",
+                        name: "photo.jpg"
+                        };
+                    let formData = new FormData();
+                    formData.append('book_name',this.state.name );
+                    formData.append('book_author', this.state.author);
+                    formData.append('book_year', this.state.year);
+                    formData.append('book_condition', this.state.condition);
+                    formData.append('store_id', 1);
+                    formData.append('book_price',this.state.price);
+                    formData.append('book_img', imagedata.uri,'photo.jpg')
+                        fetch('https://booksapp2021.herokuapp.com/Book/upload', {
+                            method: 'POST',
+                            headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'multipart/form-data',
+                            },
+                            
+                            body: formData
+                        })
+                        .then((response)=>{
+                            return response.json()
+                        })
+                        .then((data)=>{
+                            if(data.status){
+                                console.log(data.response);
+                            }
+                            else{
+                            if(data.message==='Could not verify'){
+                                dispatch(logoutUser());
+                            }
+                            }  
+                        })
+                        .catch((error)=>{
+                            console.log(error);
+                        })
+                    }
+                    else{
+                        Alert.alert(
+                            "No Photo",
+                            "Please click a photo and then upload",
+                            [
+                              {text: "Ok!"}
+                            ]
+                          );
+                    }
+               
+    }
 
     setLocation = async () => {
         console.log("at the function");
@@ -274,7 +327,7 @@ class UploadRoute extends Component{
             console.log("finishedset");
         
     }
-
+    
     
     
 
@@ -395,7 +448,7 @@ class UploadRoute extends Component{
                     mode = "contained"
                     style = {styles.submitbutton}
                     labelStyle = {styles.submitbutton}
-                    onPress = {this.setLocation}
+                    onPress = {this.uploaddetails}
                 >
                 Upload
                 </Button>

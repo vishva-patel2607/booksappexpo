@@ -14,6 +14,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,RadioButton, Subheading,IconButton } from 'react-native-paper'; 
 
 import {logoutUser} from '../actions'
+import { set } from 'react-native-reanimated';
 
 const tempoobj = {
     username : "hello",
@@ -59,7 +60,7 @@ const Changepassword = (props) => {
         else{
 
             fetch('https://booksapp2021.herokuapp.com/User/Changepassword', {
-            method: 'POST',
+            method: 'PUT',
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
@@ -70,36 +71,36 @@ const Changepassword = (props) => {
               newpassword : newpassword1,
             })
           })
-          .then((response) => {
-            for (var pair of response.headers.entries()) { 
-              if (pair[0] === 'www-authenticate') { 
+          .then((response)=>{
+            return response.json();
+          })
+          .then((data)=>{
+            console.log('Going in ');
+            if(data.status){
+              setError(data.message);
+              Alert.alert(
+                error,
+                "Please log in again with your new password",
+                [
+                  {text: "Login", onPress: () => dispatch(logoutUser())}
+                ]
+              );
+            }
+            else{
+              if(data.message==='Could not verify'){
                 dispatch(logoutUser());
-                return;
+
               }
-              else if(pair[0] === 'www-changepassword'){
-                
-                if (pair[1] === 'Password Changed!') {
-                    
-                    setError(pair[1])
-                    Alert.alert(
-                        error,
-                        "Please Login again to continue",
-                        [
-                          { text: "Login", onPress: () => dispatch(logoutUser()) }
-                        ]
-                    );
-                }
-                else {
-                    setError(pair[1])
-                    return;
-                }
+              else{
+                setError(data.message);
               }
             }
-            })  
-          .catch((error) => console.log(error));
+          })
+          .catch((error)=>{
+            console.log(error);
+          })
         }
-
-    }
+  }
 
 
     return(

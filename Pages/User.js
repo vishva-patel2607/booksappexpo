@@ -17,7 +17,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,RadioButton, Subheading,IconButton } from 'react-native-paper'; 
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-import {logoutUser} from '../actions'
+import {logoutUser, setUser} from '../actions'
 import { color, set } from 'react-native-reanimated';
 
 
@@ -42,7 +42,7 @@ const Usercard = (props) =>{
   
   const [userobj,setUserobj] = useState(props.user);
 
-  const dateofbirth=userobj.dob.split(" ");
+  
 
   return(
     
@@ -60,7 +60,7 @@ const Usercard = (props) =>{
         📞 {userobj.phonenumber}</Subheading>
         <Text></Text>
         <Subheading>
-        🎂 {dateofbirth[1]+ " " + dateofbirth[2] + " " + dateofbirth[3]}</Subheading>
+        🎂 {userobj.dob.split(" ")[1]+ " " +userobj.dob.split(" ")[2] + " " + userobj.dob.split(" ")[3]}</Subheading>
         <Text></Text>
     </View>
 
@@ -80,6 +80,7 @@ const UserRoute = (props) =>{
   const user = useSelector((state) => state.user);
 
       useEffect(() => {
+        console.log(user.token);
           setLoadingData(false);
           fetch('https://booksapp2021.herokuapp.com/User',{
             method: 'POST',
@@ -91,19 +92,26 @@ const UserRoute = (props) =>{
             body : null
           })
           .then((response) => {
-            for (var pair of response.headers.entries()) { 
-              if (pair[0] === 'www-authenticate') { 
-                console.log("token not found");
-                dispatch(logoutUser());
-                return (tempoobj);
-              }
-            }
             return response.json();
           })
-          .then((data) => {console.log(data); setUserobj(data); setLoadingData(true);})
-          .catch((error) => {console.log(error); setUserobj(tempoobj);})
-      },[])
-
+          .then((data) => {
+            console.log(data);
+            if(data.status){
+              console.log('True')
+              setUserobj(data.response.user);
+              setLoadingData(true);
+            }
+            else{
+              console.log(data.status);
+              if(data.message==='Could not verify'){
+                dispatch(logoutUser());
+              }
+            }
+          })
+          .catch((error) => {
+              console.log(error);
+          })
+        },[])
       if(LoadingData){
         return(
           <SafeAreaView>

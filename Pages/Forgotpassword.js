@@ -95,6 +95,7 @@ const ForgotPassword = (props) => {
                 onChangeText = {(text) => setphoneno(text)}
                 autoCapitalize = 'none'
                 autoCorrect = {false}
+                keyboardType = "number-pad"
                 maxLength = {20}
                 
             />

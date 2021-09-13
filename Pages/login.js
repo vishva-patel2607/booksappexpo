@@ -50,23 +50,23 @@ const Login = (props) => {
           })
         })
         .then((response) => {
-          for (var pair of response.headers.entries()) { 
-            if (pair[0] === 'www-authenticate') { 
-              setError(pair[1])
+          return response.json(); 
+        })
+        .then((data) => {
+            if(data.status){
+              setError(data.message);
+              dispatch(setUser(data.response.username,data.response.usernumber,data.response.token,data.status));
             }
-          }
-            return response.json();})
-            .then((data) => dispatch(setUser(data.username,data.usernumber,data.token,truevalue)))
-            .catch((error) => console.log(error));
-        
-        
-            
-           console.log("Done loginrequest"); 
-            
-        }
-
-      
+            else{
+              setError(data.message);
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        })
     }
+  }
+
   
       
       return (
