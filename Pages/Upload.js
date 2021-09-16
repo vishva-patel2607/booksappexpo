@@ -294,6 +294,7 @@ const UploadRoute = (props) => {
                                 setShop(null);
                                 setYear("");
                                 console.log(data.response.book);
+                                console.log(data.response.transaction);
                             }
                             else{
                             if(data.message==='Could not verify'){
