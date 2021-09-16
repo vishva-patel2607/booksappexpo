@@ -271,7 +271,7 @@ const UploadRoute = (props) => {
                     formData.append('store_id', 1);
                     formData.append('book_price',price);
                     formData.append('book_img', imagedata)
-                        fetch('https://booksapp2021.herokuapp.com/Book/upload', {
+                        fetch('https://booksapp2021.herokuapp.com/Book/Upload', {
                             method: 'POST',
                             headers: {
                             Accept: 'application/json',
