@@ -13,14 +13,12 @@ import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar
 import { TabRouter } from '@react-navigation/routers';
 
 
-class Bookscreen extends Component{
+class UploadedBooks extends Component{
 
     constructor(props){
         super(props);
         this.state = {
             book : this.props.route.params.book,
-            textValue: 'Pick Up the Book',
-            count: 0
         };
     }
     
@@ -46,38 +44,11 @@ class Bookscreen extends Component{
                   <Text></Text>
                   <Subheading style={styles.setFontSizeAuthor}>Price :- {this.state.book.book_p}</Subheading>
                   <Text></Text>
-                  <Button 
-                  mode = "contained"
-                  style = {styles.pickupbook}
-                  labelStyle = {styles.pickupbook}
-                  onPress = {this.onPress}
-                  Title = "Hi"
-                  
-                >
-                  {this.state.textValue}
-              </Button>
               </View>
               
               </View>
           </View>
         );
-    }
-    onPress = () => {
-      if (!this.state.count){
-      this.setState({
-        textValue: 'Book added to Pickup',
-        count: 1
-      })
-      alert('Book added to Pickup')
-      
-    }
-    else{
-      this.setState({
-        textValue: 'Pick Up the Book',
-        count: 0
-      })
-      alert('Book removed from Pickup')
-    }
     }
 }
 
@@ -145,4 +116,4 @@ const styles = StyleSheet.create({
     
   });
 
-export default Bookscreen;
+export default UploadedBooks;

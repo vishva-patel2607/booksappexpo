@@ -8,6 +8,7 @@ import {
   Alert,
   Pressable
 } from 'react-native';
+
 import {  Platform, StatusBar } from "react-native";
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,RadioButton, Headline,IconButton,Provider,Portal,Modal, Surface,Subheading } from 'react-native-paper'; 
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -16,7 +17,6 @@ import {logoutUser, setUser} from '../actions'
 import {useDispatch, useSelector} from 'react-redux';
 import * as Location from 'expo-location';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
 
 
 const stores = [
@@ -240,6 +240,7 @@ const UploadRoute = (props) => {
     
 
     const [name,setName] = useState("");
+    const [error,setError] = useState("");
     const [author,setAuthor] = useState("");
     const [year,setYear] = useState("");
     const [condition,setCondition] = useState("good");
@@ -285,8 +286,14 @@ const UploadRoute = (props) => {
                         })
                         .then((data)=>{
                             if(data.status){
+                                alert("Book Uploaded Succesfully");
+                                setAuthor("");
+                                setCondition("good");
+                                setName("");
+                                setPrice("");
+                                setShop(null);
+                                setYear("");
                                 console.log(data.response.book);
-
                             }
                             else{
                             if(data.message==='Could not verify'){
@@ -309,14 +316,6 @@ const UploadRoute = (props) => {
                     }
                
     }
-
-    
-    
-    
-    
-
-
-    
         let selected;
         if(shop != null){
             selected =  
@@ -437,6 +436,9 @@ const UploadRoute = (props) => {
                 >
                 Upload
                 </Button>
+                <Text style={styles.error}>
+                {error}
+                </Text>
                 </ScrollView>
             
             </SafeAreaView>

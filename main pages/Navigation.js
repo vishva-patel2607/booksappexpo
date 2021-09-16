@@ -24,6 +24,7 @@ import {useSelector, useDispatch} from 'react-redux';
 
 import { getUser, logoutUser , setUser} from '../actions';
 import ForgotPassword from '../Pages/Forgotpassword.js';
+import UploadedBooks from '../Pages/Uploadedbooks.js';
 
 const theme = {
 
@@ -135,6 +136,7 @@ const Navigation = () => {
             <Stack.Screen name="Mainpage" component={Bottomnavcomponent} options={{headerShown: false, title: ''}} />
             <Stack.Screen name='Bookscreen' component={Bookscreen}  options={{ title: '' }} />
             <Stack.Screen name="Camerascreen" component={Camerascreen} options={{ title: '' }} />
+            <Stack.Screen name="UploadedBooks" component={UploadedBooks} options={{title: 'Book Details'}}/>
             <Stack.Screen name="Changepassword" component={Changepassword} options={{ title: 'Change Password' }}/>
             <Stack.Screen name="EditPhone" component={EditPhone} options={{title: 'Change Phone'}}/>
             </Stack.Navigator>
