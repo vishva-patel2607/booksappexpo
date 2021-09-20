@@ -9,48 +9,60 @@ import {
     Pressable
   } from 'react-native';
 
-import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Avatar, Subheading } from 'react-native-paper'; 
+import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Avatar, Subheading, Caption } from 'react-native-paper'; 
 import { TabRouter } from '@react-navigation/routers';
 
 
-class UploadedBooks extends Component{
+const UploadedBooks =(props) => {
+  const [Bookdata,setBookData]=useState(props.route.params.book)
+  
 
-    constructor(props){
-        super(props);
-        this.state = {
-            book : this.props.route.params.book,
-        };
-    }
-    
-    render(){
-      console.log(this.state.book);
+
         return (
-          <View style = {styles.cardimage}>
           
+          <View style = {styles.cardimage}>
+            <Button style={styles.editbook}
+            onPress={() => props.navigation.navigate('Edituploadedbook',{ book : Bookdata })}
+            >Edit</Button>
           <Image 
             style={{resizeMode:'contain',height:'30%',width:'100%'}}
-            source={{uri : this.state.book.book_i}}
+            source={{uri : Bookdata.book_img}}
           />
           
             <View style = {styles.cardcontainer}>
               <View style = {styles.cardcontent}>
-                  <Title style={styles.setFontSizeName}>Name of the Book :- {this.state.book.book_n}</Title>
                   <Text></Text>
-                  <Subheading style={styles.setFontSizeAuthor}>Author :- {this.state.book.book_a}</Subheading>
+                  <Title style={styles.setFontSizeName}>Name of the Book :- {Bookdata.book_name}</Title>
                   <Text></Text>
-                  <Subheading style={styles.setFontSizeAuthor}>{this.state.book.book_d} km away</Subheading>
+                  <Subheading style={styles.setFontSizeAuthor}>Author :- {Bookdata.book_author}</Subheading>
                   <Text></Text>
-                  <Subheading style={styles.setFontSizeAuthor}> Condition of Book:- In {this.state.book.book_c} condition</Subheading>
+                  <Subheading style={styles.setFontSizeAuthor}>Year:- {Bookdata.book_year}</Subheading>
                   <Text></Text>
-                  <Subheading style={styles.setFontSizeAuthor}>Price :- {this.state.book.book_p}</Subheading>
+                  <Subheading style={styles.setFontSizeAuthor}>{Bookdata.book_distance} km away</Subheading>
                   <Text></Text>
+                  <Subheading style={styles.setFontSizeAuthor}> Condition of Book:- In {Bookdata.book_condition} condition</Subheading>
+                  <Text></Text>
+                  <Subheading style={styles.setFontSizeAuthor}>Price :- {Bookdata.book_price}</Subheading>
+                  <Text></Text>
+                  <Caption>Status:- {Bookdata.book_status}</Caption>
+                  <Text></Text>
+                  <Button 
+                    mode = "contained"
+                    style = {styles.submitbutton}
+                    labelStyle = {styles.submitbutton}
+                    
+                >
+      
+                Remove
+                </Button>
               </View>
               
               </View>
           </View>
+          
         );
     }
-}
+
 
 
 const styles = StyleSheet.create({
@@ -71,11 +83,12 @@ const styles = StyleSheet.create({
       margin : 10,
     },
     setFontSizeName: {
-      fontSize: 20,
+      fontSize: 18,
       marginTop: 110,
     },
     setFontSizeAuthor: {
       fontSize: 20,
+      
     },
     
   
@@ -87,11 +100,24 @@ const styles = StyleSheet.create({
       alignContent: 'center',
       alignItems : 'flex-start',
       marginBottom : 10,
-      marginTop : 10,
+      marginTop : 50,
       borderRadius : 5,
       
     },
-  
+    editbook:{
+        alignSelf:'flex-end',
+        marginTop: -10,
+        
+    },
+    submitbutton: {
+      
+      fontSize : 18,
+      height: 40,
+      width: 300,
+      alignSelf: 'center',
+      borderRadius: 10,
+      color : "white"
+    },
     cardcontent : {
       flex : 4,
       height: 150,

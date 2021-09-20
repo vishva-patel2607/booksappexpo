@@ -1,5 +1,5 @@
 
-import React, { Component,useState } from 'react';
+import React, { Component,useEffect,useState } from 'react';
 import {
     SafeAreaView,
     ScrollView,
@@ -11,75 +11,68 @@ import {
 
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Avatar, Subheading } from 'react-native-paper'; 
 import { TabRouter } from '@react-navigation/routers';
+import { set } from 'react-native-reanimated';
 
 
-class Bookscreen extends Component{
-
-    constructor(props){
-        super(props);
-        this.state = {
-            book : this.props.route.params.book,
-            textValue: 'Pick Up the Book',
-            count: 0
-        };
+const Bookscreen = (props) => {
+    const [book, setBook] = useState(props.route.params.book);
+    const [textValue,setTextValue] = useState('Pick up the book');
+    const [count, setCount] = useState(0);
+    const addtopickup = (props) => {
+      if (!count){
+        setCount(1);
     }
+    else{
+      setCount(0);
+    }
+    }
+    useEffect(()=>{
+      if(!count){
+        setTextValue('Add to Pickup')
+      }
+      else{
+        setTextValue('Remove from Pickup')
+      }
+    },[count])
     
-    render(){
-      console.log(this.state.book);
+      
         return (
           <View style = {styles.cardimage}>
-          
           <Image 
             style={{resizeMode:'contain',height:'30%',width:'100%'}}
-            source={{uri : this.state.book.book_i}}
+            source={{uri : book.book_i}}
           />
-          
             <View style = {styles.cardcontainer}>
               <View style = {styles.cardcontent}>
-                  <Title style={styles.setFontSizeName}>Name of the Book :- {this.state.book.book_n}</Title>
+                  <Title style={styles.setFontSizeName}>Name of the Book :- {book.book_n}</Title>
                   <Text></Text>
-                  <Subheading style={styles.setFontSizeAuthor}>Author :- {this.state.book.book_a}</Subheading>
+                  <Subheading style={styles.setFontSizeAuthor}>Author :- {book.book_a}</Subheading>
                   <Text></Text>
-                  <Subheading style={styles.setFontSizeAuthor}>{this.state.book.book_d} km away</Subheading>
+                  <Subheading style={styles.setFontSizeAuthor}>{book.book_d} km away</Subheading>
                   <Text></Text>
-                  <Subheading style={styles.setFontSizeAuthor}> Condition of Book:- In {this.state.book.book_c} condition</Subheading>
+                  <Subheading style={styles.setFontSizeAuthor}> Condition of Book:- In {book.book_c} condition</Subheading>
                   <Text></Text>
-                  <Subheading style={styles.setFontSizeAuthor}>Price :- {this.state.book.book_p}</Subheading>
+                  <Subheading style={styles.setFontSizeAuthor}>Price :- {book.book_p}</Subheading>
                   <Text></Text>
                   <Button 
                   mode = "contained"
                   style = {styles.pickupbook}
                   labelStyle = {styles.pickupbook}
-                  onPress = {this.onPress}
+                  onPress = {addtopickup}
                   Title = "Hi"
-                  
                 >
-                  {this.state.textValue}
-              </Button>
+                  {textValue}
+                  </Button>
+              
               </View>
               
               </View>
           </View>
         );
     }
-    onPress = () => {
-      if (!this.state.count){
-      this.setState({
-        textValue: 'Book added to Pickup',
-        count: 1
-      })
-      alert('Book added to Pickup')
-      
-    }
-    else{
-      this.setState({
-        textValue: 'Pick Up the Book',
-        count: 0
-      })
-      alert('Book removed from Pickup')
-    }
-    }
-}
+    
+    
+
 
 
 const styles = StyleSheet.create({

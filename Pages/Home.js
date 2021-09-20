@@ -1,4 +1,4 @@
-import React,{Component} from 'react';
+import React,{Component,useState,useEffect} from 'react';
 import {
     SafeAreaView,
     ScrollView,
@@ -7,12 +7,15 @@ import {
     StyleSheet,
     Pressable
   } from 'react-native';
-  import {  Platform, StatusBar } from "react-native";
-  
-  import { Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Avatar, Subheading, Caption } from 'react-native-paper'; 
+  import {  Platform, StatusBar,RefreshControl } from "react-native";
+  import {logoutUser, setUser} from '../actions'
+  import { Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Avatar, Subheading, Caption , Divider} from 'react-native-paper'; 
   import { Card, Button } from 'react-native-paper';
-
-  import { Badge } from 'react-native-paper';
+  import Horizontalscrollview from './Horizontalscrollview';
+  import {useDispatch, useSelector} from 'react-redux';
+  const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
   var data = [
     {
         book_n : "Sapiens",
@@ -22,6 +25,7 @@ import {
         book_c : "great",
         book_i : "https://images-na.ssl-images-amazon.com/images/I/713jIoMO3UL.jpg",
         book_p : "Rs 150",
+        book_s : "Uploaded!, Please submit to shop"
     },
     {
         book_n : "Guns Germs and Steel",
@@ -31,6 +35,7 @@ import {
         book_c : "good",
         book_i : "https://images-na.ssl-images-amazon.com/images/I/81RdveuYXWL.jpg",    
         book_p : "Rs 200",
+        book_s : "Book In Shop"
     },
     {
         book_n : "Sapiens",
@@ -40,6 +45,7 @@ import {
         book_c : "bad",
         book_i : "https://images-na.ssl-images-amazon.com/images/I/713jIoMO3UL.jpg",
         book_p : "Rs 250",
+        book_s : "Book In Shop"
       },
     {
         book_n : "Guns Germs and Steel",
@@ -49,6 +55,7 @@ import {
         book_c : "great",
         book_i : "https://images-na.ssl-images-amazon.com/images/I/81RdveuYXWL.jpg",
         book_p : "Rs 300",
+        book_s : "Uploaded!, Please submit to shop"
 
       },
     {
@@ -58,28 +65,78 @@ import {
         book_d : 5.2,
         book_c : "great",
         book_i : "https://images-na.ssl-images-amazon.com/images/I/81RdveuYXWL.jpg",
-        book_p : "Rs 350"
+        book_p : "Rs 350",
+        book_s : "Book In Shop"
+
       },
 ];
 
-class HomeRoute extends Component{
-  constructor(props){
-    super(props);
-    this.state = {
-      data : data,   
-    }
+  const HomeRoute = (props) =>{
+  const [Bookdata,setBookData] = useState([]);
+  const [count,setCount] = useState(1);
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = () => {
+    setRefreshing(true);
+    setCount(count+1);
   }
-    render(){
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+
+  let uploadedbook = Bookdata.length!==0 ? <Horizontalscrollview booklist={Bookdata} pagename="UploadedBooks" navigation={props.navigation} /> : <Text>No Books Uploaded Yet!</Text>
+    
+  
+  
+  useEffect(() => {
+      /*
+      fetch('https://booksapp2021.herokuapp.com/Book/Uploadedbooks',{
+        method: 'POST',
+        headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token' : user.token,
+                },
+        body : null
+      })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if(data.status){
+          console.log(data.response.books);
+          setBookData(data.response.books)
+        }
+        else{
+          if(data.message==='Could not verify'){
+            dispatch(logoutUser());
+          }
+        }
+      })
+      .catch((error) => {
+          console.log(error);
+      })
+      */
+      setBookData([]);
+      setRefreshing(false);
+      
+    },[count])
+    
       return(
+        
         <SafeAreaView style={styles.AndroidSafeArea}>
+          <ScrollView refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }>
           <Card>
           <Text></Text>
           <Text></Text>
-              <Title>Total Books Lent:-</Title>
+              <Title>Total Books Lent :-  {Bookdata.length}</Title>
               <Text></Text>
-              <Title>Total Books Borrowed:-</Title>
+              <Title>Total Books Borrowed:- </Title>
               <Text></Text>
-              <Title>Total Exchanges:-  3  </Title>
+              <Title>Total Exchanges:-   </Title>
               <Text></Text>
               <Title>Total Money Earned:-  </Title>
               <Text></Text>
@@ -104,42 +161,31 @@ class HomeRoute extends Component{
                 </Button>
                 <Text></Text>
                 </Card>
-                <Text></Text>
+                
                 <Title style={styles.statistics}>Uploaded Books</Title>
                 <Text></Text>
                 <View style = {styles.cardview}>
-            <ScrollView style={styles.cardscroll} horizontal={true}>
-  
-  
-            {
-            this.state.data.map((book,idx) => (
-              <Pressable key={idx} onPress={() => this.props.navigation.navigate('UploadedBooks',{ book : book })} >
-              <View style = {styles.cardcontainer}>
-                <View style = {styles.cardcontent}>
-                <Image 
-                      style={{resizeMode:'contain',height:'110%',width:'100%'}}
-                      source={{uri : book.book_i}}
-                    />
-                    
-                  <Title>{book.book_n}</Title>
-                  <Paragraph>{book.book_p}</Paragraph>
-                </View>
+                {uploadedbook}
+                </View> 
+                <View style={{
+                  alignSelf: 'stretch',
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#000',
+                  marginTop: 10,
+                  marginBottom: 10
+                }} />
+                <Title style={styles.statistics}>Books to Pickup</Title>  
+                <Text></Text>
                 
-              </View>
-              </Pressable>
-            ))
-            }
-  
-              
-            </ScrollView>
-          </View>
-                
+                <View style = {styles.cardview}>
+                {uploadedbook}
+                </View> 
+                </ScrollView> 
         </SafeAreaView>
-
+        
       )
-    }
+}
   
-  }
 
 
   const styles = StyleSheet.create({

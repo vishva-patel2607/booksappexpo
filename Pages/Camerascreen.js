@@ -8,11 +8,11 @@ import {
     View,
     
 } from 'react-native';
-
 import {
-    IconButton
+    IconButton,Button
 } from 'react-native-paper';
-
+import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
 class Camerscreen extends Component{
 
     constructor(props){
@@ -20,7 +20,9 @@ class Camerscreen extends Component{
 
         this.state ={
             per : false,
+            perGallery : false,
             Type : Camera.Constants.Type.back,
+            image: null,
         }
 
         this.camera = React.createRef();
@@ -30,16 +32,31 @@ class Camerscreen extends Component{
     async componentDidMount (){
         const { status } = await Camera.requestPermissionsAsync();
         this.setState({per : status === 'granted'});
-
+        const { status1 } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        console.log(status1);
+        this.setState({perGallery : status1 === 'granted'});
     }
-
-
     takePicture = async () =>{
-        
         if (!this.state.per) return
-        const photo = await this.camera.takePictureAsync()
-        
+        const photo = await this.camera.takePictureAsync();
         this.props.navigation.navigate("Mainpage" , { screen: "Upload", params: {photo : photo}});
+    }
+    pickImage = async() => {
+        console.log(this.state.perGallery);
+        if(!this.state.perGallery) return ;
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: false,
+            aspect: [4, 3],
+            quality: 1,
+          });
+        if(!result.cancelled){
+            this.setState({
+                image:result
+            });
+            this.props.navigation.navigate("Mainpage" , { screen: "Upload", params: {photo : result}});
+        }
+          
     }
 
     render (){
@@ -50,26 +67,27 @@ class Camerscreen extends Component{
         if(this.state.per === null){
             return <Text>Null</Text>;
         }
+        if(this.state.perGallery === false){
+            return <Text>No access to Photos</Text>
+        }
         return(
+            
             <View style={styles.container}>
                 <Camera style={styles.camera} type={this.state.Type} ref={(r) => {this.camera = r}}>
-                     <View style={styles.buttonContainer}>
-                        
-
+                     <View style={styles.buttonContainer}> 
                         <IconButton
                             style = {styles.buttonrightleft}
                             icon="reload"
                             color = '#EF90A9'
                             size={50}
                             onPress={() => {
-                            
+        
                                 this.state.Type === Camera.Constants.Type.back
                                 ? this.setState({Type : Camera.Constants.Type.front })
                                 : this.setState({Type: Camera.Constants.Type.back })
                             
                             }}
                         />
-
                         <IconButton
                             style = {styles.button}
                             icon="camera"
@@ -77,13 +95,13 @@ class Camerscreen extends Component{
                             size={80}
                             onPress={this.takePicture}
                         />  
-
-
-                        
-
-                        
-
-                        
+                        <IconButton
+                            style = {styles.buttonrightright}
+                            icon="image"
+                            color = '#EF90A9'
+                            size={50}
+                            onPress={this.pickImage}
+                        /> 
                     </View>
                 </Camera>
             </View>
@@ -111,6 +129,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         alignContent : 'center',
       },
+      buttonrightright: {
+        flex: 0.25,
+        alignSelf: 'flex-end',
+        alignItems: 'center',
+        alignContent : 'center',
+      },
+
       button: {
         flex: 0.5,
         alignSelf: 'flex-end',
