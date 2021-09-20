@@ -12,7 +12,6 @@ import {
     IconButton,Button
 } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions';
 class Camerscreen extends Component{
 
     constructor(props){
@@ -32,9 +31,9 @@ class Camerscreen extends Component{
     async componentDidMount (){
         const { status } = await Camera.requestPermissionsAsync();
         this.setState({per : status === 'granted'});
-        const { status1 } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        const status1  = await ImagePicker.requestMediaLibraryPermissionsAsync();
         console.log(status1);
-        this.setState({perGallery : status1 === 'granted'});
+        this.setState({perGallery : status1.status === 'granted'});
     }
     takePicture = async () =>{
         if (!this.state.per) return
