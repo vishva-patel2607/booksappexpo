@@ -1,4 +1,5 @@
 
+
 import React, { Component,useState } from 'react';
 import {
     SafeAreaView,
@@ -9,7 +10,7 @@ import {
     Pressable
   } from 'react-native';
 
-import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Avatar, Subheading, Caption } from 'react-native-paper'; 
+import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Avatar, Subheading, Caption,IconButton,Card } from 'react-native-paper'; 
 import { TabRouter } from '@react-navigation/routers';
 
 
@@ -21,6 +22,7 @@ const UploadedBooks =(props) => {
         return (
           
           <View style = {styles.cardimage}>
+
             <Button style={styles.editbook}
             onPress={() => props.navigation.navigate('Edituploadedbook',{ book : Bookdata })}
             >Edit</Button>
@@ -28,24 +30,35 @@ const UploadedBooks =(props) => {
             style={{resizeMode:'contain',height:'30%',width:'100%'}}
             source={{uri : Bookdata.book_img}}
           />
-          
+          <Text></Text>
+          <Text></Text>
             <View style = {styles.cardcontainer}>
               <View style = {styles.cardcontent}>
                   <Text></Text>
-                  <Title style={styles.setFontSizeName}>Name of the Book :- {Bookdata.book_name}</Title>
+                  <Card.Title
+                      title="Name of the book"
+                      subtitle={Bookdata.book_name}
+                      left={(props) => <Avatar.Icon {...props} icon="book" />}
+                    />
+                  <Card.Title
+                      title="Author"
+                      subtitle={Bookdata.book_author}
+                      fontSize='20'
+                      left={(props) => <Avatar.Icon {...props} icon="pen" />}
+                    />
+                  <Card.Title
+                      title="Price"
+                      subtitle={Bookdata.book_price}
+                      left={(props) => <Avatar.Icon {...props} icon={{ uri: 'https://cdn3.iconfinder.com/data/icons/inficons-currency-set/512/rupee-512.png' }} />}
+                    />
+                  <Card.Title
+                      title="Status"
+                      subtitle={Bookdata.book_status}
+                      left={(props) => <Avatar.Icon {...props} icon={{uri: 'https://cdn1.iconfinder.com/data/icons/flat-and-simple/512/1-1024.png'}} />}
+                    />
+                    
                   <Text></Text>
-                  <Subheading style={styles.setFontSizeAuthor}>Author :- {Bookdata.book_author}</Subheading>
-                  <Text></Text>
-                  <Subheading style={styles.setFontSizeAuthor}>Year:- {Bookdata.book_year}</Subheading>
-                  <Text></Text>
-                  <Subheading style={styles.setFontSizeAuthor}>{Bookdata.book_distance} km away</Subheading>
-                  <Text></Text>
-                  <Subheading style={styles.setFontSizeAuthor}> Condition of Book:- In {Bookdata.book_condition} condition</Subheading>
-                  <Text></Text>
-                  <Subheading style={styles.setFontSizeAuthor}>Price :- {Bookdata.book_price}</Subheading>
-                  <Text></Text>
-                  <Caption>Status:- {Bookdata.book_status}</Caption>
-                  <Text></Text>
+                  <Text></Text> 
                   <Button 
                     mode = "contained"
                     style = {styles.submitbutton}
@@ -123,7 +136,7 @@ const styles = StyleSheet.create({
       height: 150,
       justifyContent: 'center',
       alignItems:'center', 
-      margin : 10,
+      margin : 50,
     },
   
     cardimage : {
@@ -131,6 +144,7 @@ const styles = StyleSheet.create({
       height: 150,
       justifyContent: 'center',
       alignItems:'center', 
+      
     },
     pickupbook:{
       alignSelf: 'center',
@@ -143,3 +157,4 @@ const styles = StyleSheet.create({
   });
 
 export default UploadedBooks;
+
