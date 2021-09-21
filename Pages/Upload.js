@@ -12,6 +12,7 @@ import {logoutUser, setUser} from '../actions'
 import {  Platform, StatusBar } from "react-native";
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,RadioButton, Headline,IconButton,Provider,Portal,Modal, Surface,Subheading } from 'react-native-paper'; 
 import DateTimePicker from '@react-native-community/datetimepicker';
+import Storemodalcard from './Storemodalcard';
 
 
 import {useDispatch, useSelector} from 'react-redux';
@@ -19,218 +20,12 @@ import * as Location from 'expo-location';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
-const stores = [
-    {
-        "store_address": "Ahmedabad one, vastrapur",
-        "store_distance": [
-          2356.27861643
-        ],
-        "store_id": 4,
-        "store_incharge": "Akash  Shah",
-        "store_latitude": 72.53122465057005,
-        "store_longitude": 23.040272710494378,
-        "store_name": "ahmedabad one",
-        "store_number": "9825040159",
-        "store_pincode": "380006",
-        "usernumber": 7
-    },
-]
-const Storemodal = (props) => {
-    const [visible,setVisible]=useState(false);
-    const [longitude, setLongitude] = useState(0);
-    const [latitude, setLatitude] = useState(0);
-    const [selectedShop, setSelectedShop] = useState(null);
-    const [shops, setShops] = useState(stores);
-    const dispatch = useDispatch();
-    const user = useSelector((state) => state.user);
-    const setLocation = async() => {
-        
-        (async()=>{
-            let { status } = await Location.requestForegroundPermissionsAsync();
-                  if (status !== 'granted') {
-                    setErrorMsg('Permission to access location was denied');
-                    return;
-                }
-                let loc = await Location.getCurrentPositionAsync({});
-                console.log(loc.coords);
-                setLongitude(loc.coords.longitude);
-                setLatitude(loc.coords.latitude);
-        })
-        getStores();
-        setVisible(true);
-    }
-    const getStores = () => {
-        fetch('https://booksapp2021.herokuapp.com/Store/Getstore',{
-        method: 'POST',
-        headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                'x-access-token' : user.token,
-                },
-        body : JSON.stringify({
-            longitude: parseFloat(longitude),
-            latitude: parseFloat(latitude),
-        })
-      })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        if(data.status){
-          console.log(data.response.stores);
-          setShops(data.response.stores);
-        }
-        else{
-          if(data.message==='Could not verify'){
-            dispatch(logoutUser());
-          }
-        }
-      })
-      .catch((error) => {
-          console.log(error);
-      })
-    }
-    const sendSelectedShop = (event) => {
-        setVisible(false);
-        props.onSelectShop(selectedShop);
-        event.preventDefault();
-    }
-        return (
-            <View>
-                <Portal>
-                <Modal visible={visible} dismissable={false} contentContainerStyle={styles.containerStyle} style={styles.modal}>
-                    <Title>Select one of the shop</Title>
-                    <ScrollView style={{width: "100%",padding:10,paddingTop:0}}>
-                        {shops.map((props,idx)=>{
-                            if(selectedShop != null && selectedShop.store_id === props.store_id){
-                                return(
-                                    <View key={idx} style={{borderColor:"#EF90A9" , borderWidth : 2 , borderTopRightRadius: 12, borderTopLeftRadius: 12, marginTop: 20,}}>
-                                        <Storemodalcard 
-                                            shopName={props.store_name}
-                                            storeInchargeName={props.store_incharge}
-                                            address={props.store_address}
-                                            pincode={props.store_pincode}
-                                            distance = {(props.store_distance[0]/1000).toFixed(1)}
-                                            contactNo = {props.store_number}
-
-                                        />
-                                    </View>
-                                );
-                            }
-                            else{
-                                return(
-                                    <Pressable key={idx} onPress={() => setSelectedShop(props)} style={{marginTop : 20}}>
-                                        <Storemodalcard 
-                                            shopName={props.store_name}
-                                            storeInchargeName={props.store_incharge}
-                                            address={props.store_address}
-                                            pincode={props.store_pincode}
-                                            distance = {(props.store_distance[0]/1000).toFixed(1)}
-                                            contactNo = {props.store_number}
-                                        />
-                                    </Pressable>
-                                )
-                            }
-                            
-                        })}
-                    </ScrollView>
-                    <View style={{flexDirection : 'row'}}>
-                        <Button
-                            mode = "contained"
-                            style = {styles.submitbutton}
-                            labelStyle = {styles.submitbutton}
-                            onPress = {() => setVisible(false)}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            mode = "contained"
-                            style = {styles.submitbutton}
-                            labelStyle = {styles.submitbutton}
-                            onPress = {sendSelectedShop}
-                        >
-                            Select
-                        </Button>
-                    </View>
-                    
-                </Modal>
-                </Portal>
-                <Button 
-                            mode = "contained"
-                            style = {styles.submitbutton}
-                            labelStyle = {styles.submitbutton}
-                            onPress = {setLocation}
-                >
-                Find a Shop
-                </Button>
-                
-                
-            </View>
-        );
-    }
 
 
 
 
-class Storemodalcard extends Component{
-
-    constructor(props){
-        super(props);
-
-        this.state = {
-            showMap : false,
-            storeInchargeName: props.storeInchargeName,
-            shopName : props.shopName,
-            address : props.address,
-            pincode : props.pincode,
-            distance : props.distance,
-            contactNo : props.contactNo,
-        }
-    };
 
 
-    render(){
-        let map;
-        if (this.state.showMap) {
-            map = <View style={{backgroundColor:'#EDEDF0',justifyContent:'center',alignItems:'center',height:200}}><Text>maps coming soon</Text></View>;
-        } else {
-            map = null;
-        }
-        return(
-            <>
-                <View style={{flexDirection:'row',marginBottom:0 , borderRadius : 10,}}>
-                    <View style={styles.storemodalcardaddress}>
-                        <Title>{this.state.shopName}</Title>
-                        <Paragraph>{this.state.storeInchargeName}</Paragraph>
-                        <Paragraph>{this.state.address}-{this.state.pincode}</Paragraph>
-                        <Paragraph>{this.state.contactNo}</Paragraph>
-                    </View>
-                    <View style={styles.storemodalcarddistance}> 
-                        <Title style={{paddingTop:0}}>{this.state.distance} Km</Title>
-                        <IconButton
-                            style={{margin:0}}
-                            icon="chevron-down"
-                            color= '#EF90A9'
-                            size={40}
-                            onPress={() => {
-                                                if(this.state.showMap===true){
-                                                    this.setState({showMap : false});
-                                                }
-                                                else{
-                                                    this.setState({showMap : true});
-                                                }
-                                                    
-                                            }
-                                    }
-                        />
-                    </View>
-                </View>
-                {map}
-            </>
-        );
-    }
-
-}
 
 const UploadRoute = (props) => { 
 
@@ -245,12 +40,13 @@ const UploadRoute = (props) => {
     const [price,setPrice] = useState("");
     const dispatch = useDispatch();
     const user = useSelector( (state) => state.user)
+    
 
-    getShop = (shopClass) => {
-        setShop(shopClass);
-    }
+    useEffect(()=>{
+        setShop(props.route.params?.shop);
+    },[props.route.params?.shop])
 
-    uploaddetails = () => {
+    const uploaddetails = () => {
                 if(props.route.params?.photo !== null && props.route.params?.photo !== undefined){
                     console.log('Inside upload details');
                     var photouri = props.route.params?.photo.uri;
@@ -314,16 +110,20 @@ const UploadRoute = (props) => {
                     }
                
     }
+
+     
         let selected;
-        if(shop != null){
+        if( shop != null){
+            
             selected =  
                         <View style={{margin: 10}}>
                             <Storemodalcard 
-                                shopName={shop.shopName}
-                                address={shop.address}
-                                area={shop.area}
-                                pincode={shop.pincode}
-                                distance = {shop.distance}
+                                shopName={shop.store_name}
+                                storeInchargeName={shop.store_incharge}
+                                address={shop.store_address}
+                                pincode={shop.store_pincode}
+                                distance = {(shop.store_distance[0]/1000).toFixed(1)}
+                                contactNo = {shop.store_number}
                             />
                         </View>
                         
@@ -413,9 +213,17 @@ const UploadRoute = (props) => {
                 
 
                 
-                <Storemodal onSelectShop={getShop} />
+                <Button
+                    mode = "contained"
+                    style = {styles.submitbutton}
+                    labelStyle = {styles.submitbutton}
+                    onPress = {() => props.navigation.navigate("Storemodal")}
+                >
+                    Find a Shop
+                </Button>
 
                 {selected}
+
                 <View style={styles.container2}>
                     <TextInput 
                     style = {styles.inputtextbox}

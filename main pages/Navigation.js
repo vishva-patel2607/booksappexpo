@@ -20,6 +20,7 @@ import { CommonActions } from '@react-navigation/routers';
 import Login from '../Pages/login';
 import Signup from '../Pages/signup';
 import EditPhone from '../Pages/EditPhone.js';
+import Storemodal from '../Pages/Storemodal.js';
 import {useSelector, useDispatch} from 'react-redux';
 
 import { getUser, logoutUser , setUser} from '../actions';
@@ -139,6 +140,7 @@ const Navigation = () => {
             <Stack.Screen name="UploadedBooks" component={UploadedBooks} options={{title: 'Book Details'}}/>
             <Stack.Screen name="Changepassword" component={Changepassword} options={{ title: 'Change Password' }}/>
             <Stack.Screen name="EditPhone" component={EditPhone} options={{title: 'Change Phone'}}/>
+            <Stack.Screen name="Storemodal" component={Storemodal} options={{title: 'Select a shop'}}/>
             </Stack.Navigator>
       </NavigationContainer>
     )
