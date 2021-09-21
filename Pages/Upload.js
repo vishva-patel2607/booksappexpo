@@ -1,4 +1,4 @@
-import React, { Component,useState,useCallback } from 'react';
+import React, { Component,useState,useCallback, useEffect } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -8,11 +8,11 @@ import {
   Alert,
   Pressable
 } from 'react-native';
-
+import {logoutUser, setUser} from '../actions'
 import {  Platform, StatusBar } from "react-native";
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,RadioButton, Headline,IconButton,Provider,Portal,Modal, Surface,Subheading } from 'react-native-paper'; 
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {logoutUser, setUser} from '../actions'
+
 
 import {useDispatch, useSelector} from 'react-redux';
 import * as Location from 'expo-location';
@@ -21,116 +21,112 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const stores = [
     {
-        shopId : 1,
-        shopName : "ABC Shop",
-        address : "XYZ street, Behind Zydus Hospital",
-        area : "Thaltej",
-        pincode : "38009",
-        distance : 2,
+        "store_address": "Ahmedabad one, vastrapur",
+        "store_distance": [
+          2356.27861643
+        ],
+        "store_id": 4,
+        "store_incharge": "Akash  Shah",
+        "store_latitude": 72.53122465057005,
+        "store_longitude": 23.040272710494378,
+        "store_name": "ahmedabad one",
+        "store_number": "9825040159",
+        "store_pincode": "380006",
+        "usernumber": 7
     },
-    {
-        shopId : 2,
-        shopName : "Shop Name",
-        address : "XYZ street, Behind Zydus Hospital",
-        area : "Thaltej",
-        distance : 10,
-    },
-    {
-        shopId : 3,
-        shopName : "Shop Name",
-        address : "XYZ street, Behind Zydus Hospital",
-        area : "Thaltej",
-        distance : 20,
-    },
-
-    {
-        shopId : 4,
-        shopName : "Shop Name",
-        address : "XYZ street, Behind Zydus Hospital",
-        area : "Thaltej",
-        distance : 30,
-    },
-
-    {
-        shopId : 5,
-        shopName : "Shop Name",
-        address : "XYZ street, Behind Zydus Hospital",
-        area : "Thaltej",
-        distance : 30,
-    }
 ]
-
-class Storemodal extends Component{
-
-    constructor(props){
-        super(props);
-        this.state = {
-            visible : false,
-            location : "hi",
-            selectedShop : null,
-            shops : stores,
-        }
-
-        this.sendSelectedShop = this.sendSelectedShop.bind(this);
+const Storemodal = (props) => {
+    const [visible,setVisible]=useState(false);
+    const [longitude, setLongitude] = useState(0);
+    const [latitude, setLatitude] = useState(0);
+    const [selectedShop, setSelectedShop] = useState(null);
+    const [shops, setShops] = useState(stores);
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user);
+    const setLocation = async() => {
         
-    };
-
-    setLocation = async () => {
-        this.setState({visible: true});
-            
-
-            
-                (async () => {
-                  let { status } = await Location.requestForegroundPermissionsAsync();
+        (async()=>{
+            let { status } = await Location.requestForegroundPermissionsAsync();
                   if (status !== 'granted') {
                     setErrorMsg('Permission to access location was denied');
                     return;
-                  }
-            
-                  let loc = await Location.getCurrentPositionAsync({});
-                  this.setState({location : loc.coords });
-                })
-              
+                }
+                let loc = await Location.getCurrentPositionAsync({});
+                console.log(loc.coords);
+                setLongitude(loc.coords.longitude);
+                setLatitude(loc.coords.latitude);
+        })
+        getStores();
+        setVisible(true);
     }
-
-
-    sendSelectedShop(event){
-        this.setState({visible: false});
-        this.props.onSelectShop(this.state.selectedShop);
+    const getStores = () => {
+        fetch('https://booksapp2021.herokuapp.com/Store/Getstore',{
+        method: 'POST',
+        headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token' : user.token,
+                },
+        body : JSON.stringify({
+            longitude: parseFloat(longitude),
+            latitude: parseFloat(latitude),
+        })
+      })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if(data.status){
+          console.log(data.response.stores);
+          setShops(data.response.stores);
+        }
+        else{
+          if(data.message==='Could not verify'){
+            dispatch(logoutUser());
+          }
+        }
+      })
+      .catch((error) => {
+          console.log(error);
+      })
+    }
+    const sendSelectedShop = (event) => {
+        setVisible(false);
+        props.onSelectShop(selectedShop);
         event.preventDefault();
     }
-  
-    
-    render(){
         return (
             <View>
                 <Portal>
-                <Modal visible={this.state.visible} dismissable={false} contentContainerStyle={styles.containerStyle} style={styles.modal}>
+                <Modal visible={visible} dismissable={false} contentContainerStyle={styles.containerStyle} style={styles.modal}>
                     <Title>Select one of the shop</Title>
                     <ScrollView style={{width: "100%",padding:10,paddingTop:0}}>
-                        {this.state.shops.map((props,idx)=>{
-                            if(this.state.selectedShop != null && this.state.selectedShop.shopId === props.shopId){
+                        {shops.map((props,idx)=>{
+                            if(selectedShop != null && selectedShop.store_id === props.store_id){
                                 return(
                                     <View key={idx} style={{borderColor:"#EF90A9" , borderWidth : 2 , borderTopRightRadius: 12, borderTopLeftRadius: 12, marginTop: 20,}}>
                                         <Storemodalcard 
-                                            shopName={props.shopName}
-                                            address={props.address}
-                                            area={props.area}
-                                            pincode={props.pincode}
-                                            distance = {props.distance}
+                                            shopName={props.store_name}
+                                            storeInchargeName={props.store_incharge}
+                                            address={props.store_address}
+                                            pincode={props.store_pincode}
+                                            distance = {(props.store_distance[0]/1000).toFixed(1)}
+                                            contactNo = {props.store_number}
+
                                         />
                                     </View>
                                 );
                             }
                             else{
                                 return(
-                                    <Pressable key={idx} onPress={() => this.setState({selectedShop : props })} style={{marginTop : 20}}>
+                                    <Pressable key={idx} onPress={() => setSelectedShop(props)} style={{marginTop : 20}}>
                                         <Storemodalcard 
-                                            shopName={props.shopName}
-                                            address={props.address}
-                                            area={props.area}
-                                            pincode={props.pincode}
-                                            distance = {props.distance}
+                                            shopName={props.store_name}
+                                            storeInchargeName={props.store_incharge}
+                                            address={props.store_address}
+                                            pincode={props.store_pincode}
+                                            distance = {(props.store_distance[0]/1000).toFixed(1)}
+                                            contactNo = {props.store_number}
                                         />
                                     </Pressable>
                                 )
@@ -143,7 +139,7 @@ class Storemodal extends Component{
                             mode = "contained"
                             style = {styles.submitbutton}
                             labelStyle = {styles.submitbutton}
-                            onPress = {() => this.setState({visible: false})}
+                            onPress = {() => setVisible(false)}
                         >
                             Cancel
                         </Button>
@@ -151,7 +147,7 @@ class Storemodal extends Component{
                             mode = "contained"
                             style = {styles.submitbutton}
                             labelStyle = {styles.submitbutton}
-                            onPress = {this.sendSelectedShop}
+                            onPress = {sendSelectedShop}
                         >
                             Select
                         </Button>
@@ -163,7 +159,7 @@ class Storemodal extends Component{
                             mode = "contained"
                             style = {styles.submitbutton}
                             labelStyle = {styles.submitbutton}
-                            onPress = {this.setLocation}
+                            onPress = {setLocation}
                 >
                 Find a Shop
                 </Button>
@@ -172,7 +168,7 @@ class Storemodal extends Component{
             </View>
         );
     }
-};
+
 
 
 
@@ -183,11 +179,12 @@ class Storemodalcard extends Component{
 
         this.state = {
             showMap : false,
+            storeInchargeName: props.storeInchargeName,
             shopName : props.shopName,
-            address : "XYZ street, Behind Zydus Hospital",
-            area : "Thaltej",
-            pincode : "38009",
+            address : props.address,
+            pincode : props.pincode,
             distance : props.distance,
+            contactNo : props.contactNo,
         }
     };
 
@@ -204,9 +201,9 @@ class Storemodalcard extends Component{
                 <View style={{flexDirection:'row',marginBottom:0 , borderRadius : 10,}}>
                     <View style={styles.storemodalcardaddress}>
                         <Title>{this.state.shopName}</Title>
-                        <Paragraph>{this.state.address}</Paragraph>
-                        <Subheading>{this.state.area}-{this.state.pincode}</Subheading>
-                        
+                        <Paragraph>{this.state.storeInchargeName}</Paragraph>
+                        <Paragraph>{this.state.address}-{this.state.pincode}</Paragraph>
+                        <Paragraph>{this.state.contactNo}</Paragraph>
                     </View>
                     <View style={styles.storemodalcarddistance}> 
                         <Title style={{paddingTop:0}}>{this.state.distance} Km</Title>
