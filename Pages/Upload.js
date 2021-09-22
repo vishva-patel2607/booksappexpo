@@ -61,7 +61,7 @@ const UploadRoute = (props) => {
                     formData.append('book_author', author);
                     formData.append('book_year', year);
                     formData.append('book_condition', condition);
-                    formData.append('store_id', 1);
+                    formData.append('store_id', shop.store_id);
                     formData.append('book_price',price);
                     formData.append('book_img', imagedata)
                         fetch('https://booksapp2021.herokuapp.com/Book/Upload', {
