@@ -24,7 +24,7 @@ class Edituploadedbook extends Component{
             <Text></Text>
             <TextInput 
                 style = {styles.inputtextbox}
-                placeholder={this.state.book.book_n}
+                placeholder={this.state.book.book_name}
                 label="Name"
                 autoCapitalize = 'none'
                 autoCorrect = {false}
@@ -32,7 +32,7 @@ class Edituploadedbook extends Component{
             <Text></Text>
             <TextInput 
                 style = {styles.inputtextbox}
-                placeholder={this.state.book.book_a}
+                placeholder={this.state.book.book_author}
                 label="Author"
                 autoCapitalize = 'none'
                 autoCorrect = {false}
@@ -41,7 +41,7 @@ class Edituploadedbook extends Component{
             <Text></Text>
             <TextInput 
                 style = {styles.inputtextbox}
-                placeholder={this.state.book.book_p}
+                placeholder={this.state.book.book_price}
                 label="Price(Enter numbers only)"
                 autoCapitalize = 'none'
                 autoCorrect = {false}
@@ -71,7 +71,7 @@ class Edituploadedbook extends Component{
             <Text></Text>
             <TextInput 
                 style = {styles.inputtextbox}
-                placeholder={this.state.book.book_y}
+                placeholder={this.state.book.book_year}
                 label="Year"
                 autoCapitalize = 'none'
                 autoCorrect = {false}
