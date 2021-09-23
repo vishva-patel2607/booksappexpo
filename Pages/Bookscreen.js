@@ -47,7 +47,7 @@ const Bookscreen = (props) => {
                 Add to Pickup
               </Button>
               </View>
-              <View style={styles.container1}>
+              <ScrollView style={styles.container1}>
               <Text></Text>
               <Card.Title
               style={styles.c}
@@ -78,7 +78,7 @@ const Bookscreen = (props) => {
               left={(props) => <Avatar.Icon {...props} icon={{uri: 'https://cdn1.iconfinder.com/data/icons/flat-and-simple/512/1-1024.png'}} />}
               />
               
-              </View>
+              </ScrollView>
       </SafeAreaView>
         );
     }
@@ -88,32 +88,40 @@ const Bookscreen = (props) => {
 const styles = StyleSheet.create({
   container: {
     paddingTop: 20,
+    flexDirection : 'row',
   },
   tinyLogo: {
     width: 220,
     height: 220,
-    resizeMode: 'contain'
+    resizeMode: 'contain',
+    flex : 4,
+    
   },
   container1:{
     paddingTop:20
   },
   c:{
     backgroundColor:'#d3d3d3',
-    borderRadius:100
+    borderRadius:100,
+    marginBottom : 10,
+    marginHorizontal : 20,
   },
   submitbutton: {
-    marginRight: 20,
-    
-    fontSize : 20,
-    height: 45,
-    width: 200,
-    alignSelf: 'flex-end',
+    flex: 2,
+    fontSize : 15,
+    marginTop : 20,
+    marginRight : 15,
+    marginLeft : 10,
+    marginBottom : 20,
+    alignSelf: 'flex-start',
     borderRadius: 10,
     color : "white",
   },
   svgCurve: {
     position: 'absolute',
-    width: Dimensions.get('window').width
+    flex: 1,
+    width : '100%',
+    marginTop : 0,
   },
 });
 
