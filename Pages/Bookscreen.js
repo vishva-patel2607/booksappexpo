@@ -6,13 +6,13 @@ import {
     View,
     Image,
     StyleSheet,
-    Pressable
+    Pressable,
+    Dimensions
   } from 'react-native';
-
-import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Avatar, Subheading } from 'react-native-paper'; 
+import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Avatar, Subheading,Card } from 'react-native-paper'; 
 import { TabRouter } from '@react-navigation/routers';
 import { set } from 'react-native-reanimated';
-
+import WavyHeader from './WavyHeader';
 
 const Bookscreen = (props) => {
     const [book, setBook] = useState(props.route.params.book);
@@ -34,108 +34,89 @@ const Bookscreen = (props) => {
         setTextValue('Remove from Pickup')
       }
     },[count])
-    
-      
         return (
-          <View style = {styles.cardimage}>
-          <Image 
-            style={{resizeMode:'contain',height:'30%',width:'100%'}}
-            source={{uri : book.book_i}}
-          />
-            <View style = {styles.cardcontainer}>
-              <View style = {styles.cardcontent}>
-                  <Title style={styles.setFontSizeName}>Name of the Book :- {book.book_n}</Title>
-                  <Text></Text>
-                  <Subheading style={styles.setFontSizeAuthor}>Author :- {book.book_a}</Subheading>
-                  <Text></Text>
-                  <Subheading style={styles.setFontSizeAuthor}>{book.book_d} km away</Subheading>
-                  <Text></Text>
-                  <Subheading style={styles.setFontSizeAuthor}> Condition of Book:- In {book.book_c} condition</Subheading>
-                  <Text></Text>
-                  <Subheading style={styles.setFontSizeAuthor}>Price :- {book.book_p}</Subheading>
-                  <Text></Text>
-                  <Button 
-                  mode = "contained"
-                  style = {styles.pickupbook}
-                  labelStyle = {styles.pickupbook}
-                  onPress = {addtopickup}
-                  Title = "Hi"
-                >
-                  {textValue}
-                  </Button>
+        <SafeAreaView>
+              <Text></Text>
+              <View style={styles.container}>
+              <WavyHeader customStyles={styles.svgCurve}/>
+                <Image
+                  style={styles.tinyLogo}
+                source={{uri: book.book_i}}
+                />
+              <Button mode = "contained" style = {styles.submitbutton} labelStyle = {styles.submitbutton} >
+                Add to Pickup
+              </Button>
+              </View>
+              <View style={styles.container1}>
+              <Text></Text>
+              <Card.Title
+              style={styles.c}
+              title="Name of the book"
+              subtitle={book.book_n}
+              left={(props) => <Avatar.Icon {...props} icon="book" />}
+              />
+              <Text></Text>
+              <Card.Title
+              style={styles.c}
+              title="Author"
+              subtitle={book.book_a}
+              fontSize='20'
+              left={(props) => <Avatar.Icon {...props} icon="pen" />}
+              />
+              <Text></Text>
+              <Card.Title
+              style={styles.c}
+              title="Price"
+              subtitle={book.book_p}
+              left={(props) => <Avatar.Icon {...props} icon={{ uri: 'https://cdn3.iconfinder.com/data/icons/inficons-currency-set/512/rupee-512.png' }} />}
+              />
+              <Text></Text>
+              <Card.Title
+              style={styles.c}
+              title="Status"
+              subtitle={book.book_s}
+              left={(props) => <Avatar.Icon {...props} icon={{uri: 'https://cdn1.iconfinder.com/data/icons/flat-and-simple/512/1-1024.png'}} />}
+              />
               
               </View>
-              
-              </View>
-          </View>
+      </SafeAreaView>
         );
     }
-    
-    
 
 
 
 const styles = StyleSheet.create({
-  
+  container: {
+    paddingTop: 20,
+  },
+  tinyLogo: {
+    width: 220,
+    height: 220,
+    resizeMode: 'contain'
+  },
+  container1:{
+    paddingTop:20
+  },
+  c:{
+    backgroundColor:'#d3d3d3',
+    borderRadius:100
+  },
+  submitbutton: {
+    marginRight: 20,
     
-    layout: {
-      flex:1,
-    },
-  
-  
-    cardview :{
-      flex:1,
-    },
-  
-    cardscroll :{
-      flex : 1,
-      height : '100%',
-      margin : 10,
-    },
-    setFontSizeName: {
-      fontSize: 20,
-      marginTop: 110,
-    },
-    setFontSizeAuthor: {
-      fontSize: 20,
-    },
-    
-  
-    cardcontainer : {
-      
-      flex: 1,
-      flexDirection : 'row',
-      justifyContent : 'center',
-      alignContent: 'center',
-      alignItems : 'flex-start',
-      marginBottom : 10,
-      marginTop : 10,
-      borderRadius : 5,
-      
-    },
-  
-    cardcontent : {
-      flex : 4,
-      height: 150,
-      justifyContent: 'center',
-      alignItems:'center', 
-      margin : 10,
-    },
-  
-    cardimage : {
-      flex : 3,
-      height: 150,
-      justifyContent: 'center',
-      alignItems:'center', 
-    },
-    pickupbook:{
-      alignSelf: 'center',
-      width: 300,
-      fontSize: 20,
-      color: "white",
-      borderRadius: 10,
-    },
-    
-  });
+    fontSize : 20,
+    height: 45,
+    width: 200,
+    alignSelf: 'flex-end',
+    borderRadius: 10,
+    color : "white",
+  },
+  svgCurve: {
+    position: 'absolute',
+    width: Dimensions.get('window').width
+  },
+});
 
+    
+    
 export default Bookscreen;
