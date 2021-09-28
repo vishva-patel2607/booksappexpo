@@ -18,55 +18,60 @@ import {
   }
   var data = [
     {
-        book_n : "Sapiens",
-        book_a : "James Clear",
-        book_y : "1992",
-        book_d : 5.2,
-        book_c : "great",
-        book_i : "https://images-na.ssl-images-amazon.com/images/I/713jIoMO3UL.jpg",
-        book_p : "Rs 150",
-        book_s : "Uploaded!, Please submit to shop"
+        book_name : "Sapiens",
+        book_author : "James Clear",
+        book_year : "1992",
+        book_distance : 5.2,
+        book_condition : "great",
+        book_img : "https://images-na.ssl-images-amazon.com/images/I/713jIoMO3UL.jpg",
+        book_price : "Rs 150",
+        book_status : "Uploaded!, Please submit to shop",
+        book_transaction_code: "01"
     },
     {
-        book_n : "Guns Germs and Steel",
-        book_a : "James Clear",
-        book_y : "2002",
-        book_d : 10,
-        book_c : "good",
-        book_i : "https://images-na.ssl-images-amazon.com/images/I/81RdveuYXWL.jpg",    
-        book_p : "Rs 200",
-        book_s : "Book In Shop"
+        book_name : "Guns Germs and Steel",
+        book_author : "James Clear",
+        book_year : "2002",
+        book_distance : 10,
+        book_condition : "good",
+        book_img : "https://images-na.ssl-images-amazon.com/images/I/81RdveuYXWL.jpg",    
+        book_price : "Rs 200",
+        book_status : "Book In Shop",
+        book_transaction_code: "02"
     },
     {
-        book_n : "Sapiens",
-        book_a : "James Clear",
-        book_y : "1992",
-        book_d : 11,
-        book_c : "bad",
-        book_i : "https://images-na.ssl-images-amazon.com/images/I/713jIoMO3UL.jpg",
-        book_p : "Rs 250",
-        book_s : "Book In Shop"
+        book_name : "Sapiens",
+        book_author : "James Clear",
+        book_year : "1992",
+        book_distance : 11,
+        book_condition : "bad",
+        book_img : "https://images-na.ssl-images-amazon.com/images/I/713jIoMO3UL.jpg",
+        book_price : "Rs 250",
+        book_status : "Book In Shop",
+        book_transaction_code: "03"
       },
     {
-        book_n : "Guns Germs and Steel",
-        book_a : "James Clear",
-        book_y : "1992",
-        book_d : 5.2,
-        book_c : "great",
-        book_i : "https://images-na.ssl-images-amazon.com/images/I/81RdveuYXWL.jpg",
-        book_p : "Rs 300",
-        book_s : "Uploaded!, Please submit to shop"
+        book_name : "Guns Germs and Steel",
+        book_author : "James Clear",
+        book_year : "1992",
+        book_distance : 5.2,
+        book_condition : "great",
+        book_img : "https://images-na.ssl-images-amazon.com/images/I/81RdveuYXWL.jpg",
+        book_price : "Rs 300",
+        book_status : "Uploaded!, Please submit to shop",
+        book_transaction_code: "04"
 
       },
     {
-        book_n : "Guns Germs and steel",
-        book_a : "James Clear",
-        book_y : "1992",
-        book_d : 5.2,
-        book_c : "great",
-        book_i : "https://images-na.ssl-images-amazon.com/images/I/81RdveuYXWL.jpg",
-        book_p : "Rs 350",
-        book_s : "Book In Shop"
+        book_name : "Guns Germs and steel",
+        book_author : "James Clear",
+        book_year : "1992",
+        book_distance : 5.2,
+        book_condition : "great",
+        book_img : "https://images-na.ssl-images-amazon.com/images/I/81RdveuYXWL.jpg",
+        book_price : "Rs 350",
+        book_status : "Book In Shop",
+        book_transaction_code: "05"
 
       },
 ];
@@ -82,12 +87,11 @@ import {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
-  let uploadedbook = Bookdata.length!==0 ? <Horizontalscrollview booklist={Bookdata} pagename="UploadedBooks" navigation={props.navigation} /> : <Text>No Books Uploaded Yet!</Text>
-    
+  let uploadedbook = Bookdata.length!==0 ? <Horizontalscrollview booklist={Bookdata} pagename="UploadedBooks" navigation={props.navigation} /> : <Horizontalscrollview booklist={data} pagename="UploadedBooks" navigation={props.navigation} />
   
   
   useEffect(() => {
-      /*
+    
       fetch('https://booksapp2021.herokuapp.com/Book/Uploadedbooks',{
         method: 'POST',
         headers: {
@@ -114,12 +118,16 @@ import {
       .catch((error) => {
           console.log(error);
       })
-      */
+      
       setBookData([]);
       setRefreshing(false);
       
     },[count])
-    
+    useEffect(()=>{
+        console.log("refreshing from edit book");
+        setRefreshing(props.route.params?.refreshing);
+        setCount(count+1);
+    },[props.route.params?.refreshing])
       return(
         
         <SafeAreaView style={styles.AndroidSafeArea}>
@@ -129,39 +137,19 @@ import {
             onRefresh={onRefresh}
           />
         }>
-          <Card>
-          <Text></Text>
-          <Text></Text>
-              <Title>Total Books Lent :-  {Bookdata.length}</Title>
-              <Text></Text>
-              <Title>Total Books Borrowed:- </Title>
-              <Text></Text>
-              <Title>Total Exchanges:-   </Title>
-              <Text></Text>
-              <Title>Total Money Earned:-  </Title>
-              <Text></Text>
-              <Text></Text>
-              <Button 
-                    mode = "contained"
-                    style = {styles.submitbutton}
-                    labelStyle = {styles.submitbutton}
-                    
-                >
-                Books to Pickup
-                </Button>
+          <Card style={{borderRadius: 30,marginLeft:20,marginRight:20,marginTop:20}}>
+            <Card.Content>
+                  <Title>Total Books Uploaded :-  {Bookdata.length}</Title>
+                  <Text></Text>
+                  <Title>Total Books Pickedup :- 10</Title>
+                  <Text></Text>
+                  <Title>Total Books Exchanged :- 20</Title>
+            </Card.Content>
+            <Text></Text>
+
+          </Card>
                 <Text></Text>
-                <Button 
-                    mode = "contained"
-                    style = {styles.submitbutton}
-                    labelStyle = {styles.submitbutton}
-                    
-                >
-      
-                Books to Submit 
-                </Button>
                 <Text></Text>
-                </Card>
-                
                 <Title style={styles.statistics}>Uploaded Books</Title>
                 <Text></Text>
                 <View style = {styles.cardview}>

@@ -41,43 +41,56 @@ const Bookscreen = (props) => {
               <WavyHeader customStyles={styles.svgCurve}/>
                 <Image
                   style={styles.tinyLogo}
-                source={{uri: book.book_i}}
+                source={{uri: book.book_img}}
                 />
-              <Button mode = "contained" style = {styles.submitbutton} labelStyle = {styles.submitbutton} >
-                Add to Pickup
+              <Button mode = "contained" style = {styles.submitbutton} labelStyle = {styles.submitbutton} onPress={addtopickup} >
+                {textValue}
               </Button>
               </View>
               <ScrollView style={styles.container1}>
               <Text></Text>
               <Card.Title
               style={styles.c}
-              title="Name of the book"
-              subtitle={book.book_n}
+              subtitle="Name of the book"
+              title={book.book_name}
               left={(props) => <Avatar.Icon {...props} icon="book" />}
               />
               <Text></Text>
               <Card.Title
               style={styles.c}
-              title="Author"
-              subtitle={book.book_a}
+              subtitle="Author"
+              title={book.book_author}
               fontSize='20'
               left={(props) => <Avatar.Icon {...props} icon="pen" />}
               />
               <Text></Text>
               <Card.Title
               style={styles.c}
-              title="Price"
-              subtitle={book.book_p}
+              subtitle="Price"
+              title={book.book_price}
               left={(props) => <Avatar.Icon {...props} icon={{ uri: 'https://cdn3.iconfinder.com/data/icons/inficons-currency-set/512/rupee-512.png' }} />}
+              />
+              <Card.Title
+              style={styles.c}
+              subtitle="Condition"
+              title={book.book_condition}
+              left={(props) => <Avatar.Icon {...props} icon={{ uri: 'https://static.thenounproject.com/png/729549-200.png' }} />}
               />
               <Text></Text>
               <Card.Title
               style={styles.c}
-              title="Status"
-              subtitle={book.book_s}
+              subtitle="Status"
+              title={book.book_status}
               left={(props) => <Avatar.Icon {...props} icon={{uri: 'https://cdn1.iconfinder.com/data/icons/flat-and-simple/512/1-1024.png'}} />}
               />
-              
+              <Text></Text>
+              <Card.Title
+              style={styles.c}
+              subtitle=" Transaction Code"
+              title={book.book_transaction_code}
+              left={(props) => <Avatar.Icon {...props} icon={{uri: 'https://cdn-icons-png.flaticon.com/512/1166/1166773.png'}} />}
+              />
+
               </ScrollView>
       </SafeAreaView>
         );
@@ -101,7 +114,7 @@ const styles = StyleSheet.create({
     paddingTop:20
   },
   c:{
-    backgroundColor:'#d3d3d3',
+    backgroundColor:'#F0F8FF',
     borderRadius:100,
     marginBottom : 10,
     marginHorizontal : 20,

@@ -8,7 +8,6 @@ import { DefaultTheme } from 'react-native-paper';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
-
 import SearchRoute from '../Pages/Search.js';
 import UploadRoute from '../Pages/Upload.js';
 import UserRoute from '../Pages/User.js';
@@ -22,10 +21,10 @@ import Signup from '../Pages/signup';
 import EditPhone from '../Pages/EditPhone.js';
 import Storemodal from '../Pages/Storemodal.js';
 import {useSelector, useDispatch} from 'react-redux';
-
 import { getUser, logoutUser , setUser} from '../actions';
 import ForgotPassword from '../Pages/Forgotpassword.js';
 import UploadedBooks from '../Pages/Uploadedbooks.js';
+import Edituploadedbook from '../Pages/Edituploadedbook.js';
 
 const theme = {
 
@@ -141,6 +140,7 @@ const Navigation = () => {
             <Stack.Screen name="Changepassword" component={Changepassword} options={{ title: 'Change Password' }}/>
             <Stack.Screen name="EditPhone" component={EditPhone} options={{title: 'Change Phone'}}/>
             <Stack.Screen name="Storemodal" component={Storemodal} options={{title: 'Select a shop'}}/>
+            <Stack.Screen name="Edituploadedbook" component={Edituploadedbook} options={{title:'Edit'}}/>
             </Stack.Navigator>
       </NavigationContainer>
     )

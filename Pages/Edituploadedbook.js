@@ -1,4 +1,4 @@
-import React, { Component,useState } from 'react';
+import React, { Component,useEffect,useState } from 'react';
 import {
     SafeAreaView,
     ScrollView,
@@ -8,23 +8,78 @@ import {
     Alert,
     Pressable
 } from 'react-native';
-
+import {logoutUser, setUser} from '../actions'
+import {useDispatch, useSelector} from 'react-redux';
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,RadioButton, Subheading,IconButton } from 'react-native-paper';
-class Edituploadedbook extends Component{
-    constructor(props){
-        super(props);
-        this.state={
-            book: this.props.route.params.book,
-        };
-    }
-    render(){
+const Edituploadedbook = (props) => {
+  const [Bookdata, setBookdata] = useState(props.route.params?.book);
+  const [Newname, setNewname] = useState(props.route.params?.book.book_name);
+  const [Newauthor, setNewauthor] = useState(props.route.params?.book.book_author);
+  const [Newprice, setNewprice] = useState(props.route.params?.book.book_price);
+  const [Newyear, setNewyear] = useState(props.route.params?.book.book_year);
+  const [NewCondition,setNewCondition] = useState(props.route.params?.book.book_condition);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  useEffect(()=>{
+    setBookdata(props.route.params?.book)
+    setNewname(props.route.params?.book.book_name),
+    setNewauthor(props.route.params?.book.book_author),
+    setNewprice(props.route.params?.book.book_price),
+    setNewCondition(props.route.params?.book.book_condition),
+    setNewyear(props.route.params?.book.book_year)
+  },[props.route.params?.book])
+  const editbooks = () => {
+    fetch('https://booksapp2021.herokuapp.com/Book/Uploadedbooks/Edit',{
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type' : 'application/json',
+        'x-access-token' : user.token,
+      },
+      body: JSON.stringify({
+        book_id : Bookdata.book_id,
+        book_name : Newname,
+        book_author : Newauthor,
+        book_price : Newprice,
+        book_year : Newyear,
+        book_condition : NewCondition
+      })
+    })
+    .then((response)=>{
+      return response.json();
+    })
+    .then((data)=>{
+      if(data.status){
+        Alert.alert(
+          "Success",
+          "Book Details Updated",
+          [
+            {
+              text: "Ok", 
+              onPress : () => props.navigation.navigate("Mainpage" , { screen: "Home", params: {refreshing : true}})
+            }
+          ]
+        );
+      }
+      else{
+        if(data.message==='Could not verify'){
+            dispatch(logoutUser());
+        }
+        } 
+    })
+    .catch((error)=>{
+      console.log(error);
+    })
+  }
         return(
             <SafeAreaView style={styles.layout}>
             <View style={styles.layout}>
             <Text></Text>
             <TextInput 
                 style = {styles.inputtextbox}
-                placeholder={this.state.book.book_name}
+                placeholder={Bookdata.book_name}
+                value={Newname}
+                onChangeText = {(text) => setNewname(text)}
                 label="Name"
                 autoCapitalize = 'none'
                 autoCorrect = {false}
@@ -32,23 +87,26 @@ class Edituploadedbook extends Component{
             <Text></Text>
             <TextInput 
                 style = {styles.inputtextbox}
-                placeholder={this.state.book.book_author}
+                placeholder={Bookdata.book_author}
+                value={Newauthor}
+                onChangeText = {(text) => setNewauthor(text)}
                 label="Author"
                 autoCapitalize = 'none'
                 autoCorrect = {false}
-                
             />
             <Text></Text>
             <TextInput 
-                style = {styles.inputtextbox}
-                placeholder={this.state.book.book_price}
-                label="Price(Enter numbers only)"
-                autoCapitalize = 'none'
-                autoCorrect = {false}
+                    style = {styles.inputtextbox}
+                    label="Price"
+                    value={String(Newprice)}
+                    placeholder={String(Bookdata.book_price)}
+                    onChangeText = {(text) => setNewprice(text.replace(/[^0-9]/g, ''))}
+                    keyboardType = "number-pad"
+                    maxLength = {4}
             />
             <Text></Text>
             <Title style={styles.textbox}>Select the condition of your book:</Title>
-                        <RadioButton.Group>
+              <RadioButton.Group onValueChange={(value) => setNewCondition(value)} value={NewCondition}>
                             <View style={{flexDirection:'column'}}>
                             <View style={{flexDirection:'row'}}> 
                             <View style={{flex:1}}>
@@ -70,11 +128,12 @@ class Edituploadedbook extends Component{
                         </RadioButton.Group>
             <Text></Text>
             <TextInput 
-                style = {styles.inputtextbox}
-                placeholder={this.state.book.book_year}
-                label="Year"
-                autoCapitalize = 'none'
-                autoCorrect = {false}
+                    style = {styles.inputtextbox}
+                    label="Year"
+                    value = {String(Newyear)}
+                    onChangeText = {(text) => setNewyear(text.replace(/[^0-9]/g, ''))}
+                    keyboardType = "number-pad"
+                    maxLength = {4}
             />
             <Text></Text>
             <Text></Text>
@@ -82,7 +141,7 @@ class Edituploadedbook extends Component{
                   mode = "contained"
                   style = {styles.logoutbutton}
                   labelStyle = {styles.logoutbutton}
-                  
+                  onPress={editbooks}
                 >
                   Save
               </Button>
@@ -90,7 +149,7 @@ class Edituploadedbook extends Component{
             </SafeAreaView>
         )
     }
-}
+
 const styles = StyleSheet.create({
   
     
