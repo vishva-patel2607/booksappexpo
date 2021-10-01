@@ -1,4 +1,4 @@
-import React, { Component,useState } from 'react';
+import React, { Component,useState,useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -9,12 +9,13 @@ import {
 } from 'react-native';
 
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Avatar, Subheading, Caption } from 'react-native-paper'; 
-
+import {useDispatch, useSelector} from 'react-redux';
+import * as Location from 'expo-location';
 import Bookscreen from './Bookscreen';
 
 
 
-var data = [
+var Receiveddata = [
   {
       book_name : "Sapiens",
       book_author : "James Clear",
@@ -73,130 +74,173 @@ var data = [
     },
 ];
 
-
-class SearchRoute extends Component{
-
-    constructor(props){
-      super(props);
-      this.state = {
-        data : data,
-        searchQuery : "", 
-        testQuery : "",   
-      }
-  
-      this.onChangeSearch = this.onChangeSearch.bind(this);
+const SearchRoute = (props) => {
+    const [longitude, setLongitude] = useState();
+    const [latitude, setLatitude] = useState();
+    const [Receiveddata,setReceiveddata]=useState([]);
+    const [SearchQuery,setSearchQuery] = useState("");
+    const [Message,setMessage] = useState("");
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user);
+    const setLocation = async() => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+            setErrorMsg('Permission to access location was denied');
+            return;
+        }   
+        let loc = await Location.getCurrentPositionAsync({});
+        setLongitude(loc.coords.longitude);
+        setLatitude(loc.coords.latitude);  
     }
-  
-    onChangeSearch(props){
-      this.setState({searchQuery : props , testQuery : props})
-    }
-
-
-   
-  
-    render(){
-      
-      
-
-      return(
-        <SafeAreaView style={styles.layout}>
-            <Searchbar
-              placeholder="Search"
-              onChangeText={(text) => this.onChangeSearch(text)}
-              value={this.state.searchQuery}
-            />
-            
-  
-          <View style = {styles.cardview}>
-            <ScrollView style={styles.cardscroll}>
-  
-  
-            {
-            this.state.data.map((book,idx) => (
-              <Pressable key={idx} onPress={() => this.props.navigation.navigate('Bookscreen',{ book : book })} >
-              <View style = {styles.cardcontainer}>
-                <View style = {styles.cardcontent}>
-                  <Title>{book.book_name}</Title>
-                  <Subheading>{book.book_author}</Subheading>
-                  <Paragraph>{book.book_year}</Paragraph>
-                  <Paragraph>{book.book_distance} km away</Paragraph>
-                  <Paragraph>In {book.book_condition} condition</Paragraph>
-                  <Paragraph>{book.book_price}</Paragraph>
-                  <Paragraph>{book.book_status}</Paragraph>
-                </View>
-                <View style = {styles.cardimage}>
-                    <Image 
-                      style={{resizeMode:'contain',height:'100%',width:'100%'}}
-                      source={{uri : book.book_img}}
-                    />
-                </View>
-              </View>
-              </Pressable>
-            ))
-            }
-  
+    
+    useEffect(()=>{
+            setLocation();
+            console.log(SearchQuery);
+            if(typeof(longitude) != 'undefined' && typeof(latitude) != 'undefined'){
+            fetch('https://booksapp2021.herokuapp.com/Book/Search',{
+            method: 'POST',
+            headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'x-access-token' : user.token,
+                    },
+            body : JSON.stringify({
+                book_query:SearchQuery,
+                longitude: longitude,
+                latitude: latitude
+            })
+          })
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            if(data.status){
+              console.log(data.message);
+              if(data.message==='All the Books for given query'){
               
-            </ScrollView>
-          </View>
-          
-  
-          
-        </SafeAreaView>
-      )
-    }
-  
-  }
+                  setReceiveddata(data.response.book_list);
+                  setMessage(data.message);
+                  console.log(Receiveddata);
+              }
+              else{
+                  setReceiveddata([]);
+                  setMessage(data.message);
+              }
+            }
+            else{
+              if(data.message==='Could not verify'){
+                dispatch(logoutUser());
+              }
+            }
+          })
+          .catch((error) => {
+              console.log(error);
+          })
+          }
+        },[longitude,latitude,SearchQuery])
+        if(Receiveddata.length!==0){
+            return (
+                <SafeAreaView>
+                <Searchbar
+                  placeholder="Search"
+                  onChangeText={(text) => setSearchQuery(text)}
+                  value={SearchQuery}
+                />
+                 <View style = {styles.cardview}>
+                  <ScrollView style={styles.cardscroll}>
+                  {
+                  Receiveddata.map((book,idx) => (
+                    <Pressable key={idx} onPress={() => props.navigation.navigate('Bookscreen',{ book : book })} >
+                    <View style = {styles.cardcontainer}>
+                      <View style = {styles.cardcontent}>
+                        <Title style={{fontSize:18}}>{book.book_name}</Title>
+                        <Subheading>{book.book_author}</Subheading>
+                        <Paragraph>{book.book_year}</Paragraph>
+                        <Paragraph>{book.book_distance} km away</Paragraph>
+                        <Paragraph>In {book.book_condition} condition</Paragraph>
+                        <Paragraph>{book.book_price}</Paragraph>
+                        <Paragraph>{book.store_distance} km(s) away</Paragraph>
+                      </View>
+                      <View style = {styles.cardimage}>
+                          <Image 
+                            style={{resizeMode:'contain',height:'100%',width:'100%'}}
+                            source={{uri : book.book_img}}
+                          />
+                      </View>
+                    </View>
+                    </Pressable>
+                  ))
+                  }
+                  </ScrollView>
+                  </View>
+                </SafeAreaView>
+            )
+        }
+        else
+        {
+            return (
+                <SafeAreaView>
+                <Searchbar
+                  placeholder="Search"
+                  onChangeText={(text) => setSearchQuery(text)}
+                  value={SearchQuery}
+                />
+                <Text style={{marginTop:50,textAlign:'center'}}>No books found </Text>
+                </SafeAreaView>
+            )
+        }
 
-  const styles = StyleSheet.create({
+        
+    }
+    const styles = StyleSheet.create({
   
     
-    layout: {
-      flex:1,
-    },
-  
-  
-    cardview :{
-      flex:1,
-    },
-  
-    cardscroll :{
-      flex : 1,
-      height : '100%',
-      margin : 10,
-    },
-  
-  
-    cardcontainer : {
-      backgroundColor:'#F0F8FF',
-      flex: 1,
-      flexDirection : 'row',
-      justifyContent : 'center',
-      alignContent: 'center',
-      alignItems : 'center',
-      marginBottom : 10,
-      marginTop : 10,
-      borderRadius : 20,
-    },
-  
-    cardcontent : {
-      flex : 4,
-      height: 160,
-      justifyContent: 'center',
-      alignItems:'center', 
-      margin : 10,
+      layout: {
+        
+      },
+    
+    
+      cardview :{
+        
+      },
+    
+      cardscroll :{
+        
+        height : '100%',
+        margin : 10,
+      },
+    
+    
+      cardcontainer : {
+        backgroundColor:'#F0F8FF',
+        
+        flexDirection : 'row',
+        justifyContent : 'center',
+        alignContent: 'center',
+        alignItems : 'center',
+        marginBottom : 10,
+        marginTop : 10,
+        borderRadius : 20,
+      },
+    
+      cardcontent : {
+        
+        height: 160,
+        justifyContent: 'center',
+        alignItems:'center', 
+        margin : 10,
+        
+      },
+    
+      cardimage : {
+        
+        height: 150,
+        justifyContent: 'center',
+        alignItems:'center', 
+        margin : 10,
+        marginRight :5,
+      }
       
-    },
+    });
   
-    cardimage : {
-      flex : 3,
-      height: 150,
-      justifyContent: 'center',
-      alignItems:'center', 
-      margin : 10,
-      marginRight :5,
-    }
-    
-  });
-
-
-  export default SearchRoute;
+    export default SearchRoute;

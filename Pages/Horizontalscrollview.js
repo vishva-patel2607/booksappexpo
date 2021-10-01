@@ -13,9 +13,11 @@ import {
   import { Card, Button } from 'react-native-paper';
   
 const Horizontalscrollview = (props) => {
+
         return (
           <ScrollView style={styles.cardscroll} horizontal={true}>
           {
+          
           props.booklist.map((book,idx) => (
             <Pressable key={idx} onPress={() => props.navigation.navigate(props.pagename,{ book : book })} >
             <View style={{marginHorizontal: 10}}>
@@ -51,6 +53,7 @@ const Horizontalscrollview = (props) => {
           }
           </ScrollView>
           )
+    
 }
 const styles = StyleSheet.create({
   cardcontainer : {

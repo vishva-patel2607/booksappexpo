@@ -13,6 +13,7 @@ import {
   import { Card, Button } from 'react-native-paper';
   import Horizontalscrollview from './Horizontalscrollview';
   import {useDispatch, useSelector} from 'react-redux';
+
   const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
   }
@@ -29,7 +30,7 @@ import {
         book_transaction_code: "01"
     },
     {
-        book_name : "Guns Germs and Steel",
+        book_name : "Guns Germs and Steel written by james clear",
         book_author : "James Clear",
         book_year : "2002",
         book_distance : 10,
@@ -78,6 +79,7 @@ import {
 
   const HomeRoute = (props) =>{
   const [Bookdata,setBookData] = useState([]);
+  const [Pickupdata,setPickupdata] = useState([]);
   const [count,setCount] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = () => {
@@ -87,11 +89,44 @@ import {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
+  let booksaddedtopickup = Pickupdata.length!==0 ? <Horizontalscrollview booklist={Pickupdata} pagename = "Booksaddedtopickup" navigation={props.navigation}/>:<Text>No books added to Pickup</Text>
   let uploadedbook = Bookdata.length!==0 ? <Horizontalscrollview booklist={Bookdata} pagename="UploadedBooks" navigation={props.navigation} /> : <Horizontalscrollview booklist={data} pagename="UploadedBooks" navigation={props.navigation} />
-  
+  useEffect(() => {
+      
+    fetch('https://booksapp2021.herokuapp.com/Book/Pickedupbooks/Added',{
+      method: 'POST',
+      headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              'x-access-token' : user.token,
+              },
+      body : null
+    })
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      if(data.status){
+        console.log(data.response.books);
+        setPickupdata(data.response.books)
+      }
+      else{
+        if(data.message==='Could not verify'){
+          dispatch(logoutUser());
+        }
+      }
+    })
+    .catch((error) => {
+        console.log(error);
+    })
+    
+    setPickupdata([]);
+    setRefreshing(false);
+    
+  },[count])
   
   useEffect(() => {
-    
+      
       fetch('https://booksapp2021.herokuapp.com/Book/Uploadedbooks',{
         method: 'POST',
         headers: {
@@ -166,7 +201,7 @@ import {
                 <Text></Text>
                 
                 <View style = {styles.cardview}>
-                {uploadedbook}
+                {booksaddedtopickup}
                 </View> 
                 </ScrollView> 
         </SafeAreaView>

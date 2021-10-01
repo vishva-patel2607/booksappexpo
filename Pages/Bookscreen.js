@@ -7,36 +7,79 @@ import {
     Image,
     StyleSheet,
     Pressable,
-    Dimensions
+    Dimensions,
+    Alert
   } from 'react-native';
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Avatar, Subheading,Card } from 'react-native-paper'; 
 import { TabRouter } from '@react-navigation/routers';
 import { set } from 'react-native-reanimated';
 import WavyHeader from './WavyHeader';
+import {useDispatch, useSelector} from 'react-redux';
 
 const Bookscreen = (props) => {
     const [book, setBook] = useState(props.route.params.book);
-    const [textValue,setTextValue] = useState('Pick up the book');
-    const [count, setCount] = useState(0);
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user)
     const addtopickup = (props) => {
-      if (!count){
-        setCount(1);
-    }
-    else{
-      setCount(0);
-    }
-    }
-    useEffect(()=>{
-      if(!count){
-        setTextValue('Add to Pickup')
+      
+      fetch('https://booksapp2021.herokuapp.com/Book/Pickedupbooks/Add', {
+        method: 'POST',
+        headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token' : user.token,
+        },
+        body: JSON.stringify({
+          book_id:book.book_id
+        })
+      })
+    .then((response)=>{
+        return response.json()
+    })
+    .then((data) => {
+      console.log('in');
+      if(data.status){
+        if(data.message==='Pickup added'){
+          console.log(data.response.transaction);
+          Alert.alert(
+            "Success",
+            "Book added to Pickup",
+            [
+              {
+                text: "Ok", 
+                onPress : () => props.navigation.navigate("Mainpage" , { screen: "Home", params: {refreshing : true}})
+              }
+            ]
+          );
+        }
+        else
+        {
+          console.log(data.response.message);
+          Alert.alert(
+            "Error in removing pickup",
+            [
+              {
+                text: "Ok", 
+              }
+            ]
+          );
+        }
       }
       else{
-        setTextValue('Remove from Pickup')
+        if(data.message==='Could not verify'){
+          dispatch(logoutUser());
+        }
       }
-    },[count])
+    })
+    .catch((error) => {
+        console.log(error);
+    })
+    }
         return (
         <SafeAreaView>
+          
               <Text></Text>
+
               <View style={styles.container}>
               <WavyHeader customStyles={styles.svgCurve}/>
                 <Image
@@ -44,15 +87,16 @@ const Bookscreen = (props) => {
                 source={{uri: book.book_img}}
                 />
               <Button mode = "contained" style = {styles.submitbutton} labelStyle = {styles.submitbutton} onPress={addtopickup} >
-                {textValue}
+                Add to Pickup
               </Button>
               </View>
-              <ScrollView style={styles.container1}>
+              <ScrollView style={styles.container1}  >
               <Text></Text>
               <Card.Title
               style={styles.c}
               subtitle="Name of the book"
               title={book.book_name}
+              titleNumberOfLines={3}
               left={(props) => <Avatar.Icon {...props} icon="book" />}
               />
               <Text></Text>
@@ -61,6 +105,7 @@ const Bookscreen = (props) => {
               subtitle="Author"
               title={book.book_author}
               fontSize='20'
+              titleNumberOfLines={3}
               left={(props) => <Avatar.Icon {...props} icon="pen" />}
               />
               <Text></Text>
@@ -79,19 +124,13 @@ const Bookscreen = (props) => {
               <Text></Text>
               <Card.Title
               style={styles.c}
-              subtitle="Status"
-              title={book.book_status}
-              left={(props) => <Avatar.Icon {...props} icon={{uri: 'https://cdn1.iconfinder.com/data/icons/flat-and-simple/512/1-1024.png'}} />}
+              subtitle="Shop distance"
+              title={book.store_distance}
+              left={(props) => <Avatar.Icon {...props} icon={{uri: 'https://static.thenounproject.com/png/1801462-200.png'}} />}
               />
-              <Text></Text>
-              <Card.Title
-              style={styles.c}
-              subtitle=" Transaction Code"
-              title={book.book_transaction_code}
-              left={(props) => <Avatar.Icon {...props} icon={{uri: 'https://cdn-icons-png.flaticon.com/512/1166/1166773.png'}} />}
-              />
-
+              
               </ScrollView>
+              
       </SafeAreaView>
         );
     }
@@ -111,7 +150,7 @@ const styles = StyleSheet.create({
     
   },
   container1:{
-    paddingTop:20
+    paddingTop:20,
   },
   c:{
     backgroundColor:'#F0F8FF',
