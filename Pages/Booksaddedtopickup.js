@@ -22,17 +22,17 @@ const Booksaddedtopickup =(props) => {
   const [Pickupdata,setPickupdata]=useState(props.route.params.book)
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  /*
+  
   const removebook = () => {
-    fetch('https://booksapp2021.herokuapp.com/Book/Uploadedbooks/Remove',{
-      method: 'DELETE',
+    fetch('https://booksapp2021.herokuapp.com/Book/Pickedupbooks/Remove',{
+      method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type' : 'application/json',
         'x-access-token' : user.token,
       },
       body:JSON.stringify({
-        book_id : Bookdata.book_id
+        book_id : Pickupdata.book_id
       })
     })
     .then((response)=>{
@@ -40,35 +40,40 @@ const Booksaddedtopickup =(props) => {
     })
     .then((data)=>{
       if(data.status){
-        Alert.alert(
-          "Success",
-          data.message,
-          [
-            {
-              text: "Ok", 
-              onPress : () => props.navigation.navigate("Mainpage" , { screen: "Home", params: {refreshing : true}})
-            }
-          ]
-        );
+        if(data.message==="Pickup removed"){
+          console.log(data.message);
+          Alert.alert(
+            "Success",
+            data.message,
+            [
+              {
+                text: "Ok", 
+                onPress : () => props.navigation.navigate("Mainpage" , { screen: "Home", params: {refreshing : true}})
+              }
+            ]
+          );
+        }
+        else
+          {
+            console.log(data.message);
+            Alert.alert(
+              data.message,
+              [
+                {
+                  text: "Ok", 
+                }
+              ]
+            );
+          }
       }
       else{
         if(data.message==='Could not verify'){
             dispatch(logoutUser());
         }
-        else{
-          Alert.alert(
-            "Sorry but the book is being borrowed by someone and so can't be removed"
-            [
-              {
-                text: 'Ok'
-              }
-            ]
-          );
-        }
         } 
     })
   }  
-  */
+  
 
         return (
           
@@ -84,14 +89,21 @@ const Booksaddedtopickup =(props) => {
               />
             
           <View style={{flex:2,flexDirection:'column',marginTop:10,marginBottom:75,marginRight:20,}}>
-            <Button mode = "contained" style = {styles.submitbutton} labelStyle = {styles.submitbutton}  >
-              Not decided
+            <Button mode = "contained" style = {styles.submitbutton} labelStyle = {styles.submitbutton} onPress={removebook} >
+              Remove
             </Button>
-            
+            <Button mode = "text" style = {styles.submitbutton} labelStyle = {styles.submitbutton}>
+            </Button>
           </View>
           </View>
           <Text></Text>
-          
+          <Card.Title
+          style={styles.c}
+          subtitle="Code"
+          title={Pickupdata.book_transaction_code}
+          left={(props) => <Avatar.Icon {...props} icon={{uri: 'https://cdn-icons-png.flaticon.com/512/1166/1166773.png'}} />}
+          />
+          <Text></Text>
           <Card.Title
           style={styles.c}
           subtitle="Name of the book"
@@ -123,44 +135,13 @@ const Booksaddedtopickup =(props) => {
           left={(props) => <Avatar.Icon {...props} icon={{ uri: 'https://static.thenounproject.com/png/729549-200.png' }} />}
           />
           <Text></Text>
-          <Card.Title
-          style={styles.c}
-          subtitle="Shop name"
-          title={Pickupdata.store.store_name}
-          titleNumberOfLines={3}
-          left={(props) => <Avatar.Icon {...props} icon={{uri: 'https://cdn1.iconfinder.com/data/icons/flat-and-simple/512/1-1024.png'}} />}
-          />
-          <Card.Title
-          style={styles.c}
-          subtitle="Name of Shop Owner"
-          title={Pickupdata.store.store_incharge}
-          titleNumberOfLines={3}
-          left={(props) => <Avatar.Icon {...props} icon={{uri: 'https://cdn1.iconfinder.com/data/icons/flat-and-simple/512/1-1024.png'}} />}
-          />
-          
-          <Text></Text>
-          <Card.Title
-          style={styles.c}
-          subtitle="Address"
-          title={Pickupdata.store.store_address}
-          titleNumberOfLines={3}
-          left={(props) => <Avatar.Icon {...props} icon={{uri: 'https://cdn1.iconfinder.com/data/icons/flat-and-simple/512/1-1024.png'}} />}
-          />
-          <Text></Text>
-          <Card.Title
-          style={styles.c}
-          subtitle="Phone Number of Shop"
-          title={Pickupdata.store.store_number} 
-          titleNumberOfLines={3}
-          left={(props) => <Avatar.Icon {...props} icon={{uri: 'https://cdn1.iconfinder.com/data/icons/flat-and-simple/512/1-1024.png'}} />}
-          />
-          <Text></Text>
-          <Card.Title
-          style={styles.c}
-          subtitle="Code"
-          title={Pickupdata.book_transaction_code}
-          left={(props) => <Avatar.Icon {...props} icon={{uri: 'https://cdn-icons-png.flaticon.com/512/1166/1166773.png'}} />}
-          />
+          <Card.Content style={styles.c}>
+            <Title>Store details</Title>
+            <Subheading>{Pickupdata.store.store_name}</Subheading>
+            <Subheading>{Pickupdata.store.store_incharge}</Subheading>
+            <Paragraph>{Pickupdata.store.store_address}</Paragraph>
+            <Paragraph>{Pickupdata.store.store_number}</Paragraph>
+          </Card.Content>
           </ScrollView>
     </SafeAreaView>
   
@@ -193,7 +174,7 @@ const Booksaddedtopickup =(props) => {
       
       c:{
         backgroundColor:'#F0F8FF',
-        borderRadius:100,
+        borderRadius:10,
         
         marginHorizontal : 20,
       },

@@ -146,8 +146,8 @@ const SearchRoute = (props) => {
                   onChangeText={(text) => setSearchQuery(text)}
                   value={SearchQuery}
                 />
-                 <View style = {styles.cardview}>
-                  <ScrollView style={styles.cardscroll}>
+                 
+                  <ScrollView >
                   {
                   Receiveddata.map((book,idx) => (
                     <Pressable key={idx} onPress={() => props.navigation.navigate('Bookscreen',{ book : book })} >
@@ -156,7 +156,7 @@ const SearchRoute = (props) => {
                         <Title style={{fontSize:18}}>{book.book_name}</Title>
                         <Subheading>{book.book_author}</Subheading>
                         <Paragraph>{book.book_year}</Paragraph>
-                        <Paragraph>{book.book_distance} km away</Paragraph>
+                        
                         <Paragraph>In {book.book_condition} condition</Paragraph>
                         <Paragraph>{book.book_price}</Paragraph>
                         <Paragraph>{book.store_distance} km(s) away</Paragraph>
@@ -172,7 +172,7 @@ const SearchRoute = (props) => {
                   ))
                   }
                   </ScrollView>
-                  </View>
+                  
                 </SafeAreaView>
             )
         }
@@ -196,16 +196,16 @@ const SearchRoute = (props) => {
   
     
       layout: {
-        
+        flex:1
       },
     
     
       cardview :{
-        
+        flex:1
       },
     
       cardscroll :{
-        
+        flex:1,
         height : '100%',
         margin : 10,
       },
@@ -213,7 +213,7 @@ const SearchRoute = (props) => {
     
       cardcontainer : {
         backgroundColor:'#F0F8FF',
-        
+        flex:1,
         flexDirection : 'row',
         justifyContent : 'center',
         alignContent: 'center',
@@ -224,8 +224,8 @@ const SearchRoute = (props) => {
       },
     
       cardcontent : {
+        flex:4,
         
-        height: 160,
         justifyContent: 'center',
         alignItems:'center', 
         margin : 10,
@@ -233,7 +233,7 @@ const SearchRoute = (props) => {
       },
     
       cardimage : {
-        
+        flex:3,
         height: 150,
         justifyContent: 'center',
         alignItems:'center', 

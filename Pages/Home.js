@@ -79,6 +79,8 @@ import {
 
   const HomeRoute = (props) =>{
   const [Bookdata,setBookData] = useState([]);
+  const [Pickedupbooks,setPickedupbooks] = useState([]);
+  const [Removedbooks,setRemovedbooks] = useState([]);
   const [Pickupdata,setPickupdata] = useState([]);
   const [count,setCount] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
@@ -88,9 +90,10 @@ import {
   }
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-
+  let removedbooks = Removedbooks.length!==0 ? <Horizontalscrollview booklist={Removedbooks} pagename = "RemovedBookScreen" navigation={props.navigation}/>:<Text>No books removed from Pickup</Text>
   let booksaddedtopickup = Pickupdata.length!==0 ? <Horizontalscrollview booklist={Pickupdata} pagename = "Booksaddedtopickup" navigation={props.navigation}/>:<Text>No books added to Pickup</Text>
-  let uploadedbook = Bookdata.length!==0 ? <Horizontalscrollview booklist={Bookdata} pagename="UploadedBooks" navigation={props.navigation} /> : <Horizontalscrollview booklist={data} pagename="UploadedBooks" navigation={props.navigation} />
+  let bookspickedup = Pickedupbooks.length!==0 ? <Horizontalscrollview booklist={Pickedupbooks} pagename="Booksaddedtopickup" navigation={props.navigation}/>:<Text>No books picked up!</Text>
+  let uploadedbook = Bookdata.length!==0 ? <Horizontalscrollview booklist={Bookdata} pagename="UploadedBooks" navigation={props.navigation} /> : <Text>No books uploaded</Text>
   useEffect(() => {
       
     fetch('https://booksapp2021.herokuapp.com/Book/Pickedupbooks/Added',{
@@ -107,7 +110,6 @@ import {
     })
     .then((data) => {
       if(data.status){
-        console.log(data.response.books);
         setPickupdata(data.response.books)
       }
       else{
@@ -124,9 +126,41 @@ import {
     setRefreshing(false);
     
   },[count])
-  
   useEffect(() => {
       
+    fetch('https://booksapp2021.herokuapp.com/Book/Pickedupbooks',{
+      method: 'POST',
+      headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              'x-access-token' : user.token,
+              },
+      body : null
+    })
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      if(data.status){
+        console.log(data.response.books);
+        setPickedupbooks(data.response.books)
+      }
+      else{
+        if(data.message==='Could not verify'){
+          dispatch(logoutUser());
+        }
+      }
+    })
+    .catch((error) => {
+        console.log(error);
+    })
+    
+    setPickedupbooks([]);
+    setRefreshing(false);
+    
+  },[count])
+  
+  useEffect(() => {
       fetch('https://booksapp2021.herokuapp.com/Book/Uploadedbooks',{
         method: 'POST',
         headers: {
@@ -141,7 +175,6 @@ import {
       })
       .then((data) => {
         if(data.status){
-          console.log(data.response.books);
           setBookData(data.response.books)
         }
         else{
@@ -155,6 +188,37 @@ import {
       })
       
       setBookData([]);
+      setRefreshing(false);
+      
+    },[count])
+    useEffect(() => {
+      fetch('https://booksapp2021.herokuapp.com/Book/Pickedupbooks/Removed',{
+        method: 'POST',
+        headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token' : user.token,
+                },
+        body : null
+      })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if(data.status){
+          setRemovedbooks(data.response.books)
+        }
+        else{
+          if(data.message==='Could not verify'){
+            dispatch(logoutUser());
+          }
+        }
+      })
+      .catch((error) => {
+          console.log(error);
+      })
+      
+      setRemovedbooks([]);
       setRefreshing(false);
       
     },[count])
@@ -197,12 +261,36 @@ import {
                   marginTop: 10,
                   marginBottom: 10
                 }} />
-                <Title style={styles.statistics}>Books to Pickup</Title>  
+                <Title style={styles.statistics}>Books added to Pickup</Title>  
                 <Text></Text>
                 
                 <View style = {styles.cardview}>
                 {booksaddedtopickup}
                 </View> 
+                  <View style={{
+                    alignSelf: 'stretch',
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#000',
+                    marginTop: 10,
+                    marginBottom: 10
+                  }} />
+                  <Title style={styles.statistics}>Books Picked up by the user</Title>  
+                  <Text></Text>
+                  <View style = {styles.cardview}>
+                  {bookspickedup}
+                  </View> 
+                  <View style={{
+                    alignSelf: 'stretch',
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#000',
+                    marginTop: 10,
+                    marginBottom: 10
+                  }} />
+                  <Title style={styles.statistics}>Books Removed from pickup</Title>  
+                  <Text></Text>
+                  <View style = {styles.cardview}>
+                  {removedbooks}
+                  </View> 
                 </ScrollView> 
         </SafeAreaView>
         

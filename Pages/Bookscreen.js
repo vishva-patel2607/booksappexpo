@@ -1,4 +1,3 @@
-
 import React, { Component,useEffect,useState } from 'react';
 import {
     SafeAreaView,
@@ -20,7 +19,7 @@ const Bookscreen = (props) => {
     const [book, setBook] = useState(props.route.params.book);
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user)
-    const addtopickup = (props) => {
+    const addtopickup = () => {
       
       fetch('https://booksapp2021.herokuapp.com/Book/Pickedupbooks/Add', {
         method: 'POST',

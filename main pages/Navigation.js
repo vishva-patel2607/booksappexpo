@@ -10,6 +10,7 @@ const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 import SearchRoute from '../Pages/Search.js';
 import Booksaddedtopickup from '../Pages/Booksaddedtopickup.js';
+import RemovedBookScreen from '../Pages/RemovedBookScreen.js';
 import UploadRoute from '../Pages/Upload.js';
 import UserRoute from '../Pages/User.js';
 import HomeRoute from '../Pages/Home.js';
@@ -137,12 +138,12 @@ const Navigation = () => {
             <Stack.Screen name="Mainpage" component={Bottomnavcomponent} options={{headerShown: false, title: ''}} />
             <Stack.Screen name='Bookscreen' component={Bookscreen}  options={{ title: '' }} />
             <Stack.Screen name="Camerascreen" component={Camerascreen} options={{ title: '' }} />
+            <Stack.Screen name="RemovedBookScreen" component={RemovedBookScreen} options={{ title: '' }} />
             <Stack.Screen name="UploadedBooks" component={UploadedBooks} options={{title: 'Book Details'}}/>
             <Stack.Screen name="Booksaddedtopickup" component={Booksaddedtopickup} options={{title: 'Pickup  details'}}/>
             <Stack.Screen name="Changepassword" component={Changepassword} options={{ title: 'Change Password' }}/>
             <Stack.Screen name="EditPhone" component={EditPhone} options={{title: 'Change Phone'}}/>
             <Stack.Screen name="Storemodal" component={Storemodal} options={{title: 'Select a shop'}}/>
-
             <Stack.Screen name="Edituploadedbook" component={Edituploadedbook} options={{title:'Edit'}}/>
             </Stack.Navigator>
       </NavigationContainer>

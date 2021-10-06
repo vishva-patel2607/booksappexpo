@@ -64,7 +64,7 @@ const Storemodal = (props) => {
     const [longitude, setLongitude] = useState();
     const [latitude, setLatitude] = useState();
     const [selectedShop, setSelectedShop] = useState(null);
-    const [shops, setShops] = useState(null);
+    const [shops, setShops] = useState([]);
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user);
 
@@ -110,7 +110,7 @@ const Storemodal = (props) => {
       })
       .then((data) => {
         if(data.status){
-          //console.log(data.response.stores);
+          console.log(data.response.stores);
           setShops(data.response.stores);
         }
         else{
@@ -125,7 +125,7 @@ const Storemodal = (props) => {
       setLoading(true);
         }
     },[longitude,latitude])
-   
+    
     if(loading && shops != null){
         return (
             <SafeAreaView>
@@ -140,7 +140,7 @@ const Storemodal = (props) => {
                                             storeInchargeName={props.store_incharge}
                                             address={props.store_address}
                                             pincode={props.store_pincode}
-                                            distance = {(props.store_distance[0]/1000).toFixed(1)}
+                                            distance = {props.store_distance}
                                             contactNo = {props.store_number}
 
                                         />
@@ -155,7 +155,7 @@ const Storemodal = (props) => {
                                             storeInchargeName={props.store_incharge}
                                             address={props.store_address}
                                             pincode={props.store_pincode}
-                                            distance = {(props.store_distance[0]/1000).toFixed(1)}
+                                            distance = {props.store_distance}
                                             contactNo = {props.store_number}
                                         />
                                     </Pressable>
