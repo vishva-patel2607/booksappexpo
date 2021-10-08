@@ -122,7 +122,7 @@ const UploadRoute = (props) => {
                                 storeInchargeName={shop.store_incharge}
                                 address={shop.store_address}
                                 pincode={shop.store_pincode}
-                                distance = {(shop.store_distance[0]/1000).toFixed(1)}
+                                distance = {shop.store_distance}
                                 contactNo = {shop.store_number}
                             />
                         </View>
@@ -178,6 +178,16 @@ const UploadRoute = (props) => {
                     maxLength = {4}
                     />
                 </View> 
+                <View style={styles.container2}>
+                    <TextInput 
+                    style = {styles.inputtextbox}
+                    label="Price"
+                    value = {price}
+                    onChangeText = {(text) => setPrice(text.replace(/[^0-9]/g, ''))}
+                    keyboardType = "number-pad"
+                    maxLength = {4}
+                    />
+                </View>
                 
                     
                     
@@ -224,16 +234,7 @@ const UploadRoute = (props) => {
 
                 {selected}
 
-                <View style={styles.container2}>
-                    <TextInput 
-                    style = {styles.inputtextbox}
-                    label="Price"
-                    value = {price}
-                    onChangeText = {(text) => setPrice(text.replace(/[^0-9]/g, ''))}
-                    keyboardType = "number-pad"
-                    maxLength = {4}
-                    />
-                </View>
+                
                 <Button 
                     mode = "contained"
                     style = {styles.submitbutton}
