@@ -236,17 +236,10 @@ import {
             onRefresh={onRefresh}
           />
         }>
-          <Card style={{borderRadius: 30,marginLeft:20,marginRight:20,marginTop:20}}>
-            <Card.Content>
-                  <Title>Total Books Uploaded :-  {Bookdata.length}</Title>
-                  <Text></Text>
-                  <Title>Total Books Pickedup :- 10</Title>
-                  <Text></Text>
-                  <Title>Total Books Exchanged :- 20</Title>
-            </Card.Content>
-            <Text></Text>
+          
+          
 
-          </Card>
+          
                 <Text></Text>
                 <Text></Text>
                 <Title style={styles.statistics}>Uploaded Books</Title>
