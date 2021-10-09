@@ -13,7 +13,7 @@ import {  Platform, StatusBar } from "react-native";
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,RadioButton, Headline,IconButton,Provider,Portal,Modal, Surface,Subheading,ActivityIndicator } from 'react-native-paper'; 
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-
+import MapView, { Marker } from 'react-native-maps';
 import {useDispatch, useSelector} from 'react-redux';
 import * as Location from 'expo-location';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -37,7 +37,15 @@ const Storemodalcard = (props)=> {
     const [pincode,setPincode] = useState(props.pincode);
     const [distance,setDistance] = useState(props.distance);
     const [contactNo, setContactNo] = useState(props.contactNo);
-
+    const [Latitude, setLatitude] = useState(props.latitude);
+    const [Longitude,setLongitude] = useState(props.longitude);
+    const [mapRegion, setmapRegion] = useState({
+        latitude: Latitude,
+        longitude: Longitude,
+        latitudeDelta: 0,
+    longitudeDelta: 0,
+        
+    })
 
 
 
@@ -47,16 +55,18 @@ const Storemodalcard = (props)=> {
         setAdress(props.address);
         setPincode(props.pincode);
         setDistance(props.distance);
-        setContactNo(props.contactNo)
-
-    }, [props.storeInchargeName,props.shopName,props.address,props.pincode,props.distance,props.contactNo])
+        setContactNo(props.contactNo);
+        setLongitude(props.longitude);
+        setLatitude(props.latitude);
+    }, [props.storeInchargeName,props.shopName,props.address,props.pincode,props.distance,props.contactNo,props.latitude,props.longitude])
 
 
 
    
         let map;
         if (showMap) {
-            map = <View style={{backgroundColor:'#EDEDF0',justifyContent:'center',alignItems:'center',height:200}}><Text>maps coming soon</Text></View>;
+            map = <View><MapView style={{ alignSelf: 'stretch', height: 200 }}
+            region={mapRegion}><Marker coordinate={mapRegion}/></MapView></View>;
         } else {
             map = null;
         }
@@ -87,6 +97,7 @@ const Storemodalcard = (props)=> {
                     </View>
                 </View>
                 {map}
+                
             </>
         );
     

@@ -124,6 +124,8 @@ const UploadRoute = (props) => {
                                 pincode={shop.store_pincode}
                                 distance = {shop.store_distance}
                                 contactNo = {shop.store_number}
+                                latitude = {shop.store_latitude}
+                                longitude={shop.store_longitude}
                             />
                         </View>
                         

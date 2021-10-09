@@ -142,7 +142,8 @@ const Storemodal = (props) => {
                                             pincode={props.store_pincode}
                                             distance = {props.store_distance}
                                             contactNo = {props.store_number}
-
+                                            latitude={props.store_latitude}
+                                            longitude={props.store_longitude}
                                         />
                                     </View>
                                 );
@@ -157,6 +158,8 @@ const Storemodal = (props) => {
                                             pincode={props.store_pincode}
                                             distance = {props.store_distance}
                                             contactNo = {props.store_number}
+                                            latitude={props.store_latitude}
+                                            longitude={props.store_longitude}
                                         />
                                     </Pressable>
                                 )
