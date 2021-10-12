@@ -56,7 +56,8 @@ const UploadedBooks =(props) => {
         }
         else{
           Alert.alert(
-            "Sorry but the book is being borrowed by someone and so can't be removed"
+            "Note",
+            data.message,
             [
               {
                 text: 'Ok'
@@ -77,7 +78,7 @@ const UploadedBooks =(props) => {
           <WavyHeader customStyles={styles.svgCurve}/>
             
               <Image
-                style={{resizeMode:'contain',height:'100%',width:'100%',flex:4}}
+                style={{resizeMode:'center',height:'100%',width:'100%',flex:4}}
               source={{uri: Bookdata.book_img}}
               />
             

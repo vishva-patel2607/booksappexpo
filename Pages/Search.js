@@ -5,7 +5,8 @@ import {
   View,
   Image,
   StyleSheet,
-  Pressable
+  Pressable,
+  StatusBar
 } from 'react-native';
 
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Avatar, Subheading, Caption } from 'react-native-paper'; 
@@ -79,6 +80,7 @@ const SearchRoute = (props) => {
     const [latitude, setLatitude] = useState();
     const [Receiveddata,setReceiveddata]=useState([]);
     const [SearchQuery,setSearchQuery] = useState("");
+    const [text,setText]=useState("Search for a book");
     const [Message,setMessage] = useState("");
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user);
@@ -95,7 +97,6 @@ const SearchRoute = (props) => {
     
     useEffect(()=>{
             setLocation();
-            console.log(SearchQuery);
             if(typeof(longitude) != 'undefined' && typeof(latitude) != 'undefined'){
             fetch('https://booksapp2021.herokuapp.com/Book/Search',{
             method: 'POST',
@@ -117,14 +118,16 @@ const SearchRoute = (props) => {
             if(data.status){
               console.log(data.message);
               if(data.message==='All the Books for given query'){
-              
+                  
                   setReceiveddata(data.response.book_list);
                   setMessage(data.message);
                   console.log(Receiveddata);
               }
               else{
+                  setText("No books found");
                   setReceiveddata([]);
                   setMessage(data.message);
+                  console.log(data.message);
               }
             }
             else{
@@ -140,8 +143,8 @@ const SearchRoute = (props) => {
         },[longitude,latitude,SearchQuery])
         if(Receiveddata.length!==0){
             return (
-                <SafeAreaView>
-                <Searchbar
+                <SafeAreaView style={styles.search} >
+                <Searchbar 
                   placeholder="Search"
                   onChangeText={(text) => setSearchQuery(text)}
                   value={SearchQuery}
@@ -177,15 +180,16 @@ const SearchRoute = (props) => {
             )
         }
         else
-        {
+        { 
+            
             return (
-                <SafeAreaView>
+                <SafeAreaView style={styles.search}>
                 <Searchbar
                   placeholder="Search"
                   onChangeText={(text) => setSearchQuery(text)}
                   value={SearchQuery}
                 />
-                <Text style={{marginTop:50,textAlign:'center'}}>No books found </Text>
+                <Text style={{marginTop:50,textAlign:'center'}}>{text}</Text>
                 </SafeAreaView>
             )
         }
@@ -231,6 +235,10 @@ const SearchRoute = (props) => {
         margin : 10,
         
       },
+      search: {
+        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+
+    },
     
       cardimage : {
         flex:3,

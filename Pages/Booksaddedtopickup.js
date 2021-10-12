@@ -16,7 +16,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Avatar, Subheading, Caption,IconButton,Card } from 'react-native-paper'; 
 import { TabRouter } from '@react-navigation/routers';
 import WavyHeader from './WavyHeader';
-
+import Storemodalcard from './Storemodalcard';
 
 const Booksaddedtopickup =(props) => {
   const [Pickupdata,setPickupdata]=useState(props.route.params.book)
@@ -135,13 +135,17 @@ const Booksaddedtopickup =(props) => {
           left={(props) => <Avatar.Icon {...props} icon={{ uri: 'https://static.thenounproject.com/png/729549-200.png' }} />}
           />
           <Text></Text>
-          <Card.Content style={styles.c}>
-            <Title>Store details</Title>
-            <Subheading>{Pickupdata.store.store_name}</Subheading>
-            <Subheading>{Pickupdata.store.store_incharge}</Subheading>
-            <Paragraph>{Pickupdata.store.store_address}</Paragraph>
-            <Paragraph>{Pickupdata.store.store_number}</Paragraph>
-          </Card.Content>
+          <View style={{margin: 10}}>
+                            <Storemodalcard 
+                                shopName={Pickupdata.store.store_name}
+                                storeInchargeName={Pickupdata.store.store_incharge}
+                                address={Pickupdata.store.store_address}
+                                pincode={Pickupdata.store.store_pincode}
+                                contactNo = {Pickupdata.store.store_number}
+                                latitude = {Pickupdata.store.store_latitude}
+                                longitude={Pickupdata.store.store_longitude}
+                            />
+                        </View>
           </ScrollView>
     </SafeAreaView>
   

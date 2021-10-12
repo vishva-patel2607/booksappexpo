@@ -107,11 +107,6 @@ const Login = (props) => {
               >
                 Log in
               </Button>
-              <Button 
-                onPress = {() => props.navigation.navigate('ForgotPassword')}
-              >
-                Forgot Password?
-              </Button>
   
               <Text style={styles.error}>
                 {error}

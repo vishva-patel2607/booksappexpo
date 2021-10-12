@@ -66,7 +66,7 @@ const Storemodalcard = (props)=> {
         let map;
         if (showMap) {
             map = <View><MapView style={{ alignSelf: 'stretch', height: 200 }}
-            region={mapRegion}><Marker coordinate={mapRegion}/></MapView></View>;
+            region={mapRegion} showsUserLocation={true} minZoomLevel={10} maxZoomLevel={15} scrollEnabled={true} loadingEnabled={true}><Marker coordinate={mapRegion} title={shopName}/></MapView></View>;
         } else {
             map = null;
         }
