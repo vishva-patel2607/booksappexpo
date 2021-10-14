@@ -157,6 +157,7 @@ const Login = (props) => {
     loginlayout: {
       flex:1,
       justifyContent : "center",
+      paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
      
     },
   

@@ -9,7 +9,8 @@ import {
   Image,
   StyleSheet,
   Alert,
-  Pressable
+  Pressable,
+  Linking
 } from 'react-native';
 
 import {useDispatch, useSelector} from 'react-redux';
@@ -62,6 +63,7 @@ const Usercard = (props) =>{
         <Subheading>
         🎂 {userobj.dob.split(" ")[1]+ " " +userobj.dob.split(" ")[2] + " " + userobj.dob.split(" ")[3]}</Subheading>
         <Text></Text>
+
     </View>
 
   )
@@ -114,7 +116,8 @@ const UserRoute = (props) =>{
         },[])
       if(LoadingData){
         return(
-          <SafeAreaView>
+          <SafeAreaView style={{flex:1}}>
+            <View style={{flex:1}}>
               <Usercard user={userobj} />
               <Button 
                   mode = "contained"
@@ -132,14 +135,25 @@ const UserRoute = (props) =>{
                   onPress = {() => dispatch(logoutUser())}
                 >
                   Log out
-              </Button>
+              </Button> 
               <Button
-          style={styles.editprofile}
-          onPress = {() => {props.navigation.navigate("EditPhone");}}
-          >
-            <Avatar.Icon size={20} icon="pen" />
+                  style={styles.editprofile}
+                  onPress = {() => {props.navigation.navigate("EditPhone");}}
+                  >
+              <Avatar.Icon size={20} icon="pen" />
+              
+            </Button>
+            </View>
+            <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+              <Button 
+              >
+              © BooksAppExpo.
+              </Button>
+              <Button onPress={ ()=>{ Linking.openURL('https://google.com')}}>FAQ</Button>
+              <Button onPress={ ()=>{ Linking.openURL('https://google.com')}}> Contact Us</Button>
+              </View>
             
-          </Button>
+            
           </SafeAreaView>
           
         )
@@ -150,6 +164,7 @@ const UserRoute = (props) =>{
               <View style={styles.activityindicator} >
                 <ActivityIndicator animating={true} size={100} />
               </View>
+              
           </SafeAreaView>
           
         )
@@ -161,14 +176,9 @@ const styles = StyleSheet.create({
   userdetails: {
     textDecorationLine: 'underline',
   },
-  textbox: {
-    textAlign: "center",
-    padding :20,
-  },
   textStyle:{
-    marginTop: 40,
+    marginTop: 10,
     alignItems: "center",
-    
   },
   error: {
     textAlign: "center",
@@ -179,9 +189,6 @@ const styles = StyleSheet.create({
   activityindicator:{
     padding: 100,
     alignSelf: 'center',
-  },
-  inputtextbox: {
-    margin : 10,
   },
   editprofile: {
     fontSize : 20,
@@ -196,70 +203,23 @@ const styles = StyleSheet.create({
 
   },
   submitbutton: {
-    margin : 50,
+    margin : 30,
     fontSize : 20,
     marginBottom : 20,
     height: 45,
-    width: 300,
+    width: 250,
     alignSelf: 'center',
     borderRadius: 10,
     color : "white"
   },
   logoutbutton:{
     alignSelf: 'center',
-    width: 300,
+    width: 250,
     fontSize: 20,
     color: "white",
     borderRadius: 10,
   },
 
-  loginlayout: {
-    flex:1,
-    justifyContent : "center",
-  },
-
-  layout: {
-    flex:1,
-  },
-  cardview :{
-    flex:1,
-  },
-
-  cardscroll :{
-    flex : 1,
-    height : '100%',
-    margin : 10,
-  },
-
-
-  cardcontainer : {
-    flex: 1,
-    flexDirection : 'row',
-    justifyContent : 'center',
-    alignContent: 'center',
-    alignItems : 'center',
-    marginBottom : 10,
-    marginTop : 80,
-    borderRadius : 5,
-  },
-
-  cardcontent : {
-    flex : 4,
-    height: 150,
-    justifyContent: 'center',
-    alignItems:'center', 
-    margin : 20,
-    
-  },
-
-  cardimage : {
-    flex : 3,
-    height: 150,
-    justifyContent: 'center',
-    alignItems:'center', 
-    margin : 10,
-    marginRight :5,
-  },
 
   bg : {
     backgroundColor : '#EDEDF0',

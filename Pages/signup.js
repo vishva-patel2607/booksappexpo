@@ -9,11 +9,12 @@ import {
   View,
   Image,
   KeyboardAvoidingView,
-  Alert
+  Alert,
+  Pressable,
+
 } from 'react-native';
 
-
-import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Card,Avatar, Subheading } from 'react-native-paper'; 
+import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Card,Avatar, Subheading,Checkbox} from 'react-native-paper'; 
 import { setUser } from '../actions';
 
 
@@ -34,6 +35,7 @@ const Signup =  (props)=> {
     const [phonenumber,setPhonenumber] = useState("");
     const [token,setToken] = useState("");
     const [error,setError] = useState("");
+    const [checked, setChecked] = useState(false);
 
     const ref_day = useRef();
     const ref_month = useRef();
@@ -74,6 +76,10 @@ const Signup =  (props)=> {
         else if(day.length !== 2 || month.length !== 2 || year.length !== 4){
             alert("Enter valid date");
             return;
+        }
+        else if(checked===false){
+          alert("Kindly read the privacy policy");
+          return;
         }
         else {
 
@@ -291,8 +297,13 @@ const Signup =  (props)=> {
                     keyboardType='number-pad'
                   />
               </View>
-              
-
+              <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center',marginBottom:10,marginTop:10}}>
+                <Checkbox.Android
+                 status={checked ? 'checked' : 'unchecked'}
+                 onPress={() => {
+                   setChecked(!checked);}}/>
+                <Text>I agree to <Text onPress={console.log('Prssed')} style={{textDecorationLine:'underline'}}>Privacy policy</Text></Text>
+              </View>
 
               <Button 
                 mode = "contained"
