@@ -16,39 +16,35 @@ const Horizontalscrollview = (props) => {
 
         return (
           <ScrollView style={styles.cardscroll} horizontal={true}>
+            
           {
           
           props.booklist.map((book,idx) => (
+
             <Pressable key={idx} onPress={() => props.navigation.navigate(props.pagename,{ book : book })} >
-            <View style={{marginHorizontal: 10}}>
-              <View style={{ alignItems: 'center', justifyContent: 'center'}}>
-                <View
-                  style={{
-                    backgroundColor: '#FDEDEC',
-                    borderRadius: 10,
-                    height: 200,
-                    width: 150
-                  }}>
-                    <View style={{ height: 120, width: 150, overflow: 'hidden', paddingTop: 10}}>
-                      <Image 
-                        style={{resizeMode:'contain',height:'100%',width:'100%'}}
-                        source={{uri : book.book_img}}
-                      />
-                    </View>
-                    <Divider />
-                      <View style={{ padding: 10, width: 155, alignItems: 'flex-start' }}>
-                        <Text style={{fontSize: 11}}>{book.book_name}</Text>
-                        <Text style={{ color: '#000000', paddingTop: 5, fontSize: 10}}>
-                          {book.book_price}
-                        </Text>
-                        <Text style={{ color: '#000000', paddingTop: 5, fontSize: 10}}>
-                          {book.book_status}
-                        </Text>
-                      </View>
-                </View>
+              <View style={{flex:1,maxWidth:170,padding:10,backgroundColor: '#FDEDEC',borderRadius:10,marginLeft:5}}>
+              <View style={{flex:3}}>
+              <Image 
+                style={{resizeMode:'cover',maxWidth: 150,
+                maxHeight:200,
+                minWidth:150,
+                minHeight:200,}}        
+                source={{uri : book.book_img}}
+                />
+              </View>
+              <View style={{flex:2,padding:10}}>
+              <Text style={{fontSize: 11}}>{book.book_name}</Text>
+                  <Text style={{  paddingTop: 5, fontSize: 10}}>
+                      {book.book_price}
+                  </Text>
+                  <Text style={{  paddingTop: 5, fontSize: 10}}>
+                    {book.book_status}
+                  </Text>
               </View>
             </View>
             </Pressable>
+            
+            
           ))
           }
           </ScrollView>
@@ -74,9 +70,10 @@ const styles = StyleSheet.create({
     margin : 10,
   },
   cardscroll :{
-    
+    flex:1,
     height : '100%',
     marginHorizontal : 10,
   },
 });
+
 export default Horizontalscrollview;

@@ -27,61 +27,56 @@ const RemovedBookScreen =(props) => {
         return (
           
           <SafeAreaView>
-              <ScrollView>
-          <Text></Text>
-          <View style={styles.container}>
-          <WavyHeader customStyles={styles.svgCurve}/>
-            
-              <Image
-                style={{resizeMode:'contain',height:'100%',width:'100%',flex:4}}
-              source={{uri: Pickupdata.book_img}}
+            <ScrollView style={styles.container1}  >
+             <View style={styles.container}>
+              <WavyHeader customStyles={styles.svgCurve}/>
+                <Image
+                  style={styles.tinyLogo}
+                source={{uri: Pickupdata.book_img}}
+                />
+              <Button mode = "text" style = {styles.submitbutton} labelStyle = {styles.submitbutton} >
+                
+              </Button>
+              </View>
+              
+        
+              <Card.Title
+              style={styles.c}
+              subtitle="Code"
+              title={Pickupdata.book_transaction_code}
+              titleNumberOfLines={3}
+              left={(props) => <Avatar.Icon {...props} icon="book" />}
               />
-            
-          <View style={{flex:2,flexDirection:'column',marginTop:10,marginBottom:75,marginRight:20,}}>
-    
-            
-          </View>
-          </View>
-          <Text></Text>
-          <Card.Title
-          style={styles.c}
-          subtitle="Code"
-          title={Pickupdata.book_transaction_code}
-          left={(props) => <Avatar.Icon {...props} icon={{uri: 'https://cdn-icons-png.flaticon.com/512/1166/1166773.png'}} />}
-          />
-          <Text></Text>
-          <Card.Title
-          style={styles.c}
-          subtitle="Name of the book"
-          title={Pickupdata.book_name}
-          titleNumberOfLines={3}
-          left={(props) => <Avatar.Icon {...props} icon="book" />}
-          />
-          <Text></Text>
-          <Card.Title
-          style={styles.c}
-          subtitle="Author"
-          title={Pickupdata.book_author}
-          fontSize='20'
-          titleNumberOfLines={3}
-          left={(props) => <Avatar.Icon {...props} icon="pen" />}
-          />
-          <Text></Text>
-          <Card.Title
-          style={styles.c}
-          subtitle="Price"
-          title={Pickupdata.book_price}
-          left={(props) => <Avatar.Icon {...props} icon={{ uri: 'https://cdn3.iconfinder.com/data/icons/inficons-currency-set/512/rupee-512.png' }} />}
-          />
-          <Text></Text>
-          <Card.Title
-          style={styles.c}
-          subtitle="Condition"
-          title={Pickupdata.book_condition}
-          left={(props) => <Avatar.Icon {...props} icon={{ uri: 'https://static.thenounproject.com/png/729549-200.png' }} />}
-          />
-          <Text></Text>
-          <Card.Content style={styles.c}>
+              
+              <Card.Title
+              style={styles.c}
+              subtitle="Name of the book"
+              title={Pickupdata.book_name}
+              fontSize='20'
+              titleNumberOfLines={3}
+              left={(props) => <Avatar.Icon {...props} icon="pen" />}
+              />
+              
+              <Card.Title
+              style={styles.c}
+              subtitle="Author"
+              title={Pickupdata.book_author}
+              left={(props) => <Avatar.Icon {...props} icon={{ uri: 'https://cdn3.iconfinder.com/data/icons/inficons-currency-set/512/rupee-512.png' }} />}
+              />
+              <Card.Title
+              style={styles.c}
+              subtitle="Price"
+              title={Pickupdata.book_price}
+              left={(props) => <Avatar.Icon {...props} icon={{ uri: 'https://static.thenounproject.com/png/729549-200.png' }} />}
+              />
+          
+              <Card.Title
+              style={styles.c}
+              subtitle="Condition"
+              title={Pickupdata.book_condition}
+              left={(props) => <Avatar.Icon {...props} icon={{uri: 'https://static.thenounproject.com/png/1801462-200.png'}} />}
+              />
+          <Card.Content style={styles.c1}>
             <Title>Store details</Title>
             <Subheading>{Pickupdata.store.store_name}</Subheading>
             <Subheading>{Pickupdata.store.store_incharge}</Subheading>
@@ -97,43 +92,47 @@ const RemovedBookScreen =(props) => {
 
 
     const styles = StyleSheet.create({
-      cardview :{
-        flex:1,
-      },
-      cardscroll :{
-        flex : 1,
-        height : '100%',
-        margin : 10,
-      },
-    
       container: {
         paddingTop: 20,
         flexDirection : 'row',
       },
       tinyLogo: {
-        width: 220,
-        height: 220,
-        resizeMode: 'contain',
-        flex : 4,
-        
+        width:'75%',
+        height:'100%',
+        flex:4,
+        resizeMode: 'cover',
+        marginRight:10,
+        marginLeft:20,
+        maxWidth: 150,
+        maxHeight:200,
+        minWidth:150,
+        minHeight:200,
       },
-      
+      container1:{
+        paddingTop:20,
+      },
       c:{
         backgroundColor:'#F0F8FF',
         borderRadius:100,
-        
+        marginTop : 15,
+        marginHorizontal : 10,
+      },
+      c1:{
+        backgroundColor:'#F0F8FF',
+        borderRadius:10,
+        marginTop : 15,
         marginHorizontal : 20,
       },
       submitbutton: {
-        fontSize : 20,
-        textAlign: 'center',
-        alignContent: 'center',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom:10,
+        flex: 2,
+        fontSize : 15,
+        marginTop : 20,
+        marginRight : 15,
+        marginLeft : 10,
+        marginBottom : 20,
+        alignSelf: 'flex-start',
+        borderRadius: 10,
         color : "white",
-        paddingTop: 5,
-        height: 40,
       },
       svgCurve: {
         position: 'absolute',

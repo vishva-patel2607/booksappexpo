@@ -145,12 +145,13 @@ const SearchRoute = (props) => {
             return (
                 <SafeAreaView style={styles.search} >
                 <Searchbar 
+                  
                   placeholder="Search"
                   onChangeText={(text) => setSearchQuery(text)}
                   value={SearchQuery}
                 />
-                 
-                  <ScrollView >
+                
+                  <ScrollView style={{flex:1}} >
                   {
                   Receiveddata.map((book,idx) => (
                     <Pressable key={idx} onPress={() => props.navigation.navigate('Bookscreen',{ book : book })} >
@@ -166,7 +167,7 @@ const SearchRoute = (props) => {
                       </View>
                       <View style = {styles.cardimage}>
                           <Image 
-                            style={{resizeMode:'contain',height:'100%',width:'100%'}}
+                            style={{resizeMode:'cover',height:'100%',width:'75%'}}
                             source={{uri : book.book_img}}
                           />
                       </View>
@@ -224,6 +225,8 @@ const SearchRoute = (props) => {
         alignItems : 'center',
         marginBottom : 10,
         marginTop : 10,
+        marginLeft:10,
+        marginRight:10,
         borderRadius : 20,
       },
     
@@ -237,7 +240,7 @@ const SearchRoute = (props) => {
       },
       search: {
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-
+        flex:1,
     },
     
       cardimage : {

@@ -142,11 +142,16 @@ const styles = StyleSheet.create({
     flexDirection : 'row',
   },
   tinyLogo: {
-    width: 220,
-    height: 220,
-    resizeMode: 'contain',
-    flex : 4,
-    
+    width:'75%',
+    height:'100%',
+    flex:4,
+    resizeMode: 'cover',
+    marginRight:10,
+    marginLeft:20,
+    maxWidth: 150,
+    maxHeight:200,
+    minWidth:150,
+    minHeight:200,
   },
   container1:{
     paddingTop:20,

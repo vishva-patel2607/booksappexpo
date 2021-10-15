@@ -3,14 +3,13 @@ import {
     SafeAreaView,
     ScrollView,
     View,
-    Image,
     StyleSheet,
-    Pressable
+    
   } from 'react-native';
   import {  Platform, StatusBar,RefreshControl } from "react-native";
   import {logoutUser, setUser} from '../actions'
-  import { Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Avatar, Subheading, Caption , Divider} from 'react-native-paper'; 
-  import { Card, Button } from 'react-native-paper';
+  import { Title,Text,Headline,Card,Button} from 'react-native-paper'; 
+  
   import Horizontalscrollview from './Horizontalscrollview';
   import {useDispatch, useSelector} from 'react-redux';
 
@@ -89,11 +88,26 @@ import {
     setCount(count+1);
   }
   const dispatch = useDispatch();
+
   const user = useSelector((state) => state.user);
-  let removedbooks = Removedbooks.length!==0 ? <Horizontalscrollview booklist={Removedbooks} pagename = "RemovedBookScreen" navigation={props.navigation}/>:<Text>No books removed from Pickup</Text>
-  let booksaddedtopickup = Pickupdata.length!==0 ? <Horizontalscrollview booklist={Pickupdata} pagename = "Booksaddedtopickup" navigation={props.navigation}/>:<Text>No books added to Pickup</Text>
-  let bookspickedup = Pickedupbooks.length!==0 ? <Horizontalscrollview booklist={Pickedupbooks} pagename="Booksaddedtopickup" navigation={props.navigation}/>:<Text>No books picked up!</Text>
-  let uploadedbook = Bookdata.length!==0 ? <Horizontalscrollview booklist={Bookdata} pagename="UploadedBooks" navigation={props.navigation} /> : <Text>No books uploaded</Text>
+  
+  let removedbooks = Removedbooks.length!==0 ? <Horizontalscrollview booklist={Removedbooks} pagename = "RemovedBookScreen" navigation={props.navigation}/>:
+  <View style={{height:90 ,margin: 10, backgroundColor : "#EDEDF0" , borderRadius : 10, justifyContent:'center',alignItems:'center'}}>
+  <Headline>No books currently removed.</Headline>
+  </View>
+  let booksaddedtopickup = Pickupdata.length!==0 ? <Horizontalscrollview booklist={Pickupdata} pagename = "Booksaddedtopickup" navigation={props.navigation}/>:
+  <View style={{height:90 ,margin: 10, backgroundColor : "#EDEDF0" , borderRadius : 10, justifyContent:'center',alignItems:'center'}}>
+  <Headline>No books added to pickedup.</Headline>
+  </View>
+  let bookspickedup = Pickedupbooks.length!==0 ? <Horizontalscrollview booklist={Pickedupbooks} pagename="Booksaddedtopickup" navigation={props.navigation}/>:
+   <View style={{height:100 ,margin: 10, backgroundColor : "#EDEDF0" , borderRadius : 10, justifyContent:'center',alignItems:'center'}}>
+  <Headline>No books picked up.</Headline>
+  </View>
+  let uploadedbook = Bookdata.length!==0 ? <Horizontalscrollview booklist={Bookdata} pagename="UploadedBooks" navigation={props.navigation} /> : 
+  <View style={{height:90 ,margin: 10, backgroundColor : "#EDEDF0" , borderRadius : 10, justifyContent:'center',alignItems:'center'}}>
+  <Headline>No books uploaded.</Headline>
+  <Button mode='contained' style={{marginTop:15}} onPress = {() => {props.navigation.navigate("Upload");}}>Upload one</Button>
+  </View>
   useEffect(() => {
       
     fetch('https://booksapp2021.herokuapp.com/Book/Pickedupbooks/Added',{
@@ -236,49 +250,33 @@ import {
             onRefresh={onRefresh}
           />
         }>
-          
-          
-
-          
-                <Text></Text>
-                <Text></Text>
+                <Card style={{marginTop:20,borderRadius:35}}>
+                  <Card.Content>
+                    <Title>Books Uploaded:- {Bookdata.length}</Title>
+                    <Title style={{paddingTop:10}}>Books added to Pickup:- {Pickupdata.length}</Title>
+                    <Title style={{paddingTop:10}}>Books Pickedup:- {Pickedupbooks.length}</Title>
+                    <Title style={{paddingTop:10}}>Books removed from Pickup:- {Removedbooks.length}</Title>
+                  </Card.Content>
+                </Card>
                 <Title style={styles.statistics}>Uploaded Books</Title>
                 <Text></Text>
                 <View style = {styles.cardview}>
                 {uploadedbook}
                 </View> 
-                <View style={{
-                  alignSelf: 'stretch',
-                  borderBottomWidth: 1,
-                  borderBottomColor: '#000',
-                  marginTop: 10,
-                  marginBottom: 10
-                }} />
+                
                 <Title style={styles.statistics}>Books added to Pickup</Title>  
                 <Text></Text>
                 
                 <View style = {styles.cardview}>
                 {booksaddedtopickup}
                 </View> 
-                  <View style={{
-                    alignSelf: 'stretch',
-                    borderBottomWidth: 1,
-                    borderBottomColor: '#000',
-                    marginTop: 10,
-                    marginBottom: 10
-                  }} />
+                  
                   <Title style={styles.statistics}>Books Picked up by the user</Title>  
                   <Text></Text>
                   <View style = {styles.cardview}>
                   {bookspickedup}
                   </View> 
-                  <View style={{
-                    alignSelf: 'stretch',
-                    borderBottomWidth: 1,
-                    borderBottomColor: '#000',
-                    marginTop: 10,
-                    marginBottom: 10
-                  }} />
+                  
                   <Title style={styles.statistics}>Books Removed from pickup</Title>  
                   <Text></Text>
                   <View style = {styles.cardview}>
@@ -308,7 +306,8 @@ import {
       color : "white"
     },
     statistics: {
-      textAlign: 'center',
+      textAlign: 'left',
+      marginTop:20
     },
     cardview :{
       flex:1,

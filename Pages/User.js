@@ -144,13 +144,14 @@ const UserRoute = (props) =>{
               
             </Button>
             </View>
-            <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-              <Button 
-              >
+            <Button 
+               style={{alignContent:'center'}}>
               © BooksAppExpo.
               </Button>
-              <Button onPress={ ()=>{ Linking.openURL('https://google.com')}}>FAQ</Button>
-              <Button onPress={ ()=>{ Linking.openURL('https://google.com')}}> Contact Us</Button>
+            <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+              
+              <Button style={{alignSelf:'flex-end'}} onPress={ ()=>{ Linking.openURL('https://google.com')}}>Privacy Policy</Button>
+              <Button style={{alignSelf:'flex-start'}} onPress={ ()=>{ Linking.openURL('https://google.com')}}> Contact Us</Button>
               </View>
             
             

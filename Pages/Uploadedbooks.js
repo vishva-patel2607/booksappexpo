@@ -73,74 +73,70 @@ const UploadedBooks =(props) => {
           
           <SafeAreaView>
             <ScrollView>
-          <Text></Text>
-          <View style={styles.container}>
-          <WavyHeader customStyles={styles.svgCurve}/>
-            
+            <View style={styles.container}>
+            <WavyHeader customStyles={styles.svgCurve}/>
               <Image
-                style={{resizeMode:'center',height:'100%',width:'100%',flex:4}}
+                style={styles.tinyLogo}
               source={{uri: Bookdata.book_img}}
               />
-            
-          <View style={{flex:2,flexDirection:'column',marginTop:10,marginBottom:75,marginRight:20,}}>
+            <View style={{flex:2,flexDirection:'column',marginBottom:20,marginRight:10,marginLeft:20}}>
             <Button mode = "contained" style = {styles.submitbutton} labelStyle = {styles.submitbutton} onPress={removebook} >
-              Remove 
+              Remove
             </Button>
-            <Button mode = "contained" style = {styles.submitbutton} labelStyle = {styles.submitbutton} onPress={()=>props.navigation.navigate('Edituploadedbook',{book:Bookdata})}>
-              Edit 
+            <Button mode = "contained" style = {styles.submitbutton} labelStyle = {styles.submitbutton} onPress={()=>props.navigation.navigate('Edituploadedbook',{book:Bookdata})} >
+              Edit
             </Button>
-          </View>
-          </View>
-          <Text></Text>
-          <Card.Title
-          style={styles.c}
-          subtitle="Code"
-          title={Bookdata.book_transaction_code}
-          left={(props) => <Avatar.Icon {...props} icon={{uri: 'https://cdn-icons-png.flaticon.com/512/1166/1166773.png'}} />}
-          />
-          <Text></Text>
-          <Card.Title
-          style={styles.c}
-          subtitle="Name of the book"
-          title={Bookdata.book_name}
-          titleNumberOfLines={3}
-          left={(props) => <Avatar.Icon {...props} icon="book" />}
-          />
-          <Text></Text>
-          <Card.Title
-          style={styles.c}
-          subtitle="Author"
-          title={Bookdata.book_author}
-          fontSize='20'
-          titleNumberOfLines={3}
-          left={(props) => <Avatar.Icon {...props} icon="pen" />}
-          />
-          <Text></Text>
-          <Card.Title
-          style={styles.c}
-          subtitle="Price"
-          title={Bookdata.book_price}
-          left={(props) => <Avatar.Icon {...props} icon={{ uri: 'https://cdn3.iconfinder.com/data/icons/inficons-currency-set/512/rupee-512.png' }} />}
-          />
-          <Text></Text>
-          <Card.Title
-          style={styles.c}
-          subtitle="Condition"
-          title={Bookdata.book_condition}
-          left={(props) => <Avatar.Icon {...props} icon={{ uri: 'https://static.thenounproject.com/png/729549-200.png' }} />}
-          />
-          <Text></Text>
-          <Card.Title
-          style={styles.c}
-          subtitle="Status"
-          title={Bookdata.book_status}
-          titleNumberOfLines={3}
-          left={(props) => <Avatar.Icon {...props} icon={{uri: 'https://cdn1.iconfinder.com/data/icons/flat-and-simple/512/1-1024.png'}} />}
-          />
-          <Text></Text>
+            </View>
+            </View>
+            <Card.Title
+            style={styles.c}
+            subtitle="Code"
+            title={Bookdata.book_transaction_code}
+            titleNumberOfLines={3}
+            left={(props) => <Avatar.Icon {...props} icon="book" />}
+            />
+            
+            <Card.Title
+            style={styles.c}
+            subtitle="Name of the book"
+            title={Bookdata.book_name}
+            titleNumberOfLines={3}
+            left={(props) => <Avatar.Icon {...props} icon="book" />}
+            />
+            
+            <Card.Title
+            style={styles.c}
+            subtitle="Author"
+            title={Bookdata.book_author}
+            fontSize='20'
+            titleNumberOfLines={3}
+            left={(props) => <Avatar.Icon {...props} icon="pen" />}
+            />
           
+            <Card.Title
+            style={styles.c}
+            subtitle="Price"
+            title={Bookdata.book_price}
+            left={(props) => <Avatar.Icon {...props} icon={{ uri: 'https://cdn3.iconfinder.com/data/icons/inficons-currency-set/512/rupee-512.png' }} />}
+            />
+
+            <Card.Title
+            style={styles.c}
+            subtitle="Condition"
+            title={Bookdata.book_condition}
+            left={(props) => <Avatar.Icon {...props} icon={{ uri: 'https://static.thenounproject.com/png/729549-200.png' }} />}
+            />
+            
+            <Card.Title
+            style={styles.c}
+            subtitle="Status"
+            titleNumberOfLines={3}
+            title={Bookdata.book_status}
+            left={(props) => <Avatar.Icon {...props} icon={{uri: 'https://static.thenounproject.com/png/1801462-200.png'}} />}
+            />
+
           </ScrollView>
-    </SafeAreaView>
+          </SafeAreaView>
   
     );
     }
@@ -148,43 +144,42 @@ const UploadedBooks =(props) => {
 
 
     const styles = StyleSheet.create({
-      cardview :{
-        flex:1,
-      },
-      cardscroll :{
-        flex : 1,
-        height : '100%',
-        margin : 10,
-      },
-    
       container: {
         paddingTop: 20,
         flexDirection : 'row',
       },
       tinyLogo: {
-        width: 220,
-        height: 220,
-        resizeMode: 'contain',
-        flex : 4,
-        
+        width:'75%',
+        height:'100%',
+        flex:4,
+        resizeMode: 'cover',
+        marginRight:10,
+        marginLeft:20,
+        maxWidth: 150,
+        maxHeight:200,
+        minWidth:150,
+        minHeight:200,
       },
-      
+      container1:{
+        paddingTop:20,
+      },
       c:{
         backgroundColor:'#F0F8FF',
         borderRadius:100,
-        
+        marginTop:20,
         marginHorizontal : 20,
       },
       submitbutton: {
-        fontSize : 20,
-        textAlign: 'center',
-        alignContent: 'center',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom:10,
+        width:100,
+        height:45,
+        fontSize : 15,
+        marginTop : 10,
+        marginRight : 10,
+        marginLeft : 10,
+        marginBottom : 20,
+        alignSelf: 'flex-start',
+        borderRadius: 10,
         color : "white",
-        paddingTop: 5,
-        height: 40,
       },
       svgCurve: {
         position: 'absolute',
