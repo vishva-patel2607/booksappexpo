@@ -90,7 +90,7 @@ const Bookscreen = (props) => {
               </Button>
               </View>
               <ScrollView style={styles.container1}  >
-              <Text></Text>
+              
               <Card.Title
               style={styles.c}
               subtitle="Name of the book"
@@ -98,7 +98,7 @@ const Bookscreen = (props) => {
               titleNumberOfLines={3}
               left={(props) => <Avatar.Icon {...props} icon="book" />}
               />
-              <Text></Text>
+              
               <Card.Title
               style={styles.c}
               subtitle="Author"
@@ -107,7 +107,7 @@ const Bookscreen = (props) => {
               titleNumberOfLines={3}
               left={(props) => <Avatar.Icon {...props} icon="pen" />}
               />
-              <Text></Text>
+              
               <Card.Title
               style={styles.c}
               subtitle="Price"
@@ -120,7 +120,7 @@ const Bookscreen = (props) => {
               title={book.book_condition}
               left={(props) => <Avatar.Icon {...props} icon={{ uri: 'https://static.thenounproject.com/png/729549-200.png' }} />}
               />
-              <Text></Text>
+              
               <Card.Title
               style={styles.c}
               subtitle="Shop distance"
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   c:{
     backgroundColor:'#F0F8FF',
     borderRadius:100,
-    marginBottom : 10,
+    marginTop : 20,
     marginHorizontal : 20,
   },
   submitbutton: {

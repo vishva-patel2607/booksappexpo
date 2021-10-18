@@ -10,7 +10,8 @@ import {
   StyleSheet,
   Alert,
   Pressable,
-  Linking
+  Linking,
+  StatusBar
 } from 'react-native';
 
 import {useDispatch, useSelector} from 'react-redux';
@@ -36,40 +37,7 @@ const tempoobj = {
                   dob: "Mon, 01 Oct 2001 00:00:00 GMT"
                 };
 
-const Usercard = (props) =>{
-  
 
-  const dispatch = useDispatch();
-  
-  const [userobj,setUserobj] = useState(props.user);
-
-  
-
-  return(
-    
-    <View style={styles.textStyle}>
-        
-        <Text></Text>
-        <Avatar.Text size={80} label={userobj.firstname[0]+userobj.lastname[0]} color='white' />
-        <Text></Text>
-        <Title>{userobj.firstname + " " + userobj.lastname}</Title>
-        <Subheading>{userobj.username}</Subheading>
-        <Text></Text>
-        <Subheading>📧 {userobj.email}</Subheading>
-        <Text>  </Text>
-        <Subheading>
-        📞 {userobj.phonenumber}</Subheading>
-        <Text></Text>
-        <Subheading>
-        🎂 {userobj.dob.split(" ")[1]+ " " +userobj.dob.split(" ")[2] + " " + userobj.dob.split(" ")[3]}</Subheading>
-        <Text></Text>
-
-    </View>
-
-  )
-  
-
-}
 
 
 
@@ -78,7 +46,7 @@ const UserRoute = (props) =>{
   
   const dispatch = useDispatch();
   const [LoadingData,setLoadingData] = useState(false);
-  const [userobj,setUserobj] = useState(tempoobj);
+  const [userobj,setUserobj] = useState(props.user);
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -116,9 +84,24 @@ const UserRoute = (props) =>{
         },[])
       if(LoadingData){
         return(
-          <SafeAreaView style={{flex:1}}>
+          <SafeAreaView style={styles.uploadimage}>
             <View style={{flex:1}}>
-              <Usercard user={userobj} />
+            <View style={styles.textStyle}>
+              <Avatar.Text size={80} label={userobj.firstname[0]+userobj.lastname[0]} color='white' />
+              
+              <Title style={styles.spaceinbetween}>{userobj.firstname + " " + userobj.lastname}</Title>
+              <Subheading style={styles.spaceinbetween} >{userobj.username}</Subheading>
+              <Subheading style={styles.spaceinbetween}>📧 {userobj.email}</Subheading>
+              
+                <Subheading style={styles.spaceinbetween}> 📞 {userobj.phonenumber} <Subheading  onPress = {() => {props.navigation.navigate("EditPhone");}}> <Avatar.Icon size={20} icon="pen"/></Subheading>  </Subheading>
+                
+                    
+                
+              
+              
+              <Subheading  style={styles.spaceinbetween}>
+              🎂 {userobj.dob.split(" ")[1]+ " " +userobj.dob.split(" ")[2] + " " + userobj.dob.split(" ")[3]}</Subheading>
+            </View>
               <Button 
                   mode = "contained"
                   style = {styles.submitbutton}
@@ -136,13 +119,6 @@ const UserRoute = (props) =>{
                 >
                   Log out
               </Button> 
-              <Button
-                  style={styles.editprofile}
-                  onPress = {() => {props.navigation.navigate("EditPhone");}}
-                  >
-              <Avatar.Icon size={20} icon="pen" />
-              
-            </Button>
             </View>
             <Button 
                style={{alignContent:'center'}}>
@@ -153,7 +129,7 @@ const UserRoute = (props) =>{
               <Button style={{alignSelf:'flex-end'}} onPress={ ()=>{ Linking.openURL('https://google.com')}}>Privacy Policy</Button>
               <Button style={{alignSelf:'flex-start'}} onPress={ ()=>{ Linking.openURL('https://google.com')}}> Contact Us</Button>
               </View>
-            
+  
             
           </SafeAreaView>
           
@@ -174,6 +150,14 @@ const UserRoute = (props) =>{
 }
 
 const styles = StyleSheet.create({
+  uploadimage: {
+    flex:1,
+    justifyContent: 'center',
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+  },
+  spaceinbetween:{
+    marginTop:15,
+  },
   userdetails: {
     textDecorationLine: 'underline',
   },

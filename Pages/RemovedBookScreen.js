@@ -45,7 +45,7 @@ const RemovedBookScreen =(props) => {
               subtitle="Code"
               title={Pickupdata.book_transaction_code}
               titleNumberOfLines={3}
-              left={(props) => <Avatar.Icon {...props} icon="book" />}
+              left={(props) => <Avatar.Icon {...props}  icon={{uri: 'https://cdn-icons-png.flaticon.com/512/1166/1166773.png'}} />}
               />
               
               <Card.Title
