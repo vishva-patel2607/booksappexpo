@@ -11,7 +11,7 @@ import {
   KeyboardAvoidingView,
   Alert,
   Pressable,
-
+  
 } from 'react-native';
 
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Card,Avatar, Subheading,Checkbox} from 'react-native-paper'; 
@@ -77,8 +77,8 @@ const Signup =  (props)=> {
             alert("Enter valid date");
             return;
         }
-        else if(checked===false){
-          alert("Kindly read the privacy policy");
+        else if(!checked){
+          alert("Kindly read and accept the privacy policy.");
           return;
         }
         else {
@@ -302,7 +302,7 @@ const Signup =  (props)=> {
                  status={checked ? 'checked' : 'unchecked'}
                  onPress={() => {
                    setChecked(!checked);}}/>
-                <Text>I agree to <Text onPress={console.log('Prssed')} style={{textDecorationLine:'underline'}}>Privacy policy</Text></Text>
+                <Text>I agree to <Text onPress={()=>{props.navigation.navigate('PrivacyPolicy')}} style={{textDecorationLine:'underline'}}>Privacy policy</Text></Text>
               </View>
 
               <Button 

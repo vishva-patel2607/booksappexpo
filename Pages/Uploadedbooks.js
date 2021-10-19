@@ -79,7 +79,7 @@ const UploadedBooks =(props) => {
                 style={styles.tinyLogo}
               source={{uri: Bookdata.book_img}}
               />
-            <View style={{flex:2,flexDirection:'column',marginBottom:20,marginRight:10,marginLeft:20}}>
+            <View style={{flex:2}}>
             <Button mode = "contained" style = {styles.submitbutton} labelStyle = {styles.submitbutton} onPress={removebook} >
               Remove
             </Button>
@@ -170,14 +170,12 @@ const UploadedBooks =(props) => {
         marginHorizontal : 20,
       },
       submitbutton: {
-        width:100,
+        marginRight:10,
+        marginLeft:10,
         height:45,
-        fontSize : 15,
+        fontSize : 18,
         marginTop : 10,
-        marginRight : 10,
-        marginLeft : 10,
-        marginBottom : 20,
-        alignSelf: 'flex-start',
+        marginBottom : 10,
         borderRadius: 10,
         color : "white",
       },
