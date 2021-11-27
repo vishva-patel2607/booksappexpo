@@ -8,6 +8,7 @@ import { DefaultTheme } from 'react-native-paper';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
+import EmailVerification from '../Pages/EmailVerification.js';
 import SearchRoute from '../Pages/Search.js';
 import PrivacyPolicy from '../Pages/Privacypolicy.js';
 import Booksaddedtopickup from '../Pages/Booksaddedtopickup.js';
@@ -158,6 +159,7 @@ const Navigation = () => {
             <Stack.Screen name='Signup' component={Signup}  options={{headerShown: false}}/>
             <Stack.Screen name="ForgotPassword" component={ForgotPassword} options={{headerShown: false}}/>
             <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} options={{headerShown:true}}/>
+            <Stack.Screen name="EmailVerification" component={EmailVerification} options={{headerShown:true}}/>
             </Stack.Navigator>
       </NavigationContainer>
     )

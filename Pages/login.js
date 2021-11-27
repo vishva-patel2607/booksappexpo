@@ -8,6 +8,7 @@ import {
   useColorScheme,
   View,
   Image,
+  Alert,
 } from 'react-native';
 
 import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Card,Avatar, Subheading } from 'react-native-paper'; 
@@ -26,11 +27,45 @@ const Login = (props) => {
     const [error,setError] = useState("");
     const [token,setToken] = useState("");
     const dispatch = useDispatch();
+    const [email,setEmail]=useState("");
     //const selector = useSelector();
 
 
     
-    
+      forgotpassword = () => {
+        if(username !== ""){
+          
+        fetch('https://booksapp2021.herokuapp.com/User/Forgotpassword',{
+          method:'POST',
+          headers:{
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body:JSON.stringify({
+            username: username,
+          })
+        })
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          if(data.status){
+            Alert.alert(
+              "Password reset link to change you password has been sent to your registered email",
+              "Please Check!"
+              [
+                {
+                  text:"OK",
+                }
+              ]
+            );
+          }
+          else{
+            setError(data.message);
+          }
+        })
+      }
+    }
     loginrequest = () => {
 
         let tokenvalue = "";
@@ -58,7 +93,29 @@ const Login = (props) => {
               dispatch(setUser(data.response.username,data.response.usernumber,data.response.token,data.status));
             }
             else{
-              setError(data.message);
+              if(data.message==="User is not verified"){
+                setToken(data.response.token);
+                setEmail(data.response.email);
+                Alert.alert(
+                  "Verification email has been sent to your email",
+                  "Please Check!"
+                  [
+                    {
+                      text:"OK",
+                      onPress : props.navigation.navigate('EmailVerification',{ token: token,email:email})
+                    }
+                  ]
+                );
+                setError(data.message + ' Verification Email has been sent to ' + data.response.email);
+
+
+              }
+              
+              
+              else{
+                setError(data.message);
+                console.log(data.message);
+              }
             }
         })
         .catch((error) => {
@@ -107,7 +164,11 @@ const Login = (props) => {
               >
                 Log in
               </Button>
-  
+              <Button 
+                onPress = {forgotpassword}
+              >
+                Forgot Password
+              </Button>
               <Text style={styles.error}>
                 {error}
               </Text>

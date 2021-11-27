@@ -108,8 +108,18 @@ const Signup =  (props)=> {
           .then((data) => {
               if(data.status){
                 setError(data.message);
+                Alert.alert(
+                  "Verification email has been sent to your email",
+                  "Please Verify."
+                  [
+                    {
+                      text:"OK",
+                    }
+                  ]
+                );
               }
               else{
+                
                 setError(data.message);
               }
           })
