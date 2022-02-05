@@ -9,9 +9,7 @@ import {
     Dimensions,
     Alert
   } from 'react-native';
-import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Avatar, Subheading,Card } from 'react-native-paper'; 
-import { TabRouter } from '@react-navigation/routers';
-import { set } from 'react-native-reanimated';
+import { Button,Text,Avatar,Card } from 'react-native-paper'; 
 import WavyHeader from './WavyHeader';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -89,7 +87,7 @@ const Bookscreen = (props) => {
                 Add to Pickup
               </Button>
               </View>
-              <ScrollView style={styles.container1}  >
+              <ScrollView style={{padding:20}}  >
               
               <Card.Title
               style={styles.c}
@@ -153,9 +151,6 @@ const styles = StyleSheet.create({
     minWidth:150,
     minHeight:200,
   },
-  container1:{
-    paddingTop:20,
-  },
   c:{
     backgroundColor:'#F0F8FF',
     borderRadius:100,
@@ -183,4 +178,4 @@ const styles = StyleSheet.create({
 
     
     
-export default Bookscreen;
+export default React.memo(Bookscreen);

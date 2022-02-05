@@ -1,20 +1,16 @@
-import React, { Component,useState } from 'react';
+import React, { useState } from 'react';
 import {
     SafeAreaView,
-    ScrollView,
     View,
-    Image,
     StyleSheet,
     Alert,
-    Pressable
 } from 'react-native';
   
 import {useDispatch, useSelector} from 'react-redux';
-  
-import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,RadioButton, Subheading,IconButton } from 'react-native-paper'; 
+
+import { Button,TextInput,Text } from 'react-native-paper'; 
 
 import {logoutUser} from '../actions'
-import { set } from 'react-native-reanimated';
 
 const tempoobj = {
     username : "hello",
@@ -162,11 +158,6 @@ const Changepassword = (props) => {
 
 const styles = StyleSheet.create({
     
-    textbox: {
-      textAlign: "center",
-      padding :20,
-    },
-  
     error: {
       textAlign: "center",
       fontSize: 20,
@@ -198,4 +189,4 @@ const styles = StyleSheet.create({
   });
 
 
-export default Changepassword;
+export default React.memo(Changepassword);

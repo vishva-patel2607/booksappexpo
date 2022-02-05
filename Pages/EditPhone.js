@@ -1,19 +1,14 @@
-import React, { Component,useState } from 'react';
+import React, { useState } from 'react';
 import {
     SafeAreaView,
-    ScrollView,
     View,
-    Image,
     StyleSheet,
     Alert,
-    Pressable
 } from 'react-native';
   
 import {useDispatch, useSelector} from 'react-redux';
 import {logoutUser} from '../actions'
-
-  
-import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,RadioButton, Subheading,IconButton } from 'react-native-paper';
+import { Button,TextInput,Text } from 'react-native-paper';
 const EditPhone = (props) => {
 
     const user = useSelector((state) => state.user);
@@ -96,8 +91,8 @@ const EditPhone = (props) => {
     */
 }
     return (
-        <SafeAreaView style={styles.layout}>
-            <View style={styles.layout}>
+        <SafeAreaView style={{flex:1}}>
+            <View style={{flex:1}}>
             <TextInput 
                 style = {styles.inputtextbox}
                 label="New Phone no"
@@ -126,11 +121,6 @@ const EditPhone = (props) => {
 }
 const styles = StyleSheet.create({
     
-    textbox: {
-      textAlign: "center",
-      padding :20,
-    },
-  
     error: {
       textAlign: "center",
       fontSize: 20,
@@ -148,16 +138,6 @@ const styles = StyleSheet.create({
       fontSize : 20,
       color : "white"
     },
-  
-    layout: {
-      flex:1,
-      
-     
-    },
-  
-  
-    
-  
-    
   });
-export default EditPhone;
+
+export default React.memo(EditPhone);

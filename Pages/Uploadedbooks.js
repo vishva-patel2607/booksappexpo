@@ -6,15 +6,11 @@ import {
     View,
     Image,
     StyleSheet,
-    Pressable,
-    Dimensions,
     Alert,
-    TouchableOpacity
   } from 'react-native';
-import {logoutUser, setUser} from '../actions'
+import {logoutUser} from '../actions'
 import {useDispatch, useSelector} from 'react-redux';
-import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Avatar, Subheading, Caption,IconButton,Card } from 'react-native-paper'; 
-import { TabRouter } from '@react-navigation/routers';
+import { Button,Avatar,Card } from 'react-native-paper'; 
 import WavyHeader from './WavyHeader';
 
 
@@ -75,19 +71,23 @@ const UploadedBooks =(props) => {
             <ScrollView>
             <View style={styles.container}>
             <WavyHeader customStyles={styles.svgCurve}/>
+
               <Image
                 style={styles.tinyLogo}
               source={{uri: Bookdata.book_img}}
               />
             <View style={{flex:2}}>
+
             <Button mode = "contained" style = {styles.submitbutton} labelStyle = {styles.submitbutton} onPress={removebook} >
               Remove
             </Button>
             <Button mode = "contained" style = {styles.submitbutton} labelStyle = {styles.submitbutton} onPress={()=>props.navigation.navigate('Edituploadedbook',{book:Bookdata})} >
               Edit
             </Button>
+            
             </View>
             </View>
+
             <Card.Title
             style={styles.c}
             subtitle="Code"
@@ -188,5 +188,5 @@ const UploadedBooks =(props) => {
     });
     
 
-export default UploadedBooks;
+export default React.memo(UploadedBooks);
 

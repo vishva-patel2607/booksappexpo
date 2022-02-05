@@ -142,11 +142,6 @@ const ForgotPassword = (props) => {
 
 }
 const styles = StyleSheet.create({
-    
-    textbox: {
-      textAlign: "center",
-      padding :20,
-    },
   
     error: {
       textAlign: "center",
@@ -172,4 +167,4 @@ const styles = StyleSheet.create({
      
     },
 });
-export default ForgotPassword;
+export default React.memo(ForgotPassword);

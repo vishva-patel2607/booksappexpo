@@ -31,7 +31,7 @@ const RemovedBookScreen =(props) => {
              <View style={styles.container}>
               <WavyHeader customStyles={styles.svgCurve}/>
                 <Image
-                  style={styles.tinyLogo}
+                  style={styles.book}
                 source={{uri: Pickupdata.book_img}}
                 />
               <Button mode = "text" style = {styles.submitbutton} labelStyle = {styles.submitbutton} >
@@ -63,6 +63,7 @@ const RemovedBookScreen =(props) => {
               title={Pickupdata.book_author}
               left={(props) => <Avatar.Icon {...props} icon={{ uri: 'https://cdn3.iconfinder.com/data/icons/inficons-currency-set/512/rupee-512.png' }} />}
               />
+              
               <Card.Title
               style={styles.c}
               subtitle="Price"
@@ -96,7 +97,7 @@ const RemovedBookScreen =(props) => {
         paddingTop: 20,
         flexDirection : 'row',
       },
-      tinyLogo: {
+      book: {
         width:'75%',
         height:'100%',
         flex:4,
