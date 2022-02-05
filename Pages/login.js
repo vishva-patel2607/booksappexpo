@@ -2,18 +2,15 @@
 import React, { Component,useState,useEffect } from 'react';
 import {
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
-  useColorScheme,
   View,
-  Image,
   Alert,
 } from 'react-native';
 
-import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Card,Avatar, Subheading } from 'react-native-paper'; 
+import { Button,Title,TextInput,Text } from 'react-native-paper'; 
 
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch} from 'react-redux';
 
 import { setUser } from '../actions';
 
@@ -128,7 +125,7 @@ const Login = (props) => {
       
       return (
           <SafeAreaView style={styles.loginlayout}>
-            <View style={styles.layout}>
+            <View style={{flex:1}}>
               
             <Title style={styles.textbox}>
                 Log in
@@ -222,14 +219,10 @@ const Login = (props) => {
      
     },
   
-    layout: {
-      flex:1,
-    },
-  
     
   
     
   });
 
 
-  export default Login;
+  export default React.memo(Login);

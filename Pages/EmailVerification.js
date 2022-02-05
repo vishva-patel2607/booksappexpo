@@ -69,7 +69,7 @@ import { set } from 'react-native-reanimated';
             </Text>
             <Title style={{textAlign:'center'}}>Change Email?</Title>
             <TextInput 
-                style = {styles.inputtextbox}
+                style = {{margin:10}}
                 label="Email"
                 onChangeText = {(text) => setEmail(text)}
                 autoCapitalize = 'none'
@@ -88,15 +88,12 @@ import { set } from 'react-native-reanimated';
   }
   
   const styles=StyleSheet.create({
+    
     error: {
         textAlign: "center",
         fontSize: 20,
         color: "red",
         padding :20,
       },
-      inputtextbox: {
-        margin : 10,
-        
-      },
   });
-  export default EmailVerification;
+  export default React.memo(EmailVerification);

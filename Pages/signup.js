@@ -3,19 +3,13 @@ import React, { Component,useState,useRef } from 'react';
 import {
   SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
-  useColorScheme,
   View,
-  Image,
   KeyboardAvoidingView,
   Alert,
-  Pressable,
-  
 } from 'react-native';
 
-import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Card,Avatar, Subheading,Checkbox} from 'react-native-paper'; 
-import { setUser } from '../actions';
+import { Button,Title,TextInput,Text,Checkbox} from 'react-native-paper'; 
 
 
 
@@ -163,7 +157,7 @@ const Signup =  (props)=> {
   
     
   return (
-          <SafeAreaView style={styles.loginlayout}>
+          <SafeAreaView style={{flex:1}}>
            
  
             <Title style={styles.textbox}>
@@ -171,7 +165,7 @@ const Signup =  (props)=> {
               </Title>
 
               
-              <KeyboardAvoidingView behavior= {Platform.OS === "ios" ? 'padding' : "height"}  style={styles.layout} >
+              <KeyboardAvoidingView behavior= {Platform.OS === "ios" ? 'padding' : "height"}  style={{flex:1}} >
               <ScrollView>
              
               
@@ -373,20 +367,10 @@ const styles = StyleSheet.create({
       color : "white"
     },
   
-    loginlayout: {
-      flex:1,
-      
-     
-    },
-  
-    layout: {
-      flex:1,
-    },
-  
     
   
     
   });
 
 
-  export default Signup;
+  export default React.memo(Signup);

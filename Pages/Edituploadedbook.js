@@ -1,17 +1,16 @@
 import React, { Component,useEffect,useState } from 'react';
 import {
     SafeAreaView,
-    ScrollView,
     View,
-    Image,
     StyleSheet,
     Alert,
-    Pressable
 } from 'react-native';
-import {logoutUser, setUser} from '../actions'
+import {logoutUser} from '../actions'
 import {useDispatch, useSelector} from 'react-redux';
-import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,RadioButton, Subheading,IconButton } from 'react-native-paper';
+import { Button,Text,RadioButton } from 'react-native-paper';
+
 const Edituploadedbook = (props) => {
+
   const [Bookdata, setBookdata] = useState(props.route.params?.book);
   const [Newname, setNewname] = useState(props.route.params?.book.book_name);
   const [Newauthor, setNewauthor] = useState(props.route.params?.book.book_author);
@@ -20,6 +19,7 @@ const Edituploadedbook = (props) => {
   const [NewCondition,setNewCondition] = useState(props.route.params?.book.book_condition);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+
   useEffect(()=>{
     setBookdata(props.route.params?.book)
     setNewname(props.route.params?.book.book_name),
@@ -28,6 +28,7 @@ const Edituploadedbook = (props) => {
     setNewCondition(props.route.params?.book.book_condition),
     setNewyear(props.route.params?.book.book_year)
   },[props.route.params?.book])
+
   const editbooks = () => {
     fetch('https://booksapp2021.herokuapp.com/Book/Uploadedbooks/Edit',{
       method: 'PUT',
@@ -71,6 +72,7 @@ const Edituploadedbook = (props) => {
       console.log(error);
     })
   }
+
         return(
             <SafeAreaView style={styles.layout}>
             <View style={styles.layout}>
@@ -156,11 +158,7 @@ const styles = StyleSheet.create({
     layout: {
       flex:1,
     },
-  
-  
-    cardview :{
-      flex:1,
-    },
+
     logoutbutton:{
         alignSelf: 'center',
         width: 300,
@@ -168,28 +166,20 @@ const styles = StyleSheet.create({
         color: "white",
         borderRadius: 10,
     },
+
     textbox: {
         textAlign: "center",
         padding :10,
         fontSize: 20,
     },
+
     cardscroll :{
       flex : 1,
       height : '100%',
       margin : 10,
     },
-    setFontSizeName: {
-      fontSize: 20,
-      marginTop: 110,
-    },
-    setFontSizeAuthor: {
-      fontSize: 20,
-      
-    },
-    
-  
+
     cardcontainer : {
-      
       flex: 1,
       flexDirection : 'row',
       justifyContent : 'center',
@@ -198,43 +188,22 @@ const styles = StyleSheet.create({
       marginBottom : 10,
       marginTop : 10,
       borderRadius : 5,
-      
     },
     submitbutton: {
         margin : 10,
         fontSize : 20,
         color : "white",
     },
+
     layout: {
         flex:1,
       },
+
     editbook:{
         alignSelf:'flex-end',
         marginTop: -10,
         
     },
-  
-    cardcontent : {
-      flex : 4,
-      height: 150,
-      justifyContent: 'center',
-      alignItems:'center', 
-      margin : 10,
-    },
-  
-    cardimage : {
-      flex : 3,
-      height: 150,
-      justifyContent: 'center',
-      alignItems:'center', 
-    },
-    pickupbook:{
-      alignSelf: 'center',
-      width: 300,
-      fontSize: 20,
-      color: "white",
-      borderRadius: 10,
-    },
     
   });
-export default Edituploadedbook;
+export default React.memo(Edituploadedbook);

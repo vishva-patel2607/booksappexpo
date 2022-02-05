@@ -1,34 +1,13 @@
-import React, { Component,useState,useCallback, useEffect } from 'react';
+import React, {useState, useEffect } from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
   View,
-  Image,
   StyleSheet,
-  Alert,
-  Pressable
 } from 'react-native';
-import {logoutUser, setUser} from '../actions'
 import {  Platform, StatusBar } from "react-native";
-import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,RadioButton, Headline,IconButton,Provider,Portal,Modal, Surface,Subheading,ActivityIndicator } from 'react-native-paper'; 
-import DateTimePicker from '@react-native-community/datetimepicker';
-
+import { Title,Paragraph,IconButton} from 'react-native-paper'; 
 import MapView, { Marker } from 'react-native-maps';
-import {useDispatch, useSelector} from 'react-redux';
-import * as Location from 'expo-location';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-
-
-
-
-
-
-
 
 const Storemodalcard = (props)=> {
-
-    
-
 
     const [showMap,setShowMap] = useState(false);
     const [storeInchargeName,setStoreInchargeName] = useState(props.storeInchargeName);
@@ -47,8 +26,6 @@ const Storemodalcard = (props)=> {
         
     })
 
-
-
     useEffect(() => {
         setStoreInchargeName(props.storeInchargeName);
         setShopName(props.shopName);
@@ -59,9 +36,6 @@ const Storemodalcard = (props)=> {
         setLongitude(props.longitude);
         setLatitude(props.latitude);
     }, [props.storeInchargeName,props.shopName,props.address,props.pincode,props.distance,props.contactNo,props.latitude,props.longitude])
-
-
-
    
         let map;
         if (showMap) {
@@ -210,4 +184,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default Storemodalcard;
+export default React.memo(Storemodalcard);

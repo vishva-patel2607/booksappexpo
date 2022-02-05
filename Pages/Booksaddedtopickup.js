@@ -1,20 +1,18 @@
 
-import React, { Component,useState } from 'react';
+import React, { useState } from 'react';
+
 import {
     SafeAreaView,
     ScrollView,
     View,
     Image,
     StyleSheet,
-    Pressable,
-    Dimensions,
     Alert,
-    TouchableOpacity
   } from 'react-native';
-import {logoutUser, setUser} from '../actions'
+
+import {logoutUser} from '../actions'
 import {useDispatch, useSelector} from 'react-redux';
-import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,Avatar, Subheading, Caption,IconButton,Card } from 'react-native-paper'; 
-import { TabRouter } from '@react-navigation/routers';
+import { Button,Avatar,Card } from 'react-native-paper'; 
 import WavyHeader from './WavyHeader';
 import Storemodalcard from './Storemodalcard';
 
@@ -150,6 +148,7 @@ const Booksaddedtopickup =(props) => {
         paddingTop: 20,
         flexDirection : 'row',
       },
+      
       tinyLogo: {
         width:'75%',
         height:'100%',
@@ -161,9 +160,6 @@ const Booksaddedtopickup =(props) => {
         maxHeight:200,
         minWidth:150,
         minHeight:200,
-      },
-      container1:{
-        paddingTop:20,
       },
       c:{
         backgroundColor:'#F0F8FF',
@@ -192,5 +188,5 @@ const Booksaddedtopickup =(props) => {
     });
     
 
-export default Booksaddedtopickup;
+export default React.memo(Booksaddedtopickup);
 

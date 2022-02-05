@@ -1,4 +1,4 @@
-import React, { Component,useState,useCallback, useEffect } from 'react';
+import React, {useState, useEffect } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -10,14 +10,11 @@ import {
 } from 'react-native';
 import {logoutUser, setUser} from '../actions'
 import {  Platform, StatusBar } from "react-native";
-import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,RadioButton, Headline,IconButton,Provider,Portal,Modal, Surface,Subheading } from 'react-native-paper'; 
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { Button,Title,TextInput,Text,RadioButton, Headline,IconButton} from 'react-native-paper'; 
 import Storemodalcard from './Storemodalcard';
 
 
 import {useDispatch, useSelector} from 'react-redux';
-import * as Location from 'expo-location';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 
@@ -361,7 +358,7 @@ const styles = StyleSheet.create({
     
 });
 
-export default UploadRoute;
+export default React.memo(UploadRoute);
 
 
 /*
