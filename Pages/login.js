@@ -88,6 +88,7 @@ const Login = (props) => {
           return response.json(); 
         })
         .then((data) => {
+          console.log(data)
             if(data.status){
               setError(data.message);
               dispatch(setUser(data.response.username,data.response.usernumber,data.response.token,data.status));
@@ -96,6 +97,8 @@ const Login = (props) => {
               if(data.message==="User is not verified"){
                 setToken(data.response.token);
                 setEmail(data.response.email);
+
+                // if phone number is not verified verify it here
                 Alert.alert(
                   "Verification email has been sent to your email",
                   "Please Check!"

@@ -87,9 +87,8 @@ const Changepassword = (props) => {
               );
             }
             else{
-              if(data.message==='Could not verify'){
+              if(data.message === 'Could not verify'){
                 dispatch(logoutUser());
-
               }
               else{
                 setError(data.message);

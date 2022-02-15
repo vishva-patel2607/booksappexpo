@@ -19,6 +19,8 @@ import HomeRoute from '../Pages/Home.js';
 import Bookscreen from '../Pages/Bookscreen';
 import Camerascreen from '../Pages/Camerascreen';
 import Changepassword from '../Pages/Changepassword';
+import PhonenumberVerification from "../Pages/PhonenumberVerification";
+
 import { CommonActions } from '@react-navigation/routers';
 import Login from '../Pages/login';
 import Signup from '../Pages/signup';
@@ -152,17 +154,42 @@ const Navigation = () => {
     )
   }
   else {
-    return(
+    return (
       <NavigationContainer theme={theme}>
-            <Stack.Navigator >
-            <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
-            <Stack.Screen name='Signup' component={Signup}  options={{headerShown: false}}/>
-            <Stack.Screen name="ForgotPassword" component={ForgotPassword} options={{headerShown: false}}/>
-            <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} options={{headerShown:true}}/>
-            <Stack.Screen name="EmailVerification" component={EmailVerification} options={{headerShown:true}}/>
-            </Stack.Navigator>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Signup"
+            component={Signup}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="ForgotPassword"
+            component={ForgotPassword}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="PrivacyPolicy"
+            component={PrivacyPolicy}
+            options={{ headerShown: true }}
+          />
+          <Stack.Screen
+            name="EmailVerification"
+            component={EmailVerification}
+            options={{ headerShown: true }}
+          />
+          <Stack.Screen
+            name="PhonenumberVerification"
+            component={PhonenumberVerification}
+            options={{ headerShown: true }}
+          />
+        </Stack.Navigator>
       </NavigationContainer>
-    )
+    );
   }
 }
 
