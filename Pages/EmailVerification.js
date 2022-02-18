@@ -1,24 +1,15 @@
 import React,{Component,useState,useEffect} from 'react';
 import {
-    SafeAreaView,
-    ScrollView,
-    View,
     StyleSheet,
     Alert
   } from 'react-native';
-  import {  Platform, StatusBar,RefreshControl } from "react-native";
-  import {logoutUser, setUser} from '../actions'
-  import { Title,Text,Headline,Card,Button,TextInput} from 'react-native-paper'; 
-  
-  import Horizontalscrollview from './Horizontalscrollview';
-  import {useDispatch, useSelector} from 'react-redux';
-import { set } from 'react-native-reanimated';
+  import { Title,Text,Button,TextInput} from 'react-native-paper'; 
 
   const EmailVerification = (props) => {
     const [email,setEmail] = useState(props.route.params.email);
     const [token,setToken] = useState(props.route.params.token);
     const [error,setError] = useState("");
-    const [newemail,setNewemail] = useState("");
+    // const [newemail,setNewemail] = useState("");
     
     changeemail = () => {
       var emailRegex = new RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i );
@@ -64,10 +55,10 @@ import { set } from 'react-native-reanimated';
     return (
         <>
             <Text style={styles.error}>
-            Mail has already been sent to 
+            Mail has been sent.
               Check the spam folder.{email}
             </Text>
-            <Title style={{textAlign:'center'}}>Change Email?</Title>
+            <Title style={{textAlign:'center'}}>Change Email</Title>
             <TextInput 
                 style = {{margin:10}}
                 label="Email"
@@ -79,10 +70,11 @@ import { set } from 'react-native-reanimated';
                 left = {<TextInput.Icon name="email"/>}
                 keyboardType='email-address'
             />
+
+            <Button onPress={changeemail}>Change Email</Button>
             <Text style={styles.error}>
               {error}
             </Text>
-            <Button onPress={changeemail}>Change Email</Button>
         </>
     )
   }

@@ -1,4 +1,5 @@
 import React, {useState, useEffect } from 'react';
+import RNPickerSelect from 'react-native-picker-select';
 import {
   SafeAreaView,
   ScrollView,
@@ -35,6 +36,7 @@ const UploadRoute = (props) => {
     const [condition,setCondition] = useState("good");
     const [shop,setShop] = useState(null);
     const [price,setPrice] = useState("");
+    const [category,setCategory] = useState("");
     const dispatch = useDispatch();
     const user = useSelector( (state) => state.user)
     
@@ -83,6 +85,7 @@ const UploadRoute = (props) => {
                                 setPrice("");
                                 setShop(null);
                                 setYear("");
+                                setCategory("");
                                 console.log(data.response.book);
                                 console.log(data.response.transaction);
                             }
@@ -187,6 +190,25 @@ const UploadRoute = (props) => {
                     maxLength = {4}
                     />
                 </View>
+                <View style={{justifyContent:'center',marginHorizontal:8,marginTop:8}}>
+                <RNPickerSelect
+                        onValueChange={(value) => setCategory(value)}
+                            items={[
+                                { label: 'Crime and Thriller', value: 'crime/thriller' },
+                                { label: 'Religious', value: 'religious' },
+                                { label: 'Self-Help', value: 'selfhelp' },
+                                { label: 'Romance', value: 'romance' },
+                                { label: 'Humor', value: 'humor' },
+                                { label: 'Sci-Fi', value: 'scifi' },
+                                { label: 'Biography', value: 'biography' },
+                                { label: 'History', value: 'history' },
+                            ]}
+                            selectedValue={category}
+                            placeholder={{label: 'Category of Book', value: ''}}
+                            useNativeAndroidPickerStyle={false}
+                            style={customPickerStyles}
+                        />
+                </View>
                 
                     
                     
@@ -218,6 +240,8 @@ const UploadRoute = (props) => {
                     
                         
                 </View>
+                
+                
 
                 
 
@@ -357,6 +381,31 @@ const styles = StyleSheet.create({
     
     
 });
+
+const customPickerStyles = StyleSheet.create({
+    inputIOS: {
+      fontSize: 14,
+      paddingVertical: 15,
+      paddingHorizontal: 15,
+      borderWidth: 1,
+      borderColor: 'black',
+      borderRadius: 8,
+      color: 'black',
+      paddingRight: 30,
+       // to ensure the text is never behind the icon
+    },
+    inputAndroid: {
+      fontSize: 14,
+      paddingHorizontal: 10,
+      paddingVertical: 8,
+      borderWidth: 1,
+      borderColor: 'black',
+      borderRadius: 8,
+      color: 'black',
+      paddingRight: 30, // to ensure the text is never behind the icon
+    },
+  });
+
 
 export default React.memo(UploadRoute);
 
