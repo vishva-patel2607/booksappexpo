@@ -9,7 +9,7 @@ import {
   Alert,
   Pressable,
 } from "react-native";
-import FastImage from "react-native-fast-image";
+import BooksApptitle from "../SvgAssets/BooksApp.js";
 import { logoutUser, setUser } from "../actions";
 import { Platform, StatusBar } from "react-native";
 import {
@@ -62,6 +62,7 @@ const UploadRoute = (props) => {
       formData.append("store_id", shop.store_id);
       formData.append("book_price", price);
       formData.append("book_img", imagedata);
+      formData.append("book_category", category);
       fetch("https://booksapp2021.herokuapp.com/Book/Upload", {
         method: "POST",
         headers: {
@@ -138,6 +139,9 @@ const UploadRoute = (props) => {
 
   return (
     <SafeAreaView style={styles.uploadimage}>
+      {/* <View style={{ marginLeft: 22, marginTop: 12, marginBottom: 15 }}>
+        <BooksApptitle />
+      </View> */}
       <ScrollView>
         <View style={styles.container1}>
           <View style={styles.container11}>
@@ -146,7 +150,7 @@ const UploadRoute = (props) => {
                 style={{ flex: 1, height: "100%", width: "100%" }}
                 onPress={() => props.navigation.navigate("Camerascreen")}
               >
-                <FastImage
+                <Image
                   style={{
                     flex: 1,
                     resizeMode: "cover",
