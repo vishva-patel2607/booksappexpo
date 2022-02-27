@@ -20,6 +20,8 @@ import Bookscreen from '../Pages/Bookscreen';
 import Camerascreen from '../Pages/Camerascreen';
 import Changepassword from '../Pages/Changepassword';
 import PhonenumberVerification from "../Pages/PhonenumberVerification";
+// import BookCondition from "../Pages/BookConditions"
+
 
 import { CommonActions } from '@react-navigation/routers';
 import Login from '../Pages/login';

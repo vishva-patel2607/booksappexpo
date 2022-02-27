@@ -6,6 +6,7 @@ import { Title, Text, Headline, Card, Button } from "react-native-paper";
 
 import Horizontalscrollview from "./Horizontalscrollview";
 import { useDispatch, useSelector } from "react-redux";
+import BookConditions from "./BookConditions";
 
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -257,6 +258,7 @@ const HomeRoute = (props) => {
       .then((data) => {
         if (data.status) {
           setBookData(data.response.books);
+          console.log(data.response.books);
         } else {
           if (data.message === "Could not verify") {
             dispatch(logoutUser());
@@ -311,6 +313,7 @@ const HomeRoute = (props) => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
+        <BookConditions />
         <Card style={{ marginTop: 20, borderRadius: 35 }}>
           <Card.Content>
             <Title>Books Uploaded:- {Bookdata.length}</Title>

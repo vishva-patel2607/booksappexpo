@@ -9,7 +9,7 @@ import {
   Pressable,
 } from "react-native";
 import { logoutUser, setUser } from "../actions";
-import { Platform, StatusBar,Dimensions, } from "react-native";
+import { Platform, StatusBar, Dimensions } from "react-native";
 import {
   Button,
   Title,
@@ -37,6 +37,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { BarCodeScanner } from "expo-barcode-scanner";
 
 const UploadRoute = (props) => {
+  const [imgurl, setImgurl] = useState(null);
   const [name, setName] = useState("");
   const [isbn, setIsbn] = useState("");
   const [error, setError] = useState("");
@@ -52,67 +53,127 @@ const UploadRoute = (props) => {
     setShop(props.route.params?.shop);
   }, [props.route.params?.shop]);
 
-  const uploaddetails = () => {
+  useEffect(() => {
     if (
       props.route.params?.photo !== null &&
       props.route.params?.photo !== undefined
     ) {
-      console.log("Inside upload details");
       var photouri = props.route.params?.photo.uri;
-      console.log(props.route.params?.photo);
       var imagedata = {
         uri: photouri,
         type: "image/jpeg",
         name: "photo.jpg",
       };
-      let formData = new FormData();
-      formData.append("book_name", name);
-      formData.append("book_author", author);
-      formData.append("book_year", year);
-      formData.append("book_condition", condition);
-      formData.append("store_id", shop.store_id);
-      formData.append("book_price", price);
-      formData.append("book_img", imagedata);
-      formData.append("book_isbn", isbn);
-      fetch("https://booksapp2021.herokuapp.com/Book/Upload", {
+
+      if (imgurl) {
+        changeImage(imagedata);
+        console.log("Changed image");
+      } else {
+        uploadNewImage(imagedata);
+        console.log("New image upload");
+      }
+    }
+  }, [props.route.params?.photo]);
+
+  const uploadNewImage = async (imagedata) => {
+    let formData = new FormData();
+    formData.append("book_img", imagedata);
+
+    const fetchRes = await fetch(
+      "https://booksapp2021.herokuapp.com/Book/Upload/Image",
+      {
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "multipart/form-data",
           "x-access-token": user.token,
         },
-
         body: formData,
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          if (data.status) {
-            alert("Book Uploaded Succesfully");
-            setAuthor("");
-            setCondition("good");
-            setName("");
-            setPrice("");
-            setShop(null);
-            setYear("");
-            setIsbn("");
-            console.log(data.response.book);
-            console.log(data.response.transaction);
-          } else {
-            if (data.message === "Could not verify") {
-              dispatch(logoutUser());
-            }
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      }
+    );
+    const res = await fetchRes.json();
+    if (res.status === true) {
+      alert("Image uploaded successfully");
+      console.log("API resposne: ", res.response.book);
+      setImgurl(res.response.book);
     } else {
-      Alert.alert("No Photo", "Please click a photo and then upload", [
-        { text: "Ok!" },
-      ]);
+      alert("Error ocuured while uploading the image");
     }
+  };
+
+  const changeImage = async (imagedata) => {
+    let formData = new FormData();
+    formData.append("old_book_img_url", imgurl);
+    formData.append("book_img", imagedata);
+    const fetchRes = await fetch(
+      "https://booksapp2021.herokuapp.com/Book/Upload/Image",
+      {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+          "x-access-token": user.token,
+        },
+        body: formData,
+      }
+    );
+    const res = await fetchRes.json();
+    if (res.status === true) {
+      alert("Image changed successfully");
+      console.log("API resposne: ", res.response.book);
+      setImgurl(res.response.book);
+    } else {
+      alert("Error ocuured while changing the image");
+    }
+  };
+
+  const uploaddetails = async () => {
+    let formData = new FormData();
+    formData.append("book_name", name);
+    formData.append("book_author", author);
+    formData.append("book_year", year);
+    formData.append("book_condition", condition);
+    formData.append("store_id", shop.store_id);
+    formData.append("book_price", price);
+    formData.append("book_img_url", imgurl);
+    formData.append("book_isbn", isbn);
+
+    console.log(formData);
+    fetch("https://booksapp2021.herokuapp.com/Book/Upload", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        "x-access-token": user.token,
+      },
+
+      body: formData,
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.status) {
+          alert("Book Uploaded Succesfully");
+          setImgurl(null)
+          setAuthor("");
+          setCondition("good");
+          setName("");
+          setPrice("");
+          setShop(null);
+          setYear("");
+          setIsbn("");
+          console.log(data.response.book);
+          console.log(data.response.transaction);
+        } else {
+          if (data.message === "Could not verify") {
+            dispatch(logoutUser());
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   let selected;
@@ -154,7 +215,7 @@ const UploadRoute = (props) => {
 
       const json = await res.json();
       setName(json.title);
-      setYear(json.publish_date)
+      setYear(json.publish_date);
       const resauthor = await fetch(
         `https://openlibrary.org/${json.authors[0].key}.json`
       );
@@ -195,6 +256,7 @@ const UploadRoute = (props) => {
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
+
   return (
     <SafeAreaView style={styles.uploadimage}>
       <ScrollView>
@@ -214,7 +276,7 @@ const UploadRoute = (props) => {
             value={isbn}
             onChangeText={(isbn) => setIsbn(isbn.replace(/[^0-9]/g, ""))}
             keyboardType="number-pad"
-            right={<TextInput.Icon name={'qrcode'} size={28} />}
+            right={<TextInput.Icon name={"qrcode"} size={28} />}
           />
           <Button
             onPress={() => {
@@ -253,7 +315,7 @@ const UploadRoute = (props) => {
                     height: "100%",
                     width: "100%",
                   }}
-                  source={{ uri: props.route.params?.photo.uri }}
+                  source={{ uri: imgurl }}
                 />
               </Pressable>
             ) : (
@@ -352,6 +414,7 @@ const UploadRoute = (props) => {
           style={styles.submitbutton}
           labelStyle={styles.submitbutton}
           onPress={uploaddetails}
+          disabled={!imgurl}
         >
           Upload
         </Button>

@@ -8,6 +8,7 @@ const initialState = {
     accountNumber: "1234567890",
     token: "JhonnyAppleseed",
     isAuthenticated: false,
+    isFirstTime: true,
   },
 };
 
@@ -18,6 +19,7 @@ export const setUser =
       accountNumber: usernumber,
       token: token,
       isAuthenticated: auth,
+      isFirstTime: false,
     };
 
     try {
