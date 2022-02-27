@@ -118,7 +118,7 @@ const SearchRoute = (props) => {
                   <Paragraph>{book.store_distance} km(s) away</Paragraph>
                 </View>
                 <View style={styles.cardimage}>
-                  <FastImage
+                  <Image
                     style={{
                       resizeMode: "cover",
                       height: "100%",

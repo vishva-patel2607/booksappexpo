@@ -71,7 +71,7 @@ const Booksaddedtopickup = (props) => {
       <ScrollView>
         <View style={styles.container}>
           <WavyHeader customStyles={styles.svgCurve} />
-          <FastImage
+          <Image
             style={styles.tinyLogo}
             source={{ uri: Pickupdata.book_img }}
           />

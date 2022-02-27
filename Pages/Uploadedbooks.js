@@ -63,10 +63,7 @@ const UploadedBooks = (props) => {
         <View style={styles.container}>
           <WavyHeader customStyles={styles.svgCurve} />
 
-          <FastImage
-            style={styles.tinyLogo}
-            source={{ uri: Bookdata.book_img }}
-          />
+          <Image style={styles.tinyLogo} source={{ uri: Bookdata.book_img }} />
           <View style={{ flex: 2 }}>
             <Button
               mode="contained"
