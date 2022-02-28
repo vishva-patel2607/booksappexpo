@@ -1,14 +1,12 @@
 import { ActivityIndicator, Colors } from "react-native-paper";
 import { Avatar } from "react-native-paper";
+
 import React, { Component, useState, useCallback, useEffect } from "react";
+
 import {
   SafeAreaView,
-  ScrollView,
   View,
-  Image,
   StyleSheet,
-  Alert,
-  Pressable,
   Linking,
   StatusBar,
 } from "react-native";
@@ -44,6 +42,7 @@ const tempoobj = {
   phonenumber: "+91 7227950335",
   dob: "Mon, 01 Oct 2001 00:00:00 GMT",
 };
+
 
 const UserRoute = (props) => {
   const dispatch = useDispatch();
@@ -83,49 +82,54 @@ const UserRoute = (props) => {
         console.log(error);
       });
   }, []);
+
+
   if (LoadingData) {
     return (
-      <SafeAreaView style={styles.uploadimage}>
-        <View style={{ flex: 1 }}>
-          <View style={styles.textStyle}>
-            <Avatar.Text
-              size={80}
-              label={userobj.firstname[0] + userobj.lastname[0]}
-              color="white"
-            />
-
-            <Title style={styles.spaceinbetween}>
-              {userobj.firstname + " " + userobj.lastname}
-            </Title>
-            <Subheading style={styles.spaceinbetween}>
-              {userobj.username}
+      <SafeAreaView style={styles.safeareaview}>
+        <View
+          style={{
+            flex: 14,
+            alignItems: "center",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+          }}
+        >
+          <Avatar.Text
+            size={80}
+            label={userobj.firstname[0] + userobj.lastname[0]}
+            color="white"
+          />
+          <Title style={{ marginTop: 15 }}>
+            {userobj.firstname + " " + userobj.lastname}
+          </Title>
+          <Subheading style={{ marginTop: 15 }}>{userobj.username}</Subheading>
+          <Subheading style={{ marginTop: 15 }}>📧 {userobj.email}</Subheading>
+          <View
+            style={{ flexDirection: "row", marginTop: 15, alignSelf: "center" }}
+          >
+            <Subheading style={{ justifyContent: "center" }}>
+              📞 {userobj.phonenumber}
             </Subheading>
-            <Subheading style={styles.spaceinbetween}>
-              📧 {userobj.email}
-            </Subheading>
 
-            <Subheading style={styles.spaceinbetween}>
-              {" "}
-              📞 {userobj.phonenumber}{" "}
-              <Subheading
+            <View style={{ marginLeft: 20, justifyContent: "center" }}>
+              <Avatar.Icon
+                size={20}
+                icon="pen"
                 onPress={() => {
                   props.navigation.navigate("EditPhone");
                 }}
-              >
-                {" "}
-                <Avatar.Icon size={20} icon="pen" />
-              </Subheading>{" "}
-            </Subheading>
-
-            <Subheading style={styles.spaceinbetween}>
-              🎂{" "}
-              {userobj.dob.split(" ")[1] +
-                " " +
-                userobj.dob.split(" ")[2] +
-                " " +
-                userobj.dob.split(" ")[3]}
-            </Subheading>
+              />
+            </View>
           </View>
+          <Subheading style={{ marginTop: 15 }}>
+            🎂{" "}
+            {userobj.dob.split(" ")[1] +
+              " " +
+              userobj.dob.split(" ")[2] +
+              " " +
+              userobj.dob.split(" ")[3]}
+          </Subheading>
           <Button
             mode="contained"
             style={styles.submitbutton}
@@ -145,10 +149,23 @@ const UserRoute = (props) => {
             Log out
           </Button>
         </View>
-        <Button style={{ alignContent: "center" }}>© BooksAppExpo.</Button>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+
+
+        <View
+          style={{ flex: 5, justifyContent: "flex-end", alignItems: "center" }}
+        >
+          <Button>© BooksAppExpo.</Button>
+        </View>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+          }}
+        >
           <Button
-            style={{ alignSelf: "flex-end" }}
+
             onPress={() => {
               Linking.openURL("https://google.com");
             }}
@@ -156,7 +173,6 @@ const UserRoute = (props) => {
             Privacy Policy
           </Button>
           <Button
-            style={{ alignSelf: "flex-start" }}
             onPress={() => {
               Linking.openURL("https://google.com");
             }}
@@ -179,41 +195,18 @@ const UserRoute = (props) => {
 };
 
 const styles = StyleSheet.create({
-  uploadimage: {
+
+  safeareaview: {
     flex: 1,
-    justifyContent: "center",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
-  spaceinbetween: {
-    marginTop: 15,
-  },
-  userdetails: {
-    textDecorationLine: "underline",
-  },
-  textStyle: {
-    marginTop: 10,
-    alignItems: "center",
-  },
-  error: {
-    textAlign: "center",
-    fontSize: 20,
-    color: "red",
-    padding: 20,
-  },
+
+
   activityindicator: {
     padding: 100,
     alignSelf: "center",
   },
-  editprofile: {
-    fontSize: 20,
-    marginBottom: 10,
-    marginTop: -242,
-    height: 35,
-    width: 150,
-    alignSelf: "flex-end",
-    borderRadius: 10,
-    marginRight: -10,
-  },
+                                 
   submitbutton: {
     margin: 30,
     fontSize: 20,
@@ -224,17 +217,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     color: "white",
   },
+
   logoutbutton: {
     alignSelf: "center",
     width: 250,
     fontSize: 20,
     color: "white",
-    borderRadius: 10,
+    borderRadius: 12,
   },
 
-  bg: {
-    backgroundColor: "#EDEDF0",
-  },
 });
 
 export default UserRoute;

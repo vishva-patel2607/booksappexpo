@@ -1,10 +1,10 @@
-import React, { Component,useState,useEffect } from 'react';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import React, { Component, useState, useEffect } from "react";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { Image } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
 
-import { NavigationContainer } from '@react-navigation/native';
-
-import { createStackNavigator } from '@react-navigation/stack';
-import { DefaultTheme } from 'react-native-paper';
+import { createStackNavigator } from "@react-navigation/stack";
+import { DefaultTheme } from "react-native-paper";
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -35,75 +35,108 @@ import UploadedBooks from '../Pages/Uploadedbooks.js';
 import Edituploadedbook from '../Pages/Edituploadedbook.js';
 
 const theme = {
-
   ...DefaultTheme,
   roundness: 5,
   colors: {
     ...DefaultTheme.colors,
-  primary : '#7CABF0',
-  accent : "#EF90A9",
-  background : '#FFFFFF',
-  surface : "#EDEDF0",
-  disabled : '#808080',
-  backdrop : '#7CABF0',
-  onSurface : '#EDEDF0',
-  notification : '#EF90A9',
-  
-    
+    primary: "#FFFFFF",
+    accent: "#EF90A9",
+    background: "#FFFFFF",
+    surface: "#EDEDF0",
+    disabled: "#808080",
+    backdrop: "#7CABF0",
+    onSurface: "#EDEDF0",
+    notification: "#EF90A9",
   },
 };
 
 const Bottomnavcomponent = () => {
-    return (
-      <Tab.Navigator
-        initialRouteName="Home"
-        shifting={true}
-        sceneAnimationEnabled={false}
-        activeColor = {"white"}
-        inactiveColor = {"white"}
-        
-      >
-        <Tab.Screen
-          name="Home"
-          component={HomeRoute}
-          options={{
-            tabBarIcon: 'home',
-          }}
-        />
-        <Tab.Screen
-          name="Search"
-          component={SearchRoute}
-          options={{
-            tabBarIcon: 'magnify',
-          }}
-        />
-        <Tab.Screen
-          name="Upload"
-          component={UploadRoute}
-          options={{
-            tabBarIcon: 'upload',
-          }}
-        />
-        <Tab.Screen
-          name="User"
-          component={UserRoute}
-          options={{
-            tabBarIcon: 'account',
-          }}
-        />
-
-      </Tab.Navigator>
-    );
-  };
-
+  return (
+    <Tab.Navigator
+      initialRouteName="Home"
+      shifting={true}
+      sceneAnimationEnabled={false}
+      activeColor={"black"}
+      inactiveColor={"black"}
+    >
+      <Tab.Screen
+        name="Home"
+        component={HomeRoute}
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <Image
+              color={color}
+              size={26}
+              source={
+                focused
+                  ? require("../assets/Vector.png")
+                  : require("../assets/Home.png")
+              }
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={SearchRoute}
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <Image
+              color={color}
+              size={26}
+              source={
+                focused
+                  ? require("../assets/Groupfilled.png")
+                  : require("../assets/Group.png")
+              }
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Upload"
+        component={UploadRoute}
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <Image
+              color={color}
+              size={26}
+              source={
+                focused
+                  ? require("../assets/uploadfilled.png")
+                  : require("../assets/upload.png")
+              }
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="User"
+        component={UserRoute}
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <Image
+              color={color}
+              size={26}
+              source={
+                focused
+                  ? require("../assets/userfill.png")
+                  : require("../assets/user.png")
+              }
+            />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
 
 const Navigation = () => {
   const dispatch = useDispatch();
 
-  
   dispatch(getUser());
-  const [response,setResponse] = useState(false);
-  const [isAuthenticated,setisAuthenticated] = useState(false);
+  const [response, setResponse] = useState(false);
+  const [isAuthenticated, setisAuthenticated] = useState(false);
 
   const user = useSelector((state) => state.user);
 
@@ -135,27 +168,64 @@ const Navigation = () => {
       
   },[])*/
 
-  
-  if (user.isAuthenticated && user !== null){
-   
-    return(
+  if (user.isAuthenticated && user !== null) {
+    return (
       <NavigationContainer theme={theme}>
-            <Stack.Navigator >
-            <Stack.Screen name="Mainpage" component={Bottomnavcomponent} options={{headerShown: false, title: ''}} />
-            <Stack.Screen name='Bookscreen' component={Bookscreen}  options={{ title: '' }} />
-            <Stack.Screen name="Camerascreen" component={Camerascreen} options={{ title: '' }} />
-            <Stack.Screen name="RemovedBookScreen" component={RemovedBookScreen} options={{ title: '' }} />
-            <Stack.Screen name="UploadedBooks" component={UploadedBooks} options={{title: 'Book Details'}}/>
-            <Stack.Screen name="Booksaddedtopickup" component={Booksaddedtopickup} options={{title: 'Pickup  details'}}/>
-            <Stack.Screen name="Changepassword" component={Changepassword} options={{ title: 'Change Password' }}/>
-            <Stack.Screen name="EditPhone" component={EditPhone} options={{title: 'Change Phone'}}/>
-            <Stack.Screen name="Storemodal" component={Storemodal} options={{title: 'Select a shop'}}/>
-            <Stack.Screen name="Edituploadedbook" component={Edituploadedbook} options={{title:'Edit'}}/>
-            </Stack.Navigator>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Mainpage"
+            component={Bottomnavcomponent}
+            options={{ headerShown: false, title: "" }}
+          />
+          <Stack.Screen
+            name="Bookscreen"
+            component={Bookscreen}
+            options={{ title: "" }}
+          />
+          <Stack.Screen
+            name="Camerascreen"
+            component={Camerascreen}
+            options={{ title: "" }}
+          />
+          <Stack.Screen
+            name="RemovedBookScreen"
+            component={RemovedBookScreen}
+            options={{ title: "" }}
+          />
+          <Stack.Screen
+            name="UploadedBooks"
+            component={UploadedBooks}
+            options={{ title: "Book Details" }}
+          />
+          <Stack.Screen
+            name="Booksaddedtopickup"
+            component={Booksaddedtopickup}
+            options={{ title: "Pickup  details" }}
+          />
+          <Stack.Screen
+            name="Changepassword"
+            component={Changepassword}
+            options={{ title: "Change Password" }}
+          />
+          <Stack.Screen
+            name="EditPhone"
+            component={EditPhone}
+            options={{ title: "Change Phone" }}
+          />
+          <Stack.Screen
+            name="Storemodal"
+            component={Storemodal}
+            options={{ title: "Select a shop" }}
+          />
+          <Stack.Screen
+            name="Edituploadedbook"
+            component={Edituploadedbook}
+            options={{ title: "Edit" }}
+          />
+        </Stack.Navigator>
       </NavigationContainer>
-    )
-  }
-  else {
+    );
+  } else {
     return (
       <NavigationContainer theme={theme}>
         <Stack.Navigator>
@@ -184,6 +254,7 @@ const Navigation = () => {
             component={EmailVerification}
             options={{ headerShown: true }}
           />
+
           <Stack.Screen
             name="PhonenumberVerification"
             component={PhonenumberVerification}
@@ -193,8 +264,6 @@ const Navigation = () => {
       </NavigationContainer>
     );
   }
-}
-
-
+};
 
 export default Navigation;

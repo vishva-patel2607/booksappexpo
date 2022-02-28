@@ -1,4 +1,6 @@
-import React, { Component, useState, useCallback, useEffect } from "react";
+
+import React, { useState, useEffect } from "react";
+import RNPickerSelect from "react-native-picker-select";
 import {
   SafeAreaView,
   ScrollView,
@@ -8,6 +10,7 @@ import {
   Alert,
   Pressable,
 } from "react-native";
+
 import { logoutUser, setUser } from "../actions";
 import { Platform, StatusBar, Dimensions } from "react-native";
 import {
@@ -46,6 +49,7 @@ const UploadRoute = (props) => {
   const [condition, setCondition] = useState("good");
   const [shop, setShop] = useState(null);
   const [price, setPrice] = useState("");
+  const [category, setCategory] = useState("");
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
@@ -53,12 +57,15 @@ const UploadRoute = (props) => {
     setShop(props.route.params?.shop);
   }, [props.route.params?.shop]);
 
+
   useEffect(() => {
     if (
       props.route.params?.photo !== null &&
       props.route.params?.photo !== undefined
     ) {
+
       var photouri = props.route.params?.photo.uri;
+
       var imagedata = {
         uri: photouri,
         type: "image/jpeg",
@@ -174,6 +181,7 @@ const UploadRoute = (props) => {
       .catch((error) => {
         console.log(error);
       });
+
   };
 
   let selected;
@@ -208,6 +216,7 @@ const UploadRoute = (props) => {
       </View>
     );
   }
+
 
   const FetchBookfromISBN = async () => {
     try {
@@ -301,6 +310,7 @@ const UploadRoute = (props) => {
             Find book
           </Button>
         </View>
+
         <View style={styles.container1}>
           <View style={styles.container11}>
             {props.route.params?.photo ? (
@@ -365,6 +375,33 @@ const UploadRoute = (props) => {
           />
         </View>
 
+        <View
+          style={{
+            justifyContent: "center",
+            marginHorizontal: 8,
+            marginTop: 8,
+          }}
+        >
+          <RNPickerSelect
+            onValueChange={(value) => setCategory(value)}
+            items={[
+              { label: "Crime and Thriller", value: "crime/thriller" },
+              { label: "Religious", value: "religious" },
+              { label: "Self-Help", value: "selfhelp" },
+              { label: "Romance", value: "romance" },
+              { label: "Humor", value: "humor" },
+              { label: "Sci-Fi", value: "scifi" },
+              { label: "Biography", value: "biography" },
+              { label: "History", value: "history" },
+            ]}
+            selectedValue={category}
+            placeholder={{ label: "Category of Book", value: "" }}
+            useNativeAndroidPickerStyle={false}
+            style={customPickerStyles}
+          />
+        </View>
+
+
         <View style={styles.container3}>
           <Title style={styles.textbox}>
             Select the condition of your book:
@@ -415,6 +452,7 @@ const UploadRoute = (props) => {
           labelStyle={styles.submitbutton}
           onPress={uploaddetails}
           disabled={!imgurl}
+
         >
           Upload
         </Button>
@@ -425,11 +463,13 @@ const UploadRoute = (props) => {
 };
 
 const styles = StyleSheet.create({
+
   barcode: {
     position: "relative",
     height: 300,
     zIndex: 100,
   },
+
   textbox: {
     textAlign: "center",
     padding: 10,
@@ -523,11 +563,29 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UploadRoute;
+const customPickerStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 14,
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    borderWidth: 1,
+    borderColor: "black",
+    borderRadius: 8,
+    color: "black",
+    paddingRight: 30,
+    // to ensure the text is never behind the icon
+  },
+  inputAndroid: {
+    fontSize: 14,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: "black",
+    borderRadius: 8,
+    color: "black",
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
+});
 
-/*
+export default React.memo(UploadRoute);
 
-
-
- 
-*/

@@ -1,3 +1,4 @@
+
 import React, { Component, useState } from "react";
 import {
   SafeAreaView,
@@ -30,6 +31,9 @@ import {
 import { TabRouter } from "@react-navigation/routers";
 import WavyHeader from "./WavyHeader";
 import Storemodalcard from "./Storemodalcard";
+import FastImage from "react-native-fast-image";
+
+
 
 const Booksaddedtopickup = (props) => {
   const [Pickupdata, setPickupdata] = useState(props.route.params.book);
@@ -173,6 +177,7 @@ const Booksaddedtopickup = (props) => {
   );
 };
 
+
 const styles = StyleSheet.create({
   container: {
     paddingTop: 20,
@@ -219,4 +224,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Booksaddedtopickup;
+
+export default React.memo(Booksaddedtopickup);
+

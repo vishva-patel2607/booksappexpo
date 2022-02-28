@@ -10,6 +10,9 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
+
+import FastImage from "react-native-fast-image";
+
 import { logoutUser, setUser } from "../actions";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -40,10 +43,8 @@ const RemovedBookScreen = (props) => {
       <ScrollView style={styles.container1}>
         <View style={styles.container}>
           <WavyHeader customStyles={styles.svgCurve} />
-          <Image
-            style={styles.tinyLogo}
-            source={{ uri: Pickupdata.book_img }}
-          />
+
+          <Image style={styles.book} source={{ uri: Pickupdata.book_img }} />
           <Button
             mode="text"
             style={styles.submitbutton}
@@ -88,6 +89,7 @@ const RemovedBookScreen = (props) => {
             />
           )}
         />
+
         <Card.Title
           style={styles.c}
           subtitle="Price"
@@ -110,11 +112,12 @@ const RemovedBookScreen = (props) => {
             <Avatar.Icon
               {...props}
               icon={{
-                uri: "https://static.thenounproject.com/png/1801462-200.png",
+                uri: "https://static.thenounproject.com/png/729549-200.png",
               }}
             />
           )}
         />
+
         <Card.Content style={styles.c1}>
           <Title>Store details</Title>
           <Subheading>{Pickupdata.store.store_name}</Subheading>
@@ -127,12 +130,14 @@ const RemovedBookScreen = (props) => {
   );
 };
 
+
 const styles = StyleSheet.create({
   container: {
     paddingTop: 20,
     flexDirection: "row",
   },
-  tinyLogo: {
+
+  book: {
     width: "75%",
     height: "100%",
     flex: 4,

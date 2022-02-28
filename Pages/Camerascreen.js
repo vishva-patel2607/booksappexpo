@@ -24,6 +24,7 @@ const CamerScreen = (props) => {
     })();
   }, []);
 
+
   const takepicture = async () => {
     if (!permission) return;
     const photo = await camera.current.takePictureAsync();
@@ -41,6 +42,7 @@ const CamerScreen = (props) => {
       });
     }
   };
+
 
   const pickImage = async () => {
     if (!gallerypermission) return;

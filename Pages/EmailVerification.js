@@ -1,4 +1,5 @@
 import React, { Component, useState, useEffect } from "react";
+
 import {
   SafeAreaView,
   ScrollView,
@@ -74,6 +75,7 @@ const EmailVerification = (props) => {
       <Title style={{ textAlign: "center" }}>Change Email?</Title>
       <TextInput
         style={styles.inputtextbox}
+
         label="Email"
         onChangeText={(text) => setEmail(text)}
         autoCapitalize="none"
@@ -85,6 +87,7 @@ const EmailVerification = (props) => {
       />
       <Text style={styles.error}>{error}</Text>
       <Button onPress={changeemail}>Change Email</Button>
+
     </>
   );
 };
@@ -96,8 +99,10 @@ const styles = StyleSheet.create({
     color: "red",
     padding: 20,
   },
+
   inputtextbox: {
     margin: 10,
   },
 });
-export default EmailVerification;
+export default React.memo(EmailVerification);
+

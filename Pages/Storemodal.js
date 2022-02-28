@@ -1,9 +1,10 @@
+
 import React, { Component, useState, useCallback, useEffect } from "react";
+
 import {
   SafeAreaView,
   ScrollView,
   View,
-  Image,
   StyleSheet,
   Alert,
   Pressable,
@@ -34,6 +35,7 @@ import Storemodalcard from "./Storemodalcard";
 
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
+
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 const stores = [
@@ -62,6 +64,7 @@ const stores = [
     usernumber: 7,
   },
 ];
+
 
 const Storemodal = (props) => {
   const [loading, setLoading] = useState(false);
@@ -218,6 +221,7 @@ const Storemodal = (props) => {
 };
 
 const styles = StyleSheet.create({
+
   textbox: {
     textAlign: "center",
     padding: 10,
@@ -234,6 +238,7 @@ const styles = StyleSheet.create({
   inputtextbox: {
     margin: 10,
   },
+
 
   submitbutton: {
     flex: 1,
@@ -312,4 +317,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Storemodal;
+export default React.memo(Storemodal);
+

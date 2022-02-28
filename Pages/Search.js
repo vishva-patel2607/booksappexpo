@@ -9,90 +9,23 @@ import {
   StatusBar,
 } from "react-native";
 
+import FastImage from "react-native-fast-image";
+import { debounce } from "lodash";
 import {
-  Button,
   Title,
   Paragraph,
-  TextInput,
   Text,
-  Appbar,
-  BottomNavigation,
   Searchbar,
-  Avatar,
   Subheading,
-  Caption,
 } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
-import Bookscreen from "./Bookscreen";
-
-var Receiveddata = [
-  {
-    book_name: "Sapiens",
-    book_author: "James Clear",
-    book_year: "1992",
-    book_distance: 5.2,
-    book_condition: "great",
-    book_img:
-      "https://images-na.ssl-images-amazon.com/images/I/713jIoMO3UL.jpg",
-    book_price: "Rs 150",
-    book_status: "In Shop",
-    book_transaction_code: "05",
-  },
-  {
-    book_name: "Guns Germs and Steel",
-    book_author: "James Clear",
-    book_year: "2002",
-    book_distance: 10,
-    book_condition: "good",
-    book_img:
-      "https://images-na.ssl-images-amazon.com/images/I/81RdveuYXWL.jpg",
-    book_price: "Rs 200",
-    book_status: "In Shop",
-    book_transaction_code: "05",
-  },
-  {
-    book_name: "Sapiens",
-    book_author: "James Clear",
-    book_year: "1992",
-    book_distance: 11,
-    book_condition: "bad",
-    book_img:
-      "https://images-na.ssl-images-amazon.com/images/I/713jIoMO3UL.jpg",
-    book_price: "Rs 250",
-    book_status: "In Shop",
-    book_transaction_code: "05",
-  },
-  {
-    book_name: "Guns Germs and Steel",
-    book_author: "James Clear",
-    book_year: "1992",
-    book_distance: 5.2,
-    book_condition: "great",
-    book_img:
-      "https://images-na.ssl-images-amazon.com/images/I/81RdveuYXWL.jpg",
-    book_price: "Rs 300",
-    book_status: "In Shop",
-    book_transaction_code: "05",
-  },
-  {
-    book_name: "Guns Germs and steel",
-    book_author: "James Clear",
-    book_year: "1992",
-    book_distance: 5.2,
-    book_condition: "great",
-    book_img:
-      "https://images-na.ssl-images-amazon.com/images/I/81RdveuYXWL.jpg",
-    book_price: "Rs 350",
-    book_status: "In Shop",
-    book_transaction_code: "05",
-  },
-];
 
 const SearchRoute = (props) => {
   const [longitude, setLongitude] = useState();
   const [latitude, setLatitude] = useState();
   const [Receiveddata, setReceiveddata] = useState([]);
+  const [count, setCount] = useState(0);
   const [SearchQuery, setSearchQuery] = useState("");
   const [text, setText] = useState("Search for a book");
   const [Message, setMessage] = useState("");
@@ -112,6 +45,7 @@ const SearchRoute = (props) => {
   useEffect(() => {
     setLocation();
     if (typeof longitude != "undefined" && typeof latitude != "undefined") {
+      console.log(SearchQuery);
       fetch("https://booksapp2021.herokuapp.com/Book/Search", {
         method: "POST",
         headers: {
@@ -130,16 +64,13 @@ const SearchRoute = (props) => {
         })
         .then((data) => {
           if (data.status) {
-            console.log(data.message);
             if (data.message === "All the Books for given query") {
               setReceiveddata(data.response.book_list);
               setMessage(data.message);
-              console.log(Receiveddata);
             } else {
               setText("No books found");
               setReceiveddata([]);
               setMessage(data.message);
-              console.log(data.message);
             }
           } else {
             if (data.message === "Could not verify") {
@@ -151,13 +82,21 @@ const SearchRoute = (props) => {
           console.log(error);
         });
     }
-  }, [longitude, latitude, SearchQuery]);
+  }, [longitude, latitude, count]);
+
+  const Calltochangecount = debounce(() => setCount(!count), 500);
+
+  const onChangeInput = (text) => {
+    setSearchQuery(text);
+    Calltochangecount();
+  };
+
   if (Receiveddata.length !== 0) {
     return (
       <SafeAreaView style={styles.search}>
         <Searchbar
           placeholder="Search"
-          onChangeText={(text) => setSearchQuery(text)}
+          onChangeText={(text) => onChangeInput(text)}
           value={SearchQuery}
         />
 
@@ -200,7 +139,7 @@ const SearchRoute = (props) => {
       <SafeAreaView style={styles.search}>
         <Searchbar
           placeholder="Search"
-          onChangeText={(text) => setSearchQuery(text)}
+          onChangeText={(text) => onChangeInput(text)}
           value={SearchQuery}
         />
         <Text style={{ marginTop: 50, textAlign: "center" }}>{text}</Text>
@@ -259,4 +198,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SearchRoute;
+export default React.memo(SearchRoute);

@@ -1,3 +1,4 @@
+
 import React, { Component, useState, useCallback, useEffect } from "react";
 import {
   SafeAreaView,
@@ -35,6 +36,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
 import { TouchableOpacity } from "react-native-gesture-handler";
+
 
 const Storemodalcard = (props) => {
   const [showMap, setShowMap] = useState(false);
@@ -79,7 +81,7 @@ const Storemodalcard = (props) => {
   if (showMap) {
     map = (
       <View>
-        {/* <MapView
+        <MapView
           style={{ alignSelf: "stretch", height: 200 }}
           region={mapRegion}
           showsUserLocation={true}
@@ -89,7 +91,8 @@ const Storemodalcard = (props) => {
           loadingEnabled={true}
         >
           <Marker coordinate={mapRegion} title={shopName} />
-        </MapView> */}
+        </MapView>
+
       </View>
     );
   } else {
@@ -223,4 +226,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Storemodalcard;
+export default React.memo(Storemodalcard);
+

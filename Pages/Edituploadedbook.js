@@ -1,4 +1,5 @@
 import React, { Component, useEffect, useState } from "react";
+
 import {
   SafeAreaView,
   ScrollView,
@@ -24,6 +25,7 @@ import {
   IconButton,
 } from "react-native-paper";
 
+
 const Edituploadedbook = (props) => {
   const [Bookdata, setBookdata] = useState(props.route.params?.book);
   const [Newname, setNewname] = useState(props.route.params?.book.book_name);
@@ -36,8 +38,10 @@ const Edituploadedbook = (props) => {
     props.route.params?.book.book_condition
   );
 
+
   const [NewImg, setNewImg] = useState(props.route.params?.book.book_img);
   // console.log(props.route.params?.book.book_img);
+
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
@@ -49,6 +53,7 @@ const Edituploadedbook = (props) => {
       setNewCondition(props.route.params?.book.book_condition),
       setNewyear(props.route.params?.book.book_year);
   }, [props.route.params?.book]);
+
 
   const imageUpload = async (imagedata) => {
     console.log(NewImg);
@@ -180,6 +185,7 @@ const Edituploadedbook = (props) => {
         )}
       </View>
 
+
       <View style={styles.layout}>
         <Text></Text>
         <TextInput
@@ -234,6 +240,7 @@ const Edituploadedbook = (props) => {
                 <RadioButton.Item label="Great" value="Great" mode="android" />
               </View>
             </View>
+
           </View>
         </RadioButton.Group>
         <Text></Text>
@@ -265,9 +272,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
+
   cardview: {
     flex: 1,
   },
+
   logoutbutton: {
     alignSelf: "center",
     width: 300,
@@ -275,16 +284,19 @@ const styles = StyleSheet.create({
     color: "white",
     borderRadius: 10,
   },
+
   textbox: {
     textAlign: "center",
     padding: 10,
     fontSize: 20,
   },
+
   cardscroll: {
     flex: 1,
     height: "100%",
     margin: 10,
   },
+
   setFontSizeName: {
     fontSize: 20,
     marginTop: 110,
@@ -292,6 +304,7 @@ const styles = StyleSheet.create({
   setFontSizeAuthor: {
     fontSize: 20,
   },
+
 
   cardcontainer: {
     flex: 1,
@@ -308,9 +321,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "white",
   },
+
   layout: {
     flex: 1,
   },
+
   editbook: {
     alignSelf: "flex-end",
     marginTop: -10,
@@ -350,4 +365,5 @@ const styles = StyleSheet.create({
     borderColor: "#EF90A9",
   },
 });
-export default Edituploadedbook;
+export default React.memo(Edituploadedbook);
+

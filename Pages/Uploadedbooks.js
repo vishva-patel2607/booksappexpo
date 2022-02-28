@@ -29,6 +29,7 @@ import {
 } from "react-native-paper";
 import { TabRouter } from "@react-navigation/routers";
 import WavyHeader from "./WavyHeader";
+import FastImage from "react-native-fast-image";
 
 const UploadedBooks = (props) => {
 
@@ -77,11 +78,13 @@ const UploadedBooks = (props) => {
       });
   };
 
+
   return (
     <SafeAreaView>
       <ScrollView>
         <View style={styles.container}>
           <WavyHeader customStyles={styles.svgCurve} />
+
           <Image style={styles.tinyLogo} source={{ uri: Bookdata.book_img }} />
           <View style={{ flex: 2 }}>
             <Button
@@ -106,6 +109,7 @@ const UploadedBooks = (props) => {
             </Button>
           </View>
         </View>
+
         <Card.Title
           style={styles.c}
           subtitle="Code"
@@ -127,6 +131,7 @@ const UploadedBooks = (props) => {
           title={Bookdata.book_name}
           titleNumberOfLines={3}
           left={(props) => <Avatar.Icon {...props} icon="book" />}
+
         />
 
         <Card.Title
@@ -229,4 +234,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UploadedBooks;
+
+export default React.memo(UploadedBooks);
+

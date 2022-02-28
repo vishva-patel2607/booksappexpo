@@ -1,3 +1,4 @@
+
 import React, { Component, useState } from "react";
 import {
   SafeAreaView,
@@ -25,6 +26,7 @@ import {
   Subheading,
   IconButton,
 } from "react-native-paper";
+
 const EditPhone = (props) => {
   const user = useSelector((state) => state.user);
   const [newphoneno, setNewphoneno] = useState("");
@@ -129,6 +131,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
 
+
   error: {
     textAlign: "center",
     fontSize: 20,
@@ -150,4 +153,5 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-export default EditPhone;
+export default React.memo(EditPhone);
+

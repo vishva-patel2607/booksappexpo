@@ -1,4 +1,5 @@
 import React, { Component, useState, useEffect } from "react";
+
 import {
   SafeAreaView,
   ScrollView,
@@ -69,8 +70,10 @@ const Login = (props) => {
     }
   };
   loginrequest = () => {
+
     let tokenvalue = "";
     var truevalue = true;
+
     if (username !== "" && password !== "") {
       console.log("API");
 
@@ -131,6 +134,7 @@ const Login = (props) => {
               });
             } else {
               setError(data.message);
+
               console.log(data.message);
             }
           }
@@ -223,4 +227,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default React.memo(Login);
+

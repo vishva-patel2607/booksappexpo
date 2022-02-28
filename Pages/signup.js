@@ -2,11 +2,8 @@ import React, { Component, useState, useRef } from "react";
 import {
   SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
-  useColorScheme,
   View,
-  Image,
   KeyboardAvoidingView,
   Alert,
   Pressable,
@@ -114,7 +111,6 @@ const Signup = (props) => {
         })
         .then((data) => {
           if (data.status) {
-
             // when data comes extract usernumber and phone number ad=nd redirect user to phonenumberVerification with props
             setError(data.message);
             Alert.alert(
@@ -375,6 +371,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
 
+
   loginlayout: {
     flex: 1,
   },
@@ -384,4 +381,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Signup;
+export default React.memo(Signup);
