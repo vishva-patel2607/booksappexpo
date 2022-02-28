@@ -27,7 +27,7 @@ const Horizontalscrollview = (props) => {
             }}
           >
             <View style={{ flex: 3 }}>
-              <FastImage
+              <Image
                 style={{
                   resizeMode: "cover",
                   maxWidth: 150,

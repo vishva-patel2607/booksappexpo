@@ -9,7 +9,7 @@ import {
   Alert,
   Pressable,
 } from "react-native";
-import BooksApptitle from "../SvgAssets/BooksApp.js";
+
 import { logoutUser, setUser } from "../actions";
 import { Platform, StatusBar } from "react-native";
 import {

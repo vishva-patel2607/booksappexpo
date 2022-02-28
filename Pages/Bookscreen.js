@@ -74,7 +74,7 @@ const Bookscreen = (props) => {
 
       <View style={styles.container}>
         <WavyHeader customStyles={styles.svgCurve} />
-        <FastImage style={styles.tinyLogo} source={{ uri: book.book_img }} />
+        <Image style={styles.tinyLogo} source={{ uri: book.book_img }} />
         <Button
           mode="contained"
           style={styles.submitbutton}

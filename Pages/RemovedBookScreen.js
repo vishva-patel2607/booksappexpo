@@ -43,10 +43,7 @@ const RemovedBookScreen = (props) => {
       <ScrollView style={styles.container1}>
         <View style={styles.container}>
           <WavyHeader customStyles={styles.svgCurve} />
-          <FastImage
-            style={styles.book}
-            source={{ uri: Pickupdata.book_img }}
-          />
+          <Image style={styles.book} source={{ uri: Pickupdata.book_img }} />
           <Button
             mode="text"
             style={styles.submitbutton}
