@@ -24,14 +24,25 @@ const CamerScreen = (props) => {
     })();
   }, []);
 
+
   const takepicture = async () => {
     if (!permission) return;
     const photo = await camera.current.takePictureAsync();
-    props.navigation.navigate("Mainpage", {
-      screen: "Upload",
-      params: { photo: photo },
-    });
+
+    console.log(props.route.params?.redirectTo);
+    //  If the request comes from edit book then redirect it to edit book screen
+    if (props.route.params?.redirectTo === "Edituploadedbook") {
+      props.navigation.navigate("Edituploadedbook", {
+        params: { photo: photo },
+      });
+    } else {
+      props.navigation.navigate("Mainpage", {
+        screen: "Upload",
+        params: { photo: photo },
+      });
+    }
   };
+
 
   const pickImage = async () => {
     if (!gallerypermission) return;

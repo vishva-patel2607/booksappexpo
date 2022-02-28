@@ -6,9 +6,24 @@ import {
   View,
   KeyboardAvoidingView,
   Alert,
+  Pressable,
 } from "react-native";
 
-import { Button, Title, TextInput, Text, Checkbox } from "react-native-paper";
+import {
+  Button,
+  Title,
+  Paragraph,
+  TextInput,
+  Text,
+  Appbar,
+  BottomNavigation,
+  Searchbar,
+  Card,
+  Avatar,
+  Subheading,
+  Checkbox,
+} from "react-native-paper";
+import { setUser } from "../actions";
 
 const Signup = (props) => {
   const [username, setUsername] = useState("");
@@ -96,6 +111,7 @@ const Signup = (props) => {
         })
         .then((data) => {
           if (data.status) {
+            // when data comes extract usernumber and phone number ad=nd redirect user to phonenumberVerification with props
             setError(data.message);
             Alert.alert(
               "Verification email has been sent to your email",
@@ -108,6 +124,13 @@ const Signup = (props) => {
           } else {
             setError(data.message);
           }
+          
+          props.navigation.navigate("PhonenumberVerification", {
+            // request will come then extract the data
+            usernumber: data.response.user.usernumber,
+            phonenumber: data.response.user.phonenumber,
+          });
+
         })
         .catch((error) => {
           console.log(error);
@@ -143,12 +166,12 @@ const Signup = (props) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.loginlayout}>
       <Title style={styles.textbox}>Sign up</Title>
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
+        style={styles.layout}
       >
         <ScrollView>
           <View style={{ flexDirection: "row" }}>
@@ -346,6 +369,15 @@ const styles = StyleSheet.create({
     margin: 10,
     fontSize: 20,
     color: "white",
+  },
+
+
+  loginlayout: {
+    flex: 1,
+  },
+
+  layout: {
+    flex: 1,
   },
 });
 

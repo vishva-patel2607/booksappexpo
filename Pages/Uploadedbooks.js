@@ -3,16 +3,37 @@ import {
   SafeAreaView,
   ScrollView,
   View,
+  Image,
   StyleSheet,
+  Pressable,
+  Dimensions,
   Alert,
+  TouchableOpacity,
 } from "react-native";
-import FastImage from "react-native-fast-image";
-import { logoutUser } from "../actions";
+import { logoutUser, setUser } from "../actions";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Avatar, Card } from "react-native-paper";
+import {
+  Button,
+  Title,
+  Paragraph,
+  TextInput,
+  Text,
+  Appbar,
+  BottomNavigation,
+  Searchbar,
+  Avatar,
+  Subheading,
+  Caption,
+  IconButton,
+  Card,
+} from "react-native-paper";
+import { TabRouter } from "@react-navigation/routers";
 import WavyHeader from "./WavyHeader";
+import FastImage from "react-native-fast-image";
 
 const UploadedBooks = (props) => {
+
+  
   const [Bookdata, setBookData] = useState(props.route.params.book);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
@@ -56,6 +77,7 @@ const UploadedBooks = (props) => {
         }
       });
   };
+
 
   return (
     <SafeAreaView>
@@ -109,6 +131,7 @@ const UploadedBooks = (props) => {
           title={Bookdata.book_name}
           titleNumberOfLines={3}
           left={(props) => <Avatar.Icon {...props} icon="book" />}
+
         />
 
         <Card.Title
@@ -211,4 +234,6 @@ const styles = StyleSheet.create({
   },
 });
 
+
 export default React.memo(UploadedBooks);
+

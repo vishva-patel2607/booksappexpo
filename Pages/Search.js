@@ -8,6 +8,7 @@ import {
   Pressable,
   StatusBar,
 } from "react-native";
+
 import FastImage from "react-native-fast-image";
 import { debounce } from "lodash";
 import {

@@ -1,15 +1,84 @@
-import React, { useState, useEffect, useRef } from "react";
-import { SafeAreaView, ScrollView, View, StyleSheet } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import Constants from "expo-constants";
-import * as Notifications from "expo-notifications";
+import React, { Component, useState, useEffect, useRef } from "react";
+import { SafeAreaView, ScrollView, View, StyleSheet } from "react-native";
 import { Platform, StatusBar, RefreshControl } from "react-native";
 import { logoutUser, setUser } from "../actions";
 import { Title, Text, Headline, Card, Button } from "react-native-paper";
 
 import Horizontalscrollview from "./Horizontalscrollview";
 import { useDispatch, useSelector } from "react-redux";
+import BookConditions from "./BookConditions";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Constants from "expo-constants";
+import * as Notifications from "expo-notifications";
+
+const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
+};
+var data = [
+  {
+    book_name: "Sapiens",
+    book_author: "James Clear",
+    book_year: "1992",
+    book_distance: 5.2,
+    book_condition: "great",
+    book_img:
+      "https://images-na.ssl-images-amazon.com/images/I/713jIoMO3UL.jpg",
+    book_price: "Rs 150",
+    book_status: "Uploaded!, Please submit to shop",
+    book_transaction_code: "01",
+  },
+  {
+    book_name: "Guns Germs and Steel written by james clear",
+    book_author: "James Clear",
+    book_year: "2002",
+    book_distance: 10,
+    book_condition: "good",
+    book_img:
+      "https://images-na.ssl-images-amazon.com/images/I/81RdveuYXWL.jpg",
+    book_price: "Rs 200",
+    book_status: "Book In Shop",
+    book_transaction_code: "02",
+  },
+  {
+    book_name: "Sapiens",
+    book_author: "James Clear",
+    book_year: "1992",
+    book_distance: 11,
+    book_condition: "bad",
+    book_img:
+      "https://images-na.ssl-images-amazon.com/images/I/713jIoMO3UL.jpg",
+    book_price: "Rs 250",
+    book_status: "Book In Shop",
+    book_transaction_code: "03",
+  },
+  {
+    book_name: "Guns Germs and Steel",
+    book_author: "James Clear",
+    book_year: "1992",
+    book_distance: 5.2,
+    book_condition: "great",
+    book_img:
+      "https://images-na.ssl-images-amazon.com/images/I/81RdveuYXWL.jpg",
+    book_price: "Rs 300",
+    book_status: "Uploaded!, Please submit to shop",
+    book_transaction_code: "04",
+  },
+  {
+    book_name: "Guns Germs and steel",
+    book_author: "James Clear",
+    book_year: "1992",
+    book_distance: 5.2,
+    book_condition: "great",
+    book_img:
+      "https://images-na.ssl-images-amazon.com/images/I/81RdveuYXWL.jpg",
+    book_price: "Rs 350",
+    book_status: "Book In Shop",
+    book_transaction_code: "05",
+  },
+];
+
+
 
 const HomeRoute = (props) => {
   const [devicePushToken, setDevicePushToken] = useState("");
@@ -31,6 +100,7 @@ const HomeRoute = (props) => {
 
   const user = useSelector((state) => state.user);
 
+
   async function requestPermissionsAsync() {
     return await Notifications.requestPermissionsAsync({
       ios: {
@@ -41,6 +111,7 @@ const HomeRoute = (props) => {
       },
     });
   }
+
 
   let removedbooks =
     Removedbooks.length !== 0 ? (
@@ -135,6 +206,7 @@ const HomeRoute = (props) => {
         </Button>
       </View>
     );
+
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => checkToken(token));
@@ -309,6 +381,9 @@ const HomeRoute = (props) => {
       .then((data) => {
         if (data.status) {
           setBookData(data.response.books);
+
+          console.log(data.response.books);
+
         } else {
           if (data.message === "Could not verify") {
             dispatch(logoutUser());
@@ -364,6 +439,9 @@ const HomeRoute = (props) => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
+
+        <BookConditions />
+
         <Card style={{ marginTop: 20, borderRadius: 35 }}>
           <Card.Content>
             <Title>Books Uploaded:- {Bookdata.length}</Title>
@@ -399,20 +477,57 @@ const HomeRoute = (props) => {
   );
 };
 
+
 const styles = StyleSheet.create({
   AndroidSafeArea: {
     flex: 1,
     backgroundColor: "white",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
-
+  submitbutton: {
+    fontSize: 18,
+    height: 40,
+    width: 300,
+    alignSelf: "center",
+    borderRadius: 10,
+    color: "white",
+  },
   statistics: {
     textAlign: "left",
     marginTop: 20,
   },
-
   cardview: {
     flex: 1,
+  },
+  cardscroll: {
+    flex: 1,
+    height: "100%",
+    margin: 10,
+  },
+  cardcontainer: {
+    backgroundColor: "#FFFFFF",
+    flex: 0.5,
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 10,
+    marginTop: 20,
+    borderRadius: 5,
+  },
+  cardcontent: {
+    flex: 4,
+    height: 100,
+    padding: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 10,
+  },
+  cardimage: {
+    flex: 1,
+    height: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 10,
+    marginRight: 5,
   },
 });
 

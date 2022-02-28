@@ -1,15 +1,17 @@
-import React from 'react';
-import { View } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+
+import React from "react";
+import { View, Image, StyleSheet, SafeAreaView } from "react-native";
+import Svg, { Path } from "react-native-svg";
+
 const WavyHeader = ({ customStyles }) => {
   return (
     <View style={customStyles}>
-      <View style={{ backgroundColor: '#EF90A9', height: 160 }}>
+      <View style={{ backgroundColor: "#EF90A9", height: 160 }}>
         <Svg
           height="60%"
           width="100%"
           viewBox="0 0 1440 320"
-          style={{ position: 'absolute', top: 130 }}
+          style={{ position: "absolute", top: 130 }}
         >
           <Path
             fill="#EF90A9"
@@ -19,5 +21,7 @@ const WavyHeader = ({ customStyles }) => {
       </View>
     </View>
   );
+
 }
 export default React.memo(WavyHeader);
+

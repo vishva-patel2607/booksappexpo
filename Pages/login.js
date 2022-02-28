@@ -1,9 +1,31 @@
 import React, { Component, useState, useEffect } from "react";
-import { SafeAreaView, StatusBar, StyleSheet, View, Alert } from "react-native";
 
-import { Button, Title, TextInput, Text } from "react-native-paper";
+import {
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  useColorScheme,
+  View,
+  Image,
+  Alert,
+} from "react-native";
 
-import { useDispatch } from "react-redux";
+import {
+  Button,
+  Title,
+  Paragraph,
+  TextInput,
+  Text,
+  Appbar,
+  BottomNavigation,
+  Searchbar,
+  Card,
+  Avatar,
+  Subheading,
+} from "react-native-paper";
+
+import { useSelector, useDispatch } from "react-redux";
 
 import { setUser } from "../actions";
 
@@ -48,8 +70,10 @@ const Login = (props) => {
     }
   };
   loginrequest = () => {
-    // let tokenvalue = "";
-    // var truevalue = true;
+
+    let tokenvalue = "";
+    var truevalue = true;
+
     if (username !== "" && password !== "") {
       console.log("API");
 
@@ -68,42 +92,49 @@ const Login = (props) => {
           return response.json();
         })
         .then((data) => {
+          console.log(data);
           if (data.status) {
-            setError(data.message);
-            dispatch(
-              setUser(
-                data.response.username,
-                data.response.usernumber,
-                data.response.token,
-                data.status
-              )
-            );
+            if (!data.response.phoneverified) {
+              props.navigation.navigate("PhonenumberVerification", {
+                // request will come then extract the data
+                usernumber: data.response.usernumber,
+                phonenumber: null,
+              });
+            } else {
+              setError(data.message);
+              dispatch(
+                setUser(
+                  data.response.username,
+                  data.response.usernumber,
+                  data.response.token,
+                  data.status
+                )
+              );
+            }
           } else {
-            console.log(data);
             if (data.message === "User is not verified") {
               setToken(data.response.token);
               setEmail(data.response.email);
-              console.log(
-                data.response.email,
-                data.response.token,
-                "User is not verified"
-              );
-              Alert.alert(
-                "Verification email has been sent to your email",
-                "Please Check!"[
-                  {
-                    text: "OK",
-                    // onPress : props.navigation.navigate('EmailVerification',{ token: token,email:email})
-                  }
-                ]
-              );
-              setError(
-                data.message +
-                  " Verification Email has been sent to " +
-                  data.response.email
-              );
+
+              // if phone number is not verified verify it here
+              // Alert.alert(
+              //   "Verification email has been sent to your email",
+              //   "Please Check!"
+              //   [
+              //     {
+              //       text:"OK",
+              //       onPress : props.navigation.navigate('EmailVerification',{ token: token,email:email})
+              //     }
+              //   ]
+              // );
+              // setError(data.message + ' Verification Email has been sent to ' + data.response.email);
+              props.navigation.navigate("PhonenumberVerification", {
+                usernumber: data.response.usernumber,
+                phonenumber: null,
+              });
             } else {
               setError(data.message);
+
               console.log(data.message);
             }
           }
@@ -116,7 +147,7 @@ const Login = (props) => {
 
   return (
     <SafeAreaView style={styles.loginlayout}>
-      <View style={{ flex: 1 }}>
+      <View style={styles.layout}>
         <Title style={styles.textbox}>Log in</Title>
 
         <TextInput
@@ -190,6 +221,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
+
+  layout: {
+    flex: 1,
+  },
 });
 
 export default React.memo(Login);
+

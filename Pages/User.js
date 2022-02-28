@@ -1,6 +1,8 @@
 import { ActivityIndicator, Colors } from "react-native-paper";
 import { Avatar } from "react-native-paper";
-import React, { useState, useEffect } from "react";
+
+import React, { Component, useState, useCallback, useEffect } from "react";
+
 import {
   SafeAreaView,
   View,
@@ -8,9 +10,39 @@ import {
   Linking,
   StatusBar,
 } from "react-native";
+
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Title, Subheading } from "react-native-paper";
-import { logoutUser } from "../actions";
+
+import {
+  Button,
+  Title,
+  Paragraph,
+  TextInput,
+  Text,
+  Appbar,
+  BottomNavigation,
+  Searchbar,
+  RadioButton,
+  Subheading,
+  IconButton,
+} from "react-native-paper";
+import DateTimePicker from "@react-native-community/datetimepicker";
+
+import { logoutUser, setUser } from "../actions";
+import { color, set } from "react-native-reanimated";
+
+const tempoobj = {
+  username: "Hitz2001",
+  email: "hitanshushah5@gmail.com",
+  firstname: "Hitanshu",
+  lastname: "Shah",
+  year: "2001",
+  month: "January",
+  day: "10",
+  phonenumber: "+91 7227950335",
+  dob: "Mon, 01 Oct 2001 00:00:00 GMT",
+};
+
 
 const UserRoute = (props) => {
   const dispatch = useDispatch();
@@ -50,6 +82,7 @@ const UserRoute = (props) => {
         console.log(error);
       });
   }, []);
+
 
   if (LoadingData) {
     return (
@@ -117,6 +150,7 @@ const UserRoute = (props) => {
           </Button>
         </View>
 
+
         <View
           style={{ flex: 5, justifyContent: "flex-end", alignItems: "center" }}
         >
@@ -131,6 +165,7 @@ const UserRoute = (props) => {
           }}
         >
           <Button
+
             onPress={() => {
               Linking.openURL("https://google.com");
             }}
@@ -160,16 +195,18 @@ const UserRoute = (props) => {
 };
 
 const styles = StyleSheet.create({
+
   safeareaview: {
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
 
+
   activityindicator: {
     padding: 100,
     alignSelf: "center",
   },
-
+                                 
   submitbutton: {
     margin: 30,
     fontSize: 20,
@@ -188,6 +225,7 @@ const styles = StyleSheet.create({
     color: "white",
     borderRadius: 12,
   },
+
 });
 
 export default UserRoute;

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import RNPickerSelect from "react-native-picker-select";
 import {
@@ -11,22 +12,37 @@ import {
 } from "react-native";
 
 import { logoutUser, setUser } from "../actions";
-import { Platform, StatusBar } from "react-native";
+import { Platform, StatusBar, Dimensions } from "react-native";
 import {
   Button,
   Title,
+  Paragraph,
   TextInput,
   Text,
+  Appbar,
+  BottomNavigation,
+  Searchbar,
   RadioButton,
   Headline,
   IconButton,
+  Provider,
+  Portal,
+  Modal,
+  Surface,
+  Subheading,
 } from "react-native-paper";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import Storemodalcard from "./Storemodalcard";
 
 import { useDispatch, useSelector } from "react-redux";
+import * as Location from "expo-location";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { BarCodeScanner } from "expo-barcode-scanner";
 
 const UploadRoute = (props) => {
+  const [imgurl, setImgurl] = useState(null);
   const [name, setName] = useState("");
+  const [isbn, setIsbn] = useState("");
   const [error, setError] = useState("");
   const [author, setAuthor] = useState("");
   const [year, setYear] = useState("");
@@ -41,67 +57,131 @@ const UploadRoute = (props) => {
     setShop(props.route.params?.shop);
   }, [props.route.params?.shop]);
 
-  const uploaddetails = () => {
+
+  useEffect(() => {
     if (
       props.route.params?.photo !== null &&
       props.route.params?.photo !== undefined
     ) {
-      console.log("Inside upload details");
+
       var photouri = props.route.params?.photo.uri;
-      console.log(props.route.params?.photo);
+
       var imagedata = {
         uri: photouri,
         type: "image/jpeg",
         name: "photo.jpg",
       };
-      let formData = new FormData();
-      formData.append("book_name", name);
-      formData.append("book_author", author);
-      formData.append("book_year", year);
-      formData.append("book_condition", condition);
-      formData.append("store_id", shop.store_id);
-      formData.append("book_price", price);
-      formData.append("book_img", imagedata);
-      formData.append("book_category", category);
-      fetch("https://booksapp2021.herokuapp.com/Book/Upload", {
+
+      if (imgurl) {
+        changeImage(imagedata);
+        console.log("Changed image");
+      } else {
+        uploadNewImage(imagedata);
+        console.log("New image upload");
+      }
+    }
+  }, [props.route.params?.photo]);
+
+  const uploadNewImage = async (imagedata) => {
+    let formData = new FormData();
+    formData.append("book_img", imagedata);
+
+    const fetchRes = await fetch(
+      "https://booksapp2021.herokuapp.com/Book/Upload/Image",
+      {
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "multipart/form-data",
           "x-access-token": user.token,
         },
-
         body: formData,
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          if (data.status) {
-            alert("Book Uploaded Succesfully");
-            setAuthor("");
-            setCondition("good");
-            setName("");
-            setPrice("");
-            setShop(null);
-            setYear("");
-            setCategory("");
-            console.log(data.response.book);
-            console.log(data.response.transaction);
-          } else {
-            if (data.message === "Could not verify") {
-              dispatch(logoutUser());
-            }
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      }
+    );
+    const res = await fetchRes.json();
+    if (res.status === true) {
+      alert("Image uploaded successfully");
+      console.log("API resposne: ", res.response.book);
+      setImgurl(res.response.book);
     } else {
-      Alert.alert("No Photo", "Please click a photo and then upload", [
-        { text: "Ok!" },
-      ]);
+      alert("Error ocuured while uploading the image");
     }
+  };
+
+  const changeImage = async (imagedata) => {
+    let formData = new FormData();
+    formData.append("old_book_img_url", imgurl);
+    formData.append("book_img", imagedata);
+    const fetchRes = await fetch(
+      "https://booksapp2021.herokuapp.com/Book/Upload/Image",
+      {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+          "x-access-token": user.token,
+        },
+        body: formData,
+      }
+    );
+    const res = await fetchRes.json();
+    if (res.status === true) {
+      alert("Image changed successfully");
+      console.log("API resposne: ", res.response.book);
+      setImgurl(res.response.book);
+    } else {
+      alert("Error ocuured while changing the image");
+    }
+  };
+
+  const uploaddetails = async () => {
+    let formData = new FormData();
+    formData.append("book_name", name);
+    formData.append("book_author", author);
+    formData.append("book_year", year);
+    formData.append("book_condition", condition);
+    formData.append("store_id", shop.store_id);
+    formData.append("book_price", price);
+    formData.append("book_img_url", imgurl);
+    formData.append("book_isbn", isbn);
+
+    console.log(formData);
+    fetch("https://booksapp2021.herokuapp.com/Book/Upload", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        "x-access-token": user.token,
+      },
+
+      body: formData,
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.status) {
+          alert("Book Uploaded Succesfully");
+          setImgurl(null)
+          setAuthor("");
+          setCondition("good");
+          setName("");
+          setPrice("");
+          setShop(null);
+          setYear("");
+          setIsbn("");
+          console.log(data.response.book);
+          console.log(data.response.transaction);
+        } else {
+          if (data.message === "Could not verify") {
+            dispatch(logoutUser());
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
   };
 
   let selected;
@@ -137,12 +217,100 @@ const UploadRoute = (props) => {
     );
   }
 
+
+  const FetchBookfromISBN = async () => {
+    try {
+      const res = await fetch(`https://openlibrary.org/isbn/${isbn}.json`);
+
+      const json = await res.json();
+      setName(json.title);
+      setYear(json.publish_date);
+      const resauthor = await fetch(
+        `https://openlibrary.org/${json.authors[0].key}.json`
+      );
+      const jsonauthor = await resauthor.json();
+      setAuthor(jsonauthor.name);
+    } catch (e) {
+      console.log(e);
+      alert(
+        "Unable to find the book from the ISBN number. Please provide the details"
+      );
+      // setError('Error while fetching isbn')
+    }
+  };
+
+  /*Barcode scanner */
+  const [hasPermission, setHasPermission] = useState(null);
+  const [scanned, setScanned] = useState(false);
+  const [showQR, setShowQR] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      setHasPermission(status === "granted");
+    })();
+  }, []);
+
+  const handleBarCodeScanned = ({ type, data }) => {
+    setScanned(true);
+    alert(`Barcode scanned successfully!`);
+    setShowQR(false);
+    setIsbn(data);
+    if (showQR) setScanned(false);
+  };
+
+  if (hasPermission === null) {
+    return <Text>Requesting for camera permission</Text>;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
   return (
     <SafeAreaView style={styles.uploadimage}>
-      {/* <View style={{ marginLeft: 22, marginTop: 12, marginBottom: 15 }}>
-        <BooksApptitle />
-      </View> */}
       <ScrollView>
+        {showQR && (
+          <View>
+            <BarCodeScanner
+              onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+              style={[StyleSheet.absoluteFillObject, styles.barcode]}
+            />
+          </View>
+        )}
+
+        <View>
+          <TextInput
+            style={styles.inputtextbox}
+            label="ISBN number"
+            value={isbn}
+            onChangeText={(isbn) => setIsbn(isbn.replace(/[^0-9]/g, ""))}
+            keyboardType="number-pad"
+            right={<TextInput.Icon name={"qrcode"} size={28} />}
+          />
+          <Button
+            onPress={() => {
+              setShowQR(!showQR);
+              if (showQR) setScanned(false);
+            }}
+          >
+            {!showQR && "Show QR Scanner"}
+            {showQR && "Hide QR Scanner"}
+          </Button>
+          <Button
+            style={{
+              pading: 2,
+              margin: 2,
+            }}
+            disabled={!isbn}
+            style={styles.submitbutton}
+            labelStyle={styles.submitbutton}
+            mode="contained"
+            onPress={FetchBookfromISBN}
+          >
+            Find book
+          </Button>
+        </View>
+
         <View style={styles.container1}>
           <View style={styles.container11}>
             {props.route.params?.photo ? (
@@ -157,7 +325,7 @@ const UploadRoute = (props) => {
                     height: "100%",
                     width: "100%",
                   }}
-                  source={{ uri: props.route.params?.photo.uri }}
+                  source={{ uri: imgurl }}
                 />
               </Pressable>
             ) : (
@@ -206,6 +374,7 @@ const UploadRoute = (props) => {
             maxLength={4}
           />
         </View>
+
         <View
           style={{
             justifyContent: "center",
@@ -231,6 +400,7 @@ const UploadRoute = (props) => {
             style={customPickerStyles}
           />
         </View>
+
 
         <View style={styles.container3}>
           <Title style={styles.textbox}>
@@ -281,6 +451,8 @@ const UploadRoute = (props) => {
           style={styles.submitbutton}
           labelStyle={styles.submitbutton}
           onPress={uploaddetails}
+          disabled={!imgurl}
+
         >
           Upload
         </Button>
@@ -291,6 +463,13 @@ const UploadRoute = (props) => {
 };
 
 const styles = StyleSheet.create({
+
+  barcode: {
+    position: "relative",
+    height: 300,
+    zIndex: 100,
+  },
+
   textbox: {
     textAlign: "center",
     padding: 10,
@@ -410,9 +589,3 @@ const customPickerStyles = StyleSheet.create({
 
 export default React.memo(UploadRoute);
 
-/*
-
-
-
- 
-*/
