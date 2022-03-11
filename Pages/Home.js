@@ -1,4 +1,3 @@
-
 import React, { Component, useState, useEffect, useRef } from "react";
 import { SafeAreaView, ScrollView, View, StyleSheet } from "react-native";
 import { Platform, StatusBar, RefreshControl } from "react-native";
@@ -78,8 +77,6 @@ var data = [
   },
 ];
 
-
-
 const HomeRoute = (props) => {
   const [devicePushToken, setDevicePushToken] = useState("");
   const [notification, setNotification] = useState(false);
@@ -100,7 +97,6 @@ const HomeRoute = (props) => {
 
   const user = useSelector((state) => state.user);
 
-
   async function requestPermissionsAsync() {
     return await Notifications.requestPermissionsAsync({
       ios: {
@@ -111,7 +107,6 @@ const HomeRoute = (props) => {
       },
     });
   }
-
 
   let removedbooks =
     Removedbooks.length !== 0 ? (
@@ -206,7 +201,6 @@ const HomeRoute = (props) => {
         </Button>
       </View>
     );
-
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => checkToken(token));
@@ -383,7 +377,6 @@ const HomeRoute = (props) => {
           setBookData(data.response.books);
 
           console.log(data.response.books);
-
         } else {
           if (data.message === "Could not verify") {
             dispatch(logoutUser());
@@ -439,7 +432,6 @@ const HomeRoute = (props) => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-
         <BookConditions />
 
         <Card style={{ marginTop: 20, borderRadius: 35 }}>
@@ -476,7 +468,6 @@ const HomeRoute = (props) => {
     </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   AndroidSafeArea: {

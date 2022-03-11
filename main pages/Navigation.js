@@ -21,6 +21,11 @@ import Camerascreen from '../Pages/Camerascreen';
 import Changepassword from '../Pages/Changepassword';
 import PhonenumberVerification from "../Pages/PhonenumberVerification";
 // import BookCondition from "../Pages/BookConditions"
+import DropOff from '../Pages/DropOff';
+import SearchResults from "../Pages/SearchResults";
+import PickUp from "../Pages/PickUp";
+import BorrowedBooks from "../Pages/BorrowedBooks";
+import LentBooks from "../Pages/LentBooks";
 
 
 import { CommonActions } from '@react-navigation/routers';
@@ -221,6 +226,16 @@ const Navigation = () => {
             name="Edituploadedbook"
             component={Edituploadedbook}
             options={{ title: "Edit" }}
+          />
+          <Stack.Screen name="Dropoff" component={DropOff} />
+          <Stack.Screen name="SearchResults" component={SearchResults} />
+          <Stack.Screen name="PickUp" component={PickUp} />
+          <Stack.Screen name="BorrowedBooks" component={BorrowedBooks} />
+          <Stack.Screen name="LentBooks" component={LentBooks} />
+          <Stack.Screen
+            name="PhonenumberVerification"
+            component={PhonenumberVerification}
+            options={{ headerShown: true }}
           />
         </Stack.Navigator>
       </NavigationContainer>

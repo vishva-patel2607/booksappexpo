@@ -30,9 +30,9 @@ import {
   Subheading,
   ActivityIndicator,
 } from "react-native-paper";
-// import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
-// import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
 import { TouchableOpacity } from "react-native-gesture-handler";
