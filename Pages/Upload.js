@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import RNPickerSelect from "react-native-picker-select";
 import {
@@ -57,13 +56,11 @@ const UploadRoute = (props) => {
     setShop(props.route.params?.shop);
   }, [props.route.params?.shop]);
 
-
   useEffect(() => {
     if (
       props.route.params?.photo !== null &&
       props.route.params?.photo !== undefined
     ) {
-
       var photouri = props.route.params?.photo.uri;
 
       var imagedata = {
@@ -162,7 +159,7 @@ const UploadRoute = (props) => {
       .then((data) => {
         if (data.status) {
           alert("Book Uploaded Succesfully");
-          setImgurl(null)
+          setImgurl(null);
           setAuthor("");
           setCondition("good");
           setName("");
@@ -181,7 +178,6 @@ const UploadRoute = (props) => {
       .catch((error) => {
         console.log(error);
       });
-
   };
 
   let selected;
@@ -216,7 +212,6 @@ const UploadRoute = (props) => {
       </View>
     );
   }
-
 
   const FetchBookfromISBN = async () => {
     try {
@@ -401,7 +396,6 @@ const UploadRoute = (props) => {
           />
         </View>
 
-
         <View style={styles.container3}>
           <Title style={styles.textbox}>
             Select the condition of your book:
@@ -452,7 +446,6 @@ const UploadRoute = (props) => {
           labelStyle={styles.submitbutton}
           onPress={uploaddetails}
           disabled={!imgurl}
-
         >
           Upload
         </Button>
@@ -463,7 +456,6 @@ const UploadRoute = (props) => {
 };
 
 const styles = StyleSheet.create({
-
   barcode: {
     position: "relative",
     height: 300,
@@ -588,4 +580,3 @@ const customPickerStyles = StyleSheet.create({
 });
 
 export default React.memo(UploadRoute);
-

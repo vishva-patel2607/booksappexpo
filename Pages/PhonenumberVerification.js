@@ -84,7 +84,7 @@ const PhonenumberVerification = (props) => {
       if (jsonData.status === true) {
         alert("Your phone number has been verified!");
         // redirect it to home page
-        // props.navigation.navigate("Mainpage");
+        props.navigation.navigate("Login");
       } else {
         alert(jsonData.message);
         setShowOTPButton(!showOTPButton);
@@ -100,7 +100,9 @@ const PhonenumberVerification = (props) => {
 
       {!showOTPButton && (
         <View>
-          <Title style={styles.title}>SMS will be sent to below phone number</Title>
+          <Title style={styles.title}>
+            SMS will be sent to below phone number
+          </Title>
           <TextInput
             style={styles.inputtextbox}
             label="Mobile Number"

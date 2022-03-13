@@ -1,20 +1,24 @@
 import { ActivityIndicator, Colors } from "react-native-paper";
-import { Avatar } from "react-native-paper";
+import { Switch, Button } from "react-native-paper";
 
 import React, { Component, useState, useCallback, useEffect } from "react";
-
+import ActionButton from "../Components/Actionbutton";
+import StaticText from "../Components/StaticText";
 import {
   SafeAreaView,
   View,
   StyleSheet,
   Linking,
   StatusBar,
+  Image,
+  Pressable,
 } from "react-native";
+import BAheader from "../Components/BAheader";
+import StaticBooksApp from "../Components/StaticBooksApp";
 
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-  Button,
   Title,
   Paragraph,
   TextInput,
@@ -31,25 +35,15 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { logoutUser, setUser } from "../actions";
 import { color, set } from "react-native-reanimated";
 
-const tempoobj = {
-  username: "Hitz2001",
-  email: "hitanshushah5@gmail.com",
-  firstname: "Hitanshu",
-  lastname: "Shah",
-  year: "2001",
-  month: "January",
-  day: "10",
-  phonenumber: "+91 7227950335",
-  dob: "Mon, 01 Oct 2001 00:00:00 GMT",
-};
-
-
 const UserRoute = (props) => {
   const dispatch = useDispatch();
   const [LoadingData, setLoadingData] = useState(false);
   const [userobj, setUserobj] = useState(props.user);
+  const [switchon, setSwitchon] = useState(false);
+  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
   const user = useSelector((state) => state.user);
 
+  let dummyuri = { uri: "dummy" };
   useEffect(() => {
     console.log(user.token);
     setLoadingData(false);
@@ -83,103 +77,178 @@ const UserRoute = (props) => {
       });
   }, []);
 
-
   if (LoadingData) {
     return (
       <SafeAreaView style={styles.safeareaview}>
-        <View
-          style={{
-            flex: 14,
-            alignItems: "center",
-            flexDirection: "column",
-            justifyContent: "flex-start",
-          }}
-        >
-          <Avatar.Text
-            size={80}
-            label={userobj.firstname[0] + userobj.lastname[0]}
-            color="white"
-          />
-          <Title style={{ marginTop: 15 }}>
-            {userobj.firstname + " " + userobj.lastname}
-          </Title>
-          <Subheading style={{ marginTop: 15 }}>{userobj.username}</Subheading>
-          <Subheading style={{ marginTop: 15 }}>📧 {userobj.email}</Subheading>
-          <View
-            style={{ flexDirection: "row", marginTop: 15, alignSelf: "center" }}
-          >
-            <Subheading style={{ justifyContent: "center" }}>
-              📞 {userobj.phonenumber}
-            </Subheading>
-
-            <View style={{ marginLeft: 20, justifyContent: "center" }}>
-              <Avatar.Icon
-                size={20}
-                icon="pen"
-                onPress={() => {
-                  props.navigation.navigate("EditPhone");
-                }}
+        <View style={{ flex: 2, justifyContent: "centers" }}>
+          <StaticBooksApp />
+        </View>
+        <View style={{ flexDirection: "column", flex: 10, marginLeft: 15 }}>
+          <View style={{ flexDirection: "column", flex: 6 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-around",
+              }}
+            >
+              <Image source={require("../assets/user.png")} />
+              <View style={{ flexDirection: "column", marginLeft: -20 }}>
+                <StaticText text={userobj.firstname + " " + userobj.lastname} />
+                {/* <Text>{userobj.firstname + " " + userobj.lastname}</Text> */}
+                <View
+                  style={{ borderBottomColor: "#6E7A7D", borderBottomWidth: 1 }}
+                />
+                <Image source={require("../assets/Line.png")} />
+              </View>
+              <Image
+                source={require("../assets/Editdisabled.png")}
+                style={{ marginRight: 25 }}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 25,
+                justifyContent: "space-around",
+              }}
+            >
+              <Image source={require("../assets/email.png")} />
+              <View style={{ flexDirection: "column", marginLeft: -20 }}>
+                <StaticText text={userobj.email} />
+                <View
+                  style={{ borderBottomColor: "#6E7A7D", borderBottomWidth: 1 }}
+                />
+                <Image source={require("../assets/Line.png")} />
+              </View>
+              <Image
+                source={require("../assets/Edit.png")}
+                style={{ marginRight: 25 }}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 25,
+                justifyContent: "space-around",
+              }}
+            >
+              <Image source={require("../assets/Phone.png")} />
+              <View style={{ flexDirection: "column", marginLeft: -20 }}>
+                <StaticText text={userobj.phonenumber} />
+                <View
+                  style={{ borderBottomColor: "#6E7A7D", borderBottomWidth: 1 }}
+                />
+                <Image
+                  source={require("../assets/Line.png")}
+                  style={{ height: 5 }}
+                />
+              </View>
+              <Image
+                source={require("../assets/Edit.png")}
+                style={{ marginRight: 25 }}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 25,
+                justifyContent: "space-around",
+              }}
+            >
+              <Image source={require("../assets/Birthday.png")} />
+              <View style={{ flexDirection: "column", marginLeft: -20 }}>
+                <StaticText
+                  text={
+                    userobj.dob.split(" ")[1] +
+                    "/ " +
+                    userobj.dob.split(" ")[2] +
+                    "/ " +
+                    userobj.dob.split(" ")[3]
+                  }
+                />
+                <View
+                  style={{ borderBottomColor: "#6E7A7D", borderBottomWidth: 1 }}
+                />
+                <Image
+                  source={require("../assets/Line.png")}
+                  style={{ height: 5 }}
+                />
+              </View>
+              <Image
+                source={require("../assets/Editdisabled.png")}
+                style={{ marginRight: 25 }}
               />
             </View>
           </View>
-          <Subheading style={{ marginTop: 15 }}>
-            🎂{" "}
-            {userobj.dob.split(" ")[1] +
-              " " +
-              userobj.dob.split(" ")[2] +
-              " " +
-              userobj.dob.split(" ")[3]}
-          </Subheading>
-          <Button
-            mode="contained"
-            style={styles.submitbutton}
-            labelStyle={styles.submitbutton}
-            onPress={() => {
-              props.navigation.navigate("Changepassword");
+          <View
+            style={{
+              flex: 4,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              marginLeft: 15,
             }}
           >
-            Change Password
-          </Button>
-          <Button
-            mode="contained"
-            style={styles.logoutbutton}
-            labelStyle={styles.logoutbutton}
-            onPress={() => dispatch(logoutUser())}
-          >
-            Log out
-          </Button>
+            <View style={{ justifyContent: "flex-start" }}>
+              <StaticText text="DarkMode" />
+            </View>
+            <Switch
+              trackColor={{ true: "white", false: "blue" }}
+              value={switchon}
+              onValueChange={setSwitchon}
+              style={{ marginRight: 25 }}
+            />
+          </View>
         </View>
 
-
-        <View
-          style={{ flex: 5, justifyContent: "flex-end", alignItems: "center" }}
-        >
-          <Button>© BooksAppExpo.</Button>
-        </View>
         <View
           style={{
-            flex: 1,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
+            flex: 8,
+            marginLeft: 15,
+            justifyContent: "center",
           }}
         >
-          <Button
-
-            onPress={() => {
-              Linking.openURL("https://google.com");
-            }}
-          >
-            Privacy Policy
-          </Button>
-          <Button
-            onPress={() => {
-              Linking.openURL("https://google.com");
-            }}
-          >
-            {" "}
-            Contact Us
-          </Button>
+          <View style={{ marginBottom: 6 }}>
+            <Pressable
+              onPress={() => props.navigation.navigate("Changepassword")}
+            >
+              <Button
+                theme={{ roundness: 50 }}
+                style={{
+                  width: 215,
+                  height: 40,
+                  alignItems: "flex-start",
+                  justifyContent: "center",
+                }}
+                labelStyle={{
+                  fontSize: 14,
+                  color: "white",
+                  flexDirection: "row",
+                  fontFamily: "DMSansbold",
+                }}
+                mode="contained"
+              >
+                Change Password
+              </Button>
+            </Pressable>
+          </View>
+          <View style={{ marginBottom: 6 }}>
+            <ActionButton
+              title="Logout"
+              Click={() => dispatch(logoutUser())}
+              fontS="14"
+              style={{ marginTop: 15 }}
+            />
+          </View>
+          <View style={{ marginBottom: 6 }}>
+            <ActionButton title="Deactivate account" fontS="14" />
+          </View>
+          <View style={{ marginLeft: 2 }}>
+            <StaticText text="Contact us" />
+            <View style={{ marginTop: 5 }}>
+              <StaticText text="Privacy policy" />
+            </View>
+          </View>
         </View>
       </SafeAreaView>
     );
@@ -195,18 +264,18 @@ const UserRoute = (props) => {
 };
 
 const styles = StyleSheet.create({
-
   safeareaview: {
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    backgroundColor: "#ECEFEE",
+    flexDirection: "column",
   },
-
 
   activityindicator: {
     padding: 100,
     alignSelf: "center",
   },
-                                 
+
   submitbutton: {
     margin: 30,
     fontSize: 20,
@@ -225,7 +294,6 @@ const styles = StyleSheet.create({
     color: "white",
     borderRadius: 12,
   },
-
 });
 
 export default UserRoute;

@@ -3,7 +3,7 @@ import React from "react";
 import FastImage from "react-native-fast-image";
 
 import { ScrollView, View, Image, StyleSheet, Pressable } from "react-native";
-
+import StaticText from "../Components/StaticText";
 import { Text } from "react-native-paper";
 
 const Horizontalscrollview = (props) => {
@@ -18,34 +18,31 @@ const Horizontalscrollview = (props) => {
         >
           <View
             style={{
-              flex: 1,
-              maxWidth: 170,
-              padding: 10,
-              backgroundColor: "#FDEDEC",
-              borderRadius: 10,
-              marginLeft: 5,
+              flexDirection: "column",
+              marginRight: 12,
+              // alignContent: "center",
+              // justifyContent: "center",
             }}
           >
-            <View style={{ flex: 3 }}>
+            <View>
               <Image
                 style={{
-                  resizeMode: "cover",
-                  maxWidth: 150,
-                  maxHeight: 200,
-                  minWidth: 150,
-                  minHeight: 200,
+                  resizeMode: "contain",
+                  // maxWidth: 150,
+                  height: 150,
+                  width: 100,
+
+                  // maxHeight: 200,
+                  // minWidth: 150,
+                  // minHeight: 200,
+                  borderRadius: 10,
                 }}
                 source={{ uri: book.book_img }}
               />
             </View>
-            <View style={{ flex: 2, padding: 10 }}>
-              <Text style={{ fontSize: 11 }}>{book.book_name}</Text>
-              <Text style={{ paddingTop: 5, fontSize: 10 }}>
-                {book.book_price}
-              </Text>
-              <Text style={{ paddingTop: 5, fontSize: 10 }}>
-                {book.book_status}
-              </Text>
+            <View style={{ paddingHorizontal: 10 }}>
+              <StaticText text={book.book_name} />
+              <StaticText text={book.book_price} />
             </View>
           </View>
         </Pressable>
@@ -57,7 +54,7 @@ const styles = StyleSheet.create({
   cardscroll: {
     flex: 1,
     height: "100%",
-    marginHorizontal: 10,
+    marginLeft: 21,
   },
 });
 
