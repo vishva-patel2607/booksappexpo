@@ -1,24 +1,24 @@
 import React, { Component, useState, useEffect } from "react";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { Image } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { DefaultTheme } from "react-native-paper";
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
-import EmailVerification from '../Pages/EmailVerification.js';
-import SearchRoute from '../Pages/Search.js';
-import PrivacyPolicy from '../Pages/Privacypolicy.js';
-import Booksaddedtopickup from '../Pages/Booksaddedtopickup.js';
-import RemovedBookScreen from '../Pages/RemovedBookScreen.js';
-import UploadRoute from '../Pages/Upload.js';
-import UserRoute from '../Pages/User.js';
-import HomeRoute from '../Pages/Home.js';
-import Bookscreen from '../Pages/Bookscreen';
-import Camerascreen from '../Pages/Camerascreen';
-import Changepassword from '../Pages/Changepassword';
+import EmailVerification from "../Pages/EmailVerification.js";
+import SearchRoute from "../Pages/Search.js";
+import PrivacyPolicy from "../Pages/Privacypolicy.js";
+import Booksaddedtopickup from "../Pages/Booksaddedtopickup.js";
+import RemovedBookScreen from "../Pages/RemovedBookScreen.js";
+import UploadRoute from "../Pages/Upload.js";
+import UserRoute from "../Pages/User.js";
+import HomeRoute from "../Pages/Home.js";
+import Bookscreen from "../Pages/Bookscreen";
+import Camerascreen from "../Pages/Camerascreen";
+import Changepassword from "../Pages/Changepassword";
 import PhonenumberVerification from "../Pages/PhonenumberVerification";
 // import BookCondition from "../Pages/BookConditions"
 import DropOff from '../Pages/DropOff';
@@ -27,17 +27,17 @@ import PickUp from "../Pages/PickUp";
 import BorrowedBooks from "../Pages/BorrowedBooks";
 import LentBooks from "../Pages/LentBooks";
 
-
-import { CommonActions } from '@react-navigation/routers';
-import Login from '../Pages/login';
-import Signup from '../Pages/signup';
-import EditPhone from '../Pages/EditPhone.js';
-import Storemodal from '../Pages/Storemodal.js';
-import {useSelector, useDispatch} from 'react-redux';
-import { getUser, logoutUser , setUser} from '../actions';
-import ForgotPassword from '../Pages/Forgotpassword.js';
-import UploadedBooks from '../Pages/Uploadedbooks.js';
-import Edituploadedbook from '../Pages/Edituploadedbook.js';
+import InitialSignup from "../Pages/Initialsignup.js";
+import { CommonActions } from "@react-navigation/routers";
+import Login from "../Pages/login";
+import Signup from "../Pages/signup";
+import EditPhone from "../Pages/EditPhone.js";
+import Storemodal from "../Pages/Storemodal.js";
+import { useSelector, useDispatch } from "react-redux";
+import { getUser, logoutUser, setUser } from "../actions";
+import ForgotPassword from "../Pages/Forgotpassword.js";
+import UploadedBooks from "../Pages/Uploadedbooks.js";
+import Edituploadedbook from "../Pages/Edituploadedbook.js";
 
 const theme = {
   ...DefaultTheme,
@@ -210,7 +210,7 @@ const Navigation = () => {
           <Stack.Screen
             name="Changepassword"
             component={Changepassword}
-            options={{ title: "Change Password" }}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="EditPhone"
@@ -254,6 +254,13 @@ const Navigation = () => {
             component={Signup}
             options={{ headerShown: false }}
           />
+
+          <Stack.Screen
+            name="InitialSignup"
+            component={InitialSignup}
+            options={{ headerShown: false }}
+          />
+
           <Stack.Screen
             name="ForgotPassword"
             component={ForgotPassword}

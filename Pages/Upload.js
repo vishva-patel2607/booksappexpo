@@ -535,6 +535,7 @@ const UploadRoute = (props) => {
               </Text>
             </View>
 
+
             <View
               style={[
                 styles.checkboxContainer,
@@ -605,6 +606,35 @@ const UploadRoute = (props) => {
               >
                 Great
               </Text>
+        <View style={styles.container3}>
+          <Title style={styles.textbox}>
+            Select the condition of your book:
+          </Title>
+          <RadioButton.Group
+            onValueChange={(value) => setCondition(value)}
+            value={condition}
+          >
+            <View style={{ flexDirection: "column" }}>
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ flex: 1 }}>
+                  <RadioButton.Item label="Bad" value="Bad" mode="android" />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <RadioButton.Item label="Fair" value="Fair" mode="android" />
+                </View>
+              </View>
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ flex: 1 }}>
+                  <RadioButton.Item label="Good" value="Good" mode="android" />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <RadioButton.Item
+                    label="Great"
+                    value="Great"
+                    mode="android"
+                  />
+                </View>
+              </View>
             </View>
           </View>
         </View>
@@ -634,6 +664,12 @@ const UploadRoute = (props) => {
             justifyContent: "center",
             alignItems: "center",
           }}
+        <Button
+          mode="contained"
+          style={styles.submitbutton}
+          labelStyle={styles.submitbutton}
+          onPress={uploaddetails}
+          disabled={!imgurl}
         >
           <Text>You'll get {!price ? 0 : userBookPrice}</Text>
           <Button
@@ -649,6 +685,7 @@ const UploadRoute = (props) => {
     </ScrollView>
   );
 };
+
 
 const BooksappLogo = () => {
   return (
@@ -755,6 +792,13 @@ const QrcodeLogo = ({ setShowQR, showQR }) => {
     </Svg>
   );
 };
+const styles = StyleSheet.create({
+  barcode: {
+    position: "relative",
+    height: 300,
+    zIndex: 100,
+  },
+
 
 const styles = StyleSheet.create({
   main: {

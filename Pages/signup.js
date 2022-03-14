@@ -1,50 +1,42 @@
-import React, { Component, useState, useRef } from "react";
+import React, { Component, useState, useEffect, useRef } from "react";
 import {
   SafeAreaView,
-  ScrollView,
+  StatusBar,
   StyleSheet,
   View,
-  KeyboardAvoidingView,
   Alert,
+  Image,
+  KeyboardAvoidingView,
   Pressable,
 } from "react-native";
-
-import {
-  Button,
-  Title,
-  Paragraph,
-  TextInput,
-  Text,
-  Appbar,
-  BottomNavigation,
-  Searchbar,
-  Card,
-  Avatar,
-  Subheading,
-  Checkbox,
-} from "react-native-paper";
+import RenderButton from "../Components/Button";
+import { TextInput } from "react-native-paper";
+import { TextInputMask } from "react-native-masked-text";
 import { setUser } from "../actions";
 
 const Signup = (props) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [repassword, setRepassword] = useState("");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState(props.route.params.username);
+  const [email, setEmail] = useState(props.route.params.email);
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [year, setYear] = useState("");
   const [month, setMonth] = useState("");
   const [day, setDay] = useState("");
-  const [phonenumber, setPhonenumber] = useState("");
-  const [token, setToken] = useState("");
-  const [error, setError] = useState("");
-  const [checked, setChecked] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [password, setPassword] = useState(props.route.params.password);
+  const [date, setDate] = useState("");
+  const [trigger, setTrigger] = useState(false);
+
+  const showDatePicker = () => {
+    setTrigger(true);
+    console.log(trigger);
+  };
 
   const ref_day = useRef();
   const ref_month = useRef();
   const ref_year = useRef();
 
-  const Signuprquest = () => {
+  const SignUpRequest = () => {
     var emailRegex = new RegExp(
       /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
     );
@@ -63,29 +55,16 @@ const Signup = (props) => {
       alert("Enter your username!");
       return;
     } else if (
-      password.length === 0 ||
-      repassword.length === 0 ||
-      !passwordRegex.test(password) ||
-      password !== repassword
-    ) {
-      alert(
-        "Check Password! \n\n Password must contains eight characters, at least one uppercase letter, one lowercase letter and one number \n\n And both passwords should match"
-      );
-      return;
-    } else if (
       email.length === 0 ||
       !emailRegex.test(email.trim().toLowerCase())
     ) {
       alert("Enter a valid E-mail");
       return;
-    } else if (phonenumber.length === 0 || !/^\d+$/.test(phonenumber)) {
+    } else if (phoneNumber.length === 0 || !/^\d+$/.test(phoneNumber)) {
       alert("Check your Phonenumber");
       return;
     } else if (day.length !== 2 || month.length !== 2 || year.length !== 4) {
       alert("Enter valid date");
-      return;
-    } else if (!checked) {
-      alert("Kindly read and accept the privacy policy.");
       return;
     } else {
       fetch("https://booksapp2021.herokuapp.com/User/Signup", {
@@ -103,7 +82,7 @@ const Signup = (props) => {
           year: year,
           month: month,
           day: day,
-          phonenumber: phonenumber,
+          phonenumber: phoneNumber,
         }),
       })
         .then((response) => {
@@ -111,8 +90,8 @@ const Signup = (props) => {
         })
         .then((data) => {
           if (data.status) {
+            console.log(data.message);
             // when data comes extract usernumber and phone number ad=nd redirect user to phonenumberVerification with props
-            setError(data.message);
             Alert.alert(
               "Verification email has been sent to your email",
               "Please Verify."[
@@ -122,22 +101,20 @@ const Signup = (props) => {
               ]
             );
           } else {
-            setError(data.message);
+            console.log(data.message);
           }
-          
+
           props.navigation.navigate("PhonenumberVerification", {
             // request will come then extract the data
             usernumber: data.response.user.usernumber,
             phonenumber: data.response.user.phonenumber,
           });
-
         })
         .catch((error) => {
           console.log(error);
         });
     }
   };
-
   const handleChangeDay = (value) => {
     if (/^\d+$/.test(value) || value == "") {
       setDay(value);
@@ -164,185 +141,174 @@ const Signup = (props) => {
       }
     }
   };
-
   return (
     <SafeAreaView style={styles.loginlayout}>
-      <Title style={styles.textbox}>Sign up</Title>
-
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.layout}
-      >
-        <ScrollView>
-          <View style={{ flexDirection: "row" }}>
-            <TextInput
-              style={styles.inputtextbox}
-              label="First name"
-              value={firstname}
-              onChangeText={(text) => setFirstname(text)}
-              autoCompleteType="name"
-              autoCorrect={false}
-              maxLength={20}
-              left={<TextInput.Icon name="badge-account" />}
+      <KeyboardAvoidingView behavior="padding">
+        <View style={{ flex: 1, alignSelf: "flex-start" }}>
+          <Pressable onPress={() => props.navigation.navigate("InitialSignup")}>
+            <Image
+              source={require("../assets/Backbutton.png")}
+              style={{ marginTop: 20 }}
             />
+          </Pressable>
+        </View>
+        <View style={{ flex: 2, marginTop: 30 }}>
+          <Image
+            source={require("../assets/BAheader.png")}
+            style={{ alignSelf: "center" }}
+          />
+        </View>
 
-            <TextInput
-              style={styles.inputtextbox}
-              label="Last name"
-              value={lastname}
-              onChangeText={(text) => setLastname(text)}
-              autoCompleteType="name"
-              autoCorrect={false}
-              maxLength={20}
-              left={<TextInput.Icon name="badge-account" />}
-            />
-          </View>
-
+        <View style={{ flex: 18, flexDirection: "column" }}>
           <TextInput
             style={styles.inputtextbox}
-            label="Username"
-            value={username}
-            onChangeText={(text) => setUsername(text)}
+            theme={{
+              colors: {
+                primary: "#EEECEF",
+                placeholder: "#8e8e8e",
+              },
+              roundness: 120,
+            }}
+            // theme={{ colors: { primary: "transparent" } }}
+            placeholder="FirstName"
+            value={firstname}
+            onChangeText={(text) => setFirstname(text)}
             autoCapitalize="none"
             autoCompleteType="username"
             autoCorrect={false}
+            underlineColor="#ECEFEE"
             maxLength={20}
-            left={<TextInput.Icon name="account" />}
+            left={
+              <TextInput.Icon
+                name={() => <Image source={require("../assets/user.png")} />}
+              />
+            }
+          />
+          <TextInput
+            style={styles.inputtextbox}
+            theme={{
+              colors: {
+                primary: "#EEECEF",
+                placeholder: "#8e8e8e",
+              },
+              roundness: 120,
+            }}
+            // theme={{ colors: { primary: "transparent" } }}
+            placeholder="Lastname"
+            value={lastname}
+            onChangeText={(text) => setLastname(text)}
+            autoCapitalize="none"
+            autoCorrect={false}
+            underlineColor="#ECEFEE"
+            maxLength={20}
+            left={
+              <TextInput.Icon
+                name={() => <Image source={require("../assets/user.png")} />}
+              />
+            }
           />
 
           <TextInput
             style={styles.inputtextbox}
-            label="Password"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
+            theme={{
+              colors: {
+                primary: "#EEECEF",
+                placeholder: "#8e8e8e",
+              },
+              roundness: 120,
+            }}
+            // theme={{ colors: { primary: "transparent" } }}
+            placeholder="Phonenumber"
+            value={phoneNumber}
+            onChangeText={(text) => setPhoneNumber(text)}
             autoCapitalize="none"
-            autoCompleteType="password"
+            autoCompleteType="username"
             autoCorrect={false}
-            left={<TextInput.Icon name="eye" />}
+            underlineColor="#ECEFEE"
             maxLength={20}
+            left={
+              <TextInput.Icon
+                name={() => <Image source={require("../assets/Phone.png")} />}
+              />
+            }
           />
 
-          <TextInput
-            style={styles.inputtextbox}
-            label="Retype Password"
-            value={repassword}
-            onChangeText={(text) => setRepassword(text)}
-            autoCapitalize="none"
-            autoCompleteType="password"
-            autoCorrect={false}
-            left={<TextInput.Icon name="eye" />}
-            maxLength={20}
-          />
-
-          <TextInput
-            style={styles.inputtextbox}
-            label="Email"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-            autoCapitalize="none"
-            autoCompleteType="email"
-            autoCorrect={false}
-            maxLength={30}
-            left={<TextInput.Icon name="email" />}
-            keyboardType="email-address"
-          />
-
-          <TextInput
-            style={styles.inputtextbox}
-            label="Phone number"
-            value={phonenumber}
-            onChangeText={(text) => setPhonenumber(text)}
-            autoCapitalize="none"
-            autoCompleteType="tel"
-            autoCorrect={false}
-            maxLength={20}
-            left={<TextInput.Icon name="cellphone" />}
-            keyboardType="number-pad"
-          />
-
-          <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection: "row", marginTop: 11 }}>
             <TextInput
-              style={styles.inputtextbox}
-              label="MM"
+              style={styles.datetextbox}
+              theme={{
+                colors: {
+                  primary: "#EEECEF",
+                  placeholder: "#8e8e8e",
+                },
+                roundness: 120,
+              }}
+              underlineColor="#ECEFEE"
+              placeholder="MM"
               value={month}
               onChangeText={(text) => handleChangeMonth(text)}
-              autoCorrect={false}
+              aHiutoCorrect={false}
               maxLength={2}
-              left={<TextInput.Icon name="calendar-month" />}
+              // left={<TextInput.Icon name="calendar-month" />}
               ref={ref_month}
               keyboardType="number-pad"
             />
 
             <TextInput
-              style={styles.inputtextbox}
-              label="DD"
+              style={styles.datetextbox}
+              theme={{
+                colors: {
+                  primary: "#EEECEF",
+                  placeholder: "#8e8e8e",
+                },
+                roundness: 120,
+              }}
+              placeholder="DD"
               value={day}
               onChangeText={(text) => handleChangeDay(text)}
               autoCorrect={false}
               maxLength={2}
-              left={<TextInput.Icon name="calendar-today" />}
+              underlineColor="#ECEFEE"
+              // left={<TextInput.Icon name="calendar-today" />}
               ref={ref_day}
               keyboardType="number-pad"
             />
 
             <TextInput
-              style={styles.inputtextbox}
-              label="YYYY"
+              style={styles.yeartextbox}
+              placeholder="YYYY"
+              underlineColor="#ECEFEE"
+              theme={{
+                colors: {
+                  primary: "#EEECEF",
+                  placeholder: "#8e8e8e",
+                },
+                roundness: 120,
+              }}
               value={year}
               onChangeText={(text) => handleChangeYear(text)}
               autoCorrect={false}
               maxLength={4}
-              left={<TextInput.Icon name="calendar-blank" />}
+              // left={<TextInput.Icon name="calendar-blank" />}
               ref={ref_year}
               keyboardType="number-pad"
             />
           </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              marginBottom: 10,
-              marginTop: 10,
-            }}
-          >
-            <Checkbox.Android
-              status={checked ? "checked" : "unchecked"}
-              onPress={() => {
-                setChecked(!checked);
-              }}
-            />
-            <Text>
-              I agree to{" "}
-              <Text
-                onPress={() => {
-                  props.navigation.navigate("PrivacyPolicy");
-                }}
-                style={{ textDecorationLine: "underline" }}
-              >
-                Privacy policy
-              </Text>
-            </Text>
-          </View>
 
-          <Button
-            mode="contained"
-            style={styles.submitbutton}
-            labelStyle={styles.submitbutton}
-            onPress={Signuprquest}
-          >
-            Sign up
-          </Button>
+          {/* <Text style={styles.error}>{error}</Text> */}
+        </View>
 
-          <Text style={styles.error}>{error}</Text>
-        </ScrollView>
+        <View
+          behaviour="position"
+          style={{
+            flex: 4,
+            alignItems: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <RenderButton title="SignUp" Click={SignUpRequest} />
+        </View>
       </KeyboardAvoidingView>
-
-      <View>
-        <Button onPress={() => props.navigation.navigate("Login")}>
-          Log in
-        </Button>
-      </View>
     </SafeAreaView>
   );
 };
@@ -361,23 +327,40 @@ const styles = StyleSheet.create({
   },
 
   inputtextbox: {
-    margin: 10,
-    flex: 1,
+    marginTop: 11,
+    width: 270,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 120,
+    height: 50,
   },
 
+  datetextbox: {
+    borderRadius: 120,
+    flex: 4,
+    height: 50,
+    backgroundColor: "#FFFFFF",
+    marginRight: 10,
+  },
+
+  yeartextbox: {
+    borderRadius: 120,
+    flex: 5,
+    height: 50,
+    backgroundColor: "#FFFFFF",
+  },
   submitbutton: {
     margin: 10,
     fontSize: 20,
     color: "white",
+    width: 200,
+    borderRadius: 20,
   },
-
 
   loginlayout: {
     flex: 1,
-  },
-
-  layout: {
-    flex: 1,
+    alignItems: "center",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    backgroundColor: "#ECEFEE",
   },
 });
 

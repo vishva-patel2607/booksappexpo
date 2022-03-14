@@ -3,79 +3,20 @@ import { SafeAreaView, ScrollView, View, StyleSheet } from "react-native";
 import { Platform, StatusBar, RefreshControl } from "react-native";
 import { logoutUser, setUser } from "../actions";
 import { Title, Text, Headline, Card, Button } from "react-native-paper";
-
+import Actions from "../Components/Actions";
 import Horizontalscrollview from "./Horizontalscrollview";
 import { useDispatch, useSelector } from "react-redux";
 import BookConditions from "./BookConditions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import BAheader from "../Components/BAheader";
 import Constants from "expo-constants";
+import Newbooks from "../Components/Newbooks";
 import * as Notifications from "expo-notifications";
 
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
 };
-var data = [
-  {
-    book_name: "Sapiens",
-    book_author: "James Clear",
-    book_year: "1992",
-    book_distance: 5.2,
-    book_condition: "great",
-    book_img:
-      "https://images-na.ssl-images-amazon.com/images/I/713jIoMO3UL.jpg",
-    book_price: "Rs 150",
-    book_status: "Uploaded!, Please submit to shop",
-    book_transaction_code: "01",
-  },
-  {
-    book_name: "Guns Germs and Steel written by james clear",
-    book_author: "James Clear",
-    book_year: "2002",
-    book_distance: 10,
-    book_condition: "good",
-    book_img:
-      "https://images-na.ssl-images-amazon.com/images/I/81RdveuYXWL.jpg",
-    book_price: "Rs 200",
-    book_status: "Book In Shop",
-    book_transaction_code: "02",
-  },
-  {
-    book_name: "Sapiens",
-    book_author: "James Clear",
-    book_year: "1992",
-    book_distance: 11,
-    book_condition: "bad",
-    book_img:
-      "https://images-na.ssl-images-amazon.com/images/I/713jIoMO3UL.jpg",
-    book_price: "Rs 250",
-    book_status: "Book In Shop",
-    book_transaction_code: "03",
-  },
-  {
-    book_name: "Guns Germs and Steel",
-    book_author: "James Clear",
-    book_year: "1992",
-    book_distance: 5.2,
-    book_condition: "great",
-    book_img:
-      "https://images-na.ssl-images-amazon.com/images/I/81RdveuYXWL.jpg",
-    book_price: "Rs 300",
-    book_status: "Uploaded!, Please submit to shop",
-    book_transaction_code: "04",
-  },
-  {
-    book_name: "Guns Germs and steel",
-    book_author: "James Clear",
-    book_year: "1992",
-    book_distance: 5.2,
-    book_condition: "great",
-    book_img:
-      "https://images-na.ssl-images-amazon.com/images/I/81RdveuYXWL.jpg",
-    book_price: "Rs 350",
-    book_status: "Book In Shop",
-    book_transaction_code: "05",
-  },
-];
+
 
 const HomeRoute = (props) => {
   const [devicePushToken, setDevicePushToken] = useState("");
@@ -83,10 +24,13 @@ const HomeRoute = (props) => {
   const [message, setMessage] = useState("");
   const notificationListener = useRef();
   const responseListener = useRef();
-  const [Bookdata, setBookData] = useState([]);
-  const [Pickedupbooks, setPickedupbooks] = useState([]);
-  const [Removedbooks, setRemovedbooks] = useState([]);
-  const [Pickupdata, setPickupdata] = useState([]);
+  const [lentbooks, setLentbooks] = useState([]);
+  const [borrowedbooks, setBorrowedbooks] = useState([]);
+  const [boughtbooks, setBoughtbooks] = useState([]);
+  const [pickupbooks, setPickupbooks] = useState([]);
+  const [dropoffbooks, setDropoffbooks] = useState([]);
+  const [previoustransactions, setPrevioustransactions] = useState([]);
+  const [soldbooks, setSoldbooks] = useState([]);
   const [count, setCount] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = () => {
@@ -108,98 +52,82 @@ const HomeRoute = (props) => {
     });
   }
 
-  let removedbooks =
-    Removedbooks.length !== 0 ? (
+
+  let lent =
+    lentbooks.length !== 0 ? (
       <Horizontalscrollview
-        booklist={Removedbooks}
-        pagename="RemovedBookScreen"
+        booklist={lentbooks}
+        pagename="B"
         navigation={props.navigation}
       />
     ) : (
-      <View
-        style={{
-          height: 90,
-          margin: 10,
-          backgroundColor: "#EDEDF0",
-          borderRadius: 10,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Headline>No books currently removed.</Headline>
-      </View>
+      <Newbooks text="Some dummy text" />
     );
-  let booksaddedtopickup =
-    Pickupdata.length !== 0 ? (
+
+  let borrowed =
+    borrowedbooks.length !== 0 ? (
       <Horizontalscrollview
-        booklist={Pickupdata}
-        pagename="Booksaddedtopickup"
+        booklist={borrowedbooks}
+        pagename="B"
         navigation={props.navigation}
       />
     ) : (
-      <View
-        style={{
-          height: 90,
-          margin: 10,
-          backgroundColor: "#EDEDF0",
-          borderRadius: 10,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Headline>No books added to pickedup.</Headline>
-      </View>
+      <Newbooks text="Some dummy text" />
     );
-  let bookspickedup =
-    Pickedupbooks.length !== 0 ? (
+
+  let dropoff =
+    dropoffbooks.length !== 0 ? (
       <Horizontalscrollview
-        booklist={Pickedupbooks}
-        pagename="Booksaddedtopickup"
+        booklist={dropoffbooks}
+        pagename="B"
         navigation={props.navigation}
       />
     ) : (
-      <View
-        style={{
-          height: 100,
-          margin: 10,
-          backgroundColor: "#EDEDF0",
-          borderRadius: 10,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Headline>No books picked up.</Headline>
-      </View>
+      <Newbooks text="Some dummy text" />
     );
-  let uploadedbook =
-    Bookdata.length !== 0 ? (
+
+  let pickup =
+    pickupbooks.length !== 0 ? (
       <Horizontalscrollview
-        booklist={Bookdata}
-        pagename="UploadedBooks"
+        booklist={pickupbooks}
+        pagename="B"
         navigation={props.navigation}
       />
     ) : (
-      <View
-        style={{
-          height: 90,
-          margin: 10,
-          backgroundColor: "#EDEDF0",
-          borderRadius: 10,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Headline>No books uploaded.</Headline>
-        <Button
-          mode="contained"
-          style={{ marginTop: 15 }}
-          onPress={() => {
-            props.navigation.navigate("Upload");
-          }}
-        >
-          Upload one
-        </Button>
-      </View>
+      <Newbooks text="Some dummy text" />
+    );
+
+  let sold =
+    soldbooks.length !== 0 ? (
+      <Horizontalscrollview
+        booklist={soldbooks}
+        pagename="B"
+        navigation={props.navigation}
+      />
+    ) : (
+      <Newbooks text="Some dummy text" />
+    );
+
+  let pt =
+    previoustransactions.length !== 0 ? (
+      <Horizontalscrollview
+        booklist={previoustransactions}
+        pagename="B"
+        navigation={props.navigation}
+      />
+    ) : (
+      <Newbooks text="Some dummy text" />
+    );
+
+  let bought =
+    boughtbooks.length !== 0 ? (
+      <Horizontalscrollview
+        booklist={boughtbooks}
+        pagename="B"
+        navigation={props.navigation}
+      />
+    ) : (
+      <Newbooks text="Some dummy text" />
     );
 
   useEffect(() => {
@@ -299,8 +227,8 @@ const HomeRoute = (props) => {
   }
 
   useEffect(() => {
-    fetch("https://booksapp2021.herokuapp.com/Book/Pickedupbooks/Added", {
-      method: "POST",
+    fetch("https://booksapp2021.herokuapp.com/Book/Pickups", {
+      method: "GET",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -313,7 +241,7 @@ const HomeRoute = (props) => {
       })
       .then((data) => {
         if (data.status) {
-          setPickupdata(data.response.books);
+          setPickupbooks(data.response.books);
         } else {
           if (data.message === "Could not verify") {
             dispatch(logoutUser());
@@ -324,13 +252,13 @@ const HomeRoute = (props) => {
         console.log(error);
       });
 
-    setPickupdata([]);
+    setPickupbooks([]);
     setRefreshing(false);
   }, [count]);
 
   useEffect(() => {
-    fetch("https://booksapp2021.herokuapp.com/Book/Pickedupbooks", {
-      method: "POST",
+    fetch("https://booksapp2021.herokuapp.com/Book/Borrowed", {
+      method: "GET",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -343,8 +271,7 @@ const HomeRoute = (props) => {
       })
       .then((data) => {
         if (data.status) {
-          console.log(data.response.books);
-          setPickedupbooks(data.response.books);
+          setBorrowedbooks(data.response.books);
         } else {
           if (data.message === "Could not verify") {
             dispatch(logoutUser());
@@ -355,13 +282,13 @@ const HomeRoute = (props) => {
         console.log(error);
       });
 
-    setPickedupbooks([]);
+    setBorrowedbooks([]);
     setRefreshing(false);
   }, [count]);
 
   useEffect(() => {
-    fetch("https://booksapp2021.herokuapp.com/Book/Uploadedbooks", {
-      method: "POST",
+    fetch("https://booksapp2021.herokuapp.com/Book/Sold", {
+      method: "GET",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -374,9 +301,7 @@ const HomeRoute = (props) => {
       })
       .then((data) => {
         if (data.status) {
-          setBookData(data.response.books);
-
-          console.log(data.response.books);
+          setSoldbooks(data.response.books);
         } else {
           if (data.message === "Could not verify") {
             dispatch(logoutUser());
@@ -387,13 +312,14 @@ const HomeRoute = (props) => {
         console.log(error);
       });
 
-    setBookData([]);
+
+    setSoldbooks([]);
     setRefreshing(false);
   }, [count]);
 
   useEffect(() => {
-    fetch("https://booksapp2021.herokuapp.com/Book/Pickedupbooks/Removed", {
-      method: "POST",
+    fetch("https://booksapp2021.herokuapp.com/Book/Bought", {
+      method: "GET",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -406,7 +332,7 @@ const HomeRoute = (props) => {
       })
       .then((data) => {
         if (data.status) {
-          setRemovedbooks(data.response.books);
+          setBoughtbooks(data.response.books);
         } else {
           if (data.message === "Could not verify") {
             dispatch(logoutUser());
@@ -417,9 +343,105 @@ const HomeRoute = (props) => {
         console.log(error);
       });
 
-    setRemovedbooks([]);
+    setBoughtbooks([]);
     setRefreshing(false);
   }, [count]);
+
+  useEffect(() => {
+    fetch("https://booksapp2021.herokuapp.com/Book/Lent", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "x-access-token": user.token,
+      },
+      body: null,
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.status) {
+          setLentbooks(data.response.books);
+        } else {
+          if (data.message === "Could not verify") {
+            dispatch(logoutUser());
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    setLentbooks([]);
+    setRefreshing(false);
+  }, [count]);
+
+  useEffect(() => {
+    fetch("https://booksapp2021.herokuapp.com/Book/Previoustransactions", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "x-access-token": user.token,
+      },
+      body: null,
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.status) {
+          setPrevioustransactions(data.response.books);
+          console.log("Pr", data.response.books);
+        } else {
+          if (data.message === "Could not verify") {
+            dispatch(logoutUser());
+          } else {
+            console.log(data.message);
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    setPrevioustransactions([]);
+    setRefreshing(false);
+  }, [count]);
+
+  useEffect(() => {
+    fetch("https://booksapp2021.herokuapp.com/Book/Dropoffs", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "x-access-token": user.token,
+      },
+      body: null,
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.status) {
+          setDropoffbooks(data.response.books);
+        } else {
+          if (data.message === "Could not verify") {
+            dispatch(logoutUser());
+          } else {
+            console.log(data.message);
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    setDropoffbooks([]);
+    setRefreshing(false);
+  }, [count]);
+
   useEffect(() => {
     console.log("refreshing from edit book");
     setRefreshing(props.route.params?.refreshing);
@@ -432,38 +454,26 @@ const HomeRoute = (props) => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
+
+        <BAheader />
         <BookConditions />
-
-        <Card style={{ marginTop: 20, borderRadius: 35 }}>
-          <Card.Content>
-            <Title>Books Uploaded:- {Bookdata.length}</Title>
-            <Title style={{ paddingTop: 10 }}>
-              Books added to Pickup:- {Pickupdata.length}
-            </Title>
-            <Title style={{ paddingTop: 10 }}>
-              Books Pickedup:- {Pickedupbooks.length}
-            </Title>
-            <Title style={{ paddingTop: 10 }}>
-              Books removed from Pickup:- {Removedbooks.length}
-            </Title>
-          </Card.Content>
-        </Card>
-        <Title style={styles.statistics}>Uploaded Books</Title>
-        <Text></Text>
-        <View style={styles.cardview}>{uploadedbook}</View>
-
-        <Title style={styles.statistics}>Books added to Pickup</Title>
-        <Text></Text>
-
-        <View style={styles.cardview}>{booksaddedtopickup}</View>
-
-        <Title style={styles.statistics}>Books Picked up by the user</Title>
-        <Text></Text>
-        <View style={styles.cardview}>{bookspickedup}</View>
-
-        <Title style={styles.statistics}>Books Removed from pickup</Title>
-        <Text></Text>
-        <View style={styles.cardview}>{removedbooks}</View>
+        <Actions text="DROPOFFS" length={dropoffbooks.length} />
+        <View style={styles.cardview}>{dropoff}</View>
+        <Actions text="PICKUPS" length={pickupbooks.length} />
+        <View style={styles.cardview}>{pickup}</View>
+        <Actions text="LENT" length={lentbooks.length} />
+        <View style={styles.cardview}>{lent}</View>
+        <Actions text="BORROWED" length={borrowedbooks.length} />
+        <View style={styles.cardview}>{borrowed}</View>
+        <Actions text="SOLD" length={soldbooks.length} />
+        <View style={styles.cardview}>{sold}</View>
+        <Actions
+          text="PREVIOUS TRANSACTIONS"
+          length={previoustransactions.length}
+        />
+        <View style={styles.cardview}>{pt}</View>
+        <Actions text="BOUGHT" length={boughtbooks.length} />
+        <View style={styles.cardview}>{bought}</View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -472,7 +482,7 @@ const HomeRoute = (props) => {
 const styles = StyleSheet.create({
   AndroidSafeArea: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#ECEFEE",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   submitbutton: {

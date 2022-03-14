@@ -88,7 +88,7 @@ const PhonenumberVerification = (props) => {
       if (jsonData.status === true) {
         alert("Your phone number has been verified!");
         // redirect it to home page
-        // props.navigation.navigate("Mainpage");
+        props.navigation.navigate("Login");
       } else {
         alert(jsonData.message);
         setShowOTPButton(!showOTPButton);
@@ -104,6 +104,32 @@ const PhonenumberVerification = (props) => {
       <SafeAreaView>
         <View style={styles.logo}>
           <BooksappLogo />
+    <SafeAreaView>
+      {loading && <Text style={styles.loading}>Loading...</Text>}
+
+      {!showOTPButton && (
+        <View>
+          <Title style={styles.title}>
+            SMS will be sent to below phone number
+          </Title>
+          <TextInput
+            style={styles.inputtextbox}
+            label="Mobile Number"
+            value={phonenumber}
+            onChangeText={(number) => setNewPhonenumber(parseInt(number))}
+            maxLength={10}
+            left={<TextInput.Icon name="phone" />}
+            keyboardType="number-pad"
+          />
+          <Button
+            disabled={loading}
+            onPress={() => {
+              sendOTP();
+              setShowOTPButton(true);
+            }}
+          >
+            Send OTP
+          </Button>
         </View>
 
         <View>

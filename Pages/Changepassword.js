@@ -1,10 +1,18 @@
 import React, { useState } from "react";
-import { SafeAreaView, View, StyleSheet, Alert } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  StyleSheet,
+  Alert,
+  Text,
+  Image,
+  Pressable,
+} from "react-native";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { Button, TextInput, Text } from "react-native-paper";
-
+import { Button, TextInput } from "react-native-paper";
+import RenderActionButton from "../Components/Actionbutton";
 import { logoutUser } from "../actions";
 
 const tempoobj = {
@@ -87,50 +95,111 @@ const Changepassword = (props) => {
     }
   };
 
-
   return (
     <SafeAreaView style={styles.layout}>
-      <View style={styles.layout}>
+      <View style={{ justifyContent: "flex-start", flex: 1 }}>
+        <Pressable onPress={() => props.navigation.navigate("User")}>
+          <Image
+            source={require("../assets/Backbutton.png")}
+            style={{ marginLeft: 19, marginTop: 18 }}
+          />
+        </Pressable>
+      </View>
+      <View style={{ justifyContent: "flex-start", flex: 1 }}>
+        <Text
+          style={{
+            fontSize: 25,
+            fontWeight: "700",
+            color: "#0D1936",
+            marginLeft: 22,
+          }}
+          theme={{ fonts: { regular: "DM Sans" } }}
+        >
+          CHANGE PASSWORD
+        </Text>
+      </View>
+      <View style={{ marginLeft: 19, flex: 12 }}>
         <TextInput
           style={styles.inputtextbox}
-          label="Old Password"
+          theme={{
+            colors: {
+              primary: "#EEECEF",
+              placeholder: "#8e8e8e",
+            },
+            roundness: 120,
+          }}
+          // theme={{ colors: { primary: "transparent" } }}
+          mode="flat"
+          placeholder="Old Password"
+          secureTextEntry={true}
           value={oldpassword}
           onChangeText={(text) => setOldpassword(text)}
           autoCapitalize="none"
           autoCorrect={false}
+          underlineColor="#ECEFEE"
           maxLength={20}
-          secureTextEntry={true}
         />
 
         <TextInput
           style={styles.inputtextbox}
-          label="New Password"
+          theme={{
+            colors: {
+              primary: "#EEECEF",
+              placeholder: "#8e8e8e",
+            },
+            roundness: 120,
+          }}
+          mode="flat"
+          placeholder="New password"
           value={newpassword1}
           onChangeText={(text) => setNewpassword1(text)}
           autoCapitalize="none"
+          underlineColor="#ECEFEE"
           autoCorrect={false}
+          secureTextEntry={true}
           maxLength={20}
         />
 
         <TextInput
           style={styles.inputtextbox}
-          label="Re-type New Password"
+          theme={{
+            colors: {
+              primary: "#EEECEF",
+              placeholder: "#8e8e8e",
+            },
+            roundness: 120,
+          }}
+          mode="flat"
+          placeholder="Retype New Password"
           value={newpassword2}
           onChangeText={(text) => setNewpassword2(text)}
           autoCapitalize="none"
+          underlineColor="#ECEFEE"
           autoCorrect={false}
+          secureTextEntry={true}
           maxLength={20}
         />
 
         <Text style={styles.error}>{error}</Text>
-
         <Button
-          mode="contained"
-          style={styles.submitbutton}
-          labelStyle={styles.submitbutton}
+          theme={{ roundness: 120 }}
           onPress={changepassword}
+          style={{
+            width: 215,
+            height: 40,
+            alignItems: "flex-start",
+
+            justifyContent: "center",
+          }}
+          labelStyle={{
+            fontSize: 14,
+            color: "white",
+            flexDirection: "row",
+            fontFamily: "DMSansbold",
+          }}
+          mode="contained"
         >
-          Change Password
+          SAVE
         </Button>
       </View>
     </SafeAreaView>
@@ -146,7 +215,11 @@ const styles = StyleSheet.create({
   },
 
   inputtextbox: {
-    margin: 10,
+    marginTop: 11,
+    width: 215,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 120,
+    height: 50,
   },
 
   submitbutton: {
@@ -157,6 +230,7 @@ const styles = StyleSheet.create({
 
   layout: {
     flex: 1,
+    backgroundColor: "#ECEFEE",
   },
 });
 
