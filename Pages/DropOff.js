@@ -219,4 +219,4 @@ const styles = StyleSheet.create({
   map:{
     marginBottom: 20
   },
-});
+}); 
