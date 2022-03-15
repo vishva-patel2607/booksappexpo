@@ -55,7 +55,8 @@ const HomeRoute = (props) => {
     lentbooks.length !== 0 ? (
       <Horizontalscrollview
         booklist={lentbooks}
-        pagename="B"
+        pagename="Bookdetail"
+        title="LENT"
         navigation={props.navigation}
       />
     ) : (
@@ -66,7 +67,8 @@ const HomeRoute = (props) => {
     borrowedbooks.length !== 0 ? (
       <Horizontalscrollview
         booklist={borrowedbooks}
-        pagename="B"
+        title="BORROWED"
+        pagename="Bookdetail"
         navigation={props.navigation}
       />
     ) : (
@@ -77,7 +79,8 @@ const HomeRoute = (props) => {
     dropoffbooks.length !== 0 ? (
       <Horizontalscrollview
         booklist={dropoffbooks}
-        pagename="B"
+        pagename="Bookdetail"
+        title="DROPOFF"
         navigation={props.navigation}
       />
     ) : (
@@ -88,7 +91,8 @@ const HomeRoute = (props) => {
     pickupbooks.length !== 0 ? (
       <Horizontalscrollview
         booklist={pickupbooks}
-        pagename="B"
+        pagename="Bookdetail"
+        title="PICKUP"
         navigation={props.navigation}
       />
     ) : (
@@ -99,29 +103,31 @@ const HomeRoute = (props) => {
     soldbooks.length !== 0 ? (
       <Horizontalscrollview
         booklist={soldbooks}
-        pagename="B"
+        pagename="Bookdetail"
+        title="SOLD"
         navigation={props.navigation}
       />
     ) : (
       <Newbooks text="Some dummy text" />
     );
 
-  let pt =
-    previoustransactions.length !== 0 ? (
-      <Horizontalscrollview
-        booklist={previoustransactions}
-        pagename="B"
-        navigation={props.navigation}
-      />
-    ) : (
-      <Newbooks text="Some dummy text" />
-    );
+  // let pt =
+  //   previoustransactions.length !== 0 ? (
+  //     <Horizontalscrollview
+  //       booklist={previoustransactions}
+  //       pagename="B"
+  //       navigation={props.navigation}
+  //     />
+  //   ) : (
+  //     <Newbooks text="Some dummy text" />
+  //   );
 
   let bought =
     boughtbooks.length !== 0 ? (
       <Horizontalscrollview
         booklist={boughtbooks}
-        pagename="B"
+        pagename="Bookdetail"
+        title="BOUGHT"
         navigation={props.navigation}
       />
     ) : (
@@ -180,7 +186,6 @@ const HomeRoute = (props) => {
               if (data.status) {
                 setMessage(data.message);
               } else {
-                console.log(data);
                 setMessage(data.message);
               }
             });
@@ -374,38 +379,38 @@ const HomeRoute = (props) => {
     setRefreshing(false);
   }, [count]);
 
-  useEffect(() => {
-    fetch("https://booksapp2021.herokuapp.com/Book/Previoustransactions", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "x-access-token": user.token,
-      },
-      body: null,
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        if (data.status) {
-          setPrevioustransactions(data.response.books);
-          console.log("Pr", data.response.books);
-        } else {
-          if (data.message === "Could not verify") {
-            dispatch(logoutUser());
-          } else {
-            console.log(data.message);
-          }
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  // useEffect(() => {
+  //   fetch("https://booksapp2021.herokuapp.com/Book/Previoustransactions", {
+  //     method: "GET",
+  //     headers: {
+  //       Accept: "application/json",
+  //       "Content-Type": "application/json",
+  //       "x-access-token": user.token,
+  //     },
+  //     body: null,
+  //   })
+  //     .then((response) => {
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       if (data.status) {
+  //         setPrevioustransactions(data.response.books);
+  //         console.log("Pr", data.response.books);
+  //       } else {
+  //         if (data.message === "Could not verify") {
+  //           dispatch(logoutUser());
+  //         } else {
+  //           console.log(data.message);
+  //         }
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
 
-    setPrevioustransactions([]);
-    setRefreshing(false);
-  }, [count]);
+  //   setPrevioustransactions([]);
+  //   setRefreshing(false);
+  // }, [count]);
 
   useEffect(() => {
     fetch("https://booksapp2021.herokuapp.com/Book/Dropoffs", {
@@ -463,11 +468,11 @@ const HomeRoute = (props) => {
         <View style={styles.cardview}>{borrowed}</View>
         <Actions text="SOLD" length={soldbooks.length} />
         <View style={styles.cardview}>{sold}</View>
-        <Actions
+        {/* <Actions
           text="PREVIOUS TRANSACTIONS"
           length={previoustransactions.length}
         />
-        <View style={styles.cardview}>{pt}</View>
+        <View style={styles.cardview}>{pt}</View> */}
         <Actions text="BOUGHT" length={boughtbooks.length} />
         <View style={styles.cardview}>{bought}</View>
       </ScrollView>

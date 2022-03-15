@@ -5,7 +5,7 @@ import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { DefaultTheme } from "react-native-paper";
-
+import Bookdetail from "../Pages/Bookdetail.js";
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 import EmailVerification from "../Pages/EmailVerification.js";
@@ -221,6 +221,11 @@ const Navigation = () => {
             name="Edituploadedbook"
             component={Edituploadedbook}
             options={{ title: "Edit" }}
+          />
+          <Stack.Screen
+            name="Bookdetail"
+            component={Bookdetail}
+            options={{ headerShown: false }}
           />
         </Stack.Navigator>
       </NavigationContainer>

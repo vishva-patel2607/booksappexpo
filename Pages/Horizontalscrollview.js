@@ -7,13 +7,17 @@ import StaticText from "../Components/StaticText";
 import { Text } from "react-native-paper";
 
 const Horizontalscrollview = (props) => {
+  console.log(props);
   return (
     <ScrollView style={styles.cardscroll} horizontal={true}>
       {props.booklist.map((book, idx) => (
         <Pressable
           key={idx}
           onPress={() =>
-            props.navigation.navigate(props.pagename, { book: book })
+            props.navigation.navigate(props.pagename, {
+              book: book,
+              title: props.title,
+            })
           }
         >
           <View
