@@ -31,7 +31,7 @@ import {
 import { TabRouter } from "@react-navigation/routers";
 import WavyHeader from "./WavyHeader";
 import Storemodalcard from "./Storemodalcard";
-import FastImage from "react-native-fast-image";
+
 
 
 

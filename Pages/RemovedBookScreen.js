@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import FastImage from "react-native-fast-image";
 
 import { logoutUser, setUser } from "../actions";
 import { useDispatch, useSelector } from "react-redux";

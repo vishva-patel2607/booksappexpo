@@ -1,41 +1,20 @@
 
-import React, { Component, useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  SafeAreaView,
-  ScrollView,
   View,
-  Image,
   StyleSheet,
-  Alert,
-  Pressable,
+  Pressable
 } from "react-native";
-import { logoutUser, setUser } from "../actions";
-import { Platform, StatusBar } from "react-native";
+import { Platform, StatusBar ,Text} from "react-native";
 import {
-  Button,
   Title,
   Paragraph,
-  TextInput,
-  Text,
-  Appbar,
-  BottomNavigation,
-  Searchbar,
-  RadioButton,
-  Headline,
   IconButton,
-  Provider,
-  Portal,
-  Modal,
-  Surface,
-  Subheading,
-  ActivityIndicator,
+  Button
 } from "react-native-paper";
 // import DateTimePicker from "@react-native-community/datetimepicker";
 
-// import MapView, { Marker } from "react-native-maps";
-import { useDispatch, useSelector } from "react-redux";
-import * as Location from "expo-location";
-import { TouchableOpacity } from "react-native-gesture-handler";
+ import MapView, { Marker } from "react-native-maps";
 
 
 const Storemodalcard = (props) => {
@@ -57,6 +36,7 @@ const Storemodalcard = (props) => {
     longitudeDelta: 0,
   });
 
+  let text = showMap?"Hide Map":"View Map"
   useEffect(() => {
     setStoreInchargeName(props.storeInchargeName);
     setShopName(props.shopName);
@@ -99,131 +79,60 @@ const Storemodalcard = (props) => {
     map = null;
   }
   return (
-    <>
-      <View style={{ flexDirection: "row", marginBottom: 0, borderRadius: 10 }}>
-        <View style={styles.storemodalcardaddress}>
-          <Title>{shopName}</Title>
-          <Paragraph>{storeInchargeName}</Paragraph>
-          <Paragraph>
-            {address}-{pincode}
-          </Paragraph>
-          <Paragraph>{contactNo}</Paragraph>
-        </View>
-        <View style={styles.storemodalcarddistance}>
-          <Title style={{ paddingTop: 0 }}>{distance} Km</Title>
-          <IconButton
-            style={{ margin: 0 }}
-            icon="chevron-down"
-            color="#EF90A9"
-            size={40}
-            onPress={() => {
-              if (showMap === true) {
-                setShowMap(false);
-              } else {
-                setShowMap(true);
-              }
-            }}
-          />
-        </View>
+    <><View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+      <View style={{
+        flex: 2,
+        marginRight: 10
+      }}>
+        <Text style={{
+          borderWidth: 2,
+          paddingVertical: 6,
+          fontWeight: "500",
+          borderColor: "#0036F4",
+          borderRadius: 20,
+          textAlign: "center",
+          fontFamily: 'DMSans'
+        }}>
+          {distance} kms
+        </Text>
+
       </View>
-      {map}
-    </>
+      <View style={{ flex: 5 }}>
+        <Text style={{
+          borderWidth: 2,
+          paddingVertical: 6,
+          fontWeight: "700",
+          borderColor: "#0036F4",
+          borderRadius: 20,
+          textAlign: "center",
+          fontFamily: 'DMSans'
+        }}>
+          {shopName}
+        </Text>
+
+      </View>
+    </View>
+    <View style={{flexDirection:'row',marginTop:9,justifyContent:'space-between'}}>
+      <View style={{flexDirection:'column',alignSelf:'flex-end'}}>
+        <Text style={{fontFamily:'DMSans'}}>{storeInchargeName}</Text>
+        <Text style={{fontFamily:'DMSans'}}>{address}</Text>
+        <Text style={{fontFamily:'DMSans'}}>{contactNo}</Text>
+      </View>
+      <View style={{alignSelf:'flex-end',justifyContent:'flex-end'}}>
+        <Pressable onPress={() => setShowMap(!showMap)}>
+        <Text style={{color:'#0036F4'}}>
+          {text}
+          </Text>
+          </Pressable>
+      </View>
+
+      </View>
+      {map}</>
   );
 };
 
 const styles = StyleSheet.create({
-  textbox: {
-    textAlign: "center",
-    padding: 10,
-    fontSize: 20,
-  },
-
-  error: {
-    textAlign: "center",
-    fontSize: 20,
-    color: "red",
-    padding: 20,
-  },
-
-  inputtextbox: {
-    margin: 10,
-  },
-
-  submitbutton: {
-    flex: 1,
-    margin: 10,
-    fontSize: 20,
-    color: "white",
-  },
-
-  uploadimage: {
-    flex: 1,
-    justifyContent: "center",
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-  },
-  layout: {
-    flex: 1,
-    justifyContent: "center",
-  },
-
-  container1: {
-    flexDirection: "row",
-  },
-
-  container11: {
-    flex: 2,
-    marginLeft: 10,
-    marginBottom: 10,
-    marginTop: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: "#EF90A9",
-  },
-
-  container12: {
-    flex: 5,
-  },
-
-  container2: {
-    justifyContent: "center",
-  },
-
-  container3: {
-    flexDirection: "column",
-  },
-
-  containerStyle: {
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "white",
-    padding: 10,
-    width: "80%",
-    height: "90%",
-    borderRadius: 20,
-  },
-
-  modal: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  storemodalcardaddress: {
-    flex: 3,
-    backgroundColor: "#EDEDF0",
-    padding: 10,
-    borderTopLeftRadius: 10,
-  },
-
-  storemodalcarddistance: {
-    flex: 1,
-    backgroundColor: "#7CABF0",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 5,
-    borderTopRightRadius: 10,
-  },
+  
 });
 
 export default React.memo(Storemodalcard);

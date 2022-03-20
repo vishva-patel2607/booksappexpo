@@ -215,7 +215,7 @@ const Navigation = () => {
           <Stack.Screen
             name="Storemodal"
             component={Storemodal}
-            options={{ title: "Select a shop" }}
+            options={{ headerShown:false }}
           />
           <Stack.Screen
             name="Edituploadedbook"

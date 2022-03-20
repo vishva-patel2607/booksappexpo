@@ -1,43 +1,25 @@
 import React, { useState, useEffect } from "react";
-import RNPickerSelect from "react-native-picker-select";
+import SwitchSelector from "react-native-switch-selector";
+import Findashop from "../Components/Findashop";
 import {
   SafeAreaView,
-  ScrollView,
   View,
   Image,
   StyleSheet,
-  Alert,
   Pressable,
-  KeyboardAvoidingView,
 } from "react-native";
-import { logoutUser, setUser } from "../actions";
-import { Platform, StatusBar, Dimensions } from "react-native";
+import { logoutUser } from "../actions";
+import { Platform, StatusBar,TouchableOpacity } from "react-native";
 import {
   Button,
-  Title,
-  Paragraph,
-  TextInput,
   Text,
-  Appbar,
-  BottomNavigation,
-  Searchbar,
-  RadioButton,
-  Headline,
-  IconButton,
-  Provider,
-  Portal,
-  Modal,
-  Surface,
-  Subheading,
-} from "react-native-paper";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import Storemodalcard from "./Storemodalcard";
-
+  TextInput} from "react-native-paper";
+import BAheader from "../Components/StaticBooksApp";
+import StaticText from "../Components/StaticText";
 import { useDispatch, useSelector } from "react-redux";
-import * as Location from "expo-location";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import Svg, { Path } from "react-native-svg";
+import Changeshop from "../Components/Changeshop";
 
 const UploadRoute = (props) => {
   const [imgurl, setImgurl] = useState(null);
@@ -49,7 +31,10 @@ const UploadRoute = (props) => {
   const [condition, setCondition] = useState(null);
   const [shop, setShop] = useState(null);
   const [price, setPrice] = useState("");
-  const [category, setCategory] = useState("");
+  const [selectedcategory, setSelectedcategory] = useState("Category");
+  const [showcategoryoption, setShowcategoryoption] = useState(false);
+  
+  const [margins,setMargins] = useState(0);
   const [bookCondition, setbookCondition] = useState("");
 
   const [transaction_type, setTransaction_type] = useState("lend");
@@ -57,6 +42,24 @@ const UploadRoute = (props) => {
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+
+
+  let Category = [
+    { id: 1, name: "crime/thriller" },
+    { id: 2, name: "religious" },
+    { id: 3, name: "selfhelp" },
+    { id: 4, name: "romance" },
+    { id: 5, name: "humor" },
+    { id: 6, name: "scifi" },
+    { id: 7, name: "biography" },
+    { id: 8, name: "history" },
+
+  ];
+
+  const Option = [
+    {label: "Lent",value:"lend"},
+    {label:"Sell",value:"sell"}
+  ]
 
   const GetPreviousbookImage = async () => {
     console.log("Working");
@@ -87,6 +90,7 @@ const UploadRoute = (props) => {
 
   useEffect(() => {
     setShop(props.route.params?.shop);
+    
   }, [props.route.params?.shop]);
 
   useEffect(() => {
@@ -130,7 +134,6 @@ const UploadRoute = (props) => {
     );
     const res = await fetchRes.json();
     if (res.status === true) {
-      alert("Image uploaded successfully");
       console.log("API resposne: ", res.response.book);
       setImgurl(res.response.book);
     } else {
@@ -157,7 +160,7 @@ const UploadRoute = (props) => {
     );
     const res = await fetchRes.json();
     if (res.status === true) {
-      alert("Image changed successfully");
+      
       console.log("API resposne: ", res.response.book);
       setImgurl(res.response.book);
     } else {
@@ -217,46 +220,39 @@ const UploadRoute = (props) => {
   let selected;
   if (shop != null) {
     selected = (
-      <View>
+      <><View style={{ justifyContent: 'center',marginRight:16}}>
         <View style={styles.shop}>
           <View style={styles.shopDetailsContainer}>
             <Text style={[styles.shopDetails, styles.shopDistance]}>
-              12 kms
+              {shop.store_distance}
             </Text>
-            <Text style={styles.shopDetails}>Nirma Store</Text>
+            <Text style={styles.shopDetails}>{shop.store_name}</Text>
           </View>
         </View>
+        
 
         <View>
-          <Text style={styles.storeDetails}>Shailesh Patel </Text>
-          <Text style={styles.storeDetails}>Nirma University, SG Highway </Text>
-          <Text style={styles.storeDetails}>92503xxxxx</Text>
+          <Text style={styles.storeDetails}>{shop.store_incharge} </Text>
+          <Text style={styles.storeDetails}>{shop.store_address} </Text>
+          <Text style={styles.storeDetails}>{shop.store_number}</Text>
         </View>
-        <View
-          style={{
-            marginTop: 10,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Button style={styles.button} color="#ffffff">
-            Change Shop
-          </Button>
-        </View>
-      </View>
+      </View><View style={{ alignSelf: 'center',marginTop:10 }}>
+        <Pressable onPress = {() => props.navigation.navigate("Storemodal",{params:{shop:shop}})}>
+         <Changeshop />
+         </Pressable>
+        </View></>
+        
+      
     );
   } else {
     selected = (
-      <View>
-        <Text
-          style={{
-            textAlign: "center",
-            fontSize: 15,
-          }}
-        >
-          * Select a drop off shop
-        </Text>
-      </View>
+      <View style={{marginTop:20,alignSelf:'center'}}>
+        <Pressable  onPress={() => props.navigation.navigate("Storemodal")}>
+        <Findashop />
+        </Pressable>
+        </View>
+      
+      
     );
   }
 
@@ -309,6 +305,14 @@ const UploadRoute = (props) => {
     setIsbn(data);
     if (showQR) setScanned(false);
   };
+  
+
+  const Selectcategory = (val) => {
+    setSelectedcategory(val.name);
+    setShowcategoryoption(false);
+   
+  };
+
 
   const getPricing = async () => {
     if (!price) return;
@@ -348,45 +352,30 @@ const UploadRoute = (props) => {
   }
 
   return (
-    <ScrollView>
-      <SafeAreaView style={styles.main}>
-        <View style={{ marginTop: 20, marginBottom: 10 }}>
-          <BooksappLogo />
-        </View>
-
-        <Text style={styles.heading}>NEW BOOK</Text>
-        {showQR && (
-          <View
-            style={{
-              width: "100%",
-              flexDirection: "column",
-              top: 20,
-              right: "20%",
-              justifyContent: "center",
-              alignItems: "center",
-              zIndex: 1000,
-            }}
-          >
-            <BarCodeScanner
-              onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-              style={[
-                StyleSheet.absoluteFillObject,
-                {
-                  height: 300,
-                  width: 500,
-                  zIndex: 1000,
-                },
-              ]}
-            />
-          </View>
-        )}
-
-        <View style={styles.layout}>
-          <View style={styles.inputfields}>
+      <SafeAreaView style={{flex:1,backgroundColor:'#ECEFEE',flexDirection:'column'}}>
+      
+      <View style={{flex:2,justifyContent:'space-evenly'}}>
+        <BAheader />
+        <Text
+      style={{
+        fontSize: 18,
+        fontWeight: "700",
+        color: "#E96A59",
+        marginLeft: 21,
+        marginTop:10,
+        marginBottom: 2,
+      }}
+      theme={{ fonts: { regular: "DM Sans" } }}
+    >
+      NEW BOOK
+    </Text>
+      </View>
+      <View style={{flex:5,flexDirection:'row',marginLeft:10}}>
+      <View style={styles.inputfields}>
             <View style={styles.isbn}>
               <TextInput
                 style={[styles.inputtextbox, styles.isbninput]}
-                label="ISBN Code"
+                placeholder="ISBN"
                 value={isbn}
                 onChangeText={(isbn) => setIsbn(isbn.replace(/[^0-9]/g, ""))}
                 keyboardType="number-pad"
@@ -397,31 +386,27 @@ const UploadRoute = (props) => {
                   if (showQR) setScanned(false);
                 }}
               >
-                <View>
+                <View style={{marginTop:10,marginRight:5}}>
                   <QrcodeLogo />
                 </View>
               </Pressable>
             </View>
-
-            <View>
-              <TextInput
+            <TextInput
                 style={styles.inputtextbox}
-                label="Name of the book"
+                placeholder="Name of the book"
                 value={name}
                 onChangeText={(text) => setName(text)}
               />
-
-              <TextInput
+            <TextInput
                 style={styles.inputtextbox}
-                label="Author"
+                placeholder="Author"
                 value={author}
                 onChangeText={(text) => setAuthor(text)}
               />
-
               <View style={styles.container}>
                 <TextInput
                   style={[styles.inputtextbox, styles.subcontainer]}
-                  label="Year"
+                  placeholder="Year"
                   value={year}
                   onChangeText={(text) => setYear(text.replace(/[^0-9]/g, ""))}
                   keyboardType="number-pad"
@@ -429,7 +414,7 @@ const UploadRoute = (props) => {
                 />
                 <TextInput
                   style={[styles.inputtextbox, styles.subcontainer]}
-                  label="Price"
+                  placeholder="Price"
                   value={price}
                   onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ""))}
                   keyboardType="number-pad"
@@ -437,78 +422,151 @@ const UploadRoute = (props) => {
                 />
               </View>
               <View
+          style={{
+            flexDirection: "column",
+            marginTop:30,
+            
+            borderColor: "#0036F4",
+            borderWidth: 2,
+            borderRadius: 50,
+          }}
+        >
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={{
+              alignItems: "center",
+              justifyContent: "space-around",
+              flexDirection: "row",
+              overflow:'hidden',
+              height: 30,
+              borderRadius: 20,
+              marginLeft: showcategoryoption===true?20:0,
+              marginRight: showcategoryoption===true?20:0,
+              backgroundColor:
+                selectedcategory === "Category" ? "#ECEFEE" : "#0036F4",
+            }}
+            onPress={() => {setShowcategoryoption(!showcategoryoption); setMargins(20) }}
+          >
+            <View style={{ justifyContent: "center" }}>
+              <Text
                 style={{
-                  justifyContent: "center",
-                  marginTop: 10,
+                  fontFamily: "DMSans",
+                  fontSize: 14,
+                  color: selectedcategory === "Category" ? "black" : "white",
                 }}
               >
-                <RNPickerSelect
-                  onValueChange={(value) => setCategory(value)}
-                  items={[
-                    { label: "Crime and Thriller", value: "crime/thriller" },
-                    { label: "Religious", value: "religious" },
-                    { label: "Self-Help", value: "selfhelp" },
-                    { label: "Romance", value: "romance" },
-                    { label: "Humor", value: "humor" },
-                    { label: "Sci-Fi", value: "scifi" },
-                    { label: "Biography", value: "biography" },
-                    { label: "History", value: "history" },
-                  ]}
-                  selectedValue={category}
-                  placeholder={{ label: "Select the genre", value: "" }}
-                  useNativeAndroidPickerStyle={false}
-                  style={
-                    category ? customPickerStylesSelected : customPickerStyles
-                  }
-                />
-              </View>
+                {selectedcategory}
+              </Text>
             </View>
-          </View>
+            <Image
+              source={require("../assets/arrowdown.png")}
+              style={{
+                transform: [{ rotate: "0deg" }],
+              }}
+              resizeMode="cover"
+            />
+          </TouchableOpacity>
+          {showcategoryoption && (
+            <View>
+              {Category.map((val, id) => {
+                return (
+                  <TouchableOpacity
+                    key={id}
+                    style={{
+                      paddingVertical: 4,
+                      height: 30,
+                      justifyContent:'center',
+                      alignItems:'center',
+                      
+                      borderRadius: 40,
+                      
+                    }}
+                    onPress={() => Selectcategory(val)}
+                  >
+                    <Text
+                      style={{
+                        color:
+                          selectedcategory == val.name ? "#E96A59" : "black",
+                        fontFamily: "DMSans",
+                        fontSize: 14,
+                      }}
+                    >
+                      {val.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          )}
+        </View>
 
-          <View style={styles.uploadimage}>
-            {props.route.params?.photo || imgurl ? (
+      </View>
+      <View style={{flexDirection:'column',flex:1,justifyContent:'center'}}>
+      <View style={styles.uploadimage}>
+            {props.route.params?.photo && imgurl ? (
               <Pressable
-                style={{ flex: 1, height: "100%", width: "100%" }}
+                style={{width:'100%',height:'100%'}}
                 onPress={() => props.navigation.navigate("Camerascreen")}
               >
                 <Image
                   style={{
-                    flex: 1,
+                    flex:1,
+                    height: "100%", width: "100%",
                     resizeMode: "cover",
-                    height: "100%",
-                    width: "100%",
+                    width:'100%',
+                    borderRadius:20,
                   }}
                   source={{ uri: imgurl }}
                 />
               </Pressable>
             ) : (
-              <IconButton
-                icon="image-plus"
-                color="#EF90A9"
-                size={50}
-                onPress={() => props.navigation.navigate("Camerascreen")}
-              />
+              <Pressable
+              style={{width:'100%',height:'100%',justifyContent:'center'}}
+              onPress={() => props.navigation.navigate("Camerascreen")}
+            >
+              <Image
+                  style={{
+                    alignSelf:'center',
+                    
+                    height: "50%", width: "50%",
+                    resizeMode: "contain",
+                  
+                    borderRadius:20,
+                  }}
+                  source ={require('../assets/Union.png')}
+                />
+                </Pressable>
             )}
           </View>
-        </View>
-
-        <View
-          style={{
-            marginTop: 20,
-          }}
-        >
-          <Text
-            style={{
-              marginBottom: 10,
-            }}
-          >
-            Condition of the Book
-          </Text>
-          <View
+          <View style={{marginLeft:10,marginRight:10}}>
+          <SwitchSelector
+              options={Option}
+              initial={1}
+              textContainerStyle={{fontFamily:'DMSans'}}
+              bold={true}
+              borderRadius={50}
+              borderColor={'#E96A59'}
+              buttonColor={'#E96A59'}
+              onPress={value => {
+              setTransaction_type(value)
+              console.log(value)}
+            }
+            />
+          </View>
+          </View>
+          </View>
+      
+      
+      <View style={{flex:6,flexDirection:'column',marginLeft:20,justifyContent:'space-around'}}>
+        <View style={{marginTop:30}}>
+            <StaticText text="Condition of the book" fontS={16}/>
+            <View
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
               alignItems: "center",
+              marginTop:12,
+              marginRight:16,
             }}
           >
             <View
@@ -520,6 +578,7 @@ const UploadRoute = (props) => {
                 },
               ]}
             >
+             
               <Text
                 style={[
                   styles.checkboxText,
@@ -558,7 +617,6 @@ const UploadRoute = (props) => {
                 Fair
               </Text>
             </View>
-
             <View
               style={[
                 styles.checkboxContainer,
@@ -606,47 +664,61 @@ const UploadRoute = (props) => {
                 Great
               </Text>
             </View>
-          </View>
-        </View>
 
-        <View
+            </View>
+            </View>
+            
+            {selected}
+
+           
+            
+      </View>
+
+      <View
           style={{
-            marginTop: 30,
-            justifyContent: "center",
+            
+            marginLeft:20,
+            
+            justifyContent:'flex-end',
             alignItems: "center",
-          }}
-        >
-          <Button
-            style={styles.button}
-            onPress={() => props.navigation.navigate("Storemodal")}
-            color="#ffffff"
-          >
-            Find a Shop
-          </Button>
-        </View>
-
-        {selected}
-
-        <View
-          style={{
-            marginTop: 15,
-            paddingBottom: 20,
-            justifyContent: "center",
-            alignItems: "center",
+            flex:2
           }}
         >
           <Text>You'll get {!price ? 0 : userBookPrice}</Text>
           <Button
-            style={styles.button}
-            onPress={uploaddetails}
-            disabled={!imgurl}
-            color="#ffffff"
-          >
-            Upload
-          </Button>
+          theme={{ roundness: 120 }}
+          
+          style={{
+            width: 215,
+            height: 40,
+            margin:10,
+            alignSelf:'center',
+            justifyContent:'flex-end'
+          }}
+          labelStyle={{
+            fontSize: 14,
+            color: "white",
+            flexDirection: "row",
+            fontFamily: "DMSansbold",
+            
+          }}
+          onPress={uploaddetails}
+          mode="contained"
+        >
+          Upload
+        </Button>
         </View>
+      {/* <View style={{flex:2,justifyContent:'center',alignItems:'center',flexDirection:'column'}}> */}
+        
+      {/* </View>
+      <View style={{flex:2,backgroundColor:'black'}}>
+          
+      </View> */}
+    
       </SafeAreaView>
-    </ScrollView>
+
+
+        
   );
 };
 
@@ -760,7 +832,7 @@ const styles = StyleSheet.create({
   main: {
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     backgroundColor: "#ECEFEE",
-    paddingHorizontal: 15,
+
   },
   heading: {
     marginVertical: 10,
@@ -771,18 +843,21 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   inputfields: {
-    width: "55%",
+    width: "50%",
+    justifyContent:'space-evenly',
   },
   inputtextbox: {
     color: "#6E7A7D",
     backgroundColor: "transparent",
     justifyContent: "center",
-    height: 50,
+    height: 40,
+    marginTop:10,
   },
   isbn: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     alignItems: "center",
+    paddingTop:2,
   },
   isbninput: {
     width: "90%",
@@ -792,7 +867,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   subcontainer: {
-    marginHorizontal: 2,
+    marginHorizontal: 1,
     width: "45%",
   },
   checkboxContainer: {
@@ -807,7 +882,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   button: {
-    width: "70%",
+    width: 215,
     margin: 10,
     padding: 5,
     fontSize: 18,
@@ -822,33 +897,35 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   uploadimage: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: "flex-end",
+    marginBottom:10,
     backgroundColor: "#6E797C",
-    borderRadius: 10,
+    borderRadius: 20,
     marginLeft: 10,
+    marginRight:10,
   },
   shop: {
-    marginVertical: 20,
+    marginVertical: 15,
+    marginBottom:2,
   },
 
   shopDetailsContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    
     alignItems: "center",
   },
   shopDetails: {
-    flex: 3,
+    flex: 8,
     paddingVertical: 6,
     borderWidth: 2,
     fontWeight: "700",
     borderColor: "#0036F4",
-    borderRadius: 25,
+    borderRadius: 20,
     textAlign: "center",
+    fontFamily:'DMSans'
   },
   shopDistance: {
-    flex: 2,
+    flex: 5,
     marginRight: 20,
   },
   storeDetails: {
@@ -890,7 +967,7 @@ const customPickerStylesSelected = StyleSheet.create({
     borderColor: "#0036F4",
     borderRadius: 50,
     color: "#ffffff",
-    paddingRight: 30, // to ensure the text is never behind the icon
+    // paddingRight: 30, // to ensure the text is never behind the icon
     paddingLeft: 10,
     height: 100,
   },
@@ -901,7 +978,7 @@ const customPickerStylesSelected = StyleSheet.create({
     borderColor: "#0036F4",
     color: "#ffffff",
     borderRadius: 50,
-    paddingRight: 30, // to ensure the text is never behind the icon
+    // paddingRight: 30, // to ensure the text is never behind the icon
     paddingLeft: 10,
     height: 35,
   },

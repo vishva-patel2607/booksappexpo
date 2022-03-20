@@ -1,6 +1,6 @@
 import React from "react";
 
-import FastImage from "react-native-fast-image";
+
 
 import { ScrollView, View, Image, StyleSheet, Pressable } from "react-native";
 import StaticText from "../Components/StaticText";

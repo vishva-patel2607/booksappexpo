@@ -1,72 +1,29 @@
-
-import React, { Component, useState, useCallback, useEffect } from "react";
+Storemodal
+import React, { useState, useEffect } from "react";
 
 import {
   SafeAreaView,
   ScrollView,
   View,
   StyleSheet,
-  Alert,
   Pressable,
+  Image
 } from "react-native";
-import { logoutUser, setUser } from "../actions";
+import { logoutUser } from "../actions";
 import { Platform, StatusBar } from "react-native";
 import {
   Button,
-  Title,
-  Paragraph,
-  TextInput,
-  Text,
-  Appbar,
-  BottomNavigation,
-  Searchbar,
-  RadioButton,
-  Headline,
-  IconButton,
-  Provider,
-  Portal,
-  Modal,
-  Surface,
-  Subheading,
   ActivityIndicator,
+  Text
 } from "react-native-paper";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import Storemodalcard from "./Storemodalcard";
 
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
 
-import { TouchableOpacity } from "react-native-gesture-handler";
-
-const stores = [
-  {
-    store_address: "Ahmedabad one, vastrapur",
-    store_distance: [2356.27861643],
-    store_id: 4,
-    store_incharge: "Akash  Shah",
-    store_latitude: 72.53122465057005,
-    store_longitude: 23.040272710494378,
-    store_name: "ahmedabad one",
-    store_number: "9825040159",
-    store_pincode: "380006",
-    usernumber: 7,
-  },
-  {
-    store_address: "Ahmedabad one, vastrapur",
-    store_distance: [2356.27861643],
-    store_id: 5,
-    store_incharge: "Hitanshu  Shah",
-    store_latitude: 72.53122465057005,
-    store_longitude: 23.040272710494378,
-    store_name: "ahmedabad one",
-    store_number: "9825040159",
-    store_pincode: "380006",
-    usernumber: 7,
-  },
-];
-
 
 const Storemodal = (props) => {
+  console.log(props);
   const [loading, setLoading] = useState(false);
   const [longitude, setLongitude] = useState();
   const [latitude, setLatitude] = useState();
@@ -74,7 +31,7 @@ const Storemodal = (props) => {
   const [shops, setShops] = useState([]);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-
+  
   const setLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -86,7 +43,9 @@ const Storemodal = (props) => {
 
     setLongitude(loc.coords.longitude);
     setLatitude(loc.coords.latitude);
+    
   };
+
 
   useEffect(() => {
     setLoading(false);
@@ -124,88 +83,115 @@ const Storemodal = (props) => {
       setLoading(true);
     }
   }, [longitude, latitude]);
+ 
 
-  if (loading && shops != null) {
+  
+
+  if ( loading && shops != null) {
     return (
-      <SafeAreaView>
+      <SafeAreaView style={{flex:1}}>
+        <View>
+        <Pressable onPress={() => props.navigation.navigate("Upload")}>
+          <Image
+            source={require("../assets/Backbutton.png")}
+            style={{ marginLeft: 19, marginTop: 18 }}
+          />
+        </Pressable>
+        <Text
+      style={{
+        fontSize: 18,
+        fontWeight: "700",
+        color: "#E96A59",
+        marginLeft: 20,
+        marginTop: 16,
+        marginBottom: 2,
+        fontFamily:'DMSansbold'
+      }}
+    >
+      Shops
+    </Text>
+        </View>
         <ScrollView style={{ width: "100%", padding: 10, paddingTop: 0 }}>
-          {shops.map((props, idx) => {
+        
+          {shops.map((shop, idx) => {
             if (
-              selectedShop != null &&
-              selectedShop.store_id === props.store_id
+              (selectedShop != null &&
+              selectedShop.store_id === shop.store_id) || (shop.store_id === props.route.params?.params.shop.store_id)
             ) {
               return (
                 <View
                   key={idx}
                   style={{
-                    borderColor: "#EF90A9",
+                    backgroundColor:'#6E7A7D',
+                    opacity:0.43,
                     borderWidth: 2,
-                    borderTopRightRadius: 12,
-                    borderTopLeftRadius: 12,
+                    borderRadius:10,
+                    borderColor:'#ffffff',
                     marginTop: 20,
                   }}
                 >
                   <Storemodalcard
-                    shopName={props.store_name}
-                    storeInchargeName={props.store_incharge}
-                    address={props.store_address}
-                    pincode={props.store_pincode}
-                    distance={props.store_distance}
-                    contactNo={props.store_number}
-                    latitude={props.store_latitude}
-                    longitude={props.store_longitude}
+                    shopName={shop.store_name}
+                    storeInchargeName={shop.store_incharge}
+                    address={shop.store_address}
+                    pincode={shop.store_pincode}
+                    distance={shop.store_distance}
+                    contactNo={shop.store_number}
+                    latitude={shop.store_latitude}
+                    longitude={shop.store_longitude}
                   />
-                </View>
+                 </View>
               );
             } else {
               return (
                 <Pressable
                   key={idx}
-                  onPress={() => setSelectedShop(props)}
+                  onPress={() => setSelectedShop(shop)}
                   style={{ marginTop: 20 }}
                 >
                   <Storemodalcard
-                    shopName={props.store_name}
-                    storeInchargeName={props.store_incharge}
-                    address={props.store_address}
-                    pincode={props.store_pincode}
-                    distance={props.store_distance}
-                    contactNo={props.store_number}
-                    latitude={props.store_latitude}
-                    longitude={props.store_longitude}
+                    shopName={shop.store_name}
+                    storeInchargeName={shop.store_incharge}
+                    address={shop.store_address}
+                    pincode={shop.store_pincode}
+                    distance={shop.store_distance}
+                    contactNo={shop.store_number}
+                    latitude={shop.store_latitude}
+                    longitude={shop.store_longitude}
                   />
                 </Pressable>
               );
             }
           })}
         </ScrollView>
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row",justifyContent:'center' }}>
+          
           <Button
-            mode="contained"
-            style={styles.submitbutton}
-            labelStyle={styles.submitbutton}
-            onPress={() =>
-              props.navigation.navigate("Mainpage", {
-                screen: "Upload",
-                params: { shop: null },
-              })
-            }
-          >
-            Cancel
-          </Button>
-          <Button
-            mode="contained"
-            style={styles.submitbutton}
-            labelStyle={styles.submitbutton}
-            onPress={() =>
-              props.navigation.navigate("Mainpage", {
-                screen: "Upload",
-                params: { shop: selectedShop },
-              })
-            }
-          >
-            Select
-          </Button>
+          theme={{ roundness: 120 }}
+          
+          style={{
+            width: 215,
+            height: 40,
+            margin:10,
+            alignSelf:'center',
+            justifyContent:'center'
+          }}
+          labelStyle={{
+            fontSize: 14,
+            color: "white",
+            flexDirection: "row",
+            fontFamily: "DMSansbold",
+            
+          }}
+          onPress={() =>
+            props.navigation.navigate("Mainpage", {
+              screen: "Upload",
+              params: { shop: selectedShop },
+            })}
+          mode="contained"
+        >
+          Select
+        </Button>
         </View>
       </SafeAreaView>
     );
@@ -270,7 +256,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: "#EF90A9",
+    
   },
 
   container12: {
@@ -318,4 +304,5 @@ const styles = StyleSheet.create({
 });
 
 export default React.memo(Storemodal);
+
 

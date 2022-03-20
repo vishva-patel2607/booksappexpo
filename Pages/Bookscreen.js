@@ -10,7 +10,7 @@ import {
   Alert,
 } from "react-native";
 
-import FastImage from "react-native-fast-image";
+
 
 import { Button, Text, Avatar, Card } from "react-native-paper";
 import WavyHeader from "./WavyHeader";

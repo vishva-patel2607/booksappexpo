@@ -29,7 +29,7 @@ import {
 } from "react-native-paper";
 import { TabRouter } from "@react-navigation/routers";
 import WavyHeader from "./WavyHeader";
-import FastImage from "react-native-fast-image";
+
 
 const UploadedBooks = (props) => {
 
