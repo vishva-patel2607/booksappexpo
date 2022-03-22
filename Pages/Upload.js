@@ -34,7 +34,6 @@ const UploadRoute = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
-
   const Option = [
     { label: "Lend", value: "lend" },
     { label: "Sell", value: "sell" },
@@ -231,7 +230,7 @@ const UploadRoute = (props) => {
         </View>
       </>
     );
-  } else{
+  } else {
     selected = (
       <View style={{ marginTop: 20, alignSelf: "center" }}>
         <Pressable onPress={() => props.navigation.navigate("Storemodal")}>
@@ -282,8 +281,6 @@ const UploadRoute = (props) => {
     })();
   }, []);
 
-
-
   const getPricing = async () => {
     if (!price) return;
     try {
@@ -322,314 +319,332 @@ const UploadRoute = (props) => {
   }
 
   return (
-      <SafeAreaView
-        style={{ flex: 1, flexDirection: "column" }}
-      >
-        <View style={{ flex: 2, justifyContent: "space-evenly" }}>
-          <BAheader />
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: "700",
-              color: "#E96A59",
-              marginLeft: 21,
-              marginTop: 10,
-              marginBottom: 2,
-              fontFamily: "DMSansbold",
-            }}
-          >
-            NEW BOOK
-          </Text>
-        </View>
-        <View style={{ flex: 6, flexDirection: "row", marginLeft: 10 }}>
-          <View style={styles.inputfields}>
-            <View style={styles.isbn}>
-              <TextInput
-                style={[styles.inputtextbox, styles.isbninput]}
-                placeholder="ISBN"
-                value={isbn}
-                onChangeText={(isbn) => setIsbn(isbn.replace(/[^0-9]/g, ""))}
-                keyboardType="number-pad"
-              />
-              <Pressable
-                onPress={() => {
-                  setShowQR(!showQR);
-                  if (showQR) setScanned(false);
-                }}
-              >
-                <View style={{ marginTop: 10, marginRight: 5 }}>
-                  <QrcodeLogo />
-                </View>
-              </Pressable>
-            </View>
-            <TextInput
-              style={styles.inputtextbox}
-              placeholder="Name of the book"
-              value={name}
-              onChangeText={(text) => setName(text)}
-            />
-            <TextInput
-              style={styles.inputtextbox}
-              placeholder="Author"
-              value={author}
-              onChangeText={(text) => setAuthor(text)}
-            />
-            <View style={styles.container}>
-              <TextInput
-                style={[styles.inputtextbox, styles.subcontainer]}
-                placeholder="Year"
-                value={year}
-                onChangeText={(text) => setYear(text.replace(/[^0-9]/g, ""))}
-                keyboardType="number-pad"
-                maxLength={4}
-              />
-              <TextInput
-                style={[styles.inputtextbox, styles.subcontainer]}
-                placeholder="Price"
-                value={price}
-                onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ""))}
-                keyboardType="number-pad"
-                maxLength={4}
-              />
-            </View>
-            <RNPickerSelect
-              onValueChange={(value) => setCategory(value)}
-              items={[
-                { label: "Crime and Thriller", value: "crime/thriller" },
-                { label: "Religious", value: "religious" },
-                { label: "Self-Help", value: "selfhelp" },
-                { label: "Romance", value: "romance" },
-                { label: "Humor", value: "humor" },
-                { label: "Sci-Fi", value: "scifi" },
-                { label: "Biography", value: "biography" },
-                { label: "History", value: "history" },
-              ]}
-              selectedValue={category}
-              placeholder={{
-                label: "Select the genre",
-                value: "",
-                color: "black",
-              }}
-              place
-              useNativeAndroidPickerStyle={false}
-              style={customPickerStyles}
-            />
-          </View>
-          <View
-            style={{ flexDirection: "column", flex: 1, justifyContent: "center" }}
-          >
-            <View style={styles.uploadimage}>
-              {props.route.params?.photo && imgurl ? (
-                <Pressable
-                  style={{ width: "100%", height: "100%" }}
-                  onPress={() => props.navigation.navigate("Camerascreen",{redirectTo:"Upload"})}
-                >
-                  <Image
-                    style={{
-                      flex: 1,
-                      height: "100%",
-                      width: "100%",
-                      resizeMode: "cover",
-                      width: "100%",
-                      borderRadius: 20,
-                    }}
-                    source={{ uri: imgurl }}
-                  />
-                  <Button style={{backgroundColor:'#E96A59',marginTop:-10,borderRadius:20,fontFamily:'DMSans'}}  labelStyle={{color:'white',fontSize:14}}>Edit Photo</Button>
-                </Pressable>
-              ) : (
-                <Pressable
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    justifyContent: "center",
-                  }}
-                  onPress={() => props.navigation.navigate("Camerascreen")}
-                >
-                  <Image
-                    style={{
-                      alignSelf: "center",
-
-                      height: "50%",
-                      width: "50%",
-                      resizeMode: "contain",
-
-                      borderRadius: 20,
-                    }}
-                    source={require("../assets/Union.png")}
-                  />
-                </Pressable>
-              )}
-            </View>
-            <View style={{ marginLeft: 10, marginRight: 10 }}>
-              <SwitchSelector
-                options={Option}
-                initial={1}
-                textContainerStyle={{ fontFamily: "DMSans" }}
-                bold={true}
-                borderRadius={50}
-                borderColor={"#E96A59"}
-                buttonColor={"#E96A59"}
-                onPress={(value) => {
-                  setTransaction_type(value);
-                  console.log(value);
-                }}
-              />
-            </View>
-          </View>
-        </View>
-
-        <View
+    <SafeAreaView style={{ flex: 1, flexDirection: "column" }}>
+      <View style={{ flex: 2, justifyContent: "space-evenly" }}>
+        <BAheader />
+        <Text
           style={{
-            flex: 6,
-            flexDirection: "column",
-            marginLeft: 20,
-            justifyContent: "space-around",
+            fontSize: 18,
+            fontWeight: "700",
+            color: "#E96A59",
+            marginLeft: 21,
+            marginTop: 10,
+            marginBottom: 2,
+            fontFamily: "DMSansbold",
           }}
         >
-          <View style={{ marginTop: 30 }}>
-            <StaticText text="Condition of the book" fontS={16} />
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginTop: 12,
-                marginRight: 16,
+          NEW BOOK
+        </Text>
+      </View>
+      <View style={{ flex: 6, flexDirection: "row", marginLeft: 10 }}>
+        <View style={styles.inputfields}>
+          <View style={styles.isbn}>
+            <TextInput
+              style={[styles.inputtextbox, styles.isbninput]}
+              placeholder="ISBN"
+              value={isbn}
+              onChangeText={(isbn) => setIsbn(isbn.replace(/[^0-9]/g, ""))}
+              keyboardType="number-pad"
+            />
+            <Pressable
+              onPress={() => {
+                setShowQR(!showQR);
+                if (showQR) setScanned(false);
               }}
             >
-              <View
-                style={[
-                  styles.checkboxContainer,
-                  {
-                    backgroundColor:
-                      bookCondition === "Bad" ? "#0036F4" : "transparent",
-                  },
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.checkboxText,
-                    {
-                      color: bookCondition === "Bad" ? "#ffffff" : "#000000",
-                    },
-                  ]}
-                  onPress={() => {
-                    setbookCondition("Bad");
-                  }}
-                >
-                  Bad
-                </Text>
+              <View style={{ marginTop: 10, marginRight: 5 }}>
+                <QrcodeLogo />
               </View>
+            </Pressable>
+          </View>
+          <TextInput
+            style={styles.inputtextbox}
+            placeholder="Name of the book"
+            value={name}
+            onChangeText={(text) => setName(text)}
+          />
+          <TextInput
+            style={styles.inputtextbox}
+            placeholder="Author"
+            value={author}
+            onChangeText={(text) => setAuthor(text)}
+          />
+          <View style={styles.container}>
+            <TextInput
+              style={[styles.inputtextbox, styles.subcontainer]}
+              placeholder="Year"
+              value={year}
+              onChangeText={(text) => setYear(text.replace(/[^0-9]/g, ""))}
+              keyboardType="number-pad"
+              maxLength={4}
+            />
+            <TextInput
+              style={[styles.inputtextbox, styles.subcontainer]}
+              placeholder="Price"
+              value={price}
+              onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ""))}
+              keyboardType="number-pad"
+              maxLength={4}
+            />
+          </View>
+          <RNPickerSelect
+            onValueChange={(value) => setCategory(value)}
+            items={[
+              { label: "Crime and Thriller", value: "crime/thriller" },
+              { label: "Religious", value: "religious" },
+              { label: "Self-Help", value: "selfhelp" },
+              { label: "Romance", value: "romance" },
+              { label: "Humor", value: "humor" },
+              { label: "Sci-Fi", value: "scifi" },
+              { label: "Biography", value: "biography" },
+              { label: "History", value: "history" },
+            ]}
+            selectedValue={category}
+            placeholder={{
+              label: "Select the genre",
+              value: "",
+              color: "black",
+            }}
+            place
+            useNativeAndroidPickerStyle={false}
+            style={customPickerStyles}
+          />
+        </View>
+        <View
+          style={{ flexDirection: "column", flex: 1, justifyContent: "center" }}
+        >
+          <View style={styles.uploadimage}>
+            {props?.route.params?.photo && imgurl ? (
+              <Pressable
+                style={{ width: "100%", height: "100%" }}
+                onPress={() =>
+                  props.navigation.navigate("Camerascreen", {
+                    redirectTo: "Upload",
+                  })
+                }
+              >
+                <Image
+                  style={{
+                    flex: 1,
+                    height: "100%",
+                    width: "100%",
+                    resizeMode: "cover",
+                    width: "100%",
+                    borderRadius: 20,
+                  }}
+                  source={{ uri: imgurl || props?.route.params.params?.photo }}
+                />
+                <Button
+                  style={{
+                    backgroundColor: "#E96A59",
+                    marginTop: -10,
+                    borderRadius: 20,
+                    fontFamily: "DMSans",
+                  }}
+                  labelStyle={{ color: "white", fontSize: 14 }}
+                >
+                  Edit Photo
+                </Button>
+              </Pressable>
+            ) : (
+              <Pressable
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  justifyContent: "center",
+                }}
+                onPress={() =>
+                  props.navigation.navigate("Camerascreen", {
+                    redirectTo: "Upload",
+                  })
+                }
+              >
+                <Image
+                  style={{
+                    alignSelf: "center",
 
-              <View
-                style={[
-                  styles.checkboxContainer,
-                  {
-                    backgroundColor:
-                      bookCondition === "Fair" ? "#0036F4" : "transparent",
-                  },
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.checkboxText,
-                    {
-                      color: bookCondition === "Fair" ? "#ffffff" : "#000000",
-                    },
-                  ]}
-                  onPress={() => {
-                    setbookCondition("Fair");
-                  }}
-                >
-                  Fair
-                </Text>
-              </View>
-              <View
-                style={[
-                  styles.checkboxContainer,
-                  {
-                    backgroundColor:
-                      bookCondition === "Good" ? "#0036F4" : "transparent",
-                  },
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.checkboxText,
-                    {
-                      color: bookCondition === "Good" ? "#ffffff" : "#000000",
-                    },
-                  ]}
-                  onPress={() => {
-                    setbookCondition("Good");
-                  }}
-                >
-                  Good
-                </Text>
-              </View>
+                    height: "50%",
+                    width: "50%",
+                    resizeMode: "contain",
 
-              <View
+                    borderRadius: 20,
+                  }}
+                  source={require("../assets/Union.png")}
+                />
+              </Pressable>
+            )}
+          </View>
+          <View style={{ marginLeft: 10, marginRight: 10 }}>
+            <SwitchSelector
+              options={Option}
+              initial={1}
+              textContainerStyle={{ fontFamily: "DMSans" }}
+              bold={true}
+              borderRadius={50}
+              borderColor={"#E96A59"}
+              buttonColor={"#E96A59"}
+              onPress={(value) => {
+                setTransaction_type(value);
+                console.log(value);
+              }}
+            />
+          </View>
+        </View>
+      </View>
+
+      <View
+        style={{
+          flex: 6,
+          flexDirection: "column",
+          marginLeft: 20,
+          justifyContent: "space-around",
+        }}
+      >
+        <View style={{ marginTop: 30 }}>
+          <StaticText text="Condition of the book" fontS={16} />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginTop: 12,
+              marginRight: 16,
+            }}
+          >
+            <View
+              style={[
+                styles.checkboxContainer,
+                {
+                  backgroundColor:
+                    bookCondition === "Bad" ? "#0036F4" : "transparent",
+                },
+              ]}
+            >
+              <Text
                 style={[
-                  styles.checkboxContainer,
+                  styles.checkboxText,
                   {
-                    backgroundColor:
-                      bookCondition === "Great" ? "#0036F4" : "transparent",
+                    color: bookCondition === "Bad" ? "#ffffff" : "#000000",
                   },
                 ]}
+                onPress={() => {
+                  setbookCondition("Bad");
+                }}
               >
-                <Text
-                  style={[
-                    styles.checkboxText,
-                    {
-                      color: bookCondition === "Great" ? "#ffffff" : "#000000",
-                    },
-                  ]}
-                  onPress={() => {
-                    setbookCondition("Great");
-                  }}
-                >
-                  Great
-                </Text>
-              </View>
+                Bad
+              </Text>
+            </View>
+
+            <View
+              style={[
+                styles.checkboxContainer,
+                {
+                  backgroundColor:
+                    bookCondition === "Fair" ? "#0036F4" : "transparent",
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.checkboxText,
+                  {
+                    color: bookCondition === "Fair" ? "#ffffff" : "#000000",
+                  },
+                ]}
+                onPress={() => {
+                  setbookCondition("Fair");
+                }}
+              >
+                Fair
+              </Text>
+            </View>
+            <View
+              style={[
+                styles.checkboxContainer,
+                {
+                  backgroundColor:
+                    bookCondition === "Good" ? "#0036F4" : "transparent",
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.checkboxText,
+                  {
+                    color: bookCondition === "Good" ? "#ffffff" : "#000000",
+                  },
+                ]}
+                onPress={() => {
+                  setbookCondition("Good");
+                }}
+              >
+                Good
+              </Text>
+            </View>
+
+            <View
+              style={[
+                styles.checkboxContainer,
+                {
+                  backgroundColor:
+                    bookCondition === "Great" ? "#0036F4" : "transparent",
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.checkboxText,
+                  {
+                    color: bookCondition === "Great" ? "#ffffff" : "#000000",
+                  },
+                ]}
+                onPress={() => {
+                  setbookCondition("Great");
+                }}
+              >
+                Great
+              </Text>
             </View>
           </View>
-
-          {selected}
         </View>
 
-        <View
+        {selected}
+      </View>
+
+      <View
+        style={{
+          marginLeft: 20,
+
+          justifyContent: "flex-end",
+          alignItems: "center",
+          flex: 2,
+        }}
+      >
+        <Text style={{ fontFamily: "DMSans" }}>
+          You'll get {!price ? 0 : userBookPrice}
+        </Text>
+        <Button
+          theme={{ roundness: 120 }}
           style={{
-            marginLeft: 20,
-
+            width: 215,
+            height: 40,
+            margin: 10,
+            alignSelf: "center",
             justifyContent: "flex-end",
-            alignItems: "center",
-            flex: 2,
           }}
+          labelStyle={{
+            fontSize: 14,
+            color: "white",
+            flexDirection: "row",
+            fontFamily: "DMSansbold",
+          }}
+          onPress={uploaddetails}
+          mode="contained"
         >
-          <Text style={{fontFamily:'DMSans'}}>You'll get {!price ? 0 : userBookPrice}</Text>
-          <Button
-            theme={{ roundness: 120 }}
-            style={{
-              width: 215,
-              height: 40,
-              margin: 10,
-              alignSelf: "center",
-              justifyContent: "flex-end",
-            }}
-            labelStyle={{
-              fontSize: 14,
-              color: "white",
-              flexDirection: "row",
-              fontFamily: "DMSansbold",
-            }}
-            onPress={uploaddetails}
-            mode="contained"
-          >
-            Upload
-          </Button>
-        </View>
-      </SafeAreaView>
+          Upload
+        </Button>
+      </View>
+    </SafeAreaView>
   );
 };
 
