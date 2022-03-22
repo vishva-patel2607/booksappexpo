@@ -1,19 +1,11 @@
 import React, { useState, useEffect } from "react";
 import SwitchSelector from "react-native-switch-selector";
 import Findashop from "../Components/Findashop";
-import {
-  SafeAreaView,
-  View,
-  Image,
-  StyleSheet,
-  Pressable,
-} from "react-native";
+import RNPickerSelect from "react-native-picker-select";
+import { SafeAreaView, View, Image, StyleSheet, Pressable } from "react-native";
 import { logoutUser } from "../actions";
-import { Platform, StatusBar,TouchableOpacity } from "react-native";
-import {
-  Button,
-  Text,
-  TextInput} from "react-native-paper";
+import { Platform, StatusBar, TouchableOpacity } from "react-native";
+import { Button, Text, TextInput } from "react-native-paper";
 import BAheader from "../Components/StaticBooksApp";
 import StaticText from "../Components/StaticText";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,17 +16,16 @@ import Changeshop from "../Components/Changeshop";
 const UploadRoute = (props) => {
   const [imgurl, setImgurl] = useState(null);
   const [name, setName] = useState("");
-  const [isbn, setIsbn] = useState("");
-  const [error, setError] = useState("");
+  let [isbn, setIsbn] = useState("");
   const [author, setAuthor] = useState("");
   const [year, setYear] = useState("");
   const [condition, setCondition] = useState(null);
   const [shop, setShop] = useState(null);
+
+  const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
-  const [selectedcategory, setSelectedcategory] = useState("Category");
-  const [showcategoryoption, setShowcategoryoption] = useState(false);
-  
-  const [margins,setMargins] = useState(0);
+
+  const [margins, setMargins] = useState(0);
   const [bookCondition, setbookCondition] = useState("");
 
   const [transaction_type, setTransaction_type] = useState("lend");
@@ -44,22 +35,10 @@ const UploadRoute = (props) => {
   const user = useSelector((state) => state.user);
 
 
-  let Category = [
-    { id: 1, name: "crime/thriller" },
-    { id: 2, name: "religious" },
-    { id: 3, name: "selfhelp" },
-    { id: 4, name: "romance" },
-    { id: 5, name: "humor" },
-    { id: 6, name: "scifi" },
-    { id: 7, name: "biography" },
-    { id: 8, name: "history" },
-
-  ];
-
   const Option = [
-    {label: "Lent",value:"lend"},
-    {label:"Sell",value:"sell"}
-  ]
+    { label: "Lend", value: "lend" },
+    { label: "Sell", value: "sell" },
+  ];
 
   const GetPreviousbookImage = async () => {
     console.log("Working");
@@ -90,7 +69,6 @@ const UploadRoute = (props) => {
 
   useEffect(() => {
     setShop(props.route.params?.shop);
-    
   }, [props.route.params?.shop]);
 
   useEffect(() => {
@@ -160,7 +138,6 @@ const UploadRoute = (props) => {
     );
     const res = await fetchRes.json();
     if (res.status === true) {
-      
       console.log("API resposne: ", res.response.book);
       setImgurl(res.response.book);
     } else {
@@ -178,6 +155,8 @@ const UploadRoute = (props) => {
     formData.append("book_price", price);
     formData.append("book_img_url", imgurl);
     formData.append("book_isbn", isbn);
+    formData.append("transaction_type", transaction_type);
+    formData.append("book_category", category);
 
     console.log(formData);
     fetch("https://booksapp2021.herokuapp.com/Book/Upload", {
@@ -189,12 +168,14 @@ const UploadRoute = (props) => {
       },
 
       body: formData,
+      usernumber: user.accountNumber,
     })
       .then((response) => {
         return response.json();
       })
       .then((data) => {
         if (data.status) {
+          console.log(data.message);
           alert("Book Uploaded Succesfully");
           setImgurl(null);
           setAuthor("");
@@ -220,39 +201,43 @@ const UploadRoute = (props) => {
   let selected;
   if (shop != null) {
     selected = (
-      <><View style={{ justifyContent: 'center',marginRight:16}}>
-        <View style={styles.shop}>
-          <View style={styles.shopDetailsContainer}>
-            <Text style={[styles.shopDetails, styles.shopDistance]}>
-              {shop.store_distance}
-            </Text>
-            <Text style={styles.shopDetails}>{shop.store_name}</Text>
+      <>
+        <View style={{ justifyContent: "center", marginRight: 16 }}>
+          <View style={styles.shop}>
+            <View style={styles.shopDetailsContainer}>
+              <Text style={[styles.shopDetails, styles.shopDistance]}>
+                {shop.store_distance}
+              </Text>
+              <Text style={styles.shopDetails}>{shop.store_name}</Text>
+            </View>
+          </View>
+
+          <View>
+            <Text style={styles.storeDetails}>{shop.store_incharge} </Text>
+            <Text style={styles.storeDetails}>{shop.store_address} </Text>
+            <Text style={styles.storeDetails}>{shop.store_number}</Text>
           </View>
         </View>
-        
-
-        <View>
-          <Text style={styles.storeDetails}>{shop.store_incharge} </Text>
-          <Text style={styles.storeDetails}>{shop.store_address} </Text>
-          <Text style={styles.storeDetails}>{shop.store_number}</Text>
+        <View style={{ alignSelf: "center", marginTop: 10 }}>
+          <Pressable
+            onPress={() =>
+              props.navigation.navigate("Storemodal", {
+                params: { shop: shop },
+              })
+            }
+          >
+            <Changeshop />
+          </Pressable>
         </View>
-      </View><View style={{ alignSelf: 'center',marginTop:10 }}>
-        <Pressable onPress = {() => props.navigation.navigate("Storemodal",{params:{shop:shop}})}>
-         <Changeshop />
-         </Pressable>
-        </View></>
-        
-      
+      </>
     );
-  } else {
+  } else{
     selected = (
-      <View style={{marginTop:20,alignSelf:'center'}}>
-        <Pressable  onPress={() => props.navigation.navigate("Storemodal")}>
-        <Findashop />
+      <View style={{ marginTop: 20, alignSelf: "center" }}>
+        <Pressable onPress={() => props.navigation.navigate("Storemodal")}>
+          <Findashop />
         </Pressable>
-        </View>
-      
-      
+      </View>
     );
   }
 
@@ -297,21 +282,6 @@ const UploadRoute = (props) => {
     })();
   }, []);
 
-  const handleBarCodeScanned = ({ data }) => {
-    setScanned(true);
-    alert(`ISBN code scanned successfully!`);
-    FetchBookfromISBN();
-    setShowQR(false);
-    setIsbn(data);
-    if (showQR) setScanned(false);
-  };
-  
-
-  const Selectcategory = (val) => {
-    setSelectedcategory(val.name);
-    setShowcategoryoption(false);
-   
-  };
 
 
   const getPricing = async () => {
@@ -352,26 +322,27 @@ const UploadRoute = (props) => {
   }
 
   return (
-      <SafeAreaView style={{flex:1,backgroundColor:'#ECEFEE',flexDirection:'column'}}>
-      
-      <View style={{flex:2,justifyContent:'space-evenly'}}>
-        <BAheader />
-        <Text
-      style={{
-        fontSize: 18,
-        fontWeight: "700",
-        color: "#E96A59",
-        marginLeft: 21,
-        marginTop:10,
-        marginBottom: 2,
-      }}
-      theme={{ fonts: { regular: "DM Sans" } }}
-    >
-      NEW BOOK
-    </Text>
-      </View>
-      <View style={{flex:5,flexDirection:'row',marginLeft:10}}>
-      <View style={styles.inputfields}>
+      <SafeAreaView
+        style={{ flex: 1, flexDirection: "column" }}
+      >
+        <View style={{ flex: 2, justifyContent: "space-evenly" }}>
+          <BAheader />
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: "700",
+              color: "#E96A59",
+              marginLeft: 21,
+              marginTop: 10,
+              marginBottom: 2,
+              fontFamily: "DMSansbold",
+            }}
+          >
+            NEW BOOK
+          </Text>
+        </View>
+        <View style={{ flex: 6, flexDirection: "row", marginLeft: 10 }}>
+          <View style={styles.inputfields}>
             <View style={styles.isbn}>
               <TextInput
                 style={[styles.inputtextbox, styles.isbninput]}
@@ -386,406 +357,283 @@ const UploadRoute = (props) => {
                   if (showQR) setScanned(false);
                 }}
               >
-                <View style={{marginTop:10,marginRight:5}}>
+                <View style={{ marginTop: 10, marginRight: 5 }}>
                   <QrcodeLogo />
                 </View>
               </Pressable>
             </View>
             <TextInput
-                style={styles.inputtextbox}
-                placeholder="Name of the book"
-                value={name}
-                onChangeText={(text) => setName(text)}
-              />
+              style={styles.inputtextbox}
+              placeholder="Name of the book"
+              value={name}
+              onChangeText={(text) => setName(text)}
+            />
             <TextInput
-                style={styles.inputtextbox}
-                placeholder="Author"
-                value={author}
-                onChangeText={(text) => setAuthor(text)}
+              style={styles.inputtextbox}
+              placeholder="Author"
+              value={author}
+              onChangeText={(text) => setAuthor(text)}
+            />
+            <View style={styles.container}>
+              <TextInput
+                style={[styles.inputtextbox, styles.subcontainer]}
+                placeholder="Year"
+                value={year}
+                onChangeText={(text) => setYear(text.replace(/[^0-9]/g, ""))}
+                keyboardType="number-pad"
+                maxLength={4}
               />
-              <View style={styles.container}>
-                <TextInput
-                  style={[styles.inputtextbox, styles.subcontainer]}
-                  placeholder="Year"
-                  value={year}
-                  onChangeText={(text) => setYear(text.replace(/[^0-9]/g, ""))}
-                  keyboardType="number-pad"
-                  maxLength={4}
-                />
-                <TextInput
-                  style={[styles.inputtextbox, styles.subcontainer]}
-                  placeholder="Price"
-                  value={price}
-                  onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ""))}
-                  keyboardType="number-pad"
-                  maxLength={4}
-                />
+              <TextInput
+                style={[styles.inputtextbox, styles.subcontainer]}
+                placeholder="Price"
+                value={price}
+                onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ""))}
+                keyboardType="number-pad"
+                maxLength={4}
+              />
+            </View>
+            <RNPickerSelect
+              onValueChange={(value) => setCategory(value)}
+              items={[
+                { label: "Crime and Thriller", value: "crime/thriller" },
+                { label: "Religious", value: "religious" },
+                { label: "Self-Help", value: "selfhelp" },
+                { label: "Romance", value: "romance" },
+                { label: "Humor", value: "humor" },
+                { label: "Sci-Fi", value: "scifi" },
+                { label: "Biography", value: "biography" },
+                { label: "History", value: "history" },
+              ]}
+              selectedValue={category}
+              placeholder={{
+                label: "Select the genre",
+                value: "",
+                color: "black",
+              }}
+              place
+              useNativeAndroidPickerStyle={false}
+              style={customPickerStyles}
+            />
+          </View>
+          <View
+            style={{ flexDirection: "column", flex: 1, justifyContent: "center" }}
+          >
+            <View style={styles.uploadimage}>
+              {props.route.params?.photo && imgurl ? (
+                <Pressable
+                  style={{ width: "100%", height: "100%" }}
+                  onPress={() => props.navigation.navigate("Camerascreen",{redirectTo:"Upload"})}
+                >
+                  <Image
+                    style={{
+                      flex: 1,
+                      height: "100%",
+                      width: "100%",
+                      resizeMode: "cover",
+                      width: "100%",
+                      borderRadius: 20,
+                    }}
+                    source={{ uri: imgurl }}
+                  />
+                  <Button style={{backgroundColor:'#E96A59',marginTop:-10,borderRadius:20,fontFamily:'DMSans'}}  labelStyle={{color:'white',fontSize:14}}>Edit Photo</Button>
+                </Pressable>
+              ) : (
+                <Pressable
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    justifyContent: "center",
+                  }}
+                  onPress={() => props.navigation.navigate("Camerascreen")}
+                >
+                  <Image
+                    style={{
+                      alignSelf: "center",
+
+                      height: "50%",
+                      width: "50%",
+                      resizeMode: "contain",
+
+                      borderRadius: 20,
+                    }}
+                    source={require("../assets/Union.png")}
+                  />
+                </Pressable>
+              )}
+            </View>
+            <View style={{ marginLeft: 10, marginRight: 10 }}>
+              <SwitchSelector
+                options={Option}
+                initial={1}
+                textContainerStyle={{ fontFamily: "DMSans" }}
+                bold={true}
+                borderRadius={50}
+                borderColor={"#E96A59"}
+                buttonColor={"#E96A59"}
+                onPress={(value) => {
+                  setTransaction_type(value);
+                  console.log(value);
+                }}
+              />
+            </View>
+          </View>
+        </View>
+
+        <View
+          style={{
+            flex: 6,
+            flexDirection: "column",
+            marginLeft: 20,
+            justifyContent: "space-around",
+          }}
+        >
+          <View style={{ marginTop: 30 }}>
+            <StaticText text="Condition of the book" fontS={16} />
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginTop: 12,
+                marginRight: 16,
+              }}
+            >
+              <View
+                style={[
+                  styles.checkboxContainer,
+                  {
+                    backgroundColor:
+                      bookCondition === "Bad" ? "#0036F4" : "transparent",
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.checkboxText,
+                    {
+                      color: bookCondition === "Bad" ? "#ffffff" : "#000000",
+                    },
+                  ]}
+                  onPress={() => {
+                    setbookCondition("Bad");
+                  }}
+                >
+                  Bad
+                </Text>
+              </View>
+
+              <View
+                style={[
+                  styles.checkboxContainer,
+                  {
+                    backgroundColor:
+                      bookCondition === "Fair" ? "#0036F4" : "transparent",
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.checkboxText,
+                    {
+                      color: bookCondition === "Fair" ? "#ffffff" : "#000000",
+                    },
+                  ]}
+                  onPress={() => {
+                    setbookCondition("Fair");
+                  }}
+                >
+                  Fair
+                </Text>
               </View>
               <View
-          style={{
-            flexDirection: "column",
-            marginTop:30,
-            
-            borderColor: "#0036F4",
-            borderWidth: 2,
-            borderRadius: 50,
-          }}
-        >
-          <TouchableOpacity
-            activeOpacity={0.8}
-            style={{
-              alignItems: "center",
-              justifyContent: "space-around",
-              flexDirection: "row",
-              overflow:'hidden',
-              height: 30,
-              borderRadius: 20,
-              marginLeft: showcategoryoption===true?20:0,
-              marginRight: showcategoryoption===true?20:0,
-              backgroundColor:
-                selectedcategory === "Category" ? "#ECEFEE" : "#0036F4",
-            }}
-            onPress={() => {setShowcategoryoption(!showcategoryoption); setMargins(20) }}
-          >
-            <View style={{ justifyContent: "center" }}>
-              <Text
-                style={{
-                  fontFamily: "DMSans",
-                  fontSize: 14,
-                  color: selectedcategory === "Category" ? "black" : "white",
-                }}
+                style={[
+                  styles.checkboxContainer,
+                  {
+                    backgroundColor:
+                      bookCondition === "Good" ? "#0036F4" : "transparent",
+                  },
+                ]}
               >
-                {selectedcategory}
-              </Text>
+                <Text
+                  style={[
+                    styles.checkboxText,
+                    {
+                      color: bookCondition === "Good" ? "#ffffff" : "#000000",
+                    },
+                  ]}
+                  onPress={() => {
+                    setbookCondition("Good");
+                  }}
+                >
+                  Good
+                </Text>
+              </View>
+
+              <View
+                style={[
+                  styles.checkboxContainer,
+                  {
+                    backgroundColor:
+                      bookCondition === "Great" ? "#0036F4" : "transparent",
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.checkboxText,
+                    {
+                      color: bookCondition === "Great" ? "#ffffff" : "#000000",
+                    },
+                  ]}
+                  onPress={() => {
+                    setbookCondition("Great");
+                  }}
+                >
+                  Great
+                </Text>
+              </View>
             </View>
-            <Image
-              source={require("../assets/arrowdown.png")}
-              style={{
-                transform: [{ rotate: "0deg" }],
-              }}
-              resizeMode="cover"
-            />
-          </TouchableOpacity>
-          {showcategoryoption && (
-            <View>
-              {Category.map((val, id) => {
-                return (
-                  <TouchableOpacity
-                    key={id}
-                    style={{
-                      paddingVertical: 4,
-                      height: 30,
-                      justifyContent:'center',
-                      alignItems:'center',
-                      
-                      borderRadius: 40,
-                      
-                    }}
-                    onPress={() => Selectcategory(val)}
-                  >
-                    <Text
-                      style={{
-                        color:
-                          selectedcategory == val.name ? "#E96A59" : "black",
-                        fontFamily: "DMSans",
-                        fontSize: 14,
-                      }}
-                    >
-                      {val.name}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          )}
+          </View>
+
+          {selected}
         </View>
 
-      </View>
-      <View style={{flexDirection:'column',flex:1,justifyContent:'center'}}>
-      <View style={styles.uploadimage}>
-            {props.route.params?.photo && imgurl ? (
-              <Pressable
-                style={{width:'100%',height:'100%'}}
-                onPress={() => props.navigation.navigate("Camerascreen")}
-              >
-                <Image
-                  style={{
-                    flex:1,
-                    height: "100%", width: "100%",
-                    resizeMode: "cover",
-                    width:'100%',
-                    borderRadius:20,
-                  }}
-                  source={{ uri: imgurl }}
-                />
-              </Pressable>
-            ) : (
-              <Pressable
-              style={{width:'100%',height:'100%',justifyContent:'center'}}
-              onPress={() => props.navigation.navigate("Camerascreen")}
-            >
-              <Image
-                  style={{
-                    alignSelf:'center',
-                    
-                    height: "50%", width: "50%",
-                    resizeMode: "contain",
-                  
-                    borderRadius:20,
-                  }}
-                  source ={require('../assets/Union.png')}
-                />
-                </Pressable>
-            )}
-          </View>
-          <View style={{marginLeft:10,marginRight:10}}>
-          <SwitchSelector
-              options={Option}
-              initial={1}
-              textContainerStyle={{fontFamily:'DMSans'}}
-              bold={true}
-              borderRadius={50}
-              borderColor={'#E96A59'}
-              buttonColor={'#E96A59'}
-              onPress={value => {
-              setTransaction_type(value)
-              console.log(value)}
-            }
-            />
-          </View>
-          </View>
-          </View>
-      
-      
-      <View style={{flex:6,flexDirection:'column',marginLeft:20,justifyContent:'space-around'}}>
-        <View style={{marginTop:30}}>
-            <StaticText text="Condition of the book" fontS={16}/>
-            <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginTop:12,
-              marginRight:16,
-            }}
-          >
-            <View
-              style={[
-                styles.checkboxContainer,
-                {
-                  backgroundColor:
-                    bookCondition === "Bad" ? "#0036F4" : "transparent",
-                },
-              ]}
-            >
-             
-              <Text
-                style={[
-                  styles.checkboxText,
-                  {
-                    color: bookCondition === "Bad" ? "#ffffff" : "#000000",
-                  },
-                ]}
-                onPress={() => {
-                  setbookCondition("Bad");
-                }}
-              >
-                Bad
-              </Text>
-            </View>
-
-            <View
-              style={[
-                styles.checkboxContainer,
-                {
-                  backgroundColor:
-                    bookCondition === "Fair" ? "#0036F4" : "transparent",
-                },
-              ]}
-            >
-              <Text
-                style={[
-                  styles.checkboxText,
-                  {
-                    color: bookCondition === "Fair" ? "#ffffff" : "#000000",
-                  },
-                ]}
-                onPress={() => {
-                  setbookCondition("Fair");
-                }}
-              >
-                Fair
-              </Text>
-            </View>
-            <View
-              style={[
-                styles.checkboxContainer,
-                {
-                  backgroundColor:
-                    bookCondition === "Good" ? "#0036F4" : "transparent",
-                },
-              ]}
-            >
-              <Text
-                style={[
-                  styles.checkboxText,
-                  {
-                    color: bookCondition === "Good" ? "#ffffff" : "#000000",
-                  },
-                ]}
-                onPress={() => {
-                  setbookCondition("Good");
-                }}
-              >
-                Good
-              </Text>
-            </View>
-
-            <View
-              style={[
-                styles.checkboxContainer,
-                {
-                  backgroundColor:
-                    bookCondition === "Great" ? "#0036F4" : "transparent",
-                },
-              ]}
-            >
-              <Text
-                style={[
-                  styles.checkboxText,
-                  {
-                    color: bookCondition === "Great" ? "#ffffff" : "#000000",
-                  },
-                ]}
-                onPress={() => {
-                  setbookCondition("Great");
-                }}
-              >
-                Great
-              </Text>
-            </View>
-
-            </View>
-            </View>
-            
-            {selected}
-
-           
-            
-      </View>
-
-      <View
+        <View
           style={{
-            
-            marginLeft:20,
-            
-            justifyContent:'flex-end',
+            marginLeft: 20,
+
+            justifyContent: "flex-end",
             alignItems: "center",
-            flex:2
+            flex: 2,
           }}
         >
-          <Text>You'll get {!price ? 0 : userBookPrice}</Text>
+          <Text style={{fontFamily:'DMSans'}}>You'll get {!price ? 0 : userBookPrice}</Text>
           <Button
-          theme={{ roundness: 120 }}
-          
-          style={{
-            width: 215,
-            height: 40,
-            margin:10,
-            alignSelf:'center',
-            justifyContent:'flex-end'
-          }}
-          labelStyle={{
-            fontSize: 14,
-            color: "white",
-            flexDirection: "row",
-            fontFamily: "DMSansbold",
-            
-          }}
-          onPress={uploaddetails}
-          mode="contained"
-        >
-          Upload
-        </Button>
+            theme={{ roundness: 120 }}
+            style={{
+              width: 215,
+              height: 40,
+              margin: 10,
+              alignSelf: "center",
+              justifyContent: "flex-end",
+            }}
+            labelStyle={{
+              fontSize: 14,
+              color: "white",
+              flexDirection: "row",
+              fontFamily: "DMSansbold",
+            }}
+            onPress={uploaddetails}
+            mode="contained"
+          >
+            Upload
+          </Button>
         </View>
-      {/* <View style={{flex:2,justifyContent:'center',alignItems:'center',flexDirection:'column'}}> */}
-        
-      {/* </View>
-      <View style={{flex:2,backgroundColor:'black'}}>
-          
-      </View> */}
-    
       </SafeAreaView>
-
-
-        
   );
 };
 
-const BooksappLogo = () => {
-  return (
-    <View>
-      <Svg
-        width="90"
-        height="23"
-        viewBox="0 0 90 23"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <Path
-          d="M0.375 1.63227C2.1 1.55808 3.675 1.48389 4.95 1.48389C8.625 1.48389 10.5 2.74518 10.5 5.19356C10.5 6.08389 10.2 6.90002 9.675 7.56776C9.15 8.2355 8.25 8.68066 7.05 8.90324C8.175 9.05163 9.075 9.3484 9.75 9.94195C10.425 10.4613 10.725 11.4258 10.725 12.8355C10.8 15.6549 9 17.0645 5.25 17.0645H0.375V1.63227ZM4.95 1.70647C4.125 1.70647 3.225 1.78066 2.25 1.85485V8.82905H5.55C7.65 8.75485 8.7 7.56776 8.7 5.19356C8.7 4.08066 8.4 3.19034 7.725 2.59679C7.2 2.00324 6.225 1.70647 4.95 1.70647ZM2.25 16.842H5.25C6.6 16.842 7.5 16.471 8.1 15.8032C8.7 15.1355 9 14.0968 9 12.6129C9 11.129 8.7 10.2387 8.175 9.79356C7.65 9.3484 6.75 9.05163 5.625 9.05163H2.25V16.842Z"
-          fill="#0D1935"
-          stroke="#0D1935"
-          stroke-miterlimit="10"
-        />
-        <Path
-          d="M17.85 17.1387C16.275 17.1387 15 16.6935 14.025 15.8032C13.05 14.9129 12.525 13.5774 12.525 11.7226C12.525 9.86772 13.05 8.45804 14.1 7.41933C15.15 6.38062 16.425 5.86127 18 5.86127C19.575 5.86127 20.85 6.30643 21.825 7.19675C22.8 8.08707 23.325 9.42256 23.325 11.2774C23.325 13.1322 22.8 14.6161 21.75 15.5806C20.775 16.6193 19.425 17.1387 17.85 17.1387ZM18 6.00965C16.875 6.00965 15.9 6.52901 15.15 7.49353C14.4 8.45804 14.025 9.86772 14.025 11.6484C14.025 13.429 14.4 14.7645 15.075 15.6548C15.75 16.5451 16.65 16.9161 17.85 16.9161C18.975 16.9161 19.95 16.3968 20.7 15.4322C21.45 14.3935 21.825 13.058 21.825 11.2774C21.825 9.49675 21.45 8.16127 20.775 7.27094C20.1 6.45482 19.125 6.00965 18 6.00965Z"
-          fill="#0D1935"
-          stroke="#0D1935"
-          stroke-miterlimit="10"
-        />
-        <Path
-          d="M30.45 17.1387C28.875 17.1387 27.6 16.6935 26.625 15.8032C25.65 14.9129 25.125 13.5774 25.125 11.7226C25.125 9.86772 25.65 8.45804 26.7 7.41933C27.75 6.38062 29.025 5.86127 30.6 5.86127C32.175 5.86127 33.45 6.30643 34.425 7.19675C35.4 8.08707 35.925 9.42256 35.925 11.2774C35.925 13.1322 35.4 14.5419 34.35 15.5806C33.375 16.6193 32.025 17.1387 30.45 17.1387ZM30.6 6.00965C29.475 6.00965 28.5 6.52901 27.75 7.49353C27 8.45804 26.625 9.86772 26.625 11.6484C26.625 13.429 27 14.7645 27.675 15.6548C28.35 16.5451 29.25 16.9161 30.45 16.9161C31.575 16.9161 32.55 16.3968 33.3 15.4322C34.05 14.3935 34.425 13.058 34.425 11.2774C34.425 9.49675 34.05 8.16127 33.375 7.27094C32.7 6.45482 31.725 6.00965 30.6 6.00965Z"
-          fill="#0D1935"
-          stroke="#0D1935"
-          stroke-miterlimit="10"
-        />
-        <Path
-          d="M39.075 0.370972V11.4258L44.025 5.93549H44.25L40.575 10.0161L45.45 17.0645H43.875L39.75 10.9806L39.15 11.6484V17.0645H37.5V0.370972H39.075Z"
-          fill="#0D1935"
-          stroke="#0D1935"
-          stroke-miterlimit="10"
-        />
-        <Path
-          d="M53.475 6.67743C53.25 6.45485 52.875 6.30646 52.35 6.15808C51.825 6.00969 51.45 5.9355 51.15 5.9355C50.85 5.9355 50.7 5.9355 50.7 5.9355C49.875 5.9355 49.275 6.15808 48.975 6.52904C48.6 6.90001 48.45 7.34517 48.45 7.86453C48.45 8.38388 48.6 8.75485 48.9 9.12582C49.2 9.49679 49.575 9.71937 50.1 9.86775C50.55 10.0903 51.075 10.2387 51.6 10.5355C52.125 10.7581 52.65 10.9807 53.1 11.2774C53.55 11.5 54 11.871 54.3 12.3161C54.6 12.7613 54.75 13.3549 54.75 14.0968C54.75 14.7645 54.525 15.3581 54 15.8774C53.475 16.3968 52.95 16.6936 52.35 16.8419C51.75 16.9903 51.075 17.0645 50.4 17.0645C48.9 17.0645 47.7 16.6936 46.95 16.1L47.1 15.9516C47.4 16.2484 47.85 16.471 48.45 16.6194C49.05 16.7678 49.65 16.9161 50.175 16.9161C51.075 16.9161 51.825 16.6936 52.35 16.1742C52.95 15.729 53.25 15.0613 53.25 14.3936C53.25 13.7258 53.025 13.0581 52.575 12.6871C52.125 12.2419 51.6 11.9452 51 11.6484C50.4 11.3516 49.725 11.129 49.125 10.9065C48.525 10.6839 48 10.3129 47.55 9.86775C47.1 9.42259 46.875 8.90324 46.875 8.30969C46.875 7.71614 47.025 7.27098 47.25 6.90001C47.55 6.52904 47.85 6.30646 48.3 6.15808C49.05 5.9355 49.8 5.78711 50.625 5.78711C51.9 5.78711 52.95 6.00969 53.625 6.52904L53.475 6.67743Z"
-          fill="#0D1935"
-          stroke="#0D1935"
-          stroke-miterlimit="10"
-        />
-        <Path
-          d="M65.7 17.0645C64.65 17.0645 63.975 16.8419 63.6 16.471C63.225 16.1742 63.075 15.8774 63.075 15.6548V15.2097C62.325 16.5452 61.2 17.2129 59.55 17.2129C57.675 17.2129 56.55 16.3968 56.325 14.6903C56.325 14.5419 56.25 14.3194 56.25 14.171C56.25 14.0226 56.25 13.8 56.325 13.5774C56.4 13.3548 56.55 13.1323 56.85 12.8355C57.45 12.3161 58.65 11.9452 60.6 11.871C61.05 11.7968 61.5 11.7968 61.95 11.7968C62.4 11.7968 62.7 11.7968 63.075 11.871V8.16129C63.075 8.16129 63.075 8.0871 63.075 7.93871C63.075 7.79032 63.075 7.64194 63 7.41936C62.925 7.19678 62.775 7.04839 62.7 6.82581C62.55 6.60323 62.325 6.45484 61.95 6.30645C61.575 6.15807 61.125 6.08387 60.6 6.08387C60.075 6.08387 59.4 6.15807 58.65 6.38065C57.9 6.60323 57.375 6.75161 57 6.9742L56.925 6.82581C58.275 6.23226 59.625 5.93549 60.975 5.93549C62.55 5.93549 63.525 6.23226 64.05 6.75162C64.425 7.19678 64.65 7.64194 64.65 8.0871V15.5065C64.65 15.9516 64.725 16.2484 64.875 16.471C65.025 16.6936 65.25 16.8419 65.4 16.8419L65.625 16.9161H66.3V17.0645H65.7ZM59.85 16.9903C60.675 16.9903 61.35 16.6936 62.025 16.1742C62.625 15.6548 63 15.1355 63.075 14.6161V11.871C62.625 11.871 62.25 11.871 61.8 11.871C61.35 11.871 60.975 11.871 60.6 11.9452C59.475 12.0936 58.725 12.3161 58.35 12.6871C57.975 13.0581 57.825 13.5774 57.825 14.2452C57.825 14.3936 57.825 14.4677 57.825 14.6161C58.05 16.1742 58.65 16.9903 59.85 16.9903Z"
-          fill="#0D1935"
-          stroke="#0D1935"
-          stroke-miterlimit="10"
-        />
-        <Path
-          d="M67.8 5.93546H69.375V8.68062C69.6 8.01288 70.125 7.34514 70.8 6.75159C71.475 6.15804 72.3 5.86127 73.125 5.86127C76.2 5.86127 77.7 7.64191 77.7 11.129C77.7 15.1355 75.75 17.1387 71.775 17.1387C71.1 17.1387 70.275 16.9903 69.375 16.6193V22.5548H67.8V5.93546ZM73.125 6.00965C72.225 6.00965 71.325 6.38062 70.575 7.19675C69.825 8.01288 69.45 8.68062 69.375 9.34836V16.4709C70.275 16.8419 71.1 16.9903 71.775 16.9903C74.7 16.9903 76.125 15.0613 76.125 11.129C76.125 7.71611 75.15 6.00965 73.125 6.00965Z"
-          fill="#0D1935"
-          stroke="#0D1935"
-          stroke-miterlimit="10"
-        />
-        <Path
-          d="M79.725 5.93546H81.3V8.68062C81.525 8.01288 82.05 7.34514 82.725 6.75159C83.4 6.15804 84.225 5.86127 85.05 5.86127C88.125 5.86127 89.625 7.64191 89.625 11.129C89.625 15.1355 87.675 17.1387 83.7 17.1387C83.025 17.1387 82.2 16.9903 81.3 16.6193V22.5548H79.725V5.93546ZM85.05 6.00965C84.15 6.00965 83.25 6.38062 82.5 7.19675C81.75 8.01288 81.375 8.68062 81.3 9.34836V16.4709C82.2 16.8419 83.025 16.9903 83.7 16.9903C86.625 16.9903 88.05 15.0613 88.05 11.129C88.05 7.71611 87.075 6.00965 85.05 6.00965Z"
-          fill="#0D1935"
-          stroke="#0D1935"
-          stroke-miterlimit="10"
-        />
-      </Svg>
-    </View>
-  );
-};
-
-const QrcodeLogo = ({ setShowQR, showQR }) => {
+const QrcodeLogo = () => {
   return (
     <Svg
       width="18"
@@ -832,7 +680,6 @@ const styles = StyleSheet.create({
   main: {
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     backgroundColor: "#ECEFEE",
-
   },
   heading: {
     marginVertical: 10,
@@ -844,20 +691,20 @@ const styles = StyleSheet.create({
   },
   inputfields: {
     width: "50%",
-    justifyContent:'space-evenly',
+    justifyContent: "space-evenly",
   },
   inputtextbox: {
     color: "#6E7A7D",
     backgroundColor: "transparent",
     justifyContent: "center",
-    height: 40,
-    marginTop:10,
+    height: 50,
+    marginTop: 10,
   },
   isbn: {
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    paddingTop:2,
+    paddingTop: 2,
   },
   isbninput: {
     width: "90%",
@@ -898,20 +745,20 @@ const styles = StyleSheet.create({
   },
   uploadimage: {
     justifyContent: "flex-end",
-    marginBottom:10,
+    marginBottom: 10,
     backgroundColor: "#6E797C",
     borderRadius: 20,
     marginLeft: 10,
-    marginRight:10,
+    marginRight: 10,
   },
   shop: {
     marginVertical: 15,
-    marginBottom:2,
+    marginBottom: 2,
   },
 
   shopDetailsContainer: {
     flexDirection: "row",
-    
+
     alignItems: "center",
   },
   shopDetails: {
@@ -922,7 +769,7 @@ const styles = StyleSheet.create({
     borderColor: "#0036F4",
     borderRadius: 20,
     textAlign: "center",
-    fontFamily:'DMSans'
+    fontFamily: "DMSans",
   },
   shopDistance: {
     flex: 5,
@@ -941,11 +788,12 @@ const customPickerStyles = StyleSheet.create({
     fontSize: 14,
     borderWidth: 2,
     borderColor: "#0036F4",
-    borderRadius: 50,
-    color: "#0D1936",
+    borderRadius: 20,
+    color: "#000000",
     paddingRight: 30, // to ensure the text is never behind the icon
     paddingLeft: 10,
-    height: 100,
+    height: 40,
+    marginTop: 25,
   },
   inputAndroid: {
     fontSize: 14,
@@ -955,32 +803,9 @@ const customPickerStyles = StyleSheet.create({
     borderRadius: 50,
     paddingRight: 30, // to ensure the text is never behind the icon
     paddingLeft: 10,
-    height: 35,
+    height: 40,
+    marginTop: 20,
   },
 });
 
-const customPickerStylesSelected = StyleSheet.create({
-  inputIOS: {
-    fontSize: 14,
-    borderWidth: 2,
-    backgroundColor: "#0036F4",
-    borderColor: "#0036F4",
-    borderRadius: 50,
-    color: "#ffffff",
-    // paddingRight: 30, // to ensure the text is never behind the icon
-    paddingLeft: 10,
-    height: 100,
-  },
-  inputAndroid: {
-    fontSize: 14,
-    borderWidth: 2,
-    backgroundColor: "#0036F4",
-    borderColor: "#0036F4",
-    color: "#ffffff",
-    borderRadius: 50,
-    // paddingRight: 30, // to ensure the text is never behind the icon
-    paddingLeft: 10,
-    height: 35,
-  },
-});
 export default React.memo(UploadRoute);

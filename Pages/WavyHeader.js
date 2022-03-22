@@ -1,4 +1,3 @@
-
 import React from "react";
 import { View, Image, StyleSheet, SafeAreaView } from "react-native";
 import Svg, { Path } from "react-native-svg";
@@ -21,7 +20,5 @@ const WavyHeader = ({ customStyles }) => {
       </View>
     </View>
   );
-
-}
+};
 export default React.memo(WavyHeader);
-

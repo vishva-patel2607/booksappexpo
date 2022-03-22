@@ -80,7 +80,7 @@ const UserRoute = (props) => {
   if (LoadingData) {
     return (
       <SafeAreaView style={styles.safeareaview}>
-        <View style={{ flex: 2, justifyContent: "centers" }}>
+        <View style={{ flex: 2, justifyContent: "flex-start" }}>
           <StaticBooksApp />
         </View>
         <View style={{ flexDirection: "column", flex: 10, marginLeft: 15 }}>
@@ -120,10 +120,12 @@ const UserRoute = (props) => {
                 />
                 <Image source={require("../assets/Line.png")} />
               </View>
+              <Pressable onPress = {() => {props.navigation.navigate("EditEmail");}}>
               <Image
                 source={require("../assets/Edit.png")}
                 style={{ marginRight: 25 }}
               />
+              </Pressable>
             </View>
             <View
               style={{
@@ -143,10 +145,12 @@ const UserRoute = (props) => {
                   style={{ height: 5 }}
                 />
               </View>
+              <Pressable onPress = {() => {props.navigation.navigate("EditPhone");}}>
               <Image
                 source={require("../assets/Edit.png")}
                 style={{ marginRight: 25 }}
               />
+              </Pressable>
             </View>
             <View
               style={{
@@ -189,7 +193,7 @@ const UserRoute = (props) => {
               marginLeft: 15,
             }}
           >
-            <View style={{ justifyContent: "flex-start" }}>
+            <View style={{ justifyContent: "flex-start",marginTop:10 }}>
               <StaticText text="DarkMode" />
             </View>
             <Switch
@@ -267,7 +271,7 @@ const styles = StyleSheet.create({
   safeareaview: {
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-    backgroundColor: "#ECEFEE",
+    // backgroundColor: "#ECEFEE",
     flexDirection: "column",
   },
 

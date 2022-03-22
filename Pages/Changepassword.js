@@ -12,19 +12,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button, TextInput } from "react-native-paper";
-import RenderActionButton from "../Components/Actionbutton";
 import { logoutUser } from "../actions";
-
-const tempoobj = {
-  username: "hello",
-  email: "hello",
-  firstname: "hello",
-  lastname: "hello",
-  year: "hello",
-  month: "hello",
-  day: "hello",
-  phonenumber: "hello",
-};
 
 const Changepassword = (props) => {
   const user = useSelector((state) => state.user);
@@ -230,7 +218,7 @@ const styles = StyleSheet.create({
 
   layout: {
     flex: 1,
-    backgroundColor: "#ECEFEE",
+    
   },
 });
 

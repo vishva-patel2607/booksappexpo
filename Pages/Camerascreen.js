@@ -8,6 +8,7 @@ import { IconButton } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 
 const CamerScreen = (props) => {
+  console.log(props);
   const [gallerypermission, setGallerypermission] = useState(false);
   const [permission, setPermission] = useState(false);
   const [cameratype, setCameratype] = useState(Camera.Constants.Type.back);
@@ -29,9 +30,9 @@ const CamerScreen = (props) => {
     if (!permission) return;
     const photo = await camera.current.takePictureAsync();
 
-    console.log(props.route.params?.redirectTo);
+    console.log(props.route.params?.redirectTo,'redirectto');
     //  If the request comes from edit book then redirect it to edit book screen
-    if (props.route.params?.redirectTo === "Edituploadedbook") {
+    if (props.route.params=== undefined) {
       props.navigation.navigate("Edituploadedbook", {
         params: { photo: photo },
       });

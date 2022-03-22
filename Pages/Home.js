@@ -303,6 +303,7 @@ const HomeRoute = (props) => {
         return response.json();
       })
       .then((data) => {
+        console.log(data);
         if (data.status) {
           setSoldbooks(data.response.books);
         } else {
@@ -413,6 +414,7 @@ const HomeRoute = (props) => {
   // }, [count]);
 
   useEffect(() => {
+    
     fetch("https://booksapp2021.herokuapp.com/Book/Dropoffs", {
       method: "GET",
       headers: {
@@ -427,6 +429,7 @@ const HomeRoute = (props) => {
       })
       .then((data) => {
         if (data.status) {
+          console.log(data.response.books);
           setDropoffbooks(data.response.books);
         } else {
           if (data.message === "Could not verify") {
@@ -483,7 +486,7 @@ const HomeRoute = (props) => {
 const styles = StyleSheet.create({
   AndroidSafeArea: {
     flex: 1,
-    backgroundColor: "#ECEFEE",
+   
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   submitbutton: {

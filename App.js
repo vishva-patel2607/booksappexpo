@@ -1,23 +1,9 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { View } from "react-native";
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
-import AppLoading from "expo-app-loading";
-import Signup from "./Pages/signup";
-import Initialsignup from "./Pages/Initialsignup";
-import Login from "./Pages/login";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose } from "redux";
 import * as Font from "expo-font";
-import {
-  useFonts,
-  DMSans_400Regular,
-  DMSans_400Regular_Italic,
-  DMSans_500Medium,
-  DMSans_500Medium_Italic,
-  DMSans_700Bold,
-  DMSans_700Bold_Italic,
-} from "@expo-google-fonts/dm-sans";
 import Navigation from "./main pages/Navigation";
 import Appreducer from "./reducer";
 import thunk from "redux-thunk";

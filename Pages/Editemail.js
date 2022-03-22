@@ -18,18 +18,18 @@ import {
   Text,
 } from "react-native-paper";
 
-const EditPhone = (props) => {
+const EditEmail = (props) => {
   const user = useSelector((state) => state.user);
-  const [newphoneno, setNewphoneno] = useState("");
+  const [newemail, setNewemail] = useState("");
   const [error, setError] = useState("");
   const dispatch = useDispatch();
 
-  const editphone = () => {
+  const editemail = () => {
     if (newphoneno.length === 0 || !/^\d+$/.test(newphoneno)) {
       alert("Check your Phonenumber");
       return;
     } else {
-      fetch("https://booksapp2021.herokuapp.com/User/Changenumber", {
+      fetch("https://booksapp2021.herokuapp.com/User/Changeemail", {
         method: "PUT",
         headers: {
           Accept: "application/json",
@@ -37,7 +37,7 @@ const EditPhone = (props) => {
           "x-access-token": user.token,
         },
         body: JSON.stringify({
-          newnumber: newphoneno,
+          newemail: newemail,
         }),
       })
         .then((response) => {
@@ -47,7 +47,7 @@ const EditPhone = (props) => {
           if (data.status) {
             console.log("Status true");
             setError(data.message);
-            Alert.alert(error, "Please log in again with your new Phone No.", [
+            Alert.alert(error, "Email Changed and a verification mail is sent.", [
               { text: "Login", onPress: () => dispatch(logoutUser()) },
             ]);
           } else {
@@ -83,7 +83,7 @@ const EditPhone = (props) => {
           }}
           theme={{ fonts: { regular: "DM Sans" } }}
         >
-          CHANGE PHONE
+          CHANGE EMAIL
         </Text>
       </View>
       <View style={{ marginLeft: 19, flex: 12 }}>
@@ -98,9 +98,9 @@ const EditPhone = (props) => {
           }}
           
              mode="flat"
-             placeholder="New phone number"
-             value={newphoneno}
-            onChangeText={(text) => setNewphoneno(text)}
+             placeholder="New Email"
+             value={newemail}
+            onChangeText={(text) => setNewemail(text)}
           autoCapitalize="none"
           autoCorrect={false}
           underlineColor="#ECEFEE"
@@ -112,7 +112,7 @@ const EditPhone = (props) => {
         <Text style={styles.error}>{error}</Text>
         <Button
           theme={{ roundness: 120 }}
-          onPress={editphone}
+          onPress={editemail}
           style={{
             width: 215,
             height: 40,
@@ -159,8 +159,8 @@ const styles = StyleSheet.create({
 
   layout: {
     flex: 1,
-   
+    
   },
 });
-export default React.memo(EditPhone);
+export default React.memo(EditEmail);
 

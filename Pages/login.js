@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-    backgroundColor: "#ECEFEE",
+    
   },
 
   sectionStyle: {

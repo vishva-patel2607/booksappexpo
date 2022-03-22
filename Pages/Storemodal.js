@@ -23,7 +23,7 @@ import * as Location from "expo-location";
 
 
 const Storemodal = (props) => {
-  console.log(props);
+
   const [loading, setLoading] = useState(false);
   const [longitude, setLongitude] = useState();
   const [latitude, setLatitude] = useState();
@@ -116,17 +116,17 @@ const Storemodal = (props) => {
           {shops.map((shop, idx) => {
             if (
               (selectedShop != null &&
-              selectedShop.store_id === shop.store_id) || (shop.store_id === props.route.params?.params.shop.store_id)
+              selectedShop.store_id === shop.store_id) 
             ) {
               return (
                 <View
                   key={idx}
                   style={{
-                    backgroundColor:'#6E7A7D',
-                    opacity:0.43,
+                    
+                    
                     borderWidth: 2,
                     borderRadius:10,
-                    borderColor:'#ffffff',
+                    borderColor:'#0237f2',
                     marginTop: 20,
                   }}
                 >

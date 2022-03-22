@@ -6,13 +6,12 @@ import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { DefaultTheme } from "react-native-paper";
 import Bookdetail from "../Pages/Bookdetail.js";
-const Stack = createStackNavigator();
-const Tab = createMaterialBottomTabNavigator();
+
 import EmailVerification from "../Pages/EmailVerification.js";
 import SearchRoute from "../Pages/Search.js";
 import PrivacyPolicy from "../Pages/Privacypolicy.js";
 import Booksaddedtopickup from "../Pages/Booksaddedtopickup.js";
-import RemovedBookScreen from "../Pages/RemovedBookScreen.js";
+import EditEmail from "../Pages/Editemail.js";
 import UploadRoute from "../Pages/Upload.js";
 import UserRoute from "../Pages/User.js";
 import HomeRoute from "../Pages/Home.js";
@@ -33,7 +32,8 @@ import { getUser, logoutUser, setUser } from "../actions";
 import ForgotPassword from "../Pages/Forgotpassword.js";
 import UploadedBooks from "../Pages/Uploadedbooks.js";
 import Edituploadedbook from "../Pages/Edituploadedbook.js";
-
+const Stack = createStackNavigator();
+const Tab = createMaterialBottomTabNavigator();
 const theme = {
   ...DefaultTheme,
   roundness: 5,
@@ -41,7 +41,7 @@ const theme = {
     ...DefaultTheme.colors,
     primary: "#FFFFFF",
     accent: "#EF90A9",
-    background: "#FFFFFF",
+    background: "#ECEFEE",
     surface: "#EDEDF0",
     disabled: "#808080",
     backdrop: "#7CABF0",
@@ -180,18 +180,14 @@ const Navigation = () => {
           <Stack.Screen
             name="Bookscreen"
             component={Bookscreen}
-            options={{ title: "" }}
+            options={{ headerShown : false}}
           />
           <Stack.Screen
             name="Camerascreen"
             component={Camerascreen}
             options={{ title: "" }}
           />
-          <Stack.Screen
-            name="RemovedBookScreen"
-            component={RemovedBookScreen}
-            options={{ title: "" }}
-          />
+          
           <Stack.Screen
             name="UploadedBooks"
             component={UploadedBooks}
@@ -210,7 +206,12 @@ const Navigation = () => {
           <Stack.Screen
             name="EditPhone"
             component={EditPhone}
-            options={{ title: "Change Phone" }}
+            options={{ headerShown:false }}
+          />
+           <Stack.Screen
+            name="EditEmail"
+            component={EditEmail}
+            options={{ headerShown:false }}
           />
           <Stack.Screen
             name="Storemodal"
@@ -220,7 +221,7 @@ const Navigation = () => {
           <Stack.Screen
             name="Edituploadedbook"
             component={Edituploadedbook}
-            options={{ title: "Edit" }}
+            options={{ headerShown:false }}
           />
           <Stack.Screen
             name="Bookdetail"

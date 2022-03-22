@@ -79,7 +79,7 @@ const Storemodalcard = (props) => {
     map = null;
   }
   return (
-    <><View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+    <><View style={{ flexDirection: 'row', justifyContent: 'space-around',marginTop:6 }}>
       <View style={{
         flex: 2,
         marginRight: 10

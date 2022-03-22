@@ -1,32 +1,19 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
-  ScrollView,
   View,
-  Image,
   StyleSheet,
   Alert,
-  Pressable,
 } from "react-native";
 
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../actions";
 import {
   Button,
-  Title,
-  Paragraph,
   TextInput,
-  Text,
-  Appbar,
-  BottomNavigation,
-  Searchbar,
-  Card,
-  Avatar,
-  Subheading,
 } from "react-native-paper";
 import { Platform, StatusBar } from "react-native";
 
-import { setUser } from "../actions";
 const ForgotPassword = (props) => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();

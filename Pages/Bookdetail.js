@@ -6,8 +6,9 @@ import {
   Image,
   StyleSheet,
   Pressable,
+  Alert
 } from "react-native";
-
+import { useDispatch, useSelector } from "react-redux";
 import { Button, Title, Text } from "react-native-paper";
 import MapView, { Marker } from "react-native-maps";
 
@@ -20,9 +21,114 @@ const BookDetail = (props) => {
   );
 };
 
+const type ={ 
+  "LENT":'Lent',
+  "SOLD":'Sold',
+  "BORROWED":'Borrowed',
+  "BOUGHT":'Bought'
+}
+
+
+
 const Bookdetail = (props) => {
-  console.log(props);
+  
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  
+const removebook = () => {
+  if(props.route.params.title==="BORROWED" || props.route.params.title==="BOUGHT"){
+    fetch(`https://booksapp2021.herokuapp.com/Book/${type[props.route.params.title]}/Remove`, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "x-access-token": user.token,
+      },
+      body: JSON.stringify({
+        book_id: book.book_id,
+      }),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.status) {
+          Alert.alert("Success", data.message, [
+            {
+              text: "Ok",
+              onPress: () =>
+                props.navigation.navigate("Mainpage", {
+                  screen: "Home",
+                  params: { refreshing: true },
+                }),
+            },
+          ]);
+        } else {
+          if (data.message === "Could not verify") {
+            dispatch(logoutUser());
+          } else {
+            Alert.alert("Note", data.message, [
+              {
+                text: "Ok",
+              },
+            ]);
+          }
+        }
+      });
+  }
+  else{
+    fetch(`https://booksapp2021.herokuapp.com/Book/${type[props.route.params.title]}/Remove`, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "x-access-token": user.token,
+      },
+      body: JSON.stringify({
+        book_id: book.book_id,
+      }),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.status) {
+          console.log(data);
+          Alert.alert("Success", data.message, [
+            {
+              text: "Ok",
+              onPress: () =>
+                props.navigation.navigate("Mainpage", {
+                  screen: "Home",
+                  params: { refreshing: true },
+                }),
+            },
+          ]);
+        } else {
+          console.log(data);
+          if (data.message === "Could not verify") {
+            dispatch(logoutUser());
+          } else {
+            Alert.alert("Note", data.message, [
+              {
+                text: "Ok",
+              },
+            ]);
+          }
+        }
+      });
+  }
+  
+}
+
   const [book, setBook] = useState(props.route.params.book);
+  var status;
+  if(book.book_transaction_status===undefined){
+    status = book.book_status
+  }
+  else{
+    status = book.book_transaction_status
+  }
   const [mapRegion, setmapRegion] = useState({
     latitude: book.store.store_latitude,
     longitude: book.store.store_longitude,
@@ -52,7 +158,7 @@ const Bookdetail = (props) => {
               <BookDetail title={"Condition"} value={book.book_condition} />
               <BookDetail
                 title={"Status"}
-                value={book.book_transaction_status}
+                value={status}
               />
             </View>
           </View>
@@ -74,12 +180,16 @@ const Bookdetail = (props) => {
                 }}
               />
             </View>
-            {props.route.params.title === "DROPOFF" && (
-              <Button style={styles.button} color="#ffffff">
+            {props.route.params.title === "LENT" || props.route.params.title === "SOLD" && (
+              <Button style={styles.button} color="#ffffff" onPress={() =>
+                props.navigation.navigate("Edituploadedbook", {
+                  book: book,
+                })
+              }>
                 EDIT
               </Button>
             )}
-            <Button style={styles.button} color="#ffffff">
+            <Button style={styles.button} color="#ffffff" onPress={removebook}>
               REMOVE
             </Button>
           </View>
@@ -91,7 +201,7 @@ const Bookdetail = (props) => {
             <Text style={[styles.shopDetails, styles.shopDistance]}>
               12 kms
             </Text>
-            <Text style={styles.shopDetails}>Nirma Store</Text>
+            <Text style={styles.shopDetails}>{book.store.store_name}</Text>
           </View>
         </View>
 
@@ -132,11 +242,7 @@ const Bookdetail = (props) => {
 export default Bookdetail;
 
 const styles = StyleSheet.create({
-  main: {
-    backgroundColor: "#ECEFEE",
-
-    // paddingHorizontal: 20,
-  },
+  
   title: {
     marginTop: 20,
     marginLeft: 20,

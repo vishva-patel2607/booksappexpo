@@ -7,7 +7,7 @@ import StaticText from "../Components/StaticText";
 import { Text } from "react-native-paper";
 
 const Horizontalscrollview = (props) => {
-  console.log(props);
+
   return (
     <ScrollView style={styles.cardscroll} horizontal={true}>
       {props.booklist.map((book, idx) => (
