@@ -422,7 +422,7 @@ const UploadRoute = (props) => {
               {props.route.params?.photo && imgurl ? (
                 <Pressable
                   style={{ width: "100%", height: "100%" }}
-                  onPress={() => props.navigation.navigate("Camerascreen",{redirectTo:"Upload"})}
+                  onPress={() => props.navigation.navigate("Camerascreen")}
                 >
                   <Image
                     style={{

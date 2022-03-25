@@ -16,9 +16,10 @@ const Bookscreen = (props) => {
   const [book, setBook] = useState(props.route.params.book);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+
   const addtopickup = () => {
-    fetch("https://booksapp2021.herokuapp.com/Book/Pickedupbooks/Add", {
-      method: "POST",
+    fetch("https://booksapp2021.herokuapp.com/Book/Borrowed/Add", {
+      method: "PUT",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -176,7 +177,7 @@ const Bookscreen = (props) => {
               latitudeDelta: book.latitudeDelta,
               longitudeDelta: book.longitudeDelta,
             }}
-            title={"Nirma Store"}
+            title={book.store_name}
           />
         </MapView>
       </View>

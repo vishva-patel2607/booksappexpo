@@ -7,7 +7,7 @@ import {
   Alert,
   Pressable,
   Image,
-  
+  StatusBar,
 } from "react-native";
 import StaticText from "../Components/StaticText";
 import Findashop from "../Components/Findashop";
@@ -19,18 +19,16 @@ import { logoutUser } from "../actions";
 import { Button, Text, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 
-
 const Edituploadedbook = (props) => {
-  
   const [Bookdata, setBookdata] = useState(props.route.params?.book);
-  const [price, setPrice] = useState("");
+  const [price, setPrice] = useState(String(Bookdata.book_price));
   const [imgurl, setImgurl] = useState(null);
-  const [name, setName] = useState("");
+  const [name, setName] = useState(Bookdata.book_name);
   let [isbn, setIsbn] = useState("");
-  const [author, setAuthor] = useState("");
-  const [year, setYear] = useState("");
-  const [condition, setCondition] = useState(null);
-  const [shop, setShop] = useState(null);
+  const [author, setAuthor] = useState(Bookdata.book_author);
+  const [year, setYear] = useState(String(Bookdata.book_year));
+  const [condition, setCondition] = useState(Bookdata.book_condition);
+  // 
   const [category, setCategory] = useState("");
   const [bookCondition, setbookCondition] = useState("");
   const [NewCondition, setNewCondition] = useState(
@@ -61,119 +59,128 @@ const Edituploadedbook = (props) => {
         console.log("New image upload");
       }
     }
-  }, [props.route.params?.photo]);
+  }, [props.route.params.params?.photo]);
 
-
-
-  const [NewImg, setNewImg] = useState(props.route.params?.book.book_img);
-  // console.log(props.route.params?.book.book_img);
-
+  const [NewImg, setNewImg] = useState(props?.route?.params?.book?.book_img);
+  // console.log(props?.route?.params?.book?.book_img);
 
   let selected;
-  if (shop != null) {
-    selected = (
-      <>
-        <View style={{ justifyContent: "center", marginRight: 16 }}>
-          <View style={styles.shop}>
-            <View style={styles.shopDetailsContainer}>
-              <Text style={[styles.shopDetails, styles.shopDistance]}>
-                {shop.store_distance}
-              </Text>
-              <Text style={styles.shopDetails}>{shop.store_name}</Text>
-            </View>
-          </View>
+  // if (shop != null) {
+  //   selected = (
+  //     <>
+  //       <View style={{ justifyContent: "center", marginRight: 16 }}>
+  //         <View style={styles.shop}>
+  //           <View style={styles.shopDetailsContainer}>
+  //             <Text style={[styles.shopDetails, styles.shopDistance]}>
+  //               {shop.store_distance}
+  //             </Text>
+  //             <Text style={styles.shopDetails}>{shop.store_name}</Text>
+  //           </View>
+  //         </View>
 
-          <View>
-            <Text style={styles.storeDetails}>{shop.store_incharge} </Text>
-            <Text style={styles.storeDetails}>{shop.store_address} </Text>
-            <Text style={styles.storeDetails}>{shop.store_number}</Text>
-          </View>
-        </View>
-        <View style={{ alignSelf: "center", marginTop: 10 }}>
-          <Pressable
-            onPress={() =>
-              props.navigation.navigate("Storemodal", {
-                params: { shop: shop },
-              })
-            }
-          >
-            <Changeshop />
-          </Pressable>
-        </View>
-      </>
-    );
-  } else{
-    selected = (
-      <View style={{ marginTop: 20, alignSelf: "center" }}>
-        <Pressable onPress={() => props.navigation.navigate("Storemodal")}>
-          <Findashop />
-        </Pressable>
-      </View>
-    );
-  }
+  //         <View>
+  //           <Text style={styles.storeDetails}>{shop.store_incharge} </Text>
+  //           <Text style={styles.storeDetails}>{shop.store_address} </Text>
+  //           <Text style={styles.storeDetails}>{shop.store_number}</Text>
+  //         </View>
+  //       </View>
+  //       <View style={{ alignSelf: "center", marginTop: 10 }}>
+  //         <Pressable
+  //           onPress={() =>
+  //             props.navigation.navigate("Storemodal", {
+  //               params: { shop: shop },
+  //             })
+  //           }
+  //         >
+  //           <Changeshop />
+  //         </Pressable>
+  //       </View>
+  //     </>
+  //   );
+  // } else {
+  //   selected = (
+  //     <View style={{ marginTop: 20, alignSelf: "center" }}>
+  //       <Pressable onPress={() => props.navigation.navigate("Storemodal",{params:'Edit'})}>
+  //         <Findashop />
+  //       </Pressable>
+  //     </View>
+  //   );
+  // }
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
-  useEffect(() => {
-    setBookdata(props.route.params?.book);
-    
-  }, [props.route.params?.book]);
+  // useEffect(() => {
+  //   setBookdata(props.route.params?.book);
+  // }, [props.route.params?.book]);
 
+  // useEffect(() => {
+  //   console.log(
+  //     props.route?.params?.params?.photo.uri ||
+  //       props?.route?.params?.book?.book_img
+  //   );
+  //   setNewImg(
+  //     props.route?.params?.params?.photo.uri ||
+  //       props?.route?.params?.book?.book_img
+  //   );
+  // }, [
+  //   props.route?.params?.params?.photo.uri,
+  //   props?.route?.params?.book?.book_img,
+  // ]);
 
-  const imageUpload = async (imagedata) => {
-    console.log(NewImg);
-    let formData = new FormData();
-    formData.append("old_book_img_url", NewImg);
-    formData.append("book_img", imagedata);
+  // const imageUpload = async (imagedata) => {
+  //   console.log(NewImg);
+  //   let formData = new FormData();
+  //   formData.append("old_book_img_url", NewImg);
+  //   formData.append("book_img", imagedata);
 
-    try {
-      const fetchRes = await fetch(
-        "https://booksapp2021.herokuapp.com/Book/Upload/Image",
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "multipart/form-data",
-            "x-access-token": user.token,
-          },
-          body: formData,
-        }
-      );
-      const res = await fetchRes.json();
-      console.log("response of API", res);
-      if (res.status === true) {
-        alert("Image changed successfully");
-        setNewImg(res.response.book);
-      } else {
-        alert("Error ocuured while changing the image");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //   try {
+  //     const fetchRes = await fetch(
+  //       "https://booksapp2021.herokuapp.com/Book/Upload/Image",
+  //       {
+  //         method: "PUT",
+  //         headers: {
+  //           Accept: "application/json",
+  //           "Content-Type": "multipart/form-data",
+  //           "x-access-token": user.token,
+  //         },
+  //         body: formData,
+  //       }
+  //     );
+  //     const res = await fetchRes.json();
+  //     console.log("response of API", res);
+  //     if (res.status === true) {
+  //       alert("Image changed successfully");
+  //       setNewImg(res.response.book);
+  //     } else {
+  //       alert("Error ocuured while changing the image");
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const editbooks = async () => {
     console.log("edit books function call");
 
-    if (
-      props.route.params.params.photo !== null &&
-      props.route.params.params.photo !== undefined
-    ) {
-      console.log(
-        "props.route.params.params.photo",
-        props.route.params.params.photo
-      );
-      var photouri = props.route.params.params.photo.uri;
+    // if (
+    //   props.route.params?.params.photo !== null &&
+    //   props.route.params?.params.photo !== undefined
+    // ) {
+    //   console.log(
+    //     "props.route.params.params.photo",
+    //     props?.route.params.params.photo
+    //   );
+    //   var photouri = props.route.params.params.photo.uri;
 
-      var imagedata = {
-        uri: photouri,
-        type: "image/jpeg",
-        name: "photo.jpg",
-      };
-      await imageUpload(imagedata);
+    //   var imagedata = {
+    //     uri: photouri,
+    //     type: "image/jpeg",
+    //     name: "photo.jpg",
+    //   };
+    //   await imageUpload(imagedata);
 
-      fetch("https://booksapp2021.herokuapp.com/Book/Uploadedbooks/Edit", {
+      fetch("https://booksapp2021.herokuapp.com/Book/Lent/Edit", {
         method: "PUT",
         headers: {
           Accept: "application/json",
@@ -182,17 +189,19 @@ const Edituploadedbook = (props) => {
         },
         body: JSON.stringify({
           book_id: Bookdata.book_id,
-          book_name: Newname,
-          book_author: Newauthor,
-          book_price: Newprice,
-          book_year: Newyear,
-          book_condition: NewCondition,
+          book_name: name,
+          book_author: author,
+          book_price: price,
+          book_year: year,
+          book_condition: condition,
+          book_transaction_type:'lend'
         }),
       })
         .then((response) => {
           return response.json();
         })
         .then((data) => {
+          
           if (data.status) {
             Alert.alert("Success", "Book Details Updated", [
               {
@@ -208,16 +217,25 @@ const Edituploadedbook = (props) => {
             if (data.message === "Could not verify") {
               dispatch(logoutUser());
             }
+            else{
+              console.log(data);
+            }
+            
           }
         })
         .catch((error) => {
           console.log(error);
         });
-    }
   };
+
+  // console.log(props.route.params?.params.photo);
+  // if(props.route){
+  //   console.log(props.route?.params?.params?.photo.uri);
+
+  // }
   return (
-   <SafeAreaView style={{flex:1, flexDirection: "column"}}>
-     <View style={{ justifyContent: "flex-start", flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, flexDirection: "column" }}>
+      <View style={{ justifyContent: "flex-start", flex: 1 }}>
         <Pressable onPress={() => props.navigation.navigate("Bookdetail")}>
           <Image
             source={require("../assets/Backbutton.png")}
@@ -227,7 +245,7 @@ const Edituploadedbook = (props) => {
       </View>
       <View style={{ flex: 6, flexDirection: "row", marginLeft: 10 }}>
         <View style={styles.inputfields}>
-          <View style={styles.isbn}>
+          {/* <View style={styles.isbn}>
             <TextInput
               style={[styles.inputtextbox, styles.isbninput]}
               placeholder="ISBN"
@@ -245,24 +263,24 @@ const Edituploadedbook = (props) => {
                 <QrcodeLogo />
               </View>
             </Pressable>
-          </View>
+          </View> */}
           <TextInput
             style={styles.inputtextbox}
-            placeholder="Name of the book"
-            value={Bookdata.book_name}
+            placeholder={Bookdata.book_name}
+            value={name}
             onChangeText={(text) => setName(text)}
           />
           <TextInput
             style={styles.inputtextbox}
-            placeholder="Author"
-            value={Bookdata.book_author}
+            placeholder={Bookdata.book_author}
+            value={author}
             onChangeText={(text) => setAuthor(text)}
           />
           <View style={styles.container}>
             <TextInput
               style={[styles.inputtextbox, styles.subcontainer]}
               placeholder="Year"
-              value={String(Bookdata.book_year)}
+              value={String(year)}
               onChangeText={(text) => setYear(text.replace(/[^0-9]/g, ""))}
               keyboardType="number-pad"
               maxLength={4}
@@ -270,7 +288,7 @@ const Edituploadedbook = (props) => {
             <TextInput
               style={[styles.inputtextbox, styles.subcontainer]}
               placeholder="Price"
-              value={String(Bookdata.book_price)}
+              value={String(price)}
               onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ""))}
               keyboardType="number-pad"
               maxLength={4}
@@ -302,206 +320,199 @@ const Edituploadedbook = (props) => {
         <View
           style={{ flexDirection: "column", flex: 1, justifyContent: "center" }}
         >
-          <View style={styles.uploadimage}>
-            {props.route.params?.photo && imgurl ? (
-              <Pressable
-                style={{ width: "100%", height: "100%" }}
-                onPress={() => props.navigation.navigate("Camerascreen",{redirectTo:"Edituploadedbook"})}
-              >
-                <Image
-                  style={{
-                    flex: 1,
-                    height: "100%",
-                    width: "100%",
-                    resizeMode: "cover",
-                    width: "100%",
-                    borderRadius: 20,
-                  }}
-                  source={{ uri: Bookdata.book_img}}
-                />
-                <Button style={{backgroundColor:'#E96A59',marginTop:-10,borderRadius:20,fontFamily:'DMSans'}}  labelStyle={{color:'white',fontSize:14}}>Edit Photo</Button>
-              </Pressable>
-            ) : (
-              <Pressable
+          {/* <View style={styles.uploadimage}>
+            <Pressable
+              style={{ width: "100%", height: "100%" }}
+              onPress={() =>
+                props.navigation.navigate("Camerascreen", {
+                  redirectTo: "Edituploadedbook",
+                })
+              }
+            >
+              <Image
                 style={{
-                  width: "100%",
+                  flex: 1,
                   height: "100%",
-                  justifyContent: "center",
+                  width: "100%",
+                  resizeMode: "cover",
+                  width: "100%",
+                  borderRadius: 20,
                 }}
-                onPress={() => props.navigation.navigate("Camerascreen")}
+                source={{
+                  uri: NewImg,
+                }}
+              />
+              <Button
+                style={{
+                  backgroundColor: "#E96A59",
+                  marginTop: -10,
+                  borderRadius: 20,
+                  fontFamily: "DMSans",
+                }}
+                labelStyle={{ color: "white", fontSize: 14 }}
               >
-                <Image
-                  style={{
-                    alignSelf: "center",
+                Edit Photo
+              </Button>
+            </Pressable>
 
-                    height: "50%",
-                    width: "50%",
-                    resizeMode: "contain",
-
-                    borderRadius: 20,
-                  }}
-                  source={require("../assets/Union.png")}
-                />
-              </Pressable>
-            )}
-          </View>
+          </View> */}
         </View>
       </View>
       <View
-          style={{
-            flex: 6,
-            flexDirection: "column",
-            marginLeft: 20,
-            justifyContent: "space-around",
-          }}
-        >
-          <View style={{ marginTop: 30 }}>
-            <StaticText text="Condition of the book" fontS={16} />
+        style={{
+          flex: 6,
+          flexDirection: "column",
+          marginLeft: 20,
+          justifyContent: "space-around",
+        }}
+      >
+        <View style={{ marginTop: 30 }}>
+          <StaticText text="Condition of the book" fontS={16} />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginTop: 12,
+              marginRight: 16,
+            }}
+          >
             <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginTop: 12,
-                marginRight: 16,
-              }}
+              style={[
+                styles.checkboxContainer,
+                {
+                  backgroundColor:
+                    bookCondition === "Bad" ? "#0036F4" : "transparent",
+                },
+              ]}
             >
-              <View
+              <Text
                 style={[
-                  styles.checkboxContainer,
+                  styles.checkboxText,
                   {
-                    backgroundColor:
-                      bookCondition === "Bad" ? "#0036F4" : "transparent",
+                    color: bookCondition === "Bad" ? "#ffffff" : "#000000",
                   },
                 ]}
+                onPress={() => {
+                  setbookCondition("Bad");
+                }}
               >
-                <Text
-                  style={[
-                    styles.checkboxText,
-                    {
-                      color: bookCondition === "Bad" ? "#ffffff" : "#000000",
-                    },
-                  ]}
-                  onPress={() => {
-                    setbookCondition("Bad");
-                  }}
-                >
-                  Bad
-                </Text>
-              </View>
+                Bad
+              </Text>
+            </View>
 
-              <View
+            <View
+              style={[
+                styles.checkboxContainer,
+                {
+                  backgroundColor:
+                    bookCondition === "Fair" ? "#0036F4" : "transparent",
+                },
+              ]}
+            >
+              <Text
                 style={[
-                  styles.checkboxContainer,
+                  styles.checkboxText,
                   {
-                    backgroundColor:
-                      bookCondition === "Fair" ? "#0036F4" : "transparent",
+                    color: bookCondition === "Fair" ? "#ffffff" : "#000000",
                   },
                 ]}
+                onPress={() => {
+                  setbookCondition("Fair");
+                }}
               >
-                <Text
-                  style={[
-                    styles.checkboxText,
-                    {
-                      color: bookCondition === "Fair" ? "#ffffff" : "#000000",
-                    },
-                  ]}
-                  onPress={() => {
-                    setbookCondition("Fair");
-                  }}
-                >
-                  Fair
-                </Text>
-              </View>
-              <View
+                Fair
+              </Text>
+            </View>
+            <View
+              style={[
+                styles.checkboxContainer,
+                {
+                  backgroundColor:
+                    bookCondition === "Good" ? "#0036F4" : "transparent",
+                },
+              ]}
+            >
+              <Text
                 style={[
-                  styles.checkboxContainer,
+                  styles.checkboxText,
                   {
-                    backgroundColor:
-                      bookCondition === "Good" ? "#0036F4" : "transparent",
+                    color: bookCondition === "Good" ? "#ffffff" : "#000000",
                   },
                 ]}
+                onPress={() => {
+                  setbookCondition("Good");
+                }}
               >
-                <Text
-                  style={[
-                    styles.checkboxText,
-                    {
-                      color: bookCondition === "Good" ? "#ffffff" : "#000000",
-                    },
-                  ]}
-                  onPress={() => {
-                    setbookCondition("Good");
-                  }}
-                >
-                  Good
-                </Text>
-              </View>
+                Good
+              </Text>
+            </View>
 
-              <View
+            <View
+              style={[
+                styles.checkboxContainer,
+                {
+                  backgroundColor:
+                    bookCondition === "Great" ? "#0036F4" : "transparent",
+                },
+              ]}
+            >
+              <Text
                 style={[
-                  styles.checkboxContainer,
+                  styles.checkboxText,
                   {
-                    backgroundColor:
-                      bookCondition === "Great" ? "#0036F4" : "transparent",
+                    color: bookCondition === "Great" ? "#ffffff" : "#000000",
                   },
                 ]}
+                onPress={() => {
+                  setbookCondition("Great");
+                }}
               >
-                <Text
-                  style={[
-                    styles.checkboxText,
-                    {
-                      color: bookCondition === "Great" ? "#ffffff" : "#000000",
-                    },
-                  ]}
-                  onPress={() => {
-                    setbookCondition("Great");
-                  }}
-                >
-                  Great
-                </Text>
-              </View>
+                Great
+              </Text>
             </View>
           </View>
-
-          {selected}
         </View>
 
-        <View
+        {selected}
+      </View>
+
+      <View
+        style={{
+          marginLeft: 20,
+
+          justifyContent: "flex-end",
+          alignItems: "center",
+          flex: 2,
+        }}
+      >
+        {/* <Text style={{ fontFamily: "DMSans" }}>
+          You'll get {!price ? 0 : userBookPrice}
+        </Text> */}
+        <Button
+          theme={{ roundness: 120 }}
           style={{
-            marginLeft: 20,
-
+            width: 215,
+            height: 40,
+            margin: 10,
+            alignSelf: "center",
             justifyContent: "flex-end",
-            alignItems: "center",
-            flex: 2,
           }}
+          labelStyle={{
+            fontSize: 14,
+            color: "white",
+            flexDirection: "row",
+            fontFamily: "DMSansbold",
+          }}
+          mode="contained"
+          onPress={editbooks}
         >
-          <Text style={{fontFamily:'DMSans'}}>You'll get {!price ? 0 : userBookPrice}</Text>
-          <Button
-            theme={{ roundness: 120 }}
-            style={{
-              width: 215,
-              height: 40,
-              margin: 10,
-              alignSelf: "center",
-              justifyContent: "flex-end",
-            }}
-            labelStyle={{
-              fontSize: 14,
-              color: "white",
-              flexDirection: "row",
-              fontFamily: "DMSansbold",
-            }}
-            
-            mode="contained"
-          >
-            Upload
-          </Button>
-        </View>
-
-   </SafeAreaView>
+          Save
+        </Button>
+      </View>
+    </SafeAreaView>
   );
 };
-
 
 const QrcodeLogo = ({ setShowQR, showQR }) => {
   return (
@@ -545,7 +556,6 @@ const QrcodeLogo = ({ setShowQR, showQR }) => {
     </Svg>
   );
 };
-
 
 const styles = StyleSheet.create({
   main: {
@@ -679,4 +689,3 @@ const customPickerStyles = StyleSheet.create({
   },
 });
 export default React.memo(Edituploadedbook);
-

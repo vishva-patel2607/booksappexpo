@@ -102,7 +102,6 @@ const SearchRoute = (props) => {
         .then((data) => {
           if (data.status) {
             if (data.message === "All the Books for given query") {
-              console.log(data.message)
               setReceiveddata(data.response.book_list);
               setMessage(data.message);
             } else {
@@ -397,7 +396,6 @@ const styles = StyleSheet.create({
   search: {
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     flex: 1,
-    backgroundColor:'#ECEFEE',
   },
   touchableopacitystyle:{
     alignItems: "center",

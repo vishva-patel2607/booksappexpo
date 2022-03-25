@@ -24,6 +24,7 @@ const Horizontalscrollview = (props) => {
             style={{
               flexDirection: "column",
               marginRight: 12,
+              marginTop:6,
               // alignContent: "center",
               // justifyContent: "center",
             }}
@@ -31,9 +32,9 @@ const Horizontalscrollview = (props) => {
             <View>
               <Image
                 style={{
-                  resizeMode: "contain",
+                  resizeMode: "cover",
                   // maxWidth: 150,
-                  height: 150,
+                  height: 130,
                   width: 100,
 
                   // maxHeight: 200,
@@ -44,7 +45,7 @@ const Horizontalscrollview = (props) => {
                 source={{ uri: book.book_img }}
               />
             </View>
-            <View style={{ paddingHorizontal: 10 }}>
+            <View style={{ paddingHorizontal: 10,alignSelf:'center' }}>
               <StaticText text={book.book_name} />
               <StaticText text={book.book_price} />
             </View>

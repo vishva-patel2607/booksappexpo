@@ -172,7 +172,7 @@ const removebook = () => {
               <Image
                 style={{
                   height: 200,
-                  resizeMode: "contain",
+                  resizeMode: "cover",
                   borderRadius: 20,
                 }}
                 source={{
@@ -180,7 +180,7 @@ const removebook = () => {
                 }}
               />
             </View>
-            {props.route.params.title === "LENT" || props.route.params.title === "SOLD" && (
+            {(props.route.params.title === "LENT" || props.route.params.title === "SOLD") && (
               <Button style={styles.button} color="#ffffff" onPress={() =>
                 props.navigation.navigate("Edituploadedbook", {
                   book: book,
