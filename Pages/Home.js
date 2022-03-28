@@ -60,7 +60,7 @@ const HomeRoute = (props) => {
         navigation={props.navigation}
       />
     ) : (
-      <Newbooks text="Some dummy text" />
+      <Newbooks text="Have a bunch of books? You can earn money by lending them to others who can read!" />
     );
 
   let borrowed =
@@ -84,7 +84,7 @@ const HomeRoute = (props) => {
         navigation={props.navigation}
       />
     ) : (
-      <Newbooks text="Some dummy text" />
+      <Newbooks text="You haven't yet uploaded or read anything? Then must do it and add them to your dropoffs!" />
     );
 
   let pickup =
@@ -96,7 +96,7 @@ const HomeRoute = (props) => {
         navigation={props.navigation}
       />
     ) : (
-      <Newbooks text="Some dummy text" />
+      <Newbooks text="Select your choice of books to read and include them in pickups!" />
     );
 
   let sold =
@@ -108,7 +108,7 @@ const HomeRoute = (props) => {
         navigation={props.navigation}
       />
     ) : (
-      <Newbooks text="Some dummy text" />
+      <Newbooks text="Make some money by selling your books!" />
     );
 
   // let pt =
@@ -131,7 +131,7 @@ const HomeRoute = (props) => {
         navigation={props.navigation}
       />
     ) : (
-      <Newbooks text="Some dummy text" />
+      <Newbooks text="Have your own collection in bookshelf!" />
     );
 
   useEffect(() => {
@@ -486,7 +486,7 @@ const HomeRoute = (props) => {
 const styles = StyleSheet.create({
   AndroidSafeArea: {
     flex: 1,
-   
+    
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   submitbutton: {
@@ -503,36 +503,6 @@ const styles = StyleSheet.create({
   },
   cardview: {
     flex: 1,
-  },
-  cardscroll: {
-    flex: 1,
-    height: "100%",
-    margin: 10,
-  },
-  cardcontainer: {
-    backgroundColor: "#FFFFFF",
-    flex: 0.5,
-    flexDirection: "row",
-    justifyContent: "center",
-    marginBottom: 10,
-    marginTop: 20,
-    borderRadius: 5,
-  },
-  cardcontent: {
-    flex: 4,
-    height: 100,
-    padding: 5,
-    justifyContent: "center",
-    alignItems: "center",
-    margin: 10,
-  },
-  cardimage: {
-    flex: 1,
-    height: 100,
-    justifyContent: "center",
-    alignItems: "center",
-    margin: 10,
-    marginRight: 5,
   },
 });
 

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {useTheme} from '@react-navigation/native';
 import {
   SafeAreaView,
   View,
@@ -8,19 +9,21 @@ import {
   Image,
   Pressable,
 } from "react-native";
-
+import { ThemeContext } from "../main pages/Navigation";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button, TextInput } from "react-native-paper";
 import { logoutUser } from "../actions";
 
 const Changepassword = (props) => {
+  const {colors} = useTheme();
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const [oldpassword, setOldpassword] = useState("");
   const [newpassword1, setNewpassword1] = useState("");
   const [newpassword2, setNewpassword2] = useState("");
+  const { setTheme, Theme } = React.useContext(ThemeContext);
   const [error, setError] = useState("");
 
   const changepassword = () => {
@@ -87,10 +90,17 @@ const Changepassword = (props) => {
     <SafeAreaView style={styles.layout}>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
         <Pressable onPress={() => props.navigation.navigate("User")}>
-          <Image
-            source={require("../assets/Backbutton.png")}
-            style={{ marginLeft: 19, marginTop: 18 }}
-          />
+        {Theme === "Light" ? (
+            <Image
+              source={require("../assets/Backbutton.png")}
+              style={{ marginLeft: 20, marginTop: 18 }}
+            />
+          ) : (
+            <Image
+              source={require("../assets/Backbuttondark.png")}
+              style={{ marginLeft: 20, marginTop: 18 }}
+            />
+          )}
         </Pressable>
       </View>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
@@ -98,7 +108,7 @@ const Changepassword = (props) => {
           style={{
             fontSize: 25,
             fontWeight: "700",
-            color: "#0D1936",
+            color: colors.text,
             marginLeft: 22,
           }}
           theme={{ fonts: { regular: "DM Sans" } }}
@@ -132,7 +142,7 @@ const Changepassword = (props) => {
           style={styles.inputtextbox}
           theme={{
             colors: {
-              primary: "#EEECEF",
+              primary: "#ECEFEE",
               placeholder: "#8e8e8e",
             },
             roundness: 120,
@@ -218,7 +228,7 @@ const styles = StyleSheet.create({
 
   layout: {
     flex: 1,
-    
+   
   },
 });
 

@@ -5,19 +5,15 @@ import {
   StyleSheet,
   Pressable
 } from "react-native";
+import { useTheme } from "@react-navigation/native";
 import { Platform, StatusBar ,Text} from "react-native";
-import {
-  Title,
-  Paragraph,
-  IconButton,
-  Button
-} from "react-native-paper";
 // import DateTimePicker from "@react-native-community/datetimepicker";
 
  import MapView, { Marker } from "react-native-maps";
 
 
 const Storemodalcard = (props) => {
+  const {colors} = useTheme();
   const [showMap, setShowMap] = useState(false);
   const [storeInchargeName, setStoreInchargeName] = useState(
     props.storeInchargeName
@@ -91,7 +87,8 @@ const Storemodalcard = (props) => {
           borderColor: "#0036F4",
           borderRadius: 20,
           textAlign: "center",
-          fontFamily: 'DMSans'
+          fontFamily: 'DMSans',
+          color:colors.text
         }}>
           {distance} kms
         </Text>
@@ -105,7 +102,8 @@ const Storemodalcard = (props) => {
           borderColor: "#0036F4",
           borderRadius: 20,
           textAlign: "center",
-          fontFamily: 'DMSans'
+          fontFamily: 'DMSans',
+          color:colors.text
         }}>
           {shopName}
         </Text>
@@ -114,13 +112,13 @@ const Storemodalcard = (props) => {
     </View>
     <View style={{flexDirection:'row',marginTop:9,justifyContent:'space-between'}}>
       <View style={{flexDirection:'column',alignSelf:'flex-end'}}>
-        <Text style={{fontFamily:'DMSans'}}>{storeInchargeName}</Text>
-        <Text style={{fontFamily:'DMSans'}}>{address}</Text>
-        <Text style={{fontFamily:'DMSans'}}>{contactNo}</Text>
+        <Text style={{fontFamily:'DMSans',color:colors.text}}>{storeInchargeName}</Text>
+        <Text style={{fontFamily:'DMSans',color:colors.text}}>{address}</Text>
+        <Text style={{fontFamily:'DMSans',color:colors.text}}>{contactNo}</Text>
       </View>
       <View style={{alignSelf:'flex-end',justifyContent:'flex-end'}}>
         <Pressable onPress={() => setShowMap(!showMap)}>
-        <Text style={{color:'#0036F4'}}>
+        <Text style={{color:colors.mapcolor}}>
           {text}
           </Text>
           </Pressable>

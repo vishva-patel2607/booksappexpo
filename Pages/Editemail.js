@@ -8,7 +8,7 @@ import {
   Pressable,
   Image
 } from "react-native";
-
+import { ThemeContext } from "../main pages/Navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../actions";
 
@@ -23,6 +23,7 @@ const EditEmail = (props) => {
   const [newemail, setNewemail] = useState("");
   const [error, setError] = useState("");
   const dispatch = useDispatch();
+  const { setTheme, Theme } = React.useContext(ThemeContext);
 
   const editemail = () => {
     if (newphoneno.length === 0 || !/^\d+$/.test(newphoneno)) {
@@ -67,10 +68,17 @@ const EditEmail = (props) => {
     <SafeAreaView style={styles.layout}>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
         <Pressable onPress={() => props.navigation.navigate("User")}>
-          <Image
-            source={require("../assets/Backbutton.png")}
-            style={{ marginLeft: 19, marginTop: 18 }}
-          />
+        {Theme === "Light" ? (
+            <Image
+              source={require("../assets/Backbutton.png")}
+              style={{ marginLeft: 20, marginTop: 18 }}
+            />
+          ) : (
+            <Image
+              source={require("../assets/Backbuttondark.png")}
+              style={{ marginLeft: 20, marginTop: 18 }}
+            />
+          )}
         </Pressable>
       </View>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>

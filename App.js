@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
+import { DefaultTheme as Theme } from "@react-navigation/native";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose } from "redux";
 import * as Font from "expo-font";
@@ -45,7 +46,7 @@ export default function App() {
   }
   return (
     <Provider store={store}>
-      <PaperProvider theme={theme}>
+      <PaperProvider>
         <Navigation />
       </PaperProvider>
     </Provider>
@@ -55,15 +56,6 @@ export default function App() {
 //  <Loggedin token={"hello"} theme={{theme}} />
 const theme = {
   ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: "#E96A59",
-    accent: "#EF90A9",
-    background: "#FFFFFF",
-    surface: "#EDEDF0",
-    disabled: "#808080",
-    backdrop: "#7CABF0",
-    onSurface: "#EDEDF0",
-    notification: "#EF90A9",
-  },
 };
+
+

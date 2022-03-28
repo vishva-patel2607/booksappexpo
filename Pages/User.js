@@ -1,49 +1,86 @@
-import { ActivityIndicator, Colors } from "react-native-paper";
+import { ActivityIndicator } from "react-native-paper";
 import { Switch, Button } from "react-native-paper";
 
-import React, { Component, useState, useCallback, useEffect } from "react";
+import { ThemeContext } from "../main pages/Navigation";
+import React, { useState, useEffect } from "react";
 import ActionButton from "../Components/Actionbutton";
 import StaticText from "../Components/StaticText";
 import {
   SafeAreaView,
   View,
   StyleSheet,
-  Linking,
   StatusBar,
   Image,
   Pressable,
 } from "react-native";
-import BAheader from "../Components/BAheader";
 import StaticBooksApp from "../Components/StaticBooksApp";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  Title,
-  Paragraph,
-  TextInput,
-  Text,
-  Appbar,
-  BottomNavigation,
-  Searchbar,
-  RadioButton,
-  Subheading,
-  IconButton,
-} from "react-native-paper";
-import DateTimePicker from "@react-native-community/datetimepicker";
-
-import { logoutUser, setUser } from "../actions";
-import { color, set } from "react-native-reanimated";
+import { logoutUser } from "../actions";
 
 const UserRoute = (props) => {
+  
+  const { setTheme, Theme } = React.useContext(ThemeContext);
+  let userimage =
+    Theme === "Light" ? (
+      <Image source={require("../assets/user.png")} />
+    ) : (
+      <Image source={require("../assets/userdark.png")} />
+    );
+  let emailimage =
+    Theme === "Light" ? (
+      <Image source={require("../assets/email.png")} />
+    ) : (
+      <Image source={require("../assets/emaildark.png")} />
+    );
+  let phoneimage =
+    Theme === "Light" ? (
+      <Image source={require("../assets/Phone.png")} />
+    ) : (
+      <Image source={require("../assets/Phonedark.png")} />
+    );
+  let birthdayimage =
+    Theme === "Light" ? (
+      <Image source={require("../assets/Birthday.png")} />
+    ) : (
+      <Image source={require("../assets/birthdatedark.png")} />
+    );
+  let editimage =
+    Theme === "Light" ? (
+      <Image
+        source={require("../assets/Edit.png")}
+        style={{ marginRight: 25 }}
+      />
+    ) : (
+      <Image
+        source={require("../assets/Editdisabled.png")}
+        style={{ marginRight: 25 }}
+      />
+    );
+
+  let disablededitimage = Theme === 'Light' ? (
+    <Image
+        source={require("../assets/Editdisabled.png")}
+        style={{ marginRight: 25 }}
+      />
+  ):(
+    <Image
+        source={require("../assets/Edit.png")}
+        style={{ marginRight: 25 }}
+      />
+  )
   const dispatch = useDispatch();
   const [LoadingData, setLoadingData] = useState(false);
   const [userobj, setUserobj] = useState(props.user);
-  const [switchon, setSwitchon] = useState(false);
+  const [switchon, setSwitchon] = useState(Theme==='Light'?false:true);
   const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
   const user = useSelector((state) => state.user);
 
-  let dummyuri = { uri: "dummy" };
+  const switchchanged = () => {
+    setSwitchon(!switchon);
+    setTheme(Theme === "Light" ? "Dark" : "Light");
+  };
   useEffect(() => {
     console.log(user.token);
     setLoadingData(false);
@@ -79,7 +116,12 @@ const UserRoute = (props) => {
 
   if (LoadingData) {
     return (
-      <SafeAreaView style={styles.safeareaview}>
+      <SafeAreaView
+        style={[
+          styles.safeareaview,
+          { backgroundColor: Theme === "Light" ? "#ECEFEE" : "#0D1936" },
+        ]}
+      >
         <View style={{ flex: 2, justifyContent: "flex-start" }}>
           <StaticBooksApp />
         </View>
@@ -91,7 +133,7 @@ const UserRoute = (props) => {
                 justifyContent: "space-around",
               }}
             >
-              <Image source={require("../assets/user.png")} />
+              {userimage}
               <View style={{ flexDirection: "column", marginLeft: -20 }}>
                 <StaticText text={userobj.firstname + " " + userobj.lastname} />
                 {/* <Text>{userobj.firstname + " " + userobj.lastname}</Text> */}
@@ -100,10 +142,7 @@ const UserRoute = (props) => {
                 />
                 <Image source={require("../assets/Line.png")} />
               </View>
-              <Image
-                source={require("../assets/Editdisabled.png")}
-                style={{ marginRight: 25 }}
-              />
+              {disablededitimage}
             </View>
             <View
               style={{
@@ -112,7 +151,7 @@ const UserRoute = (props) => {
                 justifyContent: "space-around",
               }}
             >
-              <Image source={require("../assets/email.png")} />
+              {emailimage}
               <View style={{ flexDirection: "column", marginLeft: -20 }}>
                 <StaticText text={userobj.email} />
                 <View
@@ -120,11 +159,12 @@ const UserRoute = (props) => {
                 />
                 <Image source={require("../assets/Line.png")} />
               </View>
-              <Pressable onPress = {() => {props.navigation.navigate("EditEmail");}}>
-              <Image
-                source={require("../assets/Edit.png")}
-                style={{ marginRight: 25 }}
-              />
+              <Pressable
+                onPress={() => {
+                  props.navigation.navigate("EditEmail");
+                }}
+              >
+                {editimage}
               </Pressable>
             </View>
             <View
@@ -134,7 +174,7 @@ const UserRoute = (props) => {
                 justifyContent: "space-around",
               }}
             >
-              <Image source={require("../assets/Phone.png")} />
+              {phoneimage}
               <View style={{ flexDirection: "column", marginLeft: -20 }}>
                 <StaticText text={userobj.phonenumber} />
                 <View
@@ -145,11 +185,12 @@ const UserRoute = (props) => {
                   style={{ height: 5 }}
                 />
               </View>
-              <Pressable onPress = {() => {props.navigation.navigate("EditPhone");}}>
-              <Image
-                source={require("../assets/Edit.png")}
-                style={{ marginRight: 25 }}
-              />
+              <Pressable
+                onPress={() => {
+                  props.navigation.navigate("EditPhone");
+                }}
+              >
+                {editimage}
               </Pressable>
             </View>
             <View
@@ -159,7 +200,7 @@ const UserRoute = (props) => {
                 justifyContent: "space-around",
               }}
             >
-              <Image source={require("../assets/Birthday.png")} />
+              {birthdayimage}
               <View style={{ flexDirection: "column", marginLeft: -20 }}>
                 <StaticText
                   text={
@@ -178,10 +219,7 @@ const UserRoute = (props) => {
                   style={{ height: 5 }}
                 />
               </View>
-              <Image
-                source={require("../assets/Editdisabled.png")}
-                style={{ marginRight: 25 }}
-              />
+              {disablededitimage}
             </View>
           </View>
           <View
@@ -193,13 +231,13 @@ const UserRoute = (props) => {
               marginLeft: 15,
             }}
           >
-            <View style={{ justifyContent: "flex-start",marginTop:10 }}>
+            <View style={{ justifyContent: "flex-start", marginTop: 10 }}>
               <StaticText text="DarkMode" />
             </View>
             <Switch
               trackColor={{ true: "white", false: "blue" }}
               value={switchon}
-              onValueChange={setSwitchon}
+              onValueChange={switchchanged}
               style={{ marginRight: 25 }}
             />
           </View>

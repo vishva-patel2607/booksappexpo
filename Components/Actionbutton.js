@@ -2,7 +2,11 @@ import * as React from "react";
 import { Button } from "react-native-paper";
 import { Pressable } from "react-native";
 
+
 export default function RenderActionButton(props) {
+  
+
+  
   return (
     <Pressable onPress={props.Click}>
       <Button
@@ -16,7 +20,7 @@ export default function RenderActionButton(props) {
         }}
         labelStyle={{
           fontSize: parseInt(props.fontS),
-          color: "white",
+          color: '#FFFFFF',
           flexDirection: "row",
           fontFamily: "DMSansbold",
         }}

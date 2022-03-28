@@ -1,16 +1,16 @@
 import React, { Component, useState, useEffect } from "react";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { Image } from "react-native";
-import { NavigationContainer, DarkTheme } from "@react-navigation/native";
+import { NavigationContainer,DefaultTheme,DarkTheme } from "@react-navigation/native";
 
 import { createStackNavigator } from "@react-navigation/stack";
-import { DefaultTheme } from "react-native-paper";
+
 import Bookdetail from "../Pages/Bookdetail.js";
 
 import EmailVerification from "../Pages/EmailVerification.js";
 import SearchRoute from "../Pages/Search.js";
 import PrivacyPolicy from "../Pages/Privacypolicy.js";
-import Booksaddedtopickup from "../Pages/Booksaddedtopickup.js";
+
 import EditEmail from "../Pages/Editemail.js";
 import UploadRoute from "../Pages/Upload.js";
 import UserRoute from "../Pages/User.js";
@@ -30,27 +30,36 @@ import Storemodal from "../Pages/Storemodal.js";
 import { useSelector, useDispatch } from "react-redux";
 import { getUser, logoutUser, setUser } from "../actions";
 import ForgotPassword from "../Pages/Forgotpassword.js";
-import UploadedBooks from "../Pages/Uploadedbooks.js";
+
 import Edituploadedbook from "../Pages/Edituploadedbook.js";
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 const theme = {
-  ...DefaultTheme,
   roundness: 5,
   colors: {
-    ...DefaultTheme.colors,
+    ...DefaultTheme,
     primary: "#FFFFFF",
     accent: "#EF90A9",
-    background: "#ECEFEE",
     surface: "#EDEDF0",
+    mapcolor:'#0036F4',
     disabled: "#808080",
     backdrop: "#7CABF0",
     onSurface: "#EDEDF0",
     notification: "#EF90A9",
+    text:"#000000",
+    button:"#E96A59",
+    desctext:'#0D1936',
+    background:'#ECEFEE'
   },
 };
-
+const Dtheme = {
+    ...DarkTheme,
+    
+};
+export const ThemeContext = React.createContext();
 const Bottomnavcomponent = () => {
+  const { setTheme, Theme } = React.useContext(ThemeContext);
+  if(Theme==='Light'){
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -62,7 +71,9 @@ const Bottomnavcomponent = () => {
       <Tab.Screen
         name="Home"
         component={HomeRoute}
+       
         options={{
+          
           tabBarIcon: ({ color, focused }) => (
             <Image
               color={color}
@@ -129,7 +140,91 @@ const Bottomnavcomponent = () => {
       />
     </Tab.Navigator>
   );
+      }
+      else{
+        return (
+          <Tab.Navigator
+          initialRouteName="Home"
+          shifting={true}
+          sceneAnimationEnabled={false}
+          activeColor={"white"}
+          inactiveColor={"white"}
+        >
+          <Tab.Screen
+            name="Home"
+            component={HomeRoute}
+           
+            options={{
+              
+              tabBarIcon: ({ color, focused }) => (
+                <Image
+                  color={color}
+                  size={26}
+                  source={
+                    focused
+                      ? require("../assets/homefilleddark.png")
+                      : require("../assets/hometabdark.png")
+                  }
+                />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Search"
+            component={SearchRoute}
+            options={{
+              tabBarIcon: ({ color, focused }) => (
+                <Image
+                  color={color}
+                  size={26}
+                  source={
+                    focused
+                      ? require("../assets/searchtabdarkfilled.png")
+                      : require("../assets/searchtabdark.png")
+                  }
+                />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Upload"
+            component={UploadRoute}
+            options={{
+              tabBarIcon: ({ color, focused }) => (
+                <Image
+                  color={color}
+                  size={26}
+                  source={
+                    focused
+                      ? require("../assets/uploaddarkfilled.png")
+                      : require("../assets/uploaddark.png")
+                  }
+                />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="User"
+            component={UserRoute}
+            options={{
+              tabBarIcon: ({ color, focused }) => (
+                <Image
+                  color={color}
+                  size={26}
+                  source={
+                    focused
+                      ? require("../assets/usertabfilleddark.png")
+                      : require("../assets/usertab.png")
+                  }
+                />
+              ),
+            }}
+          />
+        </Tab.Navigator>
+        )
+      }
 };
+
 
 const Navigation = () => {
   const dispatch = useDispatch();
@@ -137,40 +232,17 @@ const Navigation = () => {
   dispatch(getUser());
   const [response, setResponse] = useState(false);
   const [isAuthenticated, setisAuthenticated] = useState(false);
+  const [Theme,setTheme] = useState('Light');
+
+  const themeData = { Theme, setTheme };
 
   const user = useSelector((state) => state.user);
-
-  /*useEffect(()=>{
-    
-    console.log(user);
-    console.log(user.token);
-      fetch('http://127.0.0.1:5000/Tokencheck', {
-        method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'x-access-token' : user.token,
-          },
-          body: null,
-      })
-      .then((response) => {
-            for (var pair of response.headers.entries()) { 
-              if (pair[0] === 'www-authenticate') { 
-                console.log("token not found");
-                dispatch(logoutUser());
-                return (null);
-              }
-            }
-            return response.json();
-          })
-      .then((data) => {if(data!== null){setisAuthenticated(data.response); dispatch(setUser(user.accountUsername,ussr.accountUsernumber,user.token,isAuthenticated))}})
+  
  
-      
-  },[])*/
-
   if (user.isAuthenticated && user !== null) {
     return (
-      <NavigationContainer theme={theme}>
+      <ThemeContext.Provider value={themeData}>
+      <NavigationContainer theme={Theme == 'Light'? theme : Dtheme}>
         <Stack.Navigator>
           <Stack.Screen
             name="Mainpage"
@@ -188,16 +260,8 @@ const Navigation = () => {
             options={{ title: "" }}
           />
           
-          <Stack.Screen
-            name="UploadedBooks"
-            component={UploadedBooks}
-            options={{ title: "Book Details" }}
-          />
-          <Stack.Screen
-            name="Booksaddedtopickup"
-            component={Booksaddedtopickup}
-            options={{ title: "Pickup  details" }}
-          />
+          
+          
           <Stack.Screen
             name="Changepassword"
             component={Changepassword}
@@ -230,10 +294,12 @@ const Navigation = () => {
           />
         </Stack.Navigator>
       </NavigationContainer>
+      </ThemeContext.Provider>
     );
   } else {
     return (
-      <NavigationContainer theme={theme}>
+      <ThemeContext.Provider value={themeData}>
+      <NavigationContainer theme={Theme == 'Light'? theme : Dtheme}>
         <Stack.Navigator>
           <Stack.Screen
             name="Login"
@@ -275,6 +341,7 @@ const Navigation = () => {
           />
         </Stack.Navigator>
       </NavigationContainer>
+      </ThemeContext.Provider>
     );
   }
 };

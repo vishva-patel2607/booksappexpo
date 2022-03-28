@@ -1,23 +1,22 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   StatusBar,
   StyleSheet,
   View,
-  Alert,
   Image,
   Pressable,
   KeyboardAvoidingView,
 } from "react-native";
 import RenderButton from "../Components/Button";
-import { Title, TextInput, Text } from "react-native-paper";
+import { TextInput } from "react-native-paper";
 import StaticText from "../Components/StaticText";
-import { useDispatch } from "react-redux";
+import { ThemeContext } from "../main pages/Navigation";
 
-import { setUser } from "../actions";
 
 const InitialSignUp = (props) => {
   const [username, setUsername] = useState("");
+  const {setTheme,Theme} = React.useContext(ThemeContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -75,10 +74,18 @@ const InitialSignUp = (props) => {
     <SafeAreaView style={styles.loginlayout}>
       <KeyboardAvoidingView behavior="padding">
         <View style={{ flex: 4, flexDirection: "column", marginTop: 30 }}>
-          <Image
+          {Theme === 'Light' ? (
+            <Image
             source={require("../assets/BAheader.png")}
             style={{ alignSelf: "center" }}
           />
+          ):(
+            <Image
+            source={require("../assets/BAheaderdark.png")}
+            style={{ alignSelf: "center" }}
+          />
+          )}
+          
         </View>
         <View style={{ flex: 18, flexDirection: "column" }}>
           <TextInput

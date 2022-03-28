@@ -1,4 +1,5 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useTheme } from "@react-navigation/native";
 import {
   SafeAreaView,
   StatusBar,
@@ -10,14 +11,17 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import RenderButton from "../Components/Button";
-import { Title, TextInput, Text } from "react-native-paper";
+import { TextInput, Text } from "react-native-paper";
+import { ThemeContext } from "../main pages/Navigation";
 import StaticText from "../Components/StaticText";
 import { useDispatch } from "react-redux";
-import Textinput from "../Components/Textinput";
 import { setUser } from "../actions";
 
 const Login = (props) => {
+  const { colors } = useTheme();
+  console.log(colors);
   const [bordercolor, setBordercolor] = useState("black");
+  const {setTheme,Theme} = React.useContext(ThemeContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -124,13 +128,24 @@ const Login = (props) => {
   };
 
   return (
-    <SafeAreaView style={styles.loginlayout}>
+    <SafeAreaView style={{flex: 1,
+      alignItems: "center",
+      paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+      backgroundColor:colors.background}}>
       <KeyboardAvoidingView behavior="padding">
         <View style={{ flex: 4, flexDirection: "column", marginTop: 30 }}>
-          <Image
+
+        {Theme === 'Light' ? (
+            <Image
             source={require("../assets/BAheader.png")}
             style={{ alignSelf: "center" }}
           />
+          ):(
+            <Image
+            source={require("../assets/BAheaderdark.png")}
+            style={{ alignSelf: "center" }}
+          />
+          )}
         </View>
         <View style={{ flex: 18, flexDirection: "column", borderRadius: 120 }}>
           <TextInput

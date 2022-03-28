@@ -7,13 +7,14 @@ import {
   Alert,
   StyleSheet,
 } from "react-native";
-import Addtopickups from "../Components/Addtopickups";
+import { ThemeContext } from "../main pages/Navigation";
 import Queryinfo from "../Components/Queryinfo";
 import MapView, { Marker } from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
 import { Text,Button } from "react-native-paper";
 const Bookscreen = (props) => {
   const [book, setBook] = useState(props.route.params.book);
+  const { setTheme, Theme } = React.useContext(ThemeContext);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
@@ -69,10 +70,17 @@ const Bookscreen = (props) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ECEFEE" }}>
       <View style={{ justifyContent: "flex-start" }}>
         <Pressable onPress={() => props.navigation.navigate("Search")}>
-          <Image
-            source={require("../assets/Backbutton.png")}
-            style={{ marginLeft: 19, marginTop: 18 }}
-          />
+        {Theme === "Light" ? (
+            <Image
+              source={require("../assets/Backbutton.png")}
+              style={{ marginLeft: 20, marginTop: 18 }}
+            />
+          ) : (
+            <Image
+              source={require("../assets/Backbuttondark.png")}
+              style={{ marginLeft: 20, marginTop: 18 }}
+            />
+          )}
         </Pressable>
       </View>
       <View

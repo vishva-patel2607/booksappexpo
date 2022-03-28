@@ -1,6 +1,6 @@
 Storemodal
 import React, { useState, useEffect } from "react";
-
+import { ThemeContext } from "../main pages/Navigation";
 import {
   SafeAreaView,
   ScrollView,
@@ -31,6 +31,7 @@ const Storemodal = (props) => {
   const [shops, setShops] = useState([]);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  const { setTheme, Theme } = React.useContext(ThemeContext);
   
   const setLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -92,10 +93,17 @@ const Storemodal = (props) => {
       <SafeAreaView style={{flex:1}}>
         <View>
         <Pressable onPress={() => props.navigation.navigate("Upload")}>
-          <Image
-            source={require("../assets/Backbutton.png")}
-            style={{ marginLeft: 19, marginTop: 18 }}
-          />
+        {Theme === "Light" ? (
+                <Image
+                  source={require("../assets/Backbutton.png")}
+                  style={{ marginLeft: 20, marginTop: 18 }}
+                />
+              ) : (
+                <Image
+                  source={require("../assets/Backbuttondark.png")}
+                  style={{ marginLeft: 20, marginTop: 18 }}
+                />
+              )}
         </Pressable>
         <Text
       style={{

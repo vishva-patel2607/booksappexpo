@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import {
   SafeAreaView,
   StatusBar,
@@ -9,10 +9,10 @@ import {
   KeyboardAvoidingView,
   Pressable,
 } from "react-native";
+import { ThemeContext } from "../main pages/Navigation";
+
 import RenderButton from "../Components/Button";
 import { TextInput } from "react-native-paper";
-import { TextInputMask } from "react-native-masked-text";
-import { setUser } from "../actions";
 
 const Signup = (props) => {
   const [username, setUsername] = useState(props.route.params.username);
@@ -21,6 +21,7 @@ const Signup = (props) => {
   const [lastname, setLastname] = useState("");
   const [year, setYear] = useState("");
   const [month, setMonth] = useState("");
+  const { setTheme, Theme } = React.useContext(ThemeContext);
   const [day, setDay] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState(props.route.params.password);
@@ -146,17 +147,34 @@ const Signup = (props) => {
       <KeyboardAvoidingView behavior="padding">
         <View style={{ flex: 1, alignSelf: "flex-start" }}>
           <Pressable onPress={() => props.navigation.navigate("InitialSignup")}>
-            <Image
-              source={require("../assets/Backbutton.png")}
-              style={{ marginTop: 20 }}
-            />
+            
+              {Theme === "Light" ? (
+                <Image
+                  source={require("../assets/Backbutton.png")}
+                  style={{ marginLeft: 20, marginTop: 18 }}
+                />
+              ) : (
+                <Image
+                  source={require("../assets/Backbuttondark.png")}
+                  style={{ marginLeft: 20, marginTop: 18 }}
+                />
+              )}
+        
           </Pressable>
         </View>
         <View style={{ flex: 2, marginTop: 30 }}>
-          <Image
+          {Theme === 'Light'? (
+            <Image
             source={require("../assets/BAheader.png")}
             style={{ alignSelf: "center" }}
           />
+          ):(
+            <Image
+            source={require("../assets/BAheaderdark.png")}
+            style={{ alignSelf: "center" }}
+          />
+          )}
+          
         </View>
 
         <View style={{ flex: 18, flexDirection: "column" }}>
@@ -360,7 +378,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-    backgroundColor: "#ECEFEE",
+    
   },
 });
 

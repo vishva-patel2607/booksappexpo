@@ -8,7 +8,7 @@ import {
   Pressable,
   Image
 } from "react-native";
-
+import { ThemeContext } from "../main pages/Navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../actions";
 
@@ -22,6 +22,7 @@ const EditPhone = (props) => {
   const user = useSelector((state) => state.user);
   const [newphoneno, setNewphoneno] = useState("");
   const [error, setError] = useState("");
+  const { setTheme, Theme } = React.useContext(ThemeContext);
   const dispatch = useDispatch();
 
   const editphone = () => {
@@ -67,10 +68,17 @@ const EditPhone = (props) => {
     <SafeAreaView style={styles.layout}>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
         <Pressable onPress={() => props.navigation.navigate("User")}>
-          <Image
-            source={require("../assets/Backbutton.png")}
-            style={{ marginLeft: 19, marginTop: 18 }}
-          />
+        {Theme === "Light" ? (
+            <Image
+              source={require("../assets/Backbutton.png")}
+              style={{ marginLeft: 20, marginTop: 18 }}
+            />
+          ) : (
+            <Image
+              source={require("../assets/Backbuttondark.png")}
+              style={{ marginLeft: 20, marginTop: 18 }}
+            />
+          )}
         </Pressable>
       </View>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
