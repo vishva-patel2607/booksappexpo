@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "126494263939",
+    "project_id": "booksapp-cfdcb",
+    "storage_bucket": "booksapp-cfdcb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126494263939:android:a15279b0959ba93441a9b6",
+        "android_client_info": {
+          "package_name": "com.example.BooksApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "126494263939-ae8ocl01d325kn93clkjj3d1u3gv5j1u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3eDiOQ3pKhlLh5jHyB7oEhaJyVsOJcEE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "126494263939-ae8ocl01d325kn93clkjj3d1u3gv5j1u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

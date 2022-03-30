@@ -1,201 +1,235 @@
-import React, { Component,useState } from 'react';
+import React, { useState } from "react";
+import {useTheme} from '@react-navigation/native';
 import {
-    SafeAreaView,
-    ScrollView,
-    View,
-    Image,
-    StyleSheet,
-    Alert,
-    Pressable
-} from 'react-native';
-  
-import {useDispatch, useSelector} from 'react-redux';
-  
-import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,RadioButton, Subheading,IconButton } from 'react-native-paper'; 
+  SafeAreaView,
+  View,
+  StyleSheet,
+  Alert,
+  Text,
+  Image,
+  Pressable,
+} from "react-native";
+import { ThemeContext } from "../main pages/Navigation";
+import { useDispatch, useSelector } from "react-redux";
 
-import {logoutUser} from '../actions'
-import { set } from 'react-native-reanimated';
-
-const tempoobj = {
-    username : "hello",
-    email : "hello",
-    firstname : "hello",
-    lastname : "hello",
-    year : "hello",
-    month : "hello",
-    day : "hello",
-    phonenumber : "hello"
-  };
+import { Button, TextInput } from "react-native-paper";
+import { logoutUser } from "../actions";
 
 const Changepassword = (props) => {
+  const {colors} = useTheme();
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
+  const [oldpassword, setOldpassword] = useState("");
+  const [newpassword1, setNewpassword1] = useState("");
+  const [newpassword2, setNewpassword2] = useState("");
+  const { setTheme, Theme } = React.useContext(ThemeContext);
+  const [error, setError] = useState("");
 
-    const user = useSelector((state) => state.user);
-    const dispatch = useDispatch();
+  const changepassword = () => {
+    var passwordRegex = new RegExp(
+      "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})"
+    );
 
-    const [oldpassword,setOldpassword] = useState("");
-    const [newpassword1,setNewpassword1] = useState("");
-    const [newpassword2,setNewpassword2] = useState("");
-    const [error,setError] = useState("");
-
-    const changepassword  = () => {
-        var passwordRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})');
-
-        if(oldpassword.length === 0 || !passwordRegex.test(oldpassword)){
-            alert("Check your old Password!");
-            return;
-        }
-        else if(newpassword1.length === 0){
-            alert("Enter your new password");
-            return;
-        }
-        else if(newpassword2.length === 0){
-            alert("Re-type your new password");
-            return;
-        }
-        else if(newpassword1 !== newpassword2 || !passwordRegex.test(newpassword1) || !passwordRegex.test(newpassword2) ) {
-            alert('Check Password! \n\n Password must contains eight characters, at least one uppercase letter, one lowercase letter and one number \n\n And both passwords should match');
-            return;
-        }
-        else{
-
-            fetch('https://booksapp2021.herokuapp.com/User/Changepassword', {
-            method: 'PUT',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-              'x-access-token' : user.token,
-            },
-            body: JSON.stringify({
-              oldpassword : oldpassword,
-              newpassword : newpassword1,
-            })
-          })
-          .then((response)=>{
-            return response.json();
-          })
-          .then((data)=>{
-            console.log('Going in ');
-            if(data.status){
+    if (oldpassword.length === 0 || !passwordRegex.test(oldpassword)) {
+      alert("Check your old Password!");
+      return;
+    } else if (newpassword1.length === 0) {
+      alert("Enter your new password");
+      return;
+    } else if (newpassword2.length === 0) {
+      alert("Re-type your new password");
+      return;
+    } else if (
+      newpassword1 !== newpassword2 ||
+      !passwordRegex.test(newpassword1) ||
+      !passwordRegex.test(newpassword2)
+    ) {
+      alert(
+        "Check Password! \n\n Password must contains eight characters, at least one uppercase letter, one lowercase letter and one number \n\n And both passwords should match"
+      );
+      return;
+    } else {
+      fetch("https://booksapp2021.herokuapp.com/User/Changepassword", {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "x-access-token": user.token,
+        },
+        body: JSON.stringify({
+          oldpassword: oldpassword,
+          newpassword: newpassword1,
+        }),
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          console.log("Going in ");
+          if (data.status) {
+            setError(data.message);
+            Alert.alert(error, "Please log in again with your new password", [
+              { text: "Login", onPress: () => dispatch(logoutUser()) },
+            ]);
+          } else {
+            if (data.message === "Could not verify") {
+              dispatch(logoutUser());
+            } else {
               setError(data.message);
-              Alert.alert(
-                error,
-                "Please log in again with your new password",
-                [
-                  {text: "Login", onPress: () => dispatch(logoutUser())}
-                ]
-              );
             }
-            else{
-              if(data.message==='Could not verify'){
-                dispatch(logoutUser());
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
 
-              }
-              else{
-                setError(data.message);
-              }
-            }
-          })
-          .catch((error)=>{
-            console.log(error);
-          })
-        }
-  }
-
-
-    return(
-        <SafeAreaView style={styles.layout}>
-            <View style={styles.layout}>
-              
-            
-            <TextInput 
-                style = {styles.inputtextbox}
-                label="Old Password"
-                value = {oldpassword}
-                onChangeText = {(text) => setOldpassword(text)}
-                autoCapitalize = 'none'
-                autoCorrect = {false}
-                maxLength = {20}
-                secureTextEntry = {true}
+  return (
+    <SafeAreaView style={styles.layout}>
+      <View style={{ justifyContent: "flex-start", flex: 1 }}>
+        <Pressable onPress={() => props.navigation.navigate("User")}>
+        {Theme === "Light" ? (
+            <Image
+              source={require("../assets/Backbutton.png")}
+              style={{ marginLeft: 20, marginTop: 18 }}
             />
-
-            <TextInput 
-                style = {styles.inputtextbox}
-                label="New Password"
-                value = {newpassword1}
-                onChangeText = {(text) => setNewpassword1(text)}
-                autoCapitalize = 'none'
-                autoCorrect = {false}
-                maxLength = {20}
+          ) : (
+            <Image
+              source={require("../assets/Backbuttondark.png")}
+              style={{ marginLeft: 20, marginTop: 18 }}
             />
+          )}
+        </Pressable>
+      </View>
+      <View style={{ justifyContent: "flex-start", flex: 1 }}>
+        <Text
+          style={{
+            fontSize: 25,
+            fontWeight: "700",
+            color: colors.text,
+            marginLeft: 22,
+          }}
+          theme={{ fonts: { regular: "DM Sans" } }}
+        >
+          CHANGE PASSWORD
+        </Text>
+      </View>
+      <View style={{ marginLeft: 19, flex: 12 }}>
+        <TextInput
+          style={styles.inputtextbox}
+          theme={{
+            colors: {
+              primary: "#EEECEF",
+              placeholder: "#8e8e8e",
+            },
+            roundness: 120,
+          }}
+          // theme={{ colors: { primary: "transparent" } }}
+          mode="flat"
+          placeholder="Old Password"
+          secureTextEntry={true}
+          value={oldpassword}
+          onChangeText={(text) => setOldpassword(text)}
+          autoCapitalize="none"
+          autoCorrect={false}
+          underlineColor="#ECEFEE"
+          maxLength={20}
+        />
 
-            <TextInput 
-                style = {styles.inputtextbox}
-                label="Re-type New Password"
-                value = {newpassword2}
-                onChangeText = {(text) => setNewpassword2(text)}
-                autoCapitalize = 'none'
-                autoCorrect = {false}
-                maxLength = {20}
-            />
+        <TextInput
+          style={styles.inputtextbox}
+          theme={{
+            colors: {
+              primary: "#ECEFEE",
+              placeholder: "#8e8e8e",
+            },
+            roundness: 120,
+          }}
+          mode="flat"
+          placeholder="New password"
+          value={newpassword1}
+          onChangeText={(text) => setNewpassword1(text)}
+          autoCapitalize="none"
+          underlineColor="#ECEFEE"
+          autoCorrect={false}
+          secureTextEntry={true}
+          maxLength={20}
+        />
 
-            <Text style={styles.error}>
-                {error}
-            </Text>
+        <TextInput
+          style={styles.inputtextbox}
+          theme={{
+            colors: {
+              primary: "#EEECEF",
+              placeholder: "#8e8e8e",
+            },
+            roundness: 120,
+          }}
+          mode="flat"
+          placeholder="Retype New Password"
+          value={newpassword2}
+          onChangeText={(text) => setNewpassword2(text)}
+          autoCapitalize="none"
+          underlineColor="#ECEFEE"
+          autoCorrect={false}
+          secureTextEntry={true}
+          maxLength={20}
+        />
 
+        <Text style={styles.error}>{error}</Text>
+        <Button
+          theme={{ roundness: 120 }}
+          onPress={changepassword}
+          style={{
+            width: 215,
+            height: 40,
+            alignItems: "flex-start",
 
-            <Button 
-                mode = "contained"
-                style = {styles.submitbutton}
-                labelStyle = {styles.submitbutton}
-                onPress = {changepassword}
-            >
-                Change Password
-            </Button>
-              
-              
-            </View>
-          </SafeAreaView>
-    )
-}
-
+            justifyContent: "center",
+          }}
+          labelStyle={{
+            fontSize: 14,
+            color: "white",
+            flexDirection: "row",
+            fontFamily: "DMSansbold",
+          }}
+          mode="contained"
+        >
+          SAVE
+        </Button>
+      </View>
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
-    
-    textbox: {
-      textAlign: "center",
-      padding :20,
-    },
-  
-    error: {
-      textAlign: "center",
-      fontSize: 20,
-      color: "red",
-      padding :20,
-    },
-  
-    inputtextbox: {
-      margin : 10,
-      
-    },
-  
-    submitbutton: {
-      margin : 10,
-      fontSize : 20,
-      color : "white"
-    },
-  
-    layout: {
-      flex:1,
-      
-     
-    },
-  
-  
-    
-  
-    
-  });
+  error: {
+    textAlign: "center",
+    fontSize: 20,
+    color: "red",
+    padding: 20,
+  },
 
+  inputtextbox: {
+    marginTop: 11,
+    width: 215,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 120,
+    height: 50,
+  },
 
-export default Changepassword;
+  submitbutton: {
+    margin: 10,
+    fontSize: 20,
+    color: "white",
+  },
+
+  layout: {
+    flex: 1,
+   
+  },
+});
+
+export default React.memo(Changepassword);

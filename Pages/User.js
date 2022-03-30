@@ -1,221 +1,341 @@
+import { ActivityIndicator } from "react-native-paper";
+import { Switch, Button } from "react-native-paper";
 
-import { ActivityIndicator, Colors } from 'react-native-paper';
-import { Avatar } from 'react-native-paper';
-import React, { Component,useState,useCallback,useEffect } from 'react';
+import { ThemeContext } from "../main pages/Navigation";
+import React, { useState, useEffect } from "react";
+import ActionButton from "../Components/Actionbutton";
+import StaticText from "../Components/StaticText";
 import {
   SafeAreaView,
-  ScrollView,
   View,
-  Image,
   StyleSheet,
-  Alert,
+  StatusBar,
+  Image,
   Pressable,
-  Linking,
-  StatusBar
-} from 'react-native';
+} from "react-native";
+import StaticBooksApp from "../Components/StaticBooksApp";
 
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 
-import { Button,Title,Paragraph,TextInput,Text,Appbar,BottomNavigation,Searchbar,RadioButton, Subheading,IconButton } from 'react-native-paper'; 
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { logoutUser } from "../actions";
 
-import {logoutUser, setUser} from '../actions'
-import { color, set } from 'react-native-reanimated';
-
-
-
-
-const tempoobj = {
-                  username : "Hitz2001",
-                  email : "hitanshushah5@gmail.com",
-                  firstname : "Hitanshu",
-                  lastname : "Shah",
-                  year : "2001",
-                  month : "January",
-                  day : "10",
-                  phonenumber : "+91 7227950335",
-                  dob: "Mon, 01 Oct 2001 00:00:00 GMT"
-                };
-
-
-
-
-
-const UserRoute = (props) =>{
-
+const UserRoute = (props) => {
   
+  const { setTheme, Theme } = React.useContext(ThemeContext);
+  let userimage =
+    Theme === "Light" ? (
+      <Image source={require("../assets/user.png")} />
+    ) : (
+      <Image source={require("../assets/userdark.png")} />
+    );
+  let emailimage =
+    Theme === "Light" ? (
+      <Image source={require("../assets/email.png")} />
+    ) : (
+      <Image source={require("../assets/emaildark.png")} />
+    );
+  let phoneimage =
+    Theme === "Light" ? (
+      <Image source={require("../assets/Phone.png")} />
+    ) : (
+      <Image source={require("../assets/Phonedark.png")} />
+    );
+  let birthdayimage =
+    Theme === "Light" ? (
+      <Image source={require("../assets/Birthday.png")} />
+    ) : (
+      <Image source={require("../assets/birthdatedark.png")} />
+    );
+  let editimage =
+    Theme === "Light" ? (
+      <Image
+        source={require("../assets/Edit.png")}
+        style={{ marginRight: 25 }}
+      />
+    ) : (
+      <Image
+        source={require("../assets/Editdisabled.png")}
+        style={{ marginRight: 25 }}
+      />
+    );
+
+  let disablededitimage = Theme === 'Light' ? (
+    <Image
+        source={require("../assets/Editdisabled.png")}
+        style={{ marginRight: 25 }}
+      />
+  ):(
+    <Image
+        source={require("../assets/Edit.png")}
+        style={{ marginRight: 25 }}
+      />
+  )
   const dispatch = useDispatch();
-  const [LoadingData,setLoadingData] = useState(false);
-  const [userobj,setUserobj] = useState(props.user);
+  const [LoadingData, setLoadingData] = useState(false);
+  const [userobj, setUserobj] = useState(props.user);
+  const [switchon, setSwitchon] = useState(Theme==='Light'?false:true);
+  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
   const user = useSelector((state) => state.user);
 
+  const switchchanged = () => {
+    setSwitchon(!switchon);
+    setTheme(Theme === "Light" ? "Dark" : "Light");
+  };
   useEffect(() => {
-        console.log(user.token);
-          setLoadingData(false);
-          fetch('https://booksapp2021.herokuapp.com/User',{
-            method: 'POST',
-            headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    'x-access-token' : user.token,
-                    },
-            body : null
-          })
-          .then((response) => {
-            return response.json();
-          })
-          .then((data) => {
-            console.log(data);
-            if(data.status){
-              console.log('True')
-              setUserobj(data.response.user);
-              setLoadingData(true);
-            }
-            else{
-              console.log(data.status);
-              if(data.message==='Could not verify'){
-                dispatch(logoutUser());
-              }
-            }
-          })
-          .catch((error) => {
-              console.log(error);
-          })
-        },[])
-      if(LoadingData){
-        return(
-          <SafeAreaView style={styles.uploadimage}>
-            <View style={{flex:1}}>
-            <View style={styles.textStyle}>
-              <Avatar.Text size={80} label={userobj.firstname[0]+userobj.lastname[0]} color='white' />
-              
-              <Title style={styles.spaceinbetween}>{userobj.firstname + " " + userobj.lastname}</Title>
-              <Subheading style={styles.spaceinbetween} >{userobj.username}</Subheading>
-              <Subheading style={styles.spaceinbetween}>📧 {userobj.email}</Subheading>
-              
-                <Subheading style={styles.spaceinbetween}> 📞 {userobj.phonenumber} <Subheading  onPress = {() => {props.navigation.navigate("EditPhone");}}> <Avatar.Icon size={20} icon="pen"/></Subheading>  </Subheading>
-                
-                    
-                
-              
-              
-              <Subheading  style={styles.spaceinbetween}>
-              🎂 {userobj.dob.split(" ")[1]+ " " +userobj.dob.split(" ")[2] + " " + userobj.dob.split(" ")[3]}</Subheading>
-            </View>
-              <Button 
-                  mode = "contained"
-                  style = {styles.submitbutton}
-                  labelStyle = {styles.submitbutton}
-                  onPress = {() => {props.navigation.navigate("Changepassword");}}
-      
-                >
-                  Change Password
-              </Button>
-              <Button 
-                  mode = "contained"
-                  style = {styles.logoutbutton}
-                  labelStyle = {styles.logoutbutton}
-                  onPress = {() => dispatch(logoutUser())}
-                >
-                  Log out
-              </Button> 
-            </View>
-            <Button 
-               style={{alignContent:'center'}}>
-              © BooksAppExpo.
-              </Button>
-            <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-              
-              <Button style={{alignSelf:'flex-end'}} onPress={ ()=>{ Linking.openURL('https://google.com')}}>Privacy Policy</Button>
-              <Button style={{alignSelf:'flex-start'}} onPress={ ()=>{ Linking.openURL('https://google.com')}}> Contact Us</Button>
+    console.log(user.token);
+    setLoadingData(false);
+    fetch("https://booksapp2021.herokuapp.com/User", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "x-access-token": user.token,
+      },
+      body: null,
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        if (data.status) {
+          console.log("True");
+          setUserobj(data.response.user);
+          setLoadingData(true);
+        } else {
+          console.log(data.status);
+          if (data.message === "Could not verify") {
+            dispatch(logoutUser());
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  if (LoadingData) {
+    return (
+      <SafeAreaView
+        style={[
+          styles.safeareaview,
+          { backgroundColor: Theme === "Light" ? "#ECEFEE" : "#0D1936" },
+        ]}
+      >
+        <View style={{ flex: 2, justifyContent: "flex-start" }}>
+          <StaticBooksApp />
+        </View>
+        <View style={{ flexDirection: "column", flex: 10, marginLeft: 15 }}>
+          <View style={{ flexDirection: "column", flex: 6 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-around",
+              }}
+            >
+              {userimage}
+              <View style={{ flexDirection: "column", marginLeft: -20 }}>
+                <StaticText text={userobj.firstname + " " + userobj.lastname} />
+                {/* <Text>{userobj.firstname + " " + userobj.lastname}</Text> */}
+                <View
+                  style={{ borderBottomColor: "#6E7A7D", borderBottomWidth: 1 }}
+                />
+                <Image source={require("../assets/Line.png")} />
               </View>
-  
-            
-          </SafeAreaView>
-          
-        )
-      }
-      else{
-        return(
-          <SafeAreaView>
-              <View style={styles.activityindicator} >
-                <ActivityIndicator animating={true} size={100} />
+              {disablededitimage}
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 25,
+                justifyContent: "space-around",
+              }}
+            >
+              {emailimage}
+              <View style={{ flexDirection: "column", marginLeft: -20 }}>
+                <StaticText text={userobj.email} />
+                <View
+                  style={{ borderBottomColor: "#6E7A7D", borderBottomWidth: 1 }}
+                />
+                <Image source={require("../assets/Line.png")} />
               </View>
-              
-          </SafeAreaView>
-          
-        )
-      }
-  
-}
+              <Pressable
+                onPress={() => {
+                  props.navigation.navigate("EditEmail");
+                }}
+              >
+                {editimage}
+              </Pressable>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 25,
+                justifyContent: "space-around",
+              }}
+            >
+              {phoneimage}
+              <View style={{ flexDirection: "column", marginLeft: -20 }}>
+                <StaticText text={userobj.phonenumber} />
+                <View
+                  style={{ borderBottomColor: "#6E7A7D", borderBottomWidth: 1 }}
+                />
+                <Image
+                  source={require("../assets/Line.png")}
+                  style={{ height: 5 }}
+                />
+              </View>
+              <Pressable
+                onPress={() => {
+                  props.navigation.navigate("EditPhone");
+                }}
+              >
+                {editimage}
+              </Pressable>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 25,
+                justifyContent: "space-around",
+              }}
+            >
+              {birthdayimage}
+              <View style={{ flexDirection: "column", marginLeft: -20 }}>
+                <StaticText
+                  text={
+                    userobj.dob.split(" ")[1] +
+                    "/ " +
+                    userobj.dob.split(" ")[2] +
+                    "/ " +
+                    userobj.dob.split(" ")[3]
+                  }
+                />
+                <View
+                  style={{ borderBottomColor: "#6E7A7D", borderBottomWidth: 1 }}
+                />
+                <Image
+                  source={require("../assets/Line.png")}
+                  style={{ height: 5 }}
+                />
+              </View>
+              {disablededitimage}
+            </View>
+          </View>
+          <View
+            style={{
+              flex: 4,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              marginLeft: 15,
+            }}
+          >
+            <View style={{ justifyContent: "flex-start", marginTop: 10 }}>
+              <StaticText text="DarkMode" />
+            </View>
+            <Switch
+              trackColor={{ true: "white", false: "blue" }}
+              value={switchon}
+              onValueChange={switchchanged}
+              style={{ marginRight: 25 }}
+            />
+          </View>
+        </View>
+
+        <View
+          style={{
+            flex: 8,
+            marginLeft: 15,
+            justifyContent: "center",
+          }}
+        >
+          <View style={{ marginBottom: 6 }}>
+            <Pressable
+              onPress={() => props.navigation.navigate("Changepassword")}
+            >
+              <Button
+                theme={{ roundness: 50 }}
+                style={{
+                  width: 215,
+                  height: 40,
+                  alignItems: "flex-start",
+                  justifyContent: "center",
+                }}
+                labelStyle={{
+                  fontSize: 14,
+                  color: "white",
+                  flexDirection: "row",
+                  fontFamily: "DMSansbold",
+                }}
+                mode="contained"
+              >
+                Change Password
+              </Button>
+            </Pressable>
+          </View>
+          <View style={{ marginBottom: 6 }}>
+            <ActionButton
+              title="Logout"
+              Click={() => dispatch(logoutUser())}
+              fontS="14"
+              style={{ marginTop: 15 }}
+            />
+          </View>
+          <View style={{ marginBottom: 6 }}>
+            <ActionButton title="Deactivate account" fontS="14" />
+          </View>
+          <View style={{ marginLeft: 2 }}>
+            <StaticText text="Contact us" />
+            <View style={{ marginTop: 5 }}>
+              <StaticText text="Privacy policy" />
+            </View>
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  } else {
+    return (
+      <SafeAreaView>
+        <View style={styles.activityindicator}>
+          <ActivityIndicator animating={true} size={100} />
+        </View>
+      </SafeAreaView>
+    );
+  }
+};
 
 const styles = StyleSheet.create({
-  uploadimage: {
-    flex:1,
-    justifyContent: 'center',
+  safeareaview: {
+    flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    // backgroundColor: "#ECEFEE",
+    flexDirection: "column",
   },
-  spaceinbetween:{
-    marginTop:15,
-  },
-  userdetails: {
-    textDecorationLine: 'underline',
-  },
-  textStyle:{
-    marginTop: 10,
-    alignItems: "center",
-  },
-  error: {
-    textAlign: "center",
-    fontSize: 20,
-    color: "red",
-    padding :20,
-  },
-  activityindicator:{
-    padding: 100,
-    alignSelf: 'center',
-  },
-  editprofile: {
-    fontSize : 20,
-    marginBottom : 10,
-    marginTop: -242,
-    height: 35,
-    width: 150,
-    alignSelf: 'flex-end',
-    borderRadius: 10,
-    marginRight: -10,
-    
 
+  activityindicator: {
+    padding: 100,
+    alignSelf: "center",
   },
+
   submitbutton: {
-    margin : 30,
-    fontSize : 20,
-    marginBottom : 20,
+    margin: 30,
+    fontSize: 20,
+    marginBottom: 20,
     height: 45,
     width: 250,
-    alignSelf: 'center',
+    alignSelf: "center",
     borderRadius: 10,
-    color : "white"
+    color: "white",
   },
-  logoutbutton:{
-    alignSelf: 'center',
+
+  logoutbutton: {
+    alignSelf: "center",
     width: 250,
     fontSize: 20,
     color: "white",
-    borderRadius: 10,
+    borderRadius: 12,
   },
-
-
-  bg : {
-    backgroundColor : '#EDEDF0',
-  }
-  
-
-  
 });
 
 export default UserRoute;
-
-
-  
-

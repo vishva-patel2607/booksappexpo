@@ -1,171 +1,349 @@
-import React, { Component,useState,useEffect } from 'react';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import React, { Component, useState, useEffect } from "react";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { Image } from "react-native";
+import { NavigationContainer,DefaultTheme,DarkTheme } from "@react-navigation/native";
 
-import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from "@react-navigation/stack";
 
-import { createStackNavigator } from '@react-navigation/stack';
-import { DefaultTheme } from 'react-native-paper';
+import Bookdetail from "../Pages/Bookdetail.js";
 
+import EmailVerification from "../Pages/EmailVerification.js";
+import SearchRoute from "../Pages/Search.js";
+import PrivacyPolicy from "../Pages/Privacypolicy.js";
+
+import EditEmail from "../Pages/Editemail.js";
+import UploadRoute from "../Pages/Upload.js";
+import UserRoute from "../Pages/User.js";
+import HomeRoute from "../Pages/Home.js";
+import Bookscreen from "../Pages/Bookscreen";
+import Camerascreen from "../Pages/Camerascreen";
+import Changepassword from "../Pages/Changepassword";
+import PhonenumberVerification from "../Pages/PhonenumberVerification";
+// import BookCondition from "../Pages/BookConditions"
+
+import InitialSignup from "../Pages/Initialsignup.js";
+import { CommonActions } from "@react-navigation/routers";
+import Login from "../Pages/login";
+import Signup from "../Pages/signup";
+import EditPhone from "../Pages/EditPhone.js";
+import Storemodal from "../Pages/Storemodal.js";
+import { useSelector, useDispatch } from "react-redux";
+import { getUser, logoutUser, setUser } from "../actions";
+import ForgotPassword from "../Pages/Forgotpassword.js";
+
+import Edituploadedbook from "../Pages/Edituploadedbook.js";
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
-import EmailVerification from '../Pages/EmailVerification.js';
-import SearchRoute from '../Pages/Search.js';
-import PrivacyPolicy from '../Pages/Privacypolicy.js';
-import Booksaddedtopickup from '../Pages/Booksaddedtopickup.js';
-import RemovedBookScreen from '../Pages/RemovedBookScreen.js';
-import UploadRoute from '../Pages/Upload.js';
-import UserRoute from '../Pages/User.js';
-import HomeRoute from '../Pages/Home.js';
-import Bookscreen from '../Pages/Bookscreen';
-import Camerascreen from '../Pages/Camerascreen';
-import Changepassword from '../Pages/Changepassword';
-import { CommonActions } from '@react-navigation/routers';
-import Login from '../Pages/login';
-import Signup from '../Pages/signup';
-import EditPhone from '../Pages/EditPhone.js';
-import Storemodal from '../Pages/Storemodal.js';
-import {useSelector, useDispatch} from 'react-redux';
-import { getUser, logoutUser , setUser} from '../actions';
-import ForgotPassword from '../Pages/Forgotpassword.js';
-import UploadedBooks from '../Pages/Uploadedbooks.js';
-import Edituploadedbook from '../Pages/Edituploadedbook.js';
-
 const theme = {
-
-  ...DefaultTheme,
   roundness: 5,
   colors: {
-    ...DefaultTheme.colors,
-  primary : '#7CABF0',
-  accent : "#EF90A9",
-  background : '#FFFFFF',
-  surface : "#EDEDF0",
-  disabled : '#808080',
-  backdrop : '#7CABF0',
-  onSurface : '#EDEDF0',
-  notification : '#EF90A9',
-  
-    
+    ...DefaultTheme,
+    primary: "#FFFFFF",
+    accent: "#EF90A9",
+    surface: "#EDEDF0",
+    mapcolor:'#0036F4',
+    disabled: "#808080",
+    backdrop: "#7CABF0",
+    onSurface: "#EDEDF0",
+    notification: "#EF90A9",
+    text:"#000000",
+    button:"#E96A59",
+    desctext:'#0D1936',
+    background:'#ECEFEE'
   },
 };
-
+const Dtheme = {
+    ...DarkTheme,
+    
+};
+export const ThemeContext = React.createContext();
 const Bottomnavcomponent = () => {
-    return (
-      <Tab.Navigator
-        initialRouteName="Home"
-        shifting={true}
-        sceneAnimationEnabled={false}
-        activeColor = {"white"}
-        inactiveColor = {"white"}
-        
-      >
-        <Tab.Screen
-          name="Home"
-          component={HomeRoute}
-          options={{
-            tabBarIcon: 'home',
-          }}
-        />
-        <Tab.Screen
-          name="Search"
-          component={SearchRoute}
-          options={{
-            tabBarIcon: 'magnify',
-          }}
-        />
-        <Tab.Screen
-          name="Upload"
-          component={UploadRoute}
-          options={{
-            tabBarIcon: 'upload',
-          }}
-        />
-        <Tab.Screen
-          name="User"
-          component={UserRoute}
-          options={{
-            tabBarIcon: 'account',
-          }}
-        />
-
-      </Tab.Navigator>
-    );
-  };
+  const { setTheme, Theme } = React.useContext(ThemeContext);
+  if(Theme==='Light'){
+  return (
+    <Tab.Navigator
+      initialRouteName="Home"
+      shifting={true}
+      sceneAnimationEnabled={false}
+      activeColor={"black"}
+      inactiveColor={"black"}
+    >
+      <Tab.Screen
+        name="Home"
+        component={HomeRoute}
+       
+        options={{
+          
+          tabBarIcon: ({ color, focused }) => (
+            <Image
+              color={color}
+              size={26}
+              source={
+                focused
+                  ? require("../assets/Vector.png")
+                  : require("../assets/Home.png")
+              }
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={SearchRoute}
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <Image
+              color={color}
+              size={26}
+              source={
+                focused
+                  ? require("../assets/Groupfilled.png")
+                  : require("../assets/Group.png")
+              }
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Upload"
+        component={UploadRoute}
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <Image
+              color={color}
+              size={26}
+              source={
+                focused
+                  ? require("../assets/uploadfilled.png")
+                  : require("../assets/upload.png")
+              }
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="User"
+        component={UserRoute}
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <Image
+              color={color}
+              size={26}
+              source={
+                focused
+                  ? require("../assets/userfill.png")
+                  : require("../assets/user.png")
+              }
+            />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+      }
+      else{
+        return (
+          <Tab.Navigator
+          initialRouteName="Home"
+          shifting={true}
+          sceneAnimationEnabled={false}
+          activeColor={"white"}
+          inactiveColor={"white"}
+        >
+          <Tab.Screen
+            name="Home"
+            component={HomeRoute}
+           
+            options={{
+              
+              tabBarIcon: ({ color, focused }) => (
+                <Image
+                  color={color}
+                  size={26}
+                  source={
+                    focused
+                      ? require("../assets/homefilleddark.png")
+                      : require("../assets/hometabdark.png")
+                  }
+                />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Search"
+            component={SearchRoute}
+            options={{
+              tabBarIcon: ({ color, focused }) => (
+                <Image
+                  color={color}
+                  size={26}
+                  source={
+                    focused
+                      ? require("../assets/searchtabdarkfilled.png")
+                      : require("../assets/searchtabdark.png")
+                  }
+                />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Upload"
+            component={UploadRoute}
+            options={{
+              tabBarIcon: ({ color, focused }) => (
+                <Image
+                  color={color}
+                  size={26}
+                  source={
+                    focused
+                      ? require("../assets/uploaddarkfilled.png")
+                      : require("../assets/uploaddark.png")
+                  }
+                />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="User"
+            component={UserRoute}
+            options={{
+              tabBarIcon: ({ color, focused }) => (
+                <Image
+                  color={color}
+                  size={26}
+                  source={
+                    focused
+                      ? require("../assets/usertabfilleddark.png")
+                      : require("../assets/usertab.png")
+                  }
+                />
+              ),
+            }}
+          />
+        </Tab.Navigator>
+        )
+      }
+};
 
 
 const Navigation = () => {
   const dispatch = useDispatch();
 
-  
   dispatch(getUser());
-  const [response,setResponse] = useState(false);
-  const [isAuthenticated,setisAuthenticated] = useState(false);
+  const [response, setResponse] = useState(false);
+  const [isAuthenticated, setisAuthenticated] = useState(false);
+  const [Theme,setTheme] = useState('Light');
+
+  const themeData = { Theme, setTheme };
 
   const user = useSelector((state) => state.user);
-
-  /*useEffect(()=>{
-    
-    console.log(user);
-    console.log(user.token);
-      fetch('http://127.0.0.1:5000/Tokencheck', {
-        method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'x-access-token' : user.token,
-          },
-          body: null,
-      })
-      .then((response) => {
-            for (var pair of response.headers.entries()) { 
-              if (pair[0] === 'www-authenticate') { 
-                console.log("token not found");
-                dispatch(logoutUser());
-                return (null);
-              }
-            }
-            return response.json();
-          })
-      .then((data) => {if(data!== null){setisAuthenticated(data.response); dispatch(setUser(user.accountUsername,ussr.accountUsernumber,user.token,isAuthenticated))}})
- 
-      
-  },[])*/
-
   
-  if (user.isAuthenticated && user !== null){
-   
-    return(
-      <NavigationContainer theme={theme}>
-            <Stack.Navigator >
-            <Stack.Screen name="Mainpage" component={Bottomnavcomponent} options={{headerShown: false, title: ''}} />
-            <Stack.Screen name='Bookscreen' component={Bookscreen}  options={{ title: '' }} />
-            <Stack.Screen name="Camerascreen" component={Camerascreen} options={{ title: '' }} />
-            <Stack.Screen name="RemovedBookScreen" component={RemovedBookScreen} options={{ title: '' }} />
-            <Stack.Screen name="UploadedBooks" component={UploadedBooks} options={{title: 'Book Details'}}/>
-            <Stack.Screen name="Booksaddedtopickup" component={Booksaddedtopickup} options={{title: 'Pickup  details'}}/>
-            <Stack.Screen name="Changepassword" component={Changepassword} options={{ title: 'Change Password' }}/>
-            <Stack.Screen name="EditPhone" component={EditPhone} options={{title: 'Change Phone'}}/>
-            <Stack.Screen name="Storemodal" component={Storemodal} options={{title: 'Select a shop'}}/>
-            <Stack.Screen name="Edituploadedbook" component={Edituploadedbook} options={{title:'Edit'}}/>
-            </Stack.Navigator>
+ 
+  if (user.isAuthenticated && user !== null) {
+    return (
+      <ThemeContext.Provider value={themeData}>
+      <NavigationContainer theme={Theme == 'Light'? theme : Dtheme}>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Mainpage"
+            component={Bottomnavcomponent}
+            options={{ headerShown: false, title: "" }}
+          />
+          <Stack.Screen
+            name="Bookscreen"
+            component={Bookscreen}
+            options={{ headerShown : false}}
+          />
+          <Stack.Screen
+            name="Camerascreen"
+            component={Camerascreen}
+            options={{ title: "" }}
+          />
+          
+          
+          
+          <Stack.Screen
+            name="Changepassword"
+            component={Changepassword}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="EditPhone"
+            component={EditPhone}
+            options={{ headerShown:false }}
+          />
+           <Stack.Screen
+            name="EditEmail"
+            component={EditEmail}
+            options={{ headerShown:false }}
+          />
+          <Stack.Screen
+            name="Storemodal"
+            component={Storemodal}
+            options={{ headerShown:false }}
+          />
+          <Stack.Screen
+            name="Edituploadedbook"
+            component={Edituploadedbook}
+            options={{ headerShown:false }}
+          />
+          <Stack.Screen
+            name="Bookdetail"
+            component={Bookdetail}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
       </NavigationContainer>
-    )
-  }
-  else {
-    return(
-      <NavigationContainer theme={theme}>
-            <Stack.Navigator >
-            <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
-            <Stack.Screen name='Signup' component={Signup}  options={{headerShown: false}}/>
-            <Stack.Screen name="ForgotPassword" component={ForgotPassword} options={{headerShown: false}}/>
-            <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} options={{headerShown:true}}/>
-            <Stack.Screen name="EmailVerification" component={EmailVerification} options={{headerShown:true}}/>
-            </Stack.Navigator>
+      </ThemeContext.Provider>
+    );
+  } else {
+    return (
+      <ThemeContext.Provider value={themeData}>
+      <NavigationContainer theme={Theme == 'Light'? theme : Dtheme}>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Signup"
+            component={Signup}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="InitialSignup"
+            component={InitialSignup}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="ForgotPassword"
+            component={ForgotPassword}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="PrivacyPolicy"
+            component={PrivacyPolicy}
+            options={{ headerShown: true }}
+          />
+          <Stack.Screen
+            name="EmailVerification"
+            component={EmailVerification}
+            options={{ headerShown: true }}
+          />
+
+          <Stack.Screen
+            name="PhonenumberVerification"
+            component={PhonenumberVerification}
+            options={{ headerShown: true }}
+          />
+        </Stack.Navigator>
       </NavigationContainer>
-    )
+      </ThemeContext.Provider>
+    );
   }
-}
-
-
+};
 
 export default Navigation;
