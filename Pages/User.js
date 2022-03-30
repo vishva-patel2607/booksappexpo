@@ -1,7 +1,7 @@
 import { ActivityIndicator } from "react-native-paper";
 import { Switch, Button } from "react-native-paper";
 
-import { ThemeContext } from "../main pages/Navigation";
+import { ThemeContext } from "../Components/Theme";
 import React, { useState, useEffect } from "react";
 import ActionButton from "../Components/Actionbutton";
 import StaticText from "../Components/StaticText";

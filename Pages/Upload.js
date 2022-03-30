@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import SwitchSelector from "react-native-switch-selector";
 import Findashop from "../Components/Findashop";
 import RNPickerSelect from "react-native-picker-select";
-
+import { ThemeContext } from "../Components/Theme";
 import { SafeAreaView, View, Image, StyleSheet, Pressable } from "react-native";
 import { logoutUser } from "../actions";
 import { Platform, StatusBar } from "react-native";
@@ -207,17 +207,17 @@ const UploadRoute = (props) => {
         <View style={{ justifyContent: "center", marginRight: 16 }}>
           <View style={styles.shop}>
             <View style={styles.shopDetailsContainer}>
-              <Text style={[styles.shopDetails, styles.shopDistance]}>
+              <Text style={[styles.shopDetails, styles.shopDistance,{color:colors.text}]}>
                 {shop.store_distance}
               </Text>
-              <Text style={styles.shopDetails}>{shop.store_name}</Text>
+              <Text style={[styles.shopDetails,{color:colors.text}]}>{shop.store_name}</Text>
             </View>
           </View>
 
           <View>
-            <Text style={styles.storeDetails}>{shop.store_incharge} </Text>
-            <Text style={styles.storeDetails}>{shop.store_address} </Text>
-            <Text style={styles.storeDetails}>{shop.store_number}</Text>
+            <Text style={[styles.storeDetails,{color:colors.text}]}>{shop.store_incharge} </Text>
+            <Text style={[styles.storeDetails,{color:colors.text}]}>{shop.store_address} </Text>
+            <Text style={[styles.storeDetails,{color:colors.text}]}>{shop.store_number}</Text>
           </View>
         </View>
         <View style={{ alignSelf: "center", marginTop: 10 }}>
@@ -421,8 +421,9 @@ const UploadRoute = (props) => {
             placeholder={{
               label: "Select the genre",
               value: "",
-              color: "black",
+              color: colors.text,
             }}
+            
             place
             useNativeAndroidPickerStyle={false}
             style={customPickerStyles}
@@ -813,7 +814,6 @@ const customPickerStyles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#0036F4",
     borderRadius: 20,
-    color: "#000000",
     paddingRight: 30, // to ensure the text is never behind the icon
     paddingLeft: 10,
     height: 40,
@@ -823,7 +823,6 @@ const customPickerStyles = StyleSheet.create({
     fontSize: 14,
     borderWidth: 2,
     borderColor: "#0036F4",
-    color: "#0D1936",
     borderRadius: 50,
     paddingRight: 30, // to ensure the text is never behind the icon
     paddingLeft: 10,

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Image, View } from "react-native";
-import { ThemeContext } from "../main pages/Navigation";
+import { ThemeContext } from "./Theme";
 
 export default function BAheader() {
   const {Theme,setTheme} = React.useContext(ThemeContext)

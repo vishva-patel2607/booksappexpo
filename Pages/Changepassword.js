@@ -9,7 +9,7 @@ import {
   Image,
   Pressable,
 } from "react-native";
-import { ThemeContext } from "../main pages/Navigation";
+import { ThemeContext } from "../Components/Theme";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button, TextInput } from "react-native-paper";
@@ -121,13 +121,13 @@ const Changepassword = (props) => {
           style={styles.inputtextbox}
           theme={{
             colors: {
-              primary: "#EEECEF",
+              primary: colors.background,
               placeholder: "#8e8e8e",
             },
             roundness: 120,
           }}
           // theme={{ colors: { primary: "transparent" } }}
-          mode="flat"
+          mode="outlined"
           placeholder="Old Password"
           secureTextEntry={true}
           value={oldpassword}
@@ -142,12 +142,12 @@ const Changepassword = (props) => {
           style={styles.inputtextbox}
           theme={{
             colors: {
-              primary: "#ECEFEE",
+              primary: colors.background,
               placeholder: "#8e8e8e",
             },
             roundness: 120,
           }}
-          mode="flat"
+          mode="outlined"
           placeholder="New password"
           value={newpassword1}
           onChangeText={(text) => setNewpassword1(text)}
@@ -162,12 +162,12 @@ const Changepassword = (props) => {
           style={styles.inputtextbox}
           theme={{
             colors: {
-              primary: "#EEECEF",
+              primary: colors.background,
               placeholder: "#8e8e8e",
             },
             roundness: 120,
           }}
-          mode="flat"
+          mode="outlined"
           placeholder="Retype New Password"
           value={newpassword2}
           onChangeText={(text) => setNewpassword2(text)}

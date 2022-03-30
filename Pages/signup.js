@@ -9,12 +9,14 @@ import {
   KeyboardAvoidingView,
   Pressable,
 } from "react-native";
-import { ThemeContext } from "../main pages/Navigation";
+import { useTheme } from "@react-navigation/native";
+import { ThemeContext } from "../Components/Theme";
 
 import RenderButton from "../Components/Button";
 import { TextInput } from "react-native-paper";
 
 const Signup = (props) => {
+  const { colors } = useTheme();
   const [username, setUsername] = useState(props.route.params.username);
   const [email, setEmail] = useState(props.route.params.email);
   const [firstname, setFirstname] = useState("");
@@ -144,8 +146,8 @@ const Signup = (props) => {
   };
   return (
     <SafeAreaView style={styles.loginlayout}>
-      <KeyboardAvoidingView behavior="padding">
-        <View style={{ flex: 1, alignSelf: "flex-start" }}>
+      
+        <View style={{ flex: 1, alignSelf: "flex-start",marginLeft:10 }}>
           <Pressable onPress={() => props.navigation.navigate("InitialSignup")}>
             
               {Theme === "Light" ? (
@@ -162,7 +164,8 @@ const Signup = (props) => {
         
           </Pressable>
         </View>
-        <View style={{ flex: 2, marginTop: 30 }}>
+        <KeyboardAvoidingView behavior="padding">
+        <View style={{ flex: 2, marginTop: 30,justifyContent:'center' }}>
           {Theme === 'Light'? (
             <Image
             source={require("../assets/BAheader.png")}
@@ -177,12 +180,12 @@ const Signup = (props) => {
           
         </View>
 
-        <View style={{ flex: 18, flexDirection: "column" }}>
+        <View style={{ flex: 15, flexDirection: "column",justifyContent:'flex-start' }}>
           <TextInput
             style={styles.inputtextbox}
             theme={{
               colors: {
-                primary: "#EEECEF",
+                primary: colors.background,
                 placeholder: "#8e8e8e",
               },
               roundness: 120,
@@ -194,7 +197,7 @@ const Signup = (props) => {
             autoCapitalize="none"
             autoCompleteType="username"
             autoCorrect={false}
-            underlineColor="#ECEFEE"
+            underlineColor="transparent"
             maxLength={20}
             left={
               <TextInput.Icon
@@ -206,7 +209,7 @@ const Signup = (props) => {
             style={styles.inputtextbox}
             theme={{
               colors: {
-                primary: "#EEECEF",
+                primary: colors.background,
                 placeholder: "#8e8e8e",
               },
               roundness: 120,
@@ -217,7 +220,7 @@ const Signup = (props) => {
             onChangeText={(text) => setLastname(text)}
             autoCapitalize="none"
             autoCorrect={false}
-            underlineColor="#ECEFEE"
+            underlineColor="transparent"
             maxLength={20}
             left={
               <TextInput.Icon
@@ -230,7 +233,7 @@ const Signup = (props) => {
             style={styles.inputtextbox}
             theme={{
               colors: {
-                primary: "#EEECEF",
+                primary: colors.background,
                 placeholder: "#8e8e8e",
               },
               roundness: 120,
@@ -242,7 +245,7 @@ const Signup = (props) => {
             autoCapitalize="none"
             autoCompleteType="username"
             autoCorrect={false}
-            underlineColor="#ECEFEE"
+            underlineColor="transparent"
             maxLength={20}
             left={
               <TextInput.Icon
@@ -256,12 +259,12 @@ const Signup = (props) => {
               style={styles.datetextbox}
               theme={{
                 colors: {
-                  primary: "#EEECEF",
+                  primary: colors.background,
                   placeholder: "#8e8e8e",
                 },
                 roundness: 120,
               }}
-              underlineColor="#ECEFEE"
+              underlineColor="transparent"
               placeholder="MM"
               value={month}
               onChangeText={(text) => handleChangeMonth(text)}
@@ -276,7 +279,7 @@ const Signup = (props) => {
               style={styles.datetextbox}
               theme={{
                 colors: {
-                  primary: "#EEECEF",
+                  primary: colors.background,
                   placeholder: "#8e8e8e",
                 },
                 roundness: 120,
@@ -286,7 +289,7 @@ const Signup = (props) => {
               onChangeText={(text) => handleChangeDay(text)}
               autoCorrect={false}
               maxLength={2}
-              underlineColor="#ECEFEE"
+              underlineColor="transparent"
               // left={<TextInput.Icon name="calendar-today" />}
               ref={ref_day}
               keyboardType="number-pad"

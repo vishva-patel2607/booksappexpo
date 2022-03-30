@@ -12,14 +12,13 @@ import {
 } from "react-native";
 import RenderButton from "../Components/Button";
 import { TextInput, Text } from "react-native-paper";
-import { ThemeContext } from "../main pages/Navigation";
+import { ThemeContext } from "../Components/Theme";
 import StaticText from "../Components/StaticText";
 import { useDispatch } from "react-redux";
 import { setUser } from "../actions";
 
 const Login = (props) => {
   const { colors } = useTheme();
-  console.log(colors);
   const [bordercolor, setBordercolor] = useState("black");
   const {setTheme,Theme} = React.useContext(ThemeContext);
   const [username, setUsername] = useState("");
@@ -152,7 +151,7 @@ const Login = (props) => {
             style={styles.inputtextbox}
             theme={{
               colors: {
-                primary: "#EEECEF",
+                primary: colors.background,
                 placeholder: "#8e8e8e",
               },
               roundness: 120,
@@ -161,6 +160,7 @@ const Login = (props) => {
             // label="Username"
             placeholder="Username"
             value={username}
+       
             onChangeText={(text) => setUsername(text)}
             autoCapitalize="none"
             autoCompleteType="username"
@@ -180,11 +180,12 @@ const Login = (props) => {
             <TextInput
               theme={{
                 colors: {
-                  primary: "#EEECEF",
+                  primary: colors.background,
                   placeholder: "#8e8e8e",
                 },
                 roundness: 120,
               }}
+
               style={styles.inputtextbox}
               placeholder="Password"
               value={password}
@@ -193,7 +194,7 @@ const Login = (props) => {
               autoCompleteType="password"
               autoCorrect={false}
               maxLength={20}
-              underlineColor="#ECEFEE"
+              underlineColor="transparent"
               secureTextEntry={true}
               left={
                 <TextInput.Icon
@@ -249,11 +250,6 @@ const Login = (props) => {
 };
 
 const styles = StyleSheet.create({
-  textbox: {
-    textAlign: "center",
-    padding: 20,
-  },
-
   error: {
     textAlign: "center",
     fontSize: 20,
@@ -269,40 +265,6 @@ const styles = StyleSheet.create({
     height: 50,
   },
 
-  submitbutton: {
-    margin: 10,
-    fontSize: 20,
-    color: "white",
-    width: 200,
-    borderRadius: 20,
-  },
-
-  loginlayout: {
-    flex: 1,
-    alignItems: "center",
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-    
-  },
-
-  sectionStyle: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    borderWidth: 0.5,
-
-    height: 50,
-    borderRadius: 120,
-    margin: 10,
-  },
-  imageStyle: {
-    padding: 10,
-    margin: 5,
-    height: 25,
-    width: 25,
-    resizeMode: "stretch",
-    alignItems: "center",
-  },
 });
 
 export default React.memo(Login);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import { useTheme } from "@react-navigation/native";
 import {
   SafeAreaView,
   View,
@@ -10,19 +10,19 @@ import {
   StatusBar,
 } from "react-native";
 import StaticText from "../Components/StaticText";
-import Findashop from "../Components/Findashop";
-import Changeshop from "../Components/Changeshop";
 import RNPickerSelect from "react-native-picker-select";
-import { BarCodeScanner } from "expo-barcode-scanner";
+import { ThemeContext } from "../Components/Theme";
 import Svg, { Path } from "react-native-svg";
 import { logoutUser } from "../actions";
 import { Button, Text, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 
 const Edituploadedbook = (props) => {
+  const {colors} = useTheme();
+  const { setTheme, Theme } = React.useContext(ThemeContext);
   const [Bookdata, setBookdata] = useState(props.route.params?.book);
   const [price, setPrice] = useState(String(Bookdata.book_price));
-  const [imgurl, setImgurl] = useState(null);
+  const [imgurl, setImgurl] = useState(Bookdata.book_img);
   const [name, setName] = useState(Bookdata.book_name);
   let [isbn, setIsbn] = useState("");
   const [author, setAuthor] = useState(Bookdata.book_author);
@@ -34,9 +34,6 @@ const Edituploadedbook = (props) => {
   const [NewCondition, setNewCondition] = useState(
     props.route.params?.book.book_condition
   );
-  const [hasPermission, setHasPermission] = useState(null);
-  const [scanned, setScanned] = useState(false);
-  const [showQR, setShowQR] = useState(false);
 
   useEffect(() => {
     if (
@@ -61,124 +58,14 @@ const Edituploadedbook = (props) => {
     }
   }, [props.route.params.params?.photo]);
 
-  const [NewImg, setNewImg] = useState(props?.route?.params?.book?.book_img);
-  // console.log(props?.route?.params?.book?.book_img);
-
-  let selected;
-  // if (shop != null) {
-  //   selected = (
-  //     <>
-  //       <View style={{ justifyContent: "center", marginRight: 16 }}>
-  //         <View style={styles.shop}>
-  //           <View style={styles.shopDetailsContainer}>
-  //             <Text style={[styles.shopDetails, styles.shopDistance]}>
-  //               {shop.store_distance}
-  //             </Text>
-  //             <Text style={styles.shopDetails}>{shop.store_name}</Text>
-  //           </View>
-  //         </View>
-
-  //         <View>
-  //           <Text style={styles.storeDetails}>{shop.store_incharge} </Text>
-  //           <Text style={styles.storeDetails}>{shop.store_address} </Text>
-  //           <Text style={styles.storeDetails}>{shop.store_number}</Text>
-  //         </View>
-  //       </View>
-  //       <View style={{ alignSelf: "center", marginTop: 10 }}>
-  //         <Pressable
-  //           onPress={() =>
-  //             props.navigation.navigate("Storemodal", {
-  //               params: { shop: shop },
-  //             })
-  //           }
-  //         >
-  //           <Changeshop />
-  //         </Pressable>
-  //       </View>
-  //     </>
-  //   );
-  // } else {
-  //   selected = (
-  //     <View style={{ marginTop: 20, alignSelf: "center" }}>
-  //       <Pressable onPress={() => props.navigation.navigate("Storemodal",{params:'Edit'})}>
-  //         <Findashop />
-  //       </Pressable>
-  //     </View>
-  //   );
-  // }
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
-  // useEffect(() => {
-  //   setBookdata(props.route.params?.book);
-  // }, [props.route.params?.book]);
-
-  // useEffect(() => {
-  //   console.log(
-  //     props.route?.params?.params?.photo.uri ||
-  //       props?.route?.params?.book?.book_img
-  //   );
-  //   setNewImg(
-  //     props.route?.params?.params?.photo.uri ||
-  //       props?.route?.params?.book?.book_img
-  //   );
-  // }, [
-  //   props.route?.params?.params?.photo.uri,
-  //   props?.route?.params?.book?.book_img,
-  // ]);
-
-  // const imageUpload = async (imagedata) => {
-  //   console.log(NewImg);
-  //   let formData = new FormData();
-  //   formData.append("old_book_img_url", NewImg);
-  //   formData.append("book_img", imagedata);
-
-  //   try {
-  //     const fetchRes = await fetch(
-  //       "https://booksapp2021.herokuapp.com/Book/Upload/Image",
-  //       {
-  //         method: "PUT",
-  //         headers: {
-  //           Accept: "application/json",
-  //           "Content-Type": "multipart/form-data",
-  //           "x-access-token": user.token,
-  //         },
-  //         body: formData,
-  //       }
-  //     );
-  //     const res = await fetchRes.json();
-  //     console.log("response of API", res);
-  //     if (res.status === true) {
-  //       alert("Image changed successfully");
-  //       setNewImg(res.response.book);
-  //     } else {
-  //       alert("Error ocuured while changing the image");
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  
 
   const editbooks = async () => {
     console.log("edit books function call");
-
-    // if (
-    //   props.route.params?.params.photo !== null &&
-    //   props.route.params?.params.photo !== undefined
-    // ) {
-    //   console.log(
-    //     "props.route.params.params.photo",
-    //     props?.route.params.params.photo
-    //   );
-    //   var photouri = props.route.params.params.photo.uri;
-
-    //   var imagedata = {
-    //     uri: photouri,
-    //     type: "image/jpeg",
-    //     name: "photo.jpg",
-    //   };
-    //   await imageUpload(imagedata);
 
       fetch("https://booksapp2021.herokuapp.com/Book/Lent/Edit", {
         method: "PUT",
@@ -228,50 +115,38 @@ const Edituploadedbook = (props) => {
         });
   };
 
-  // console.log(props.route.params?.params.photo);
-  // if(props.route){
-  //   console.log(props.route?.params?.params?.photo.uri);
+ 
 
   // }
   return (
     <SafeAreaView style={{ flex: 1, flexDirection: "column" }}>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
         <Pressable onPress={() => props.navigation.navigate("Bookdetail")}>
-          <Image
-            source={require("../assets/Backbutton.png")}
-            style={{ marginLeft: 19, marginTop: 18 }}
-          />
+        {Theme === "Light" ? (
+            <Image
+              source={require("../assets/Backbutton.png")}
+              style={{ marginLeft: 20, marginTop: 18 }}
+            />
+          ) : (
+            <Image
+              source={require("../assets/Backbuttondark.png")}
+              style={{ marginLeft: 20, marginTop: 18 }}
+            />
+          )}
         </Pressable>
       </View>
-      <View style={{ flex: 6, flexDirection: "row", marginLeft: 10 }}>
+      <View style={{ flex: 4, flexDirection: "row", marginLeft: 10 }}>
         <View style={styles.inputfields}>
-          {/* <View style={styles.isbn}>
-            <TextInput
-              style={[styles.inputtextbox, styles.isbninput]}
-              placeholder="ISBN"
-              value={Bookdata.book_isbn}
-              onChangeText={(isbn) => setIsbn(isbn.replace(/[^0-9]/g, ""))}
-              keyboardType="number-pad"
-            />
-            <Pressable
-              onPress={() => {
-                setShowQR(!showQR);
-                if (showQR) setScanned(false);
-              }}
-            >
-              <View style={{ marginTop: 10, marginRight: 5 }}>
-                <QrcodeLogo />
-              </View>
-            </Pressable>
-          </View> */}
           <TextInput
             style={styles.inputtextbox}
+            theme={{ colors: { text: colors.text, placeholder: colors.text } }}
             placeholder={Bookdata.book_name}
             value={name}
             onChangeText={(text) => setName(text)}
           />
           <TextInput
             style={styles.inputtextbox}
+            theme={{ colors: { text: colors.text, placeholder: colors.text } }}
             placeholder={Bookdata.book_author}
             value={author}
             onChangeText={(text) => setAuthor(text)}
@@ -279,6 +154,7 @@ const Edituploadedbook = (props) => {
           <View style={styles.container}>
             <TextInput
               style={[styles.inputtextbox, styles.subcontainer]}
+              theme={{ colors: { text: colors.text, placeholder: colors.text } }}
               placeholder="Year"
               value={String(year)}
               onChangeText={(text) => setYear(text.replace(/[^0-9]/g, ""))}
@@ -287,6 +163,9 @@ const Edituploadedbook = (props) => {
             />
             <TextInput
               style={[styles.inputtextbox, styles.subcontainer]}
+              theme={{
+                colors: { text: colors.text, placeholder: colors.text },
+              }}
               placeholder="Price"
               value={String(price)}
               onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ""))}
@@ -318,44 +197,24 @@ const Edituploadedbook = (props) => {
           />
         </View>
         <View
-          style={{ flexDirection: "column", flex: 1, justifyContent: "center" }}
+          style={{ flexDirection: "column", flex: 1, justifyContent: "flex-start",marginTop:20 }}
         >
-          {/* <View style={styles.uploadimage}>
-            <Pressable
-              style={{ width: "100%", height: "100%" }}
-              onPress={() =>
-                props.navigation.navigate("Camerascreen", {
-                  redirectTo: "Edituploadedbook",
-                })
-              }
-            >
+          <View style={styles.uploadimage}>
               <Image
                 style={{
-                  flex: 1,
+                  
                   height: "100%",
                   width: "100%",
-                  resizeMode: "cover",
-                  width: "100%",
+                  
                   borderRadius: 20,
                 }}
                 source={{
-                  uri: NewImg,
+                  uri: imgurl,
                 }}
+                onLoad = {() => {console.log('Loaded')}}
               />
-              <Button
-                style={{
-                  backgroundColor: "#E96A59",
-                  marginTop: -10,
-                  borderRadius: 20,
-                  fontFamily: "DMSans",
-                }}
-                labelStyle={{ color: "white", fontSize: 14 }}
-              >
-                Edit Photo
-              </Button>
-            </Pressable>
-
-          </View> */}
+          </View>
+          
         </View>
       </View>
       <View
@@ -363,7 +222,7 @@ const Edituploadedbook = (props) => {
           flex: 6,
           flexDirection: "column",
           marginLeft: 20,
-          justifyContent: "space-around",
+          justifyContent: "flex-start",
         }}
       >
         <View style={{ marginTop: 30 }}>
@@ -390,7 +249,7 @@ const Edituploadedbook = (props) => {
                 style={[
                   styles.checkboxText,
                   {
-                    color: bookCondition === "Bad" ? "#ffffff" : "#000000",
+                    color: bookCondition === "Bad" ? "#ffffff" : colors.text,
                   },
                 ]}
                 onPress={() => {
@@ -414,7 +273,7 @@ const Edituploadedbook = (props) => {
                 style={[
                   styles.checkboxText,
                   {
-                    color: bookCondition === "Fair" ? "#ffffff" : "#000000",
+                    color: bookCondition === "Fair" ? "#ffffff" : colors.text,
                   },
                 ]}
                 onPress={() => {
@@ -437,7 +296,7 @@ const Edituploadedbook = (props) => {
                 style={[
                   styles.checkboxText,
                   {
-                    color: bookCondition === "Good" ? "#ffffff" : "#000000",
+                    color: bookCondition === "Good" ? "#ffffff" : colors.text,
                   },
                 ]}
                 onPress={() => {
@@ -461,7 +320,7 @@ const Edituploadedbook = (props) => {
                 style={[
                   styles.checkboxText,
                   {
-                    color: bookCondition === "Great" ? "#ffffff" : "#000000",
+                    color: bookCondition === "Great" ? "#ffffff" : colors.text,
                   },
                 ]}
                 onPress={() => {
@@ -473,8 +332,25 @@ const Edituploadedbook = (props) => {
             </View>
           </View>
         </View>
+        <View style={{ justifyContent: "center", marginRight: 16 }}>
+          <View style={styles.shop}>
+            <View style={styles.shopDetailsContainer}>
+              <Text style={[styles.shopDetails, styles.shopDistance,{color:colors.text}]}>
+                {Bookdata.store.store_distance}
+              </Text>
+              <Text style={[styles.shopDetails,{color:colors.text}]}>{Bookdata.store.store_name}</Text>
+            </View>
+          </View>
 
-        {selected}
+          <View>
+            <Text style={[styles.storeDetails,{color:colors.text}]}>{Bookdata.store.store_incharge} </Text>
+            <Text style={[styles.storeDetails,{color:colors.text}]}>{Bookdata.store.store_address} </Text>
+            <Text style={[styles.storeDetails,{color:colors.text}]}>{Bookdata.store.store_number}</Text>
+          </View>
+        </View>
+
+
+        {/* {selected} */}
       </View>
 
       <View
@@ -572,13 +448,12 @@ const styles = StyleSheet.create({
   },
   inputfields: {
     width: "50%",
-    justifyContent: "space-evenly",
+    justifyContent: "space-around",
   },
   inputtextbox: {
-    color: "#6E7A7D",
     backgroundColor: "transparent",
     justifyContent: "center",
-    height: 50,
+    height: 20,
     marginTop: 10,
   },
   isbn: {
@@ -594,10 +469,36 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
+  shop: {
+    marginVertical: 15,
+    marginBottom: 2,
+  },
+
+  shopDetailsContainer: {
+    flexDirection: "row",
+
+    alignItems: "center",
+  },
+  shopDetails: {
+    flex: 8,
+    paddingVertical: 6,
+    borderWidth: 2,
+    fontWeight: "700",
+    borderColor: "#0036F4",
+    borderRadius: 20,
+    textAlign: "center",
+    fontFamily: "DMSans",
+  },
   subcontainer: {
     marginHorizontal: 1,
     width: "45%",
   },
+
+  shopDistance: {
+    flex: 5,
+    marginRight: 20,
+  },
+
   checkboxContainer: {
     width: "20%",
     borderWidth: 2,
@@ -625,7 +526,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   uploadimage: {
-    justifyContent: "flex-end",
+    
     marginBottom: 10,
     backgroundColor: "#6E797C",
     borderRadius: 20,
