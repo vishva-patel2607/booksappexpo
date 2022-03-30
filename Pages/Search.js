@@ -10,7 +10,7 @@ import {
   StatusBar,
   TouchableOpacity,
 } from "react-native";
-import { ThemeContext } from "../main pages/Navigation";
+import { ThemeContext } from "../Components/Theme";
 import { Divider, IconButton } from "react-native-paper";
 import { debounce } from "lodash";
 import { Text, Searchbar } from "react-native-paper";
@@ -112,6 +112,7 @@ const SearchRoute = (props) => {
         .then((data) => {
           if (data.status) {
             if (data.message === "All the Books for given query") {
+              console.log(data);
               setReceiveddata(data.response.book_list);
               setMessage(data.message);
             } else {
@@ -172,9 +173,10 @@ const SearchRoute = (props) => {
             style={styles.touchableopacitystyle}
             onPress={() => setShowpriceoption(!showpriceoption)}
           >
-            <View style={{ justifyContent: "center" }}>
+            <View style={{ }}>
               <Text
                 style={{
+                  justifyContent:'center',
                   fontFamily: "DMSans",
                   fontSize: 14,
                   color: colors.text,
@@ -186,7 +188,7 @@ const SearchRoute = (props) => {
            {arrowdown}
           </TouchableOpacity>
           {showpriceoption && (
-            <View>
+            <View style={{alignItems:'center'}}>
               {Price.map((val, id) => {
                 return (
                   <TouchableOpacity
@@ -194,6 +196,7 @@ const SearchRoute = (props) => {
                     style={{
                       height: 30,
                       borderRadius: 10,
+                      paddingVertical:5,
                     }}
                     onPress={() => {
                       filterlist.add(val.name);
@@ -223,12 +226,13 @@ const SearchRoute = (props) => {
             style={styles.touchableopacitystyle}
             onPress={() => setShowcategoryoption(!showcategoryoption)}
           >
-            <View style={{ justifyContent: "center" }}>
+            <View  style={{alignItems:'center'}}>
               <Text
                 style={{
                   fontFamily: "DMSans",
                   fontSize: 14,
                   color: colors.text,
+                  
                 }}
               >
                 Category
@@ -243,7 +247,8 @@ const SearchRoute = (props) => {
                   <TouchableOpacity
                     key={id}
                     style={{
-                      paddingVertical: 8,
+                      paddingVertical: 5,
+                      alignItems:'center',
                       height: 30,
                       borderRadius: 10,
                     }}
@@ -288,13 +293,13 @@ const SearchRoute = (props) => {
             {arrowdown}
           </TouchableOpacity>
           {showdistanceoption && (
-            <View>
+            <View style={{alignItems:'center'}}>
               {Distance.map((val, id) => {
                 return (
                   <TouchableOpacity
                     key={id}
                     style={{
-                      paddingVertical: 8,
+                      paddingVertical: 5,
                       height: 30,
                       borderRadius: 10,
                     }}
@@ -345,7 +350,7 @@ const SearchRoute = (props) => {
               style={{
                 fontFamily: "DMSans",
                 marginLeft: 5,
-                color: colors.text,
+                color: colors.background,
               }}
             >
               {val}
@@ -427,7 +432,7 @@ const styles = StyleSheet.create({
   },
   touchableopacitystyle: {
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent:'space-around',
     flexDirection: "row",
     width: 100,
     height: 30,

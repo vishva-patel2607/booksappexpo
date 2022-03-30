@@ -129,9 +129,6 @@ const Storemodalcard = (props) => {
   );
 };
 
-const styles = StyleSheet.create({
-  
-});
 
 export default React.memo(Storemodalcard);
 

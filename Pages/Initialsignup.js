@@ -9,12 +9,14 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import RenderButton from "../Components/Button";
+import {useTheme} from '@react-navigation/native';
 import { TextInput } from "react-native-paper";
 import StaticText from "../Components/StaticText";
-import { ThemeContext } from "../main pages/Navigation";
+import { ThemeContext } from "../Components/Theme";
 
 
 const InitialSignUp = (props) => {
+  const {colors} = useTheme();
   const [username, setUsername] = useState("");
   const {setTheme,Theme} = React.useContext(ThemeContext);
   const [email, setEmail] = useState("");
@@ -92,18 +94,17 @@ const InitialSignUp = (props) => {
             style={styles.inputtextbox}
             theme={{
               colors: {
-                primary: "#EEECEF",
+                primary: colors.background,
                 placeholder: "#8e8e8e",
               },
               roundness: 120,
             }}
             // theme={{ colors: { primary: "transparent" } }}
-
             placeholder="Username"
             value={username}
             onChangeText={(text) => setUsername(text)}
             autoCapitalize="none"
-            underlineColor="#ECEFEE"
+            underlineColor="transparent"
             autoCompleteType="username"
             autoCorrect={false}
             // underlineColor="transparent"
@@ -119,19 +120,18 @@ const InitialSignUp = (props) => {
             style={styles.inputtextbox}
             theme={{
               colors: {
-                primary: "#EEECEF",
+                primary: colors.background,
                 placeholder: "#8e8e8e",
               },
               roundness: 120,
             }}
             // theme={{ colors: { primary: "transparent" } }}
-
             placeholder="Email"
             value={email}
             onChangeText={(text) => setEmail(text)}
             autoCapitalize="none"
             autoCompleteType="email"
-            underlineColor="#ECEFEE"
+            underlineColor="transparent"
             autoCorrect={false}
             maxLength={30}
             left={
@@ -144,18 +144,18 @@ const InitialSignUp = (props) => {
           <TextInput
             theme={{
               colors: {
-                primary: "#EEECEF",
+                primary: colors.background,
                 placeholder: "#8e8e8e",
               },
               roundness: 120,
             }}
             style={styles.inputtextbox}
             placeholder="Password"
-            underlineColor="#ECEFEE"
             value={password}
             onChangeText={(text) => setPassword(text)}
             autoCapitalize="none"
             autoCorrect={false}
+            underlineColor="transparent"
             maxLength={20}
             secureTextEntry={true}
             left={
@@ -170,7 +170,7 @@ const InitialSignUp = (props) => {
           <TextInput
             theme={{
               colors: {
-                primary: "#EEECEF",
+                primary: colors.background,
                 placeholder: "#8e8e8e",
               },
               roundness: 120,
@@ -182,7 +182,7 @@ const InitialSignUp = (props) => {
             autoCapitalize="none"
             autoCorrect={false}
             maxLength={20}
-            underlineColor="#ECEFEE"
+            underlineColor= "transparent"
             secureTextEntry={true}
             left={
               <TextInput.Icon

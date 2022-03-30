@@ -9,9 +9,9 @@ import {
   Alert,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { ThemeContext } from "../main pages/Navigation";
+import { ThemeContext } from "../Components/Theme";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Title, Text } from "react-native-paper";
+import { Button, Title, Text, ActivityIndicator } from "react-native-paper";
 import MapView, { Marker } from "react-native-maps";
 import { createPortal } from "react-dom";
 
@@ -21,7 +21,7 @@ const BookDetail = (props) => {
   return (
     <View>
       <Text style={[styles.BookDetailTitle]}>{props.title}</Text>
-      <Text style={[styles.BookDetailValue, { color: colors.text }]}>
+      <Text style={[styles.BookDetailValue, { color: colors.text }]} numberOfLines={2}>
         {props.value}
       </Text>
     </View>
@@ -39,6 +39,9 @@ const Bookdetail = (props) => {
   const { colors } = useTheme();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  const [imageloading, setImageloading] = useState(false);
+  let showloading = imageloading === true ? <ActivityIndicator style={{alignSelf:'center'}} /> :<View></View>
+  
 
   const removebook = () => {
     if (
@@ -190,7 +193,7 @@ const Bookdetail = (props) => {
                 flex: 1,
               }}
             >
-              <Image
+              {/* <Image
                 style={{
                   height: 200,
                   resizeMode: "cover",
@@ -199,25 +202,43 @@ const Bookdetail = (props) => {
                 source={{
                   uri: book.book_img,
                 }}
+              /> */}
+              {showloading}
+                <Image
+                style={{
+                  height: 200,
+                  resizeMode: "cover",
+                  borderRadius: 20,
+                }}
+                source={{
+                  uri: book.book_img,
+                }}
+                onLoadStart={() => {setImageloading(true
+                  )
+                console.log('In')}}
+                onLoadEnd={() => {setImageloading(false)
+                   console.log('Out')}}
               />
             </View>
             {(props.route.params.title === "LENT" ||
               props.route.params.title === "SOLD") && (
-              <Button
-                style={styles.button}
-                color="#ffffff"
+              <Pressable
                 onPress={() =>
                   props.navigation.navigate("Edituploadedbook", {
                     book: book,
                   })
                 }
               >
-                EDIT
-              </Button>
+                <Button style={styles.button} color="#ffffff">
+                  EDIT
+                </Button>
+              </Pressable>
             )}
-            <Button style={styles.button} color="#ffffff" onPress={removebook}>
-              REMOVE
-            </Button>
+            <Pressable onPress={removebook}>
+              <Button style={styles.button} color="#ffffff">
+                REMOVE
+              </Button>
+            </Pressable>
           </View>
         </View>
 

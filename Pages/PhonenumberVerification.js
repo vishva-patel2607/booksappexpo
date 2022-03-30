@@ -6,6 +6,8 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
+import { useTheme } from "@react-navigation/native";
+
 import { Platform, StatusBar, RefreshControl } from "react-native";
 import { logoutUser, setUser } from "../actions";
 import {
@@ -21,6 +23,7 @@ import { Path, Svg } from "react-native-svg";
 const URL = `https://booksapp2021.herokuapp.com/`;
 
 const PhonenumberVerification = (props) => {
+  const { setTheme, Theme } = React.useContext(ThemeContext);
   const { usernumber, phonenumber } = props.route.params;
 
   const [otp, setOTP] = useState({ s1: 0, s2: 0, s3: 0, s4: 0, s5: 0, s6: 0 });
@@ -300,7 +303,6 @@ const BooksappLogo = () => {
 
 const styles = StyleSheet.create({
   main: {
-    backgroundColor: "#ECEFEE",
     paddingHorizontal: 20,
   },
   logo: {

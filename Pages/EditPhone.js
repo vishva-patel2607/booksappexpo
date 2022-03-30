@@ -8,7 +8,7 @@ import {
   Pressable,
   Image
 } from "react-native";
-import { ThemeContext } from "../main pages/Navigation";
+import { ThemeContext } from "../Components/Theme";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../actions";
 

@@ -1,6 +1,6 @@
 Storemodal
 import React, { useState, useEffect } from "react";
-import { ThemeContext } from "../main pages/Navigation";
+import { ThemeContext } from "../Components/Theme";
 import {
   SafeAreaView,
   ScrollView,

@@ -6,7 +6,7 @@ import { NavigationContainer,DefaultTheme,DarkTheme } from "@react-navigation/na
 import { createStackNavigator } from "@react-navigation/stack";
 
 import Bookdetail from "../Pages/Bookdetail.js";
-
+import { ThemeContext } from "../Components/Theme.js";
 import EmailVerification from "../Pages/EmailVerification.js";
 import SearchRoute from "../Pages/Search.js";
 import PrivacyPolicy from "../Pages/Privacypolicy.js";
@@ -56,7 +56,7 @@ const Dtheme = {
     ...DarkTheme,
     
 };
-export const ThemeContext = React.createContext();
+
 const Bottomnavcomponent = () => {
   const { setTheme, Theme } = React.useContext(ThemeContext);
   if(Theme==='Light'){

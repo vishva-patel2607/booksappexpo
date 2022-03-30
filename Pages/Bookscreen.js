@@ -7,7 +7,7 @@ import {
   Alert,
   StyleSheet,
 } from "react-native";
-import { ThemeContext } from "../main pages/Navigation";
+import { ThemeContext } from "../Components/Theme";
 import Queryinfo from "../Components/Queryinfo";
 import MapView, { Marker } from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
