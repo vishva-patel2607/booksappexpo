@@ -1,0 +1,17 @@
+import * as React from 'react';
+import {View} from 'react-native';
+import { useTheme } from '@react-navigation/native';
+
+export default function Divider(){
+    const {colors} = useTheme();
+    return(
+        <View
+        style={{
+          marginTop: 17,
+          height: 1,
+          backgroundColor:
+            colors.text === "#000000" ? "#6E7A7D" : colors.text,
+        }}
+      />
+    )
+}

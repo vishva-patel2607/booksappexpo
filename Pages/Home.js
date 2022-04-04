@@ -72,7 +72,7 @@ const HomeRoute = (props) => {
         navigation={props.navigation}
       />
     ) : (
-      <Newbooks text="Some dummy text" />
+      <Newbooks text="All your borrowed collection is here!" />
     );
 
   let dropoff =
@@ -243,7 +243,9 @@ const HomeRoute = (props) => {
         return response.json();
       })
       .then((data) => {
+        console.log(data,'data');
         if (data.status) {
+          console.log(data.response.books);
           setPickupbooks(data.response.books);
         } else {
           if (data.message === "Could not verify") {
@@ -273,6 +275,7 @@ const HomeRoute = (props) => {
         return response.json();
       })
       .then((data) => {
+        console.log(data,'borrowed data');
         if (data.status) {
           setBorrowedbooks(data.response.books);
         } else {

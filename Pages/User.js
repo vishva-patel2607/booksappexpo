@@ -14,6 +14,7 @@ import {
   Pressable,
 } from "react-native";
 import StaticBooksApp from "../Components/StaticBooksApp";
+import BooksApp from "../Components/BooksApp";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -123,7 +124,7 @@ const UserRoute = (props) => {
         ]}
       >
         <View style={{ flex: 2, justifyContent: "flex-start" }}>
-          <StaticBooksApp />
+          <BooksApp />
         </View>
         <View style={{ flexDirection: "column", flex: 10, marginLeft: 15 }}>
           <View style={{ flexDirection: "column", flex: 6 }}>
@@ -227,8 +228,9 @@ const UserRoute = (props) => {
               flex: 4,
               flexDirection: "row",
               justifyContent: "space-between",
-              alignItems: "flex-start",
+              alignItems: "center",
               marginLeft: 15,
+              paddingHorizontal:5,
             }}
           >
             <View style={{ justifyContent: "flex-start", marginTop: 10 }}>
@@ -263,7 +265,7 @@ const UserRoute = (props) => {
                   justifyContent: "center",
                 }}
                 labelStyle={{
-                  fontSize: 14,
+                  fontSize: 16,
                   color: "white",
                   flexDirection: "row",
                   fontFamily: "DMSansbold",
@@ -285,7 +287,7 @@ const UserRoute = (props) => {
           <View style={{ marginBottom: 6 }}>
             <ActionButton title="Deactivate account" fontS="14" />
           </View>
-          <View style={{ marginLeft: 2 }}>
+          <View style={{ marginLeft: 2,marginTop:10 }}>
             <StaticText text="Contact us" />
             <View style={{ marginTop: 5 }}>
               <StaticText text="Privacy policy" />

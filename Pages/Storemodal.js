@@ -1,4 +1,4 @@
-Storemodal
+Storemodal;
 import React, { useState, useEffect } from "react";
 import { ThemeContext } from "../Components/Theme";
 import {
@@ -7,23 +7,18 @@ import {
   View,
   StyleSheet,
   Pressable,
-  Image
+  Image,
 } from "react-native";
 import { logoutUser } from "../actions";
 import { Platform, StatusBar } from "react-native";
-import {
-  Button,
-  ActivityIndicator,
-  Text
-} from "react-native-paper";
+import { Button, ActivityIndicator, Text } from "react-native-paper";
 import Storemodalcard from "./Storemodalcard";
+import Backbutton from "../Components/Backbutton";
 
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
 
-
 const Storemodal = (props) => {
-
   const [loading, setLoading] = useState(false);
   const [longitude, setLongitude] = useState();
   const [latitude, setLatitude] = useState();
@@ -32,7 +27,7 @@ const Storemodal = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const { setTheme, Theme } = React.useContext(ThemeContext);
-  
+
   const setLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -44,9 +39,7 @@ const Storemodal = (props) => {
 
     setLongitude(loc.coords.longitude);
     setLatitude(loc.coords.latitude);
-    
   };
-
 
   useEffect(() => {
     setLoading(false);
@@ -84,57 +77,41 @@ const Storemodal = (props) => {
       setLoading(true);
     }
   }, [longitude, latitude]);
- 
 
-  
-
-  if ( loading && shops != null) {
+  if (loading && shops != null) {
     return (
-      <SafeAreaView style={{flex:1}}>
+      <SafeAreaView style={{ flex: 1 }}>
         <View>
-        <Pressable onPress={() => props.navigation.navigate("Upload")}>
-        {Theme === "Light" ? (
-                <Image
-                  source={require("../assets/Backbutton.png")}
-                  style={{ marginLeft: 20, marginTop: 18 }}
-                />
-              ) : (
-                <Image
-                  source={require("../assets/Backbuttondark.png")}
-                  style={{ marginLeft: 20, marginTop: 18 }}
-                />
-              )}
-        </Pressable>
-        <Text
-      style={{
-        fontSize: 18,
-        fontWeight: "700",
-        color: "#E96A59",
-        marginLeft: 20,
-        marginTop: 16,
-        marginBottom: 2,
-        fontFamily:'DMSansbold'
-      }}
-    >
-      Shops
-    </Text>
+          <Pressable onPress={() => props.navigation.navigate("Upload")}>
+            <Backbutton />
+          </Pressable>
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: "700",
+              color: "#E96A59",
+              marginLeft: 20,
+              marginTop: 16,
+              marginBottom: 2,
+              fontFamily: "DMSansbold",
+            }}
+          >
+            Shops
+          </Text>
         </View>
         <ScrollView style={{ width: "100%", padding: 10, paddingTop: 0 }}>
-        
           {shops.map((shop, idx) => {
             if (
-              (selectedShop != null &&
-              selectedShop.store_id === shop.store_id) 
+              selectedShop != null &&
+              selectedShop.store_id === shop.store_id
             ) {
               return (
                 <View
                   key={idx}
                   style={{
-                    
-                    
-                    borderWidth: 2,
-                    borderRadius:10,
-                    borderColor:'#0237f2',
+                    padding: 10,
+                    borderRadius: 10,
+                    backgroundColor: "#D5DDEE",
                     marginTop: 20,
                   }}
                 >
@@ -148,7 +125,7 @@ const Storemodal = (props) => {
                     latitude={shop.store_latitude}
                     longitude={shop.store_longitude}
                   />
-                 </View>
+                </View>
               );
             } else {
               return (
@@ -172,34 +149,32 @@ const Storemodal = (props) => {
             }
           })}
         </ScrollView>
-        <View style={{ flexDirection: "row",justifyContent:'center' }}>
-          
+        <View style={{ flexDirection: "row", justifyContent: "center" }}>
           <Button
-          theme={{ roundness: 120 }}
-          
-          style={{
-            width: 215,
-            height: 40,
-            margin:10,
-            alignSelf:'center',
-            justifyContent:'center'
-          }}
-          labelStyle={{
-            fontSize: 14,
-            color: "white",
-            flexDirection: "row",
-            fontFamily: "DMSansbold",
-            
-          }}
-          onPress={() =>
-            props.navigation.navigate("Mainpage", {
-              screen: "Upload",
-              params: { shop: selectedShop },
-            })}
-          mode="contained"
-        >
-          Select
-        </Button>
+            theme={{ roundness: 120 }}
+            style={{
+              width: 215,
+              height: 40,
+              margin: 10,
+              alignSelf: "center",
+              justifyContent: "center",
+            }}
+            labelStyle={{
+              fontSize: 16,
+              color: "white",
+              flexDirection: "row",
+              fontFamily: "DMSansbold",
+            }}
+            onPress={() =>
+              props.navigation.navigate("Mainpage", {
+                screen: "Upload",
+                params: { shop: selectedShop },
+              })
+            }
+            mode="contained"
+          >
+            Select
+          </Button>
         </View>
       </SafeAreaView>
     );
@@ -215,7 +190,6 @@ const Storemodal = (props) => {
 };
 
 const styles = StyleSheet.create({
-
   textbox: {
     textAlign: "center",
     padding: 10,
@@ -232,7 +206,6 @@ const styles = StyleSheet.create({
   inputtextbox: {
     margin: 10,
   },
-
 
   submitbutton: {
     flex: 1,
@@ -264,7 +237,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 5,
     borderWidth: 1,
-    
   },
 
   container12: {
@@ -312,5 +284,3 @@ const styles = StyleSheet.create({
 });
 
 export default React.memo(Storemodal);
-
-

@@ -58,7 +58,7 @@ const Storemodalcard = (props) => {
     map = (
       <View>
         <MapView
-          style={{ alignSelf: "stretch", height: 200 }}
+          style={{ alignSelf: "stretch", height: 200,marginTop:10,borderRadius:10 }}
           region={mapRegion}
           showsUserLocation={true}
           minZoomLevel={10}
@@ -85,7 +85,7 @@ const Storemodalcard = (props) => {
           paddingVertical: 6,
           fontWeight: "500",
           borderColor: "#0036F4",
-          borderRadius: 20,
+          borderRadius: 18,
           textAlign: "center",
           fontFamily: 'DMSans',
           color:colors.text
@@ -100,7 +100,7 @@ const Storemodalcard = (props) => {
           paddingVertical: 6,
           fontWeight: "700",
           borderColor: "#0036F4",
-          borderRadius: 20,
+          borderRadius: 18,
           textAlign: "center",
           fontFamily: 'DMSans',
           color:colors.text

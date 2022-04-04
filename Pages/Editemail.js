@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   SafeAreaView,
@@ -6,17 +5,13 @@ import {
   StyleSheet,
   Alert,
   Pressable,
-  Image
+  Image,
 } from "react-native";
 import { ThemeContext } from "../Components/Theme";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../actions";
-
-import {
-  Button,
-  TextInput,
-  Text,
-} from "react-native-paper";
+import Backbutton from "../Components/Backbutton";
+import { Button, TextInput, Text } from "react-native-paper";
 
 const EditEmail = (props) => {
   const user = useSelector((state) => state.user);
@@ -48,9 +43,11 @@ const EditEmail = (props) => {
           if (data.status) {
             console.log("Status true");
             setError(data.message);
-            Alert.alert(error, "Email Changed and a verification mail is sent.", [
-              { text: "Login", onPress: () => dispatch(logoutUser()) },
-            ]);
+            Alert.alert(
+              error,
+              "Email Changed and a verification mail is sent.",
+              [{ text: "Login", onPress: () => dispatch(logoutUser()) }]
+            );
           } else {
             if (data.message == "Could not verify") {
               dispatch(logoutUser());
@@ -61,24 +58,13 @@ const EditEmail = (props) => {
           console.log(error);
         });
     }
-    
   };
- 
+
   return (
     <SafeAreaView style={styles.layout}>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
         <Pressable onPress={() => props.navigation.navigate("User")}>
-        {Theme === "Light" ? (
-            <Image
-              source={require("../assets/Backbutton.png")}
-              style={{ marginLeft: 20, marginTop: 18 }}
-            />
-          ) : (
-            <Image
-              source={require("../assets/Backbuttondark.png")}
-              style={{ marginLeft: 20, marginTop: 18 }}
-            />
-          )}
+          <Backbutton />
         </Pressable>
       </View>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
@@ -95,7 +81,7 @@ const EditEmail = (props) => {
         </Text>
       </View>
       <View style={{ marginLeft: 19, flex: 12 }}>
-         <TextInput
+        <TextInput
           style={styles.inputtextbox}
           theme={{
             colors: {
@@ -104,18 +90,15 @@ const EditEmail = (props) => {
             },
             roundness: 120,
           }}
-          
-             mode="flat"
-             placeholder="New Email"
-             value={newemail}
-            onChangeText={(text) => setNewemail(text)}
+          mode="flat"
+          placeholder="New Email"
+          value={newemail}
+          onChangeText={(text) => setNewemail(text)}
           autoCapitalize="none"
           autoCorrect={false}
-          underlineColor="#ECEFEE"
+          underlineColor="transparent"
           maxLength={10}
         />
-
-       
 
         <Text style={styles.error}>{error}</Text>
         <Button
@@ -129,7 +112,7 @@ const EditEmail = (props) => {
             justifyContent: "center",
           }}
           labelStyle={{
-            fontSize: 14,
+            fontSize: 16,
             color: "white",
             flexDirection: "row",
             fontFamily: "DMSansbold",
@@ -157,6 +140,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderRadius: 120,
     height: 50,
+    paddingLeft: 10,
   },
 
   submitbutton: {
@@ -167,8 +151,6 @@ const styles = StyleSheet.create({
 
   layout: {
     flex: 1,
-    
   },
 });
 export default React.memo(EditEmail);
-

@@ -16,6 +16,7 @@ import { ThemeContext } from "../Components/Theme";
 import StaticText from "../Components/StaticText";
 import { useDispatch } from "react-redux";
 import { setUser } from "../actions";
+import StaticBooksApp from "../Components/StaticBooksApp";
 
 const Login = (props) => {
   const { colors } = useTheme();
@@ -132,19 +133,8 @@ const Login = (props) => {
       paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
       backgroundColor:colors.background}}>
       <KeyboardAvoidingView behavior="padding">
-        <View style={{ flex: 4, flexDirection: "column", marginTop: 30 }}>
-
-        {Theme === 'Light' ? (
-            <Image
-            source={require("../assets/BAheader.png")}
-            style={{ alignSelf: "center" }}
-          />
-          ):(
-            <Image
-            source={require("../assets/BAheaderdark.png")}
-            style={{ alignSelf: "center" }}
-          />
-          )}
+        <View style={{ flex: 4, flexDirection: "column", marginTop: 30,alignItems:'center' }}>
+        <StaticBooksApp />
         </View>
         <View style={{ flex: 18, flexDirection: "column", borderRadius: 120 }}>
           <TextInput

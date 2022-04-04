@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { ThemeContext } from "../Components/Theme";
-
+import Backbutton from "../Components/Backbutton";
 import RenderButton from "../Components/Button";
 import { TextInput } from "react-native-paper";
 
@@ -149,19 +149,7 @@ const Signup = (props) => {
       
         <View style={{ flex: 1, alignSelf: "flex-start",marginLeft:10 }}>
           <Pressable onPress={() => props.navigation.navigate("InitialSignup")}>
-            
-              {Theme === "Light" ? (
-                <Image
-                  source={require("../assets/Backbutton.png")}
-                  style={{ marginLeft: 20, marginTop: 18 }}
-                />
-              ) : (
-                <Image
-                  source={require("../assets/Backbuttondark.png")}
-                  style={{ marginLeft: 20, marginTop: 18 }}
-                />
-              )}
-        
+            <Backbutton />
           </Pressable>
         </View>
         <KeyboardAvoidingView behavior="padding">
@@ -173,7 +161,7 @@ const Signup = (props) => {
           />
           ):(
             <Image
-            source={require("../assets/BAheaderdark.png")}
+            source={require("../assets/BAlogindark.png")}
             style={{ alignSelf: "center" }}
           />
           )}

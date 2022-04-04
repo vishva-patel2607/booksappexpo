@@ -2,8 +2,8 @@
 
 export let Distance =
 [
-    { id: 5, name: "near to far" },
-    { id: 6, name: "far to near" },
+    { id: 1, name: "near to far" },
+    { id: 2, name: "far to near" },
 ];
 
 export let Price = [

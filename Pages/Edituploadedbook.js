@@ -12,13 +12,14 @@ import {
 import StaticText from "../Components/StaticText";
 import RNPickerSelect from "react-native-picker-select";
 import { ThemeContext } from "../Components/Theme";
+import Backbutton from "../Components/Backbutton";
 import Svg, { Path } from "react-native-svg";
 import { logoutUser } from "../actions";
 import { Button, Text, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 
 const Edituploadedbook = (props) => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const { setTheme, Theme } = React.useContext(ThemeContext);
   const [Bookdata, setBookdata] = useState(props.route.params?.book);
   const [price, setPrice] = useState(String(Bookdata.book_price));
@@ -28,7 +29,7 @@ const Edituploadedbook = (props) => {
   const [author, setAuthor] = useState(Bookdata.book_author);
   const [year, setYear] = useState(String(Bookdata.book_year));
   const [condition, setCondition] = useState(Bookdata.book_condition);
-  // 
+  //
   const [category, setCategory] = useState("");
   const [bookCondition, setbookCondition] = useState("");
   const [NewCondition, setNewCondition] = useState(
@@ -58,81 +59,63 @@ const Edituploadedbook = (props) => {
     }
   }, [props.route.params.params?.photo]);
 
-
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-
-  
 
   const editbooks = async () => {
     console.log("edit books function call");
 
-      fetch("https://booksapp2021.herokuapp.com/Book/Lent/Edit", {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "x-access-token": user.token,
-        },
-        body: JSON.stringify({
-          book_id: Bookdata.book_id,
-          book_name: name,
-          book_author: author,
-          book_price: price,
-          book_year: year,
-          book_condition: condition,
-          book_transaction_type:'lend'
-        }),
+    fetch("https://booksapp2021.herokuapp.com/Book/Lent/Edit", {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "x-access-token": user.token,
+      },
+      body: JSON.stringify({
+        book_id: Bookdata.book_id,
+        book_name: name,
+        book_author: author,
+        book_price: price,
+        book_year: year,
+        book_condition: condition,
+        book_transaction_type: "lend",
+      }),
+    })
+      .then((response) => {
+        return response.json();
       })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          
-          if (data.status) {
-            Alert.alert("Success", "Book Details Updated", [
-              {
-                text: "Ok",
-                onPress: () =>
-                  props.navigation.navigate("Mainpage", {
-                    screen: "Home",
-                    params: { refreshing: true },
-                  }),
-              },
-            ]);
+      .then((data) => {
+        if (data.status) {
+          Alert.alert("Success", "Book Details Updated", [
+            {
+              text: "Ok",
+              onPress: () =>
+                props.navigation.navigate("Mainpage", {
+                  screen: "Home",
+                  params: { refreshing: true },
+                }),
+            },
+          ]);
+        } else {
+          if (data.message === "Could not verify") {
+            dispatch(logoutUser());
           } else {
-            if (data.message === "Could not verify") {
-              dispatch(logoutUser());
-            }
-            else{
-              console.log(data);
-            }
-            
+            console.log(data);
           }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
-
- 
 
   // }
   return (
     <SafeAreaView style={{ flex: 1, flexDirection: "column" }}>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
         <Pressable onPress={() => props.navigation.navigate("Bookdetail")}>
-        {Theme === "Light" ? (
-            <Image
-              source={require("../assets/Backbutton.png")}
-              style={{ marginLeft: 20, marginTop: 18 }}
-            />
-          ) : (
-            <Image
-              source={require("../assets/Backbuttondark.png")}
-              style={{ marginLeft: 20, marginTop: 18 }}
-            />
-          )}
+          <Backbutton />
         </Pressable>
       </View>
       <View style={{ flex: 4, flexDirection: "row", marginLeft: 10 }}>
@@ -154,7 +137,9 @@ const Edituploadedbook = (props) => {
           <View style={styles.container}>
             <TextInput
               style={[styles.inputtextbox, styles.subcontainer]}
-              theme={{ colors: { text: colors.text, placeholder: colors.text } }}
+              theme={{
+                colors: { text: colors.text, placeholder: colors.text },
+              }}
               placeholder="Year"
               value={String(year)}
               onChangeText={(text) => setYear(text.replace(/[^0-9]/g, ""))}
@@ -197,24 +182,29 @@ const Edituploadedbook = (props) => {
           />
         </View>
         <View
-          style={{ flexDirection: "column", flex: 1, justifyContent: "flex-start",marginTop:20 }}
+          style={{
+            flexDirection: "column",
+            flex: 1,
+            justifyContent: "flex-start",
+            marginTop: 20,
+          }}
         >
           <View style={styles.uploadimage}>
-              <Image
-                style={{
-                  
-                  height: "100%",
-                  width: "100%",
-                  
-                  borderRadius: 20,
-                }}
-                source={{
-                  uri: imgurl,
-                }}
-                onLoad = {() => {console.log('Loaded')}}
-              />
+            <Image
+              style={{
+                height: "100%",
+                width: "100%",
+
+                borderRadius: 20,
+              }}
+              source={{
+                uri: imgurl,
+              }}
+              onLoad={() => {
+                console.log("Loaded");
+              }}
+            />
           </View>
-          
         </View>
       </View>
       <View
@@ -335,20 +325,33 @@ const Edituploadedbook = (props) => {
         <View style={{ justifyContent: "center", marginRight: 16 }}>
           <View style={styles.shop}>
             <View style={styles.shopDetailsContainer}>
-              <Text style={[styles.shopDetails, styles.shopDistance,{color:colors.text}]}>
+              <Text
+                style={[
+                  styles.shopDetails,
+                  styles.shopDistance,
+                  { color: colors.text },
+                ]}
+              >
                 {Bookdata.store.store_distance}
               </Text>
-              <Text style={[styles.shopDetails,{color:colors.text}]}>{Bookdata.store.store_name}</Text>
+              <Text style={[styles.shopDetails, { color: colors.text }]}>
+                {Bookdata.store.store_name}
+              </Text>
             </View>
           </View>
 
           <View>
-            <Text style={[styles.storeDetails,{color:colors.text}]}>{Bookdata.store.store_incharge} </Text>
-            <Text style={[styles.storeDetails,{color:colors.text}]}>{Bookdata.store.store_address} </Text>
-            <Text style={[styles.storeDetails,{color:colors.text}]}>{Bookdata.store.store_number}</Text>
+            <Text style={[styles.storeDetails, { color: colors.text }]}>
+              {Bookdata.store.store_incharge}{" "}
+            </Text>
+            <Text style={[styles.storeDetails, { color: colors.text }]}>
+              {Bookdata.store.store_address}{" "}
+            </Text>
+            <Text style={[styles.storeDetails, { color: colors.text }]}>
+              {Bookdata.store.store_number}
+            </Text>
           </View>
         </View>
-
 
         {/* {selected} */}
       </View>
@@ -375,7 +378,7 @@ const Edituploadedbook = (props) => {
             justifyContent: "flex-end",
           }}
           labelStyle={{
-            fontSize: 14,
+            fontSize: 16,
             color: "white",
             flexDirection: "row",
             fontFamily: "DMSansbold",
@@ -526,7 +529,6 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   uploadimage: {
-    
     marginBottom: 10,
     backgroundColor: "#6E797C",
     borderRadius: 20,

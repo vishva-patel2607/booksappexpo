@@ -8,10 +8,12 @@ import {
   Pressable,
   KeyboardAvoidingView,
 } from "react-native";
+import StaticText from "../Components/StaticText";
+import StaticBooksApp from "../Components/StaticBooksApp";
 import RenderButton from "../Components/Button";
 import {useTheme} from '@react-navigation/native';
 import { TextInput } from "react-native-paper";
-import StaticText from "../Components/StaticText";
+
 import { ThemeContext } from "../Components/Theme";
 
 
@@ -75,19 +77,8 @@ const InitialSignUp = (props) => {
   return (
     <SafeAreaView style={styles.loginlayout}>
       <KeyboardAvoidingView behavior="padding">
-        <View style={{ flex: 4, flexDirection: "column", marginTop: 30 }}>
-          {Theme === 'Light' ? (
-            <Image
-            source={require("../assets/BAheader.png")}
-            style={{ alignSelf: "center" }}
-          />
-          ):(
-            <Image
-            source={require("../assets/BAheaderdark.png")}
-            style={{ alignSelf: "center" }}
-          />
-          )}
-          
+        <View style={{ flex: 4, flexDirection: "column", marginTop: 30,alignItems:'center' }}>
+          <StaticBooksApp />
         </View>
         <View style={{ flex: 18, flexDirection: "column" }}>
           <TextInput
