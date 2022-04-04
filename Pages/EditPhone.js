@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   SafeAreaView,
@@ -6,19 +5,17 @@ import {
   StyleSheet,
   Alert,
   Pressable,
-  Image
+  Image,
 } from "react-native";
 import { ThemeContext } from "../Components/Theme";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../actions";
-
-import {
-  Button,
-  TextInput,
-  Text,
-} from "react-native-paper";
+import { useTheme } from "@react-navigation/native";
+import Backbutton from "../Components/Backbutton";
+import { Button, TextInput, Text } from "react-native-paper";
 
 const EditPhone = (props) => {
+  const { colors } = useTheme();
   const user = useSelector((state) => state.user);
   const [newphoneno, setNewphoneno] = useState("");
   const [error, setError] = useState("");
@@ -61,24 +58,13 @@ const EditPhone = (props) => {
           console.log(error);
         });
     }
-    
   };
- 
+
   return (
     <SafeAreaView style={styles.layout}>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
         <Pressable onPress={() => props.navigation.navigate("User")}>
-        {Theme === "Light" ? (
-            <Image
-              source={require("../assets/Backbutton.png")}
-              style={{ marginLeft: 20, marginTop: 18 }}
-            />
-          ) : (
-            <Image
-              source={require("../assets/Backbuttondark.png")}
-              style={{ marginLeft: 20, marginTop: 18 }}
-            />
-          )}
+          <Backbutton />
         </Pressable>
       </View>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
@@ -86,7 +72,7 @@ const EditPhone = (props) => {
           style={{
             fontSize: 25,
             fontWeight: "700",
-            color: "#0D1936",
+            color: colors.text,
             marginLeft: 22,
           }}
           theme={{ fonts: { regular: "DM Sans" } }}
@@ -95,7 +81,7 @@ const EditPhone = (props) => {
         </Text>
       </View>
       <View style={{ marginLeft: 19, flex: 12 }}>
-         <TextInput
+        <TextInput
           style={styles.inputtextbox}
           theme={{
             colors: {
@@ -104,18 +90,14 @@ const EditPhone = (props) => {
             },
             roundness: 120,
           }}
-          
-             mode="flat"
-             placeholder="New phone number"
-             value={newphoneno}
-            onChangeText={(text) => setNewphoneno(text)}
+          placeholder="New phone number"
+          value={newphoneno}
+          onChangeText={(text) => setNewphoneno(text)}
           autoCapitalize="none"
           autoCorrect={false}
-          underlineColor="#ECEFEE"
+          underlineColor="transparent"
           maxLength={10}
         />
-
-       
 
         <Text style={styles.error}>{error}</Text>
         <Button
@@ -125,11 +107,10 @@ const EditPhone = (props) => {
             width: 215,
             height: 40,
             alignItems: "flex-start",
-
             justifyContent: "center",
           }}
           labelStyle={{
-            fontSize: 14,
+            fontSize: 16,
             color: "white",
             flexDirection: "row",
             fontFamily: "DMSansbold",
@@ -157,6 +138,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderRadius: 120,
     height: 50,
+    paddingLeft: 10,
   },
 
   submitbutton: {
@@ -167,8 +149,6 @@ const styles = StyleSheet.create({
 
   layout: {
     flex: 1,
-   
   },
 });
 export default React.memo(EditPhone);
-

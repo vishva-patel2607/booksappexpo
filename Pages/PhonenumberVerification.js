@@ -1,20 +1,14 @@
-import React, { Component, useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import {
   SafeAreaView,
   ScrollView,
   View,
   StyleSheet,
-  Alert,
 } from "react-native";
-import { useTheme } from "@react-navigation/native";
 
-import { Platform, StatusBar, RefreshControl } from "react-native";
-import { logoutUser, setUser } from "../actions";
 import {
   Title,
   Text,
-  Headline,
-  Card,
   Button,
   TextInput,
 } from "react-native-paper";
@@ -47,10 +41,6 @@ const PhonenumberVerification = (props) => {
           },
         }
       );
-      // response = {
-      //     "status" : True,
-      //     "message" : "Message with OTP sent!"
-      // },
       let jsonData = await response.json();
       console.log(jsonData);
 
@@ -80,10 +70,6 @@ const PhonenumberVerification = (props) => {
         }
       );
 
-      // response = {
-      //             "status" : True,
-      //             "message" : "User phone number verified"
-      //           },
 
       const jsonData = await response.json();
       setLoading(false);

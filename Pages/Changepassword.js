@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {useTheme} from '@react-navigation/native';
+import { useTheme } from "@react-navigation/native";
 import {
   SafeAreaView,
   View,
@@ -11,12 +11,12 @@ import {
 } from "react-native";
 import { ThemeContext } from "../Components/Theme";
 import { useDispatch, useSelector } from "react-redux";
-
+import Backbutton from "../Components/Backbutton";
 import { Button, TextInput } from "react-native-paper";
 import { logoutUser } from "../actions";
 
 const Changepassword = (props) => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
@@ -90,17 +90,7 @@ const Changepassword = (props) => {
     <SafeAreaView style={styles.layout}>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
         <Pressable onPress={() => props.navigation.navigate("User")}>
-        {Theme === "Light" ? (
-            <Image
-              source={require("../assets/Backbutton.png")}
-              style={{ marginLeft: 20, marginTop: 18 }}
-            />
-          ) : (
-            <Image
-              source={require("../assets/Backbuttondark.png")}
-              style={{ marginLeft: 20, marginTop: 18 }}
-            />
-          )}
+          <Backbutton />
         </Pressable>
       </View>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
@@ -127,14 +117,13 @@ const Changepassword = (props) => {
             roundness: 120,
           }}
           // theme={{ colors: { primary: "transparent" } }}
-          mode="outlined"
           placeholder="Old Password"
           secureTextEntry={true}
           value={oldpassword}
           onChangeText={(text) => setOldpassword(text)}
           autoCapitalize="none"
           autoCorrect={false}
-          underlineColor="#ECEFEE"
+          underlineColor="transparent"
           maxLength={20}
         />
 
@@ -147,12 +136,11 @@ const Changepassword = (props) => {
             },
             roundness: 120,
           }}
-          mode="outlined"
           placeholder="New password"
           value={newpassword1}
           onChangeText={(text) => setNewpassword1(text)}
           autoCapitalize="none"
-          underlineColor="#ECEFEE"
+          underlineColor="transparent"
           autoCorrect={false}
           secureTextEntry={true}
           maxLength={20}
@@ -167,12 +155,11 @@ const Changepassword = (props) => {
             },
             roundness: 120,
           }}
-          mode="outlined"
           placeholder="Retype New Password"
           value={newpassword2}
           onChangeText={(text) => setNewpassword2(text)}
           autoCapitalize="none"
-          underlineColor="#ECEFEE"
+          underlineColor="transparent"
           autoCorrect={false}
           secureTextEntry={true}
           maxLength={20}
@@ -190,7 +177,7 @@ const Changepassword = (props) => {
             justifyContent: "center",
           }}
           labelStyle={{
-            fontSize: 14,
+            fontSize: 16,
             color: "white",
             flexDirection: "row",
             fontFamily: "DMSansbold",
@@ -218,6 +205,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderRadius: 120,
     height: 50,
+    paddingLeft: 10,
   },
 
   submitbutton: {
@@ -228,7 +216,6 @@ const styles = StyleSheet.create({
 
   layout: {
     flex: 1,
-   
   },
 });
 

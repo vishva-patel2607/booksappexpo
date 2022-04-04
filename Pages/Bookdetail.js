@@ -10,135 +10,47 @@ import {
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { ThemeContext } from "../Components/Theme";
+import Backbutton from "../Components/Backbutton";
+
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Title, Text, ActivityIndicator } from "react-native-paper";
 import MapView, { Marker } from "react-native-maps";
-import { createPortal } from "react-dom";
 
 const BookDetail = (props) => {
   const { colors } = useTheme();
+  const user = useSelector((state) => state.user);
 
   return (
     <View>
       <Text style={[styles.BookDetailTitle]}>{props.title}</Text>
-      <Text style={[styles.BookDetailValue, { color: colors.text }]} numberOfLines={2}>
+      <Text
+        style={[styles.BookDetailValue, { color: colors.text }]}
+        numberOfLines={2}
+      >
         {props.value}
       </Text>
     </View>
   );
 };
 
-const type = {
-  LENT: "Lent",
-  SOLD: "Sold",
-  BORROWED: "Borrowed",
-  BOUGHT: "Bought",
-};
+// const type = {
+//   LENT: "Lent",
+//   SOLD: "Sold",
+//   BORROWED: "Borrowed",
+//   BOUGHT: "Bought",
+// };
 
 const Bookdetail = (props) => {
   const { colors } = useTheme();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [imageloading, setImageloading] = useState(false);
-  let showloading = imageloading === true ? <ActivityIndicator style={{alignSelf:'center'}} /> :<View></View>
-  
-
-  const removebook = () => {
-    if (
-      props.route.params.title === "BORROWED" ||
-      props.route.params.title === "BOUGHT"
-    ) {
-      fetch(
-        `https://booksapp2021.herokuapp.com/Book/${
-          type[props.route.params.title]
-        }/Remove`,
-        {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "x-access-token": user.token,
-          },
-          body: JSON.stringify({
-            book_id: book.book_id,
-          }),
-        }
-      )
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          if (data.status) {
-            Alert.alert("Success", data.message, [
-              {
-                text: "Ok",
-                onPress: () =>
-                  props.navigation.navigate("Mainpage", {
-                    screen: "Home",
-                    params: { refreshing: true },
-                  }),
-              },
-            ]);
-          } else {
-            if (data.message === "Could not verify") {
-              dispatch(logoutUser());
-            } else {
-              Alert.alert("Note", data.message, [
-                {
-                  text: "Ok",
-                },
-              ]);
-            }
-          }
-        });
-    } else {
-      fetch(
-        `https://booksapp2021.herokuapp.com/Book/${
-          type[props.route.params.title]
-        }/Remove`,
-        {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "x-access-token": user.token,
-          },
-          body: JSON.stringify({
-            book_id: book.book_id,
-          }),
-        }
-      )
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          if (data.status) {
-            console.log(data);
-            Alert.alert("Success", data.message, [
-              {
-                text: "Ok",
-                onPress: () =>
-                  props.navigation.navigate("Mainpage", {
-                    screen: "Home",
-                    params: { refreshing: true },
-                  }),
-              },
-            ]);
-          } else {
-            console.log(data);
-            if (data.message === "Could not verify") {
-              dispatch(logoutUser());
-            } else {
-              Alert.alert("Note", data.message, [
-                {
-                  text: "Ok",
-                },
-              ]);
-            }
-          }
-        });
-    }
-  };
+  let showloading =
+    imageloading === true ? (
+      <ActivityIndicator style={{ alignSelf: "center" }} />
+    ) : (
+      <View></View>
+    );
 
   const [book, setBook] = useState(props.route.params.book);
   const { setTheme, Theme } = React.useContext(ThemeContext);
@@ -155,22 +67,174 @@ const Bookdetail = (props) => {
     latitudeDelta: 0,
     longitudeDelta: 0,
   });
-
+  const removebook = () => {
+    if (book.usernumber === user.accountNumber) {
+      if (book.book_transaction_type === "lend") {
+        fetch(`https://booksapp2021.herokuapp.com/Book/Lent/Remove`, {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "x-access-token": user.token,
+          },
+          body: JSON.stringify({
+            book_id: book.book_id,
+          }),
+        })
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            if (data.status) {
+              Alert.alert("Success", data.message, [
+                {
+                  text: "Ok",
+                  onPress: () =>
+                    props.navigation.navigate("Mainpage", {
+                      screen: "Home",
+                      params: { refreshing: true },
+                    }),
+                },
+              ]);
+            } else {
+              if (data.message === "Could not verify") {
+                dispatch(logoutUser());
+              } else {
+                Alert.alert("Note", data.message, [
+                  {
+                    text: "Ok",
+                  },
+                ]);
+              }
+            }
+          });
+      } else {
+        fetch(`https://booksapp2021.herokuapp.com/Book/Sold/Remove`, {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "x-access-token": user.token,
+          },
+          body: JSON.stringify({
+            book_id: book.book_id,
+          }),
+        })
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            if (data.status) {
+              Alert.alert("Success", data.message, [
+                {
+                  text: "Ok",
+                  onPress: () =>
+                    props.navigation.navigate("Mainpage", {
+                      screen: "Home",
+                      params: { refreshing: true },
+                    }),
+                },
+              ]);
+            } else {
+              if (data.message === "Could not verify") {
+                dispatch(logoutUser());
+              } else {
+                Alert.alert("Note", data.message, [
+                  {
+                    text: "Ok",
+                  },
+                ]);
+              }
+            }
+          });
+      }
+    } else {
+      if (book.book_transaction_type === "lend") {
+        fetch(`https://booksapp2021.herokuapp.com/Book/Borrowed/Remove`, {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "x-access-token": user.token,
+          },
+          body: JSON.stringify({
+            book_id: book.book_id,
+          }),
+        })
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            if (data.status) {
+              Alert.alert("Success", data.message, [
+                {
+                  text: "Ok",
+                  onPress: () =>
+                    props.navigation.navigate("Mainpage", {
+                      screen: "Home",
+                      params: { refreshing: true },
+                    }),
+                },
+              ]);
+            } else {
+              if (data.message === "Could not verify") {
+                dispatch(logoutUser());
+              } else {
+                Alert.alert("Note", data.message, [
+                  {
+                    text: "Ok",
+                  },
+                ]);
+              }
+            }
+          });
+      } else {
+        fetch(`https://booksapp2021.herokuapp.com/Book/Bought/Remove`, {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "x-access-token": user.token,
+          },
+          body: JSON.stringify({
+            book_id: book.book_id,
+          }),
+        })
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            if (data.status) {
+              Alert.alert("Success", data.message, [
+                {
+                  text: "Ok",
+                  onPress: () =>
+                    props.navigation.navigate("Mainpage", {
+                      screen: "Home",
+                      params: { refreshing: true },
+                    }),
+                },
+              ]);
+            } else {
+              if (data.message === "Could not verify") {
+                dispatch(logoutUser());
+              } else {
+                Alert.alert("Note", data.message, [
+                  {
+                    text: "Ok",
+                  },
+                ]);
+              }
+            }
+          });
+      }
+    }
+  };
   return (
     <ScrollView>
       <SafeAreaView>
         <Pressable onPress={() => props.navigation.navigate("Home")}>
-          {Theme === "Light" ? (
-            <Image
-              source={require("../assets/Backbutton.png")}
-              style={{ marginLeft: 20, marginTop: 18 }}
-            />
-          ) : (
-            <Image
-              source={require("../assets/Backbuttondark.png")}
-              style={{ marginLeft: 20, marginTop: 18 }}
-            />
-          )}
+         <Backbutton />
         </Pressable>
         <Title style={styles.title}>{props.route.params.title}</Title>
 
@@ -204,7 +268,7 @@ const Bookdetail = (props) => {
                 }}
               /> */}
               {showloading}
-                <Image
+              <Image
                 style={{
                   height: 200,
                   resizeMode: "cover",
@@ -213,11 +277,14 @@ const Bookdetail = (props) => {
                 source={{
                   uri: book.book_img,
                 }}
-                onLoadStart={() => {setImageloading(true
-                  )
-                console.log('In')}}
-                onLoadEnd={() => {setImageloading(false)
-                   console.log('Out')}}
+                onLoadStart={() => {
+                  setImageloading(true);
+                  console.log("In");
+                }}
+                onLoadEnd={() => {
+                  setImageloading(false);
+                  console.log("Out");
+                }}
               />
             </View>
             {(props.route.params.title === "LENT" ||
@@ -280,7 +347,7 @@ const Bookdetail = (props) => {
               borderRadius: 10,
               marginLeft: 20,
               marginRight: 20,
-              borderWidth: 1,
+              
               overflow: "hidden",
             }}
           >
@@ -371,7 +438,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     fontWeight: "700",
     borderColor: "#0036F4",
-    borderRadius: 25,
+    borderRadius: 18,
     textAlign: "center",
   },
   shopDistance: {

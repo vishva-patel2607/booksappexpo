@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import SwitchSelector from "react-native-switch-selector";
 import Findashop from "../Components/Findashop";
 import RNPickerSelect from "react-native-picker-select";
-import { ThemeContext } from "../Components/Theme";
 import { SafeAreaView, View, Image, StyleSheet, Pressable } from "react-native";
 import { logoutUser } from "../actions";
 import { Platform, StatusBar } from "react-native";
@@ -10,6 +9,7 @@ import { Button, Text, TextInput } from "react-native-paper";
 import { useTheme } from "@react-navigation/native";
 import BAheader from "../Components/StaticBooksApp";
 import StaticText from "../Components/StaticText";
+import BooksApp from "../Components/BooksApp";
 import { useDispatch, useSelector } from "react-redux";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import Svg, { Path } from "react-native-svg";
@@ -204,20 +204,34 @@ const UploadRoute = (props) => {
   if (shop != null) {
     selected = (
       <>
-        <View style={{ justifyContent: "center", marginRight: 16 }}>
+        <View style={{ justifyContent: "center", marginRight: 16,marginTop:5 }}>
           <View style={styles.shop}>
             <View style={styles.shopDetailsContainer}>
-              <Text style={[styles.shopDetails, styles.shopDistance,{color:colors.text}]}>
+              <Text
+                style={[
+                  styles.shopDetails,
+                  styles.shopDistance,
+                  { color: colors.text },
+                ]}
+              >
                 {shop.store_distance}
               </Text>
-              <Text style={[styles.shopDetails,{color:colors.text}]}>{shop.store_name}</Text>
+              <Text style={[styles.shopDetails, { color: colors.text }]}>
+                {shop.store_name}
+              </Text>
             </View>
           </View>
 
           <View>
-            <Text style={[styles.storeDetails,{color:colors.text}]}>{shop.store_incharge} </Text>
-            <Text style={[styles.storeDetails,{color:colors.text}]}>{shop.store_address} </Text>
-            <Text style={[styles.storeDetails,{color:colors.text}]}>{shop.store_number}</Text>
+            <Text style={[styles.storeDetails, { color: colors.text }]}>
+              {shop.store_incharge}{" "}
+            </Text>
+            <Text style={[styles.storeDetails, { color: colors.text }]}>
+              {shop.store_address}{" "}
+            </Text>
+            <Text style={[styles.storeDetails, { color: colors.text }]}>
+              {shop.store_number}
+            </Text>
           </View>
         </View>
         <View style={{ alignSelf: "center", marginTop: 10 }}>
@@ -243,33 +257,47 @@ const UploadRoute = (props) => {
     );
   }
 
-  const FetchBookfromISBN = async () => {
-    const YearRegex = new RegExp("^[12][0-9]{3}$");
-    try {
-      const res = await fetch(`https://openlibrary.org/isbn/${isbn}.json`);
-
-      const json = await res.json();
-      setName(json.title);
-
-      if (YearRegex.test(json.publish_date)) {
-        setYear(json.publish_date);
-      }
+  const FetchBookfromISBN = async (isbn) => {
+    setIsbn(isbn.replace(/[^0-9]/g, ""));
+    console.log(isbn);12
+    if (isbn.length === 10 || isbn.length === 13) {
+      const YearRegex = new RegExp("^[12][0-9]{3}$");
       try {
-        const resauthor = await fetch(
-          `https://openlibrary.org/${json.authors[0].key}.json`
-        );
-        const jsonauthor = await resauthor.json();
-        setAuthor(jsonauthor.name);
+        console.log(isbn);
+        const res = await fetch(`https://openlibrary.org/isbn/${isbn}.json`);
+
+        const json = await res.json();
+        console.log(res, "res");
+        setName(json.title);
+
+        if (YearRegex.test(json.publish_date)) {
+          setYear(json.publish_date);
+        }
+        try {
+          const resauthor = await fetch(
+            `https://openlibrary.org/${json.authors[0].key}.json`
+          );
+          const jsonauthor = await resauthor.json();
+          setAuthor(jsonauthor.name);
+        } catch (e) {
+          console.log(e);
+        }
       } catch (e) {
         console.log(e);
+        alert(
+          "Unable to find the book from the ISBN number. Please provide the details"
+        );
+        // setError('Error while fetching isbn')
       }
-    } catch (e) {
-      console.log(e);
-      alert(
-        "Unable to find the book from the ISBN number. Please provide the details"
-      );
-      // setError('Error while fetching isbn')
     }
+  };
+  const handleBarCodeScanned = ({ data }) => {
+    setScanned(true);
+    alert(`ISBN code scanned successfully!`);
+    FetchBookfromISBN();
+    setShowQR(false);
+    setIsbn(data);
+    if (showQR) setScanned(false);
   };
 
   /*Barcode scanner */
@@ -321,10 +349,19 @@ const UploadRoute = (props) => {
     return <Text>No access to camera</Text>;
   }
 
+  const IsbnInput = (isbn) => {
+    setIsbn(isbn.replace(/[^0-9]/g, ""));
+    if (isbn.length === 11) {
+      FetchBookfromISBN();
+    } else if (isbn.length === 14) {
+      FetchBookfromISBN();
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, flexDirection: "column" }}>
       <View style={{ flex: 2, justifyContent: "space-evenly" }}>
-        <BAheader />
+        <BooksApp />
         <Text
           style={{
             fontSize: 18,
@@ -339,6 +376,32 @@ const UploadRoute = (props) => {
           NEW BOOK
         </Text>
       </View>
+      {showQR && (
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "column",
+            top: 20,
+            right: "20%",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+        >
+          <BarCodeScanner
+            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+            style={[
+              StyleSheet.absoluteFillObject,
+              {
+                height: 300,
+                width: 500,
+                zIndex: 1000,
+              },
+            ]}
+          />
+        </View>
+      )}
+
       <View style={{ flex: 6, flexDirection: "row", marginLeft: 10 }}>
         <View style={styles.inputfields}>
           <View style={styles.isbn}>
@@ -350,7 +413,7 @@ const UploadRoute = (props) => {
               ]}
               placeholder="ISBN"
               value={isbn}
-              onChangeText={(isbn) => setIsbn(isbn.replace(/[^0-9]/g, ""))}
+              onChangeText={(isbn) => FetchBookfromISBN(isbn)}
               keyboardType="number-pad"
               theme={{
                 colors: { text: colors.text, placeholder: colors.text },
@@ -370,6 +433,7 @@ const UploadRoute = (props) => {
           <TextInput
             style={styles.inputtextbox}
             placeholder="Name of the book"
+            numberOfLines={2}
             value={name}
             onChangeText={(text) => setName(text)}
             theme={{ colors: { text: colors.text, placeholder: colors.text } }}
@@ -423,7 +487,6 @@ const UploadRoute = (props) => {
               value: "",
               color: colors.text,
             }}
-            
             place
             useNativeAndroidPickerStyle={false}
             style={customPickerStyles}
@@ -625,13 +688,12 @@ const UploadRoute = (props) => {
       <View
         style={{
           marginLeft: 20,
-
           justifyContent: "flex-end",
           alignItems: "center",
           flex: 2,
         }}
       >
-        <Text style={{ fontFamily: "DMSans", color: colors.text }}>
+        <Text style={{ fontFamily: "DMSansbold", color: '#E96A59'}}>
           You'll get {!price ? 0 : userBookPrice}
         </Text>
         <Button
@@ -722,7 +784,7 @@ const styles = StyleSheet.create({
   inputtextbox: {
     backgroundColor: "transparent",
     justifyContent: "center",
-    height: 50,
+    height: 35,
     marginTop: 10,
   },
   isbn: {
