@@ -112,7 +112,7 @@ const Storemodal = (props) => {
                     padding: 10,
                     borderRadius: 10,
                     backgroundColor: "#D5DDEE",
-                    marginTop: 20,
+                    marginTop: 10,
                   }}
                 >
                   <Storemodalcard
@@ -132,7 +132,7 @@ const Storemodal = (props) => {
                 <Pressable
                   key={idx}
                   onPress={() => setSelectedShop(shop)}
-                  style={{ marginTop: 20 }}
+                  style={{ marginTop: 10,padding:10 }}
                 >
                   <Storemodalcard
                     shopName={shop.store_name}

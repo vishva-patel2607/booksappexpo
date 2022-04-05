@@ -204,7 +204,9 @@ const UploadRoute = (props) => {
   if (shop != null) {
     selected = (
       <>
-        <View style={{ justifyContent: "center", marginRight: 16,marginTop:5 }}>
+        <View
+          style={{ justifyContent: "center", marginRight: 16, marginTop: 5 }}
+        >
           <View style={styles.shop}>
             <View style={styles.shopDetailsContainer}>
               <Text
@@ -259,7 +261,7 @@ const UploadRoute = (props) => {
 
   const FetchBookfromISBN = async (isbn) => {
     setIsbn(isbn.replace(/[^0-9]/g, ""));
-    console.log(isbn);12
+    console.log(isbn);
     if (isbn.length === 10 || isbn.length === 13) {
       const YearRegex = new RegExp("^[12][0-9]{3}$");
       try {
@@ -267,11 +269,14 @@ const UploadRoute = (props) => {
         const res = await fetch(`https://openlibrary.org/isbn/${isbn}.json`);
 
         const json = await res.json();
-        console.log(res, "res");
         setName(json.title);
 
         if (YearRegex.test(json.publish_date)) {
+          console.log(json.publish_date);
           setYear(json.publish_date);
+        }
+        else{
+          setYear(json.publish_date.slice((json.publish_date.length)-4))
         }
         try {
           const resauthor = await fetch(
@@ -284,9 +289,11 @@ const UploadRoute = (props) => {
         }
       } catch (e) {
         console.log(e);
-        alert(
-          "Unable to find the book from the ISBN number. Please provide the details"
-        );
+        if (isbn.length === 13) {
+          alert(
+            "Unable to find the book from the ISBN number. Please provide the details"
+          );
+        }
         // setError('Error while fetching isbn')
       }
     }
@@ -693,8 +700,8 @@ const UploadRoute = (props) => {
           flex: 2,
         }}
       >
-        <Text style={{ fontFamily: "DMSansbold", color: '#E96A59'}}>
-          You'll get {!price ? 0 : userBookPrice}
+        <Text style={{ fontFamily: "DMSansbold", color: "#E96A59" }}>
+          You'll get Rs {!price ? 0 : userBookPrice}
         </Text>
         <Button
           theme={{ roundness: 120 }}

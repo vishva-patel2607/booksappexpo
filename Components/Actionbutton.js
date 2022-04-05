@@ -20,6 +20,7 @@ export default function RenderActionButton(props) {
         }}
         labelStyle={{
           fontSize: parseInt(props.fontS),
+          paddingLeft:5,
           color: '#FFFFFF',
           flexDirection: "row",
           fontFamily: "DMSansbold",

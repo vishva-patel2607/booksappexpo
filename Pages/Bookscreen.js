@@ -36,29 +36,33 @@ const Bookscreen = (props) => {
           book_id: book.book_id,
         }),
       })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          if (data.status) {
-            if (data.message === "Pickup added") {
-             console.log('Pickup added');
-            } else {
-              Alert.alert("Error in removing pickup", [
-                {
-                  text: "Ok",
-                },
-              ]);
-            }
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.status) {
+          Alert.alert("Success", data.message, [
+            {
+              text: "Ok",
+              onPress: () =>
+                props.navigation.navigate("Mainpage", {
+                  screen: "Home",
+                  params: { refreshing: true },
+                }),
+            },
+          ]);
+        } else {
+          if (data.message === "Could not verify") {
+            dispatch(logoutUser());
           } else {
-            if (data.message === "Could not verify") {
-              dispatch(logoutUser());
-            }
+            Alert.alert("Note", data.message, [
+              {
+                text: "Ok",
+              },
+            ]);
           }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        }
+      });
     } else {
       fetch("https://booksapp2021.herokuapp.com/Book/Bought/Add", {
         method: "PUT",
@@ -77,17 +81,8 @@ const Bookscreen = (props) => {
         .then((data) => {
           if (data.status) {
             if (data.message === "Pickup added") {
-              Alert.alert("Success", "Book added to Pickup", [
-                {
-                  text: "Ok",
-                  onPress: () =>
-                    props.navigation.navigate("Mainpage", {
-                      screen: "Home",
-                      params: { refreshing: true },
-                    }),
-                },
-              ]);
-            } else {
+             console.log('added')} 
+             else {
               Alert.alert("Error in adding pickup", [
                 {
                   text: "Ok",

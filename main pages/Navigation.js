@@ -53,8 +53,16 @@ const theme = {
   },
 };
 const Dtheme = {
+  colors:{
     ...DarkTheme,
-    
+    primary: '#0D1936',
+    background: '#0D1936',
+    card: '#0D1936',
+    text: '#ECEFEE',
+    border: 'rgb(39, 39, 41)',
+    notification: 'rgb(255, 69, 58)',
+    mapcolor:'#ffffff'
+  }
 };
 
 const Bottomnavcomponent = () => {

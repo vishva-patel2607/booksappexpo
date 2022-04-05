@@ -60,13 +60,13 @@ const SearchRoute = (props) => {
   }, [props.route.params?.refreshing]);
 
   const removefilter = (val) => {
-    console.log(pricefilterobj[val],[...pricefilterlist]);
+    console.log(pricefilterobj[val],[...pricefilterlist],'pricef');
     if ([...categoryfilterset].indexOf(val) !== -1) {
       filterlist.delete(val);
       categoryfilterset.delete(val);
       console.log(categoryfilterset);
       setFiltercount(filtercount - 1);
-    } else if([...pricefilterlist].indexOf(pricefilterobj[val]) === -1) {
+    } else if([...pricefilterlist].includes(val)) {
       pricefilterlist.clear();
       setPricefilter(0);
       setFiltercount(filtercount - 1);
@@ -116,7 +116,7 @@ const SearchRoute = (props) => {
   useEffect(() => {
     setLocation();
     if (typeof longitude != "undefined" && typeof latitude != "undefined") {
-      console.log(pricefilter,distancefilter);
+      console.log(pricefilter,distancefilter)
       fetch(`https://booksapp2021.herokuapp.com/Book/Search/${inset}`, {
         method: "POST",
         headers: {
