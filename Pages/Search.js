@@ -10,13 +10,14 @@ import {
   StatusBar,
   TouchableOpacity,
   RefreshControl,
+  FlatList,
 } from "react-native";
 import { logoutUser } from "../actions";
 import Searchresult from "../Components/Searchresult";
 import { ThemeContext } from "../Components/Theme";
 import { IconButton } from "react-native-paper";
 import { debounce } from "lodash";
-import { Text, Searchbar,Divider } from "react-native-paper";
+import { Text, Searchbar, Divider } from "react-native-paper";
 import Queryinfo from "../Components/Queryinfo";
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
@@ -63,7 +64,49 @@ const SearchRoute = (props) => {
     setRefreshCount(count + 1);
   }, [props.route.params?.refreshing]);
 
+  const renderData = ({ item }) => (
+    <Pressable
+      // key={idx}
+      onPress={() => props.navigation.navigate("Bookscreen", { book: item })}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          marginHorizontal: 16,
+          marginTop: 6,
+          flex: 1,
+          justifyContent: "space-between",
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "column",
+            justifyContent: "space-equal",
+
+            paddingVertical: 10,
+          }}
+        >
+          <Searchresult
+            bookname={item.book_name}
+            bookauthor={item.book_author}
+            bookcondition={item.book_condition}
+            bookprice={item.book_price}
+            bookdistance={item.store_distance}
+          />
+        </View>
+        <View style={{ alignSelf: "flex-end" }}>
+          <Image
+            source={{ uri: item.book_img }}
+            style={{ height: 112.5, width: 80, borderRadius: 10 }}
+            resizeMode="cover"
+          />
+        </View>
+      </View>
+    </Pressable>
+  );
+
   const removefilter = (val) => {
+    setInset(1);
     console.log(pricefilterobj[val], [...pricefilterlist], "pricef");
     if ([...categoryfilterset].indexOf(val) !== -1) {
       filterlist.delete(val);
@@ -116,10 +159,17 @@ const SearchRoute = (props) => {
     setLatitude(loc.coords.latitude);
   };
 
+  
+
   useEffect(() => {
+    console.log(inset,pricefilter);
     setLocation();
-    if (typeof longitude != "undefined" && typeof latitude != "undefined") {
-      console.log(pricefilter, distancefilter, inset);
+    if (
+      typeof longitude != "undefined" &&
+      typeof latitude != "undefined" 
+  
+    ) {
+      console.log(SearchQuery);
       fetch(`https://booksapp2021.herokuapp.com/Book/Search/${inset}`, {
         method: "POST",
         headers: {
@@ -140,15 +190,29 @@ const SearchRoute = (props) => {
           return response.json();
         })
         .then((data) => {
+          console.log(data);
           if (data.status) {
-            if (data.response.book_list.length !== 0) {
-              console.log(data);
-              setReceiveddata(data.response.book_list);
-              setMessage(data.message);
-            } else {
-              setText("No books found");
-              setReceiveddata([]);
-              setMessage(data.message);
+            if(inset===1){
+              if (data.response.book_list.length !== 0) {
+                   console.log(data,'data');
+                   setReceiveddata(data.response.book_list);
+                   console.log(Receiveddata);
+                   setMessage(data.message);
+                 } else {
+                   setText("No books found");
+                   setReceiveddata([]);
+                 }
+            }
+            else{
+              if (data.response.book_list.length !== 0) {
+                console.log(data,'data');
+                setReceiveddata([...Receiveddata,data.response.book_list]);
+                console.log(Receiveddata);
+                setMessage(data.message);
+              } else {
+                setText("No books found");
+                setReceiveddata(Receiveddata);
+              }  
             }
           } else {
             if (data.message === "Could not verify") {
@@ -160,21 +224,18 @@ const SearchRoute = (props) => {
           console.log(error);
         });
     }
-    setRefreshing(false);
   }, [
+    inset,
+    count,
     longitude,
     latitude,
-    count,
-    inset,
-    pricefilter,
-    distancefilter,
-    categoryfilterset,
-    refreshcount,
+    filtercount
   ]);
 
   const Calltochangecount = debounce(() => setCount(!count), 500);
 
   const onChangeInput = (text) => {
+    setInset(1);
     setSearchQuery(text);
     Calltochangecount();
   };
@@ -265,6 +326,7 @@ const SearchRoute = (props) => {
                       pricefilterlist.add(val.name);
                       setPricefilter(val.id);
                       setFiltercount(filtercount + 1);
+                      setInset(1);
                     }}
                   >
                     <Text
@@ -315,7 +377,6 @@ const SearchRoute = (props) => {
                 source={require("../assets/arrowdown.png")}
                 style={{
                   transform: [{ rotate: showcategorydown ? "180deg" : "0deg" }],
-                  
                 }}
                 resizeMode="cover"
               />
@@ -346,6 +407,7 @@ const SearchRoute = (props) => {
                       filterlist.add(val.name);
                       categoryfilterset.add(val.name);
                       setFiltercount(filtercount + 1);
+                      setInset(1);
                     }}
                   >
                     <Text
@@ -403,6 +465,7 @@ const SearchRoute = (props) => {
                       distancefilterlist.add(val.name);
                       setDistancefilter(val.name);
                       setFiltercount(count + 1);
+                      setInset(1);
                     }}
                   >
                     <Text
@@ -421,7 +484,13 @@ const SearchRoute = (props) => {
           )}
         </View>
       </View>
-      <Divider style={{marginTop:10,backgroundColor:colors.text==='#000000'?'#6E7A7D':'white',height:0.6}}/>
+      <Divider
+        style={{
+          marginTop: 10,
+          backgroundColor: colors.text === "#000000" ? "#6E7A7D" : "white",
+          height: 0.6,
+        }}
+      />
       <View
         style={{
           flexDirection: "row",
@@ -468,9 +537,19 @@ const SearchRoute = (props) => {
           )
         )}
       </View>
-      {([...filterlist].length !== 0 || [...pricefilterlist].length !==0 || [...distancefilterlist].length!==0) && <Divider style={{marginTop:10,backgroundColor:colors.text==='#000000'?'#6E7A7D':'white',height:0.6}}/>}
+      {([...filterlist].length !== 0 ||
+        [...pricefilterlist].length !== 0 ||
+        [...distancefilterlist].length !== 0) && (
+        <Divider
+          style={{
+            marginTop: 10,
+            backgroundColor: colors.text === "#000000" ? "#6E7A7D" : "white",
+            height: 0.6,
+          }}
+        />
+      )}
 
-      {Receiveddata.length !== 0 && (
+      {/* {Receiveddata.length !== 0 && (
         <ScrollView
           style={{ flex: 1 }}
           onScrollEndDrag={() => {
@@ -521,7 +600,7 @@ const SearchRoute = (props) => {
                   />
                 </View>
               </View>
-              <Divider style={{marginTop:10,backgroundColor:colors.text==='#000000'?'#6E7A7D':'white',height:0.6}} />
+             
             </Pressable>
           ))}
         </ScrollView>
@@ -536,7 +615,14 @@ const SearchRoute = (props) => {
             No books found
           </Text>
         </View>
-      )}
+      )} */}
+      <FlatList
+        data={Receiveddata}
+        renderItem={renderData}
+        onEndReachedThreshold={0.1}
+        onEndReached={() => setInset(inset+1)}
+        keyExtractor={(item, index) => index.toString()}
+      />
     </SafeAreaView>
   );
 };

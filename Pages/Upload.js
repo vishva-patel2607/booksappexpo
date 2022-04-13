@@ -946,6 +946,7 @@ const customPickerStyles = StyleSheet.create({
     marginHorizontal: 10,
     width: "80%",
     marginLeft: 10,
+    color:'black'
   },
   inputAndroid: {
     fontSize: 14,

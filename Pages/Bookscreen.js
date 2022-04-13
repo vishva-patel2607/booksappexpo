@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -6,8 +6,9 @@ import {
   Pressable,
   Alert,
   StyleSheet,
-  StatusBar
+  StatusBar,
 } from "react-native";
+import * as Location from "expo-location";
 import { useTheme } from "@react-navigation/native";
 import { ThemeContext } from "../Components/Theme";
 import Queryinfo from "../Components/Queryinfo";
@@ -18,14 +19,53 @@ import { Text, Button, ActivityIndicator } from "react-native-paper";
 const Bookscreen = (props) => {
   const { colors } = useTheme();
   const [book, setBook] = useState(props.route.params.book);
+  let store_latitude = book.store.store_latitude;
+  let store_longitude = book.store.store_longitude;
   const [imageloading, setImageloading] = useState(false);
+  const [distance,setDistance] = useState("");
   const { setTheme, Theme } = React.useContext(ThemeContext);
+  const [latitude, setLatitude] = useState();
+  const [longitude, setLongitude] = useState();
+
   let showloading =
     imageloading === true ? (
       <ActivityIndicator style={{ alignSelf: "center" }} />
     ) : (
       <View></View>
     );
+
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let loc = await Location.getCurrentPositionAsync({});
+      setLatitude(loc.coords.latitude);
+      setLongitude(loc.coords.longitude);
+      console.log(latitude,longitude);
+    });
+    setLatitude((latitude * Math.PI) / 180);
+    setLongitude((longitude * Math.PI) / 180);
+    store_latitude = (store_latitude * Math.PI) / 180;
+    store_longitude = (store_longitude * Math.PI) / 180;
+    let lon = store_longitude - longitude;
+    let lat = store_latitude - latitude;
+    let a =
+      Math.pow(Math.sin(lat / 2), 2) +
+      Math.cos(latitude) *
+        Math.cos(store_latitude) *
+        Math.pow(Math.sin(lon / 2), 2);
+
+    let c = 2 * Math.asin(Math.sqrt(a));
+    let r = 6371;
+    setDistance((parseInt(c*r)).toString())
+
+  }, []);
+
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
@@ -108,7 +148,13 @@ const Bookscreen = (props) => {
     }
   };
   return (
-    <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === "android" ? StatusBar.currentHeight+10 : 0 }}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        paddingTop:
+          Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
+      }}
+    >
       <View style={{ justifyContent: "flex-start" }}>
         <Pressable onPress={() => props.navigation.navigate("Search")}>
           <Backbutton />
@@ -120,7 +166,7 @@ const Bookscreen = (props) => {
           flexDirection: "row",
           justifyContent: "space-between",
           marginLeft: 14,
-          marginRight:12,
+          marginRight: 12,
           marginTop: 37,
         }}
       >
@@ -201,7 +247,7 @@ const Bookscreen = (props) => {
           flexDirection: "column",
           alignItems: "flex-start",
           marginLeft: 14,
-          
+
           marginTop: 9,
         }}
       >

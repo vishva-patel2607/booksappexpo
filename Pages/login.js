@@ -18,6 +18,8 @@ import { useDispatch } from "react-redux";
 import Error from "../Components/Error";
 import { setUser } from "../actions";
 import StaticBooksApp from "../Components/StaticBooksApp";
+import UserIcon from "../Svg/User";
+import PasswordIcon from "../Svg/Password";
 
 const Login = (props) => {
   const { colors } = useTheme();
@@ -184,7 +186,7 @@ const Login = (props) => {
               <TextInput.Icon
                 name={() => (
                   <View style={{ justifyContent: "center" }}>
-                    <Image source={require("../assets/user.png")} />
+                    <UserIcon />
                   </View>
                 )}
               />
@@ -216,7 +218,7 @@ const Login = (props) => {
                 <TextInput.Icon
                   name={() => (
                     <View style={{ justifyContent: "center" }}>
-                      <Image source={require("../assets/password.png")} />
+                      <PasswordIcon />
                     </View>
                   )}
                 />

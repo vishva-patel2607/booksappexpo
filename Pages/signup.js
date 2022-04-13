@@ -16,6 +16,9 @@ import RenderButton from "../Components/Button";
 import Error from "../Components/Error";
 import StaticBooksApp from "../Components/StaticBooksApp";
 import { TextInput } from "react-native-paper";
+import UserIcon from "../Svg/User";
+import PhoneIcon from "../Svg/Phone";
+import { Use } from "react-native-svg";
 
 const Signup = (props) => {
   const { colors } = useTheme();
@@ -201,7 +204,7 @@ const Signup = (props) => {
               maxLength={20}
               left={
                 <TextInput.Icon
-                  name={() => <Image source={require("../assets/user.png")} />}
+                  name={() =><UserIcon />}
                 />
               }
             />
@@ -231,7 +234,7 @@ const Signup = (props) => {
               maxLength={20}
               left={
                 <TextInput.Icon
-                  name={() => <Image source={require("../assets/user.png")} />}
+                  name={() => <UserIcon />}
                 />
               }
             />
@@ -262,7 +265,7 @@ const Signup = (props) => {
               maxLength={20}
               left={
                 <TextInput.Icon
-                  name={() => <Image source={require("../assets/Phone.png")} />}
+                  name={() => <PhoneIcon />}
                 />
               }
             />
@@ -314,7 +317,7 @@ const Signup = (props) => {
                 underlineColor="#ECEFEE"
                 theme={{
                   colors: {
-                    primary: "#EEECEF",
+                    primary: colors.background,
                     placeholder: "#8e8e8e",
                   },
                   roundness: 120,

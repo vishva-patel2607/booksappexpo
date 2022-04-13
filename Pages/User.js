@@ -5,6 +5,10 @@ import { ThemeContext } from "../Components/Theme";
 import React, { useState, useEffect } from "react";
 import ActionButton from "../Components/Actionbutton";
 import StaticText from "../Components/StaticText";
+import UserIcon from "../Svg/Useruser";
+import PhoneIcon from "../Svg/Phoneuser";
+import EmailIcon from "../Svg/Emailuser";
+import Birthday from "../Svg/Birthday";
 import {
   SafeAreaView,
   View,
@@ -136,7 +140,7 @@ const UserRoute = (props) => {
               <View
                 style={{ width: "75%", flexDirection: "row", marginLeft: 15 }}
               >
-                {userimage}
+                <UserIcon />
                 <View style={{ flexDirection: "column", marginLeft: 20 }}>
                   <StaticText
                     text={userobj.firstname + " " + userobj.lastname}
@@ -161,7 +165,7 @@ const UserRoute = (props) => {
                   marginTop: 25,
                 }}
               >
-                {emailimage}
+                <EmailIcon />
                 <View style={{ flexDirection: "column", marginLeft: 20 }}>
                   <StaticText text={userobj.email} />
                   <View
@@ -192,7 +196,7 @@ const UserRoute = (props) => {
                   marginTop: 25,
                 }}
               >
-                {phoneimage}
+                <PhoneIcon />
                 <View style={{ flexDirection: "column", marginLeft: 20 }}>
                   <StaticText text={userobj.phonenumber} />
                   <View
@@ -223,7 +227,7 @@ const UserRoute = (props) => {
                   marginTop: 25,
                 }}
               >
-                {birthdayimage}
+                <Birthday />
                 <View style={{ flexDirection: "column", marginLeft: 20 }}>
                 <StaticText
                   text={

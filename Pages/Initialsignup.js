@@ -14,6 +14,9 @@ import StaticBooksApp from "../Components/StaticBooksApp";
 import RenderButton from "../Components/Button";
 import { useTheme } from "@react-navigation/native";
 import { TextInput } from "react-native-paper";
+import UserIcon from "../Svg/User";
+import PasswordIcon from "../Svg/Password";
+import EmailIcon from "../Svg/Email";
 
 import { ThemeContext } from "../Components/Theme";
 
@@ -120,7 +123,7 @@ const InitialSignUp = (props) => {
               maxLength={20}
               left={
                 <TextInput.Icon
-                  name={() => <Image source={require("../assets/user.png")} />}
+                  name={() =><UserIcon />}
                 />
               }
             />
@@ -152,7 +155,7 @@ const InitialSignUp = (props) => {
               maxLength={30}
               left={
                 <TextInput.Icon
-                  name={() => <Image source={require("../assets/email.png")} />}
+                  name={() => <EmailIcon />}
                 />
               }
             />
@@ -183,7 +186,7 @@ const InitialSignUp = (props) => {
               left={
                 <TextInput.Icon
                   name={() => (
-                    <Image source={require("../assets/password.png")} />
+                   <PasswordIcon />
                   )}
                 />
               }
@@ -215,7 +218,7 @@ const InitialSignUp = (props) => {
               left={
                 <TextInput.Icon
                   name={() => (
-                    <Image source={require("../assets/password.png")} />
+                    <PasswordIcon />
                   )}
                 />
               }
