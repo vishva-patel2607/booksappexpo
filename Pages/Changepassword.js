@@ -8,6 +8,7 @@ import {
   Text,
   Image,
   Pressable,
+  StatusBar,
 } from "react-native";
 import { ThemeContext } from "../Components/Theme";
 import { useDispatch, useSelector } from "react-redux";
@@ -107,64 +108,68 @@ const Changepassword = (props) => {
         </Text>
       </View>
       <View style={{ marginLeft: 19, flex: 12 }}>
-        <TextInput
-          style={styles.inputtextbox}
-          theme={{
-            colors: {
-              primary: colors.background,
-              placeholder: "#8e8e8e",
-            },
-            roundness: 120,
-          }}
-          // theme={{ colors: { primary: "transparent" } }}
-          placeholder="Old Password"
-          secureTextEntry={true}
-          value={oldpassword}
-          onChangeText={(text) => setOldpassword(text)}
-          autoCapitalize="none"
-          autoCorrect={false}
-          underlineColor="transparent"
-          maxLength={20}
-        />
+        <View style={{ height: 59, overflow: "hidden" }}>
+          <TextInput
+            style={styles.inputtextbox}
+            theme={{
+              colors: {
+                primary: colors.background,
+                placeholder: "#8e8e8e",
+              },
+              roundness: 120,
+            }}
+            // theme={{ colors: { primary: "transparent" } }}
+            placeholder="Old Password"
+            secureTextEntry={true}
+            value={oldpassword}
+            onChangeText={(text) => setOldpassword(text)}
+            autoCapitalize="none"
+            autoCorrect={false}
+            underlineColor="transparent"
+            maxLength={20}
+          />
+        </View>
+        <View style={{ height: 59, overflow: "hidden" }}>
+          <TextInput
+            style={styles.inputtextbox}
+            theme={{
+              colors: {
+                primary: colors.background,
+                placeholder: "#8e8e8e",
+              },
+              roundness: 120,
+            }}
+            placeholder="New password"
+            value={newpassword1}
+            onChangeText={(text) => setNewpassword1(text)}
+            autoCapitalize="none"
+            underlineColor="transparent"
+            autoCorrect={false}
+            secureTextEntry={true}
+            maxLength={20}
+          />
+        </View>
 
-        <TextInput
-          style={styles.inputtextbox}
-          theme={{
-            colors: {
-              primary: colors.background,
-              placeholder: "#8e8e8e",
-            },
-            roundness: 120,
-          }}
-          placeholder="New password"
-          value={newpassword1}
-          onChangeText={(text) => setNewpassword1(text)}
-          autoCapitalize="none"
-          underlineColor="transparent"
-          autoCorrect={false}
-          secureTextEntry={true}
-          maxLength={20}
-        />
-
-        <TextInput
-          style={styles.inputtextbox}
-          theme={{
-            colors: {
-              primary: colors.background,
-              placeholder: "#8e8e8e",
-            },
-            roundness: 120,
-          }}
-          placeholder="Retype New Password"
-          value={newpassword2}
-          onChangeText={(text) => setNewpassword2(text)}
-          autoCapitalize="none"
-          underlineColor="transparent"
-          autoCorrect={false}
-          secureTextEntry={true}
-          maxLength={20}
-        />
-
+        <View style={{ height: 59, overflow: "hidden" }}>
+          <TextInput
+            style={styles.inputtextbox}
+            theme={{
+              colors: {
+                primary: colors.background,
+                placeholder: "#8e8e8e",
+              },
+              roundness: 120,
+            }}
+            placeholder="Retype New Password"
+            value={newpassword2}
+            onChangeText={(text) => setNewpassword2(text)}
+            autoCapitalize="none"
+            underlineColor="transparent"
+            autoCorrect={false}
+            secureTextEntry={true}
+            maxLength={20}
+          />
+        </View>
         <Text style={styles.error}>{error}</Text>
         <Button
           theme={{ roundness: 120 }}
@@ -216,6 +221,7 @@ const styles = StyleSheet.create({
 
   layout: {
     flex: 1,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
   },
 });
 

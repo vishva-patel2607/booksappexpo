@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "@react-navigation/native";
 import {
   SafeAreaView,
@@ -15,13 +15,14 @@ import { TextInput, Text } from "react-native-paper";
 import { ThemeContext } from "../Components/Theme";
 import StaticText from "../Components/StaticText";
 import { useDispatch } from "react-redux";
+import Error from "../Components/Error";
 import { setUser } from "../actions";
 import StaticBooksApp from "../Components/StaticBooksApp";
 
 const Login = (props) => {
   const { colors } = useTheme();
   const [bordercolor, setBordercolor] = useState("black");
-  const {setTheme,Theme} = React.useContext(ThemeContext);
+  const { setTheme, Theme } = React.useContext(ThemeContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -29,6 +30,8 @@ const Login = (props) => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   //const selector = useSelector();
+
+  
 
   forgotpassword = () => {
     if (username !== "") {
@@ -128,15 +131,37 @@ const Login = (props) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1,
-      alignItems: "center",
-      paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-      backgroundColor:colors.background}}>
-      <KeyboardAvoidingView behavior="padding">
-        <View style={{ flex: 4, flexDirection: "column", marginTop: 30,alignItems:'center' }}>
-        <StaticBooksApp />
+    <SafeAreaView
+      style={{
+        flex: 1,
+        alignItems: "center",
+        paddingTop:
+          Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
+        backgroundColor: colors.background,
+      }}
+    >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : null}
+        keyboardVerticalOffset={Platform.select({ ios: 0, android: 500 })}
+      >
+        <View
+          style={{
+            flex: 4,
+            flexDirection: "column",
+            marginTop: 30,
+            alignItems: "center",
+          }}
+        >
+          <StaticBooksApp />
         </View>
-        <View style={{ flex: 18, flexDirection: "column", borderRadius: 120 }}>
+        <View
+          style={{ flex: 18, flexDirection: "column", borderColor: "#ECEFEE" }}
+        >
+          <View style={{
+        height: 59,
+        overflow:'hidden',
+        
+        }}>
           <TextInput
             style={styles.inputtextbox}
             theme={{
@@ -150,7 +175,6 @@ const Login = (props) => {
             // label="Username"
             placeholder="Username"
             value={username}
-       
             onChangeText={(text) => setUsername(text)}
             autoCapitalize="none"
             autoCompleteType="username"
@@ -166,18 +190,20 @@ const Login = (props) => {
               />
             }
           />
-          <View style={{ borderRadius: 120 }}>
+          </View>
+          <View style={{overflow:'hidden',height:59}} >
             <TextInput
               theme={{
                 colors: {
                   primary: colors.background,
-                  placeholder: "#8e8e8e",
+                  underlineColor:'transparent'
+                  
                 },
                 roundness: 120,
               }}
-
               style={styles.inputtextbox}
               placeholder="Password"
+              
               value={password}
               onChangeText={(text) => setPassword(text)}
               autoCapitalize="none"
@@ -199,15 +225,21 @@ const Login = (props) => {
           </View>
           <View style={{ marginTop: 10 }}>
             <Pressable
-              onPress={() => {
-                forgotpassword;
+               onPress={() => {
+                props.navigation.navigate("ForgotPassword");
               }}
             >
               <StaticText text="   Forgot Password?" />
             </Pressable>
           </View>
 
-          <Text style={styles.error}>{error}</Text>
+          <View style={{ alignSelf: "center" }}>
+            {error !== "" && (
+              <View style={{ marginTop: 30 }}>
+                <Error text={error} />
+              </View>
+            )}
+          </View>
         </View>
 
         <View
@@ -215,25 +247,18 @@ const Login = (props) => {
           style={{
             flex: 4,
             alignItems: "center",
-            justifyContent: "space-evenly",
+            justifyContent: "center",
           }}
         >
           <RenderButton title="LogIn" Click={loginrequest} />
-          {/* <Button onPress={forgotpassword}>Forgot Password</Button> */}
-          {/* </View> */}
-
-          {/* <View
-          behavior="position"
-          style={{
-            flex: 3,
-            alignItems: "center",
-            justifyContent: "flex-start",
-          }}
-        > */}
-          <Pressable onPress={() => props.navigation.navigate("InitialSignup")}>
+          <Pressable
+            onPress={() => props.navigation.navigate("InitialSignup")}
+            style={{ marginTop: 5 }}
+          >
             <StaticText text="Don't have an account? SignUp" />
           </Pressable>
         </View>
+        <View style={{ flex: 0.8 }}></View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -253,8 +278,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderRadius: 120,
     height: 50,
+    overflow: 'hidden',
   },
-
 });
 
 export default React.memo(Login);

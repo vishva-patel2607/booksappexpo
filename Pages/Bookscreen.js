@@ -6,6 +6,7 @@ import {
   Pressable,
   Alert,
   StyleSheet,
+  StatusBar
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { ThemeContext } from "../Components/Theme";
@@ -13,18 +14,24 @@ import Queryinfo from "../Components/Queryinfo";
 import MapView, { Marker } from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
 import Backbutton from "../Components/Backbutton";
-import { Text, Button, Colors } from "react-native-paper";
+import { Text, Button, ActivityIndicator } from "react-native-paper";
 const Bookscreen = (props) => {
   const { colors } = useTheme();
   const [book, setBook] = useState(props.route.params.book);
-
+  const [imageloading, setImageloading] = useState(false);
   const { setTheme, Theme } = React.useContext(ThemeContext);
+  let showloading =
+    imageloading === true ? (
+      <ActivityIndicator style={{ alignSelf: "center" }} />
+    ) : (
+      <View></View>
+    );
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
   const addtopickup = () => {
     if (book.transaction_type === "lend") {
-      console.log('lend');
+      console.log("lend");
       fetch("https://booksapp2021.herokuapp.com/Book/Borrowed/Add", {
         method: "PUT",
         headers: {
@@ -36,33 +43,33 @@ const Bookscreen = (props) => {
           book_id: book.book_id,
         }),
       })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        if (data.status) {
-          Alert.alert("Success", data.message, [
-            {
-              text: "Ok",
-              onPress: () =>
-                props.navigation.navigate("Mainpage", {
-                  screen: "Home",
-                  params: { refreshing: true },
-                }),
-            },
-          ]);
-        } else {
-          if (data.message === "Could not verify") {
-            dispatch(logoutUser());
-          } else {
-            Alert.alert("Note", data.message, [
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          if (data.status) {
+            Alert.alert("Success", data.message, [
               {
                 text: "Ok",
+                onPress: () =>
+                  props.navigation.navigate("Mainpage", {
+                    screen: "Home",
+                    params: { refreshing: true },
+                  }),
               },
             ]);
+          } else {
+            if (data.message === "Could not verify") {
+              dispatch(logoutUser());
+            } else {
+              Alert.alert("Note", data.message, [
+                {
+                  text: "Ok",
+                },
+              ]);
+            }
           }
-        }
-      });
+        });
     } else {
       fetch("https://booksapp2021.herokuapp.com/Book/Bought/Add", {
         method: "PUT",
@@ -81,8 +88,8 @@ const Bookscreen = (props) => {
         .then((data) => {
           if (data.status) {
             if (data.message === "Pickup added") {
-             console.log('added')} 
-             else {
+              console.log("added");
+            } else {
               Alert.alert("Error in adding pickup", [
                 {
                   text: "Ok",
@@ -96,12 +103,12 @@ const Bookscreen = (props) => {
           }
         })
         .catch((error) => {
-          console.log('error');
+          console.log("error");
         });
     }
   };
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === "android" ? StatusBar.currentHeight+10 : 0 }}>
       <View style={{ justifyContent: "flex-start" }}>
         <Pressable onPress={() => props.navigation.navigate("Search")}>
           <Backbutton />
@@ -112,7 +119,8 @@ const Bookscreen = (props) => {
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          marginHorizontal: 12,
+          marginLeft: 14,
+          marginRight:12,
           marginTop: 37,
         }}
       >
@@ -126,10 +134,19 @@ const Bookscreen = (props) => {
         />
         {/* </View> */}
         <View>
+          {showloading}
           <Image
             source={{ uri: book.book_img }}
             resizeMode="cover"
-            style={{ height: 150, width: 150, borderRadius: 10 }}
+            style={{ height: 130, width: 100, borderRadius: 10 }}
+            onLoadStart={() => {
+              setImageloading(true);
+              console.log("In");
+            }}
+            onLoadEnd={() => {
+              setImageloading(false);
+              console.log("Out");
+            }}
           />
         </View>
       </View>
@@ -159,7 +176,7 @@ const Bookscreen = (props) => {
               color: colors.text,
             }}
           >
-            {book.store_distance}
+            {book.store_distance} km(s)
           </Text>
         </View>
         <View style={{ flex: 5 }}>
@@ -183,7 +200,8 @@ const Bookscreen = (props) => {
         style={{
           flexDirection: "column",
           alignItems: "flex-start",
-          marginLeft: 12,
+          marginLeft: 14,
+          
           marginTop: 9,
         }}
       >
@@ -203,7 +221,7 @@ const Bookscreen = (props) => {
           region={{
             latitude: book.store.store_latitude,
             longitude: book.store.store_longitude,
-            latitudeDelta: 0.10,
+            latitudeDelta: 0.1,
             longitudeDelta: 0.15,
           }}
           showsUserLocation={true}
@@ -216,7 +234,7 @@ const Bookscreen = (props) => {
             coordinate={{
               latitude: book.store.store_latitude,
               longitude: book.store.store_longitude,
-              latitudeDelta: 0.10,
+              latitudeDelta: 0.1,
               longitudeDelta: 0.15,
             }}
             title={book.store_name}

@@ -4,6 +4,7 @@ import {
   ScrollView,
   View,
   StyleSheet,
+  StatusBar
 } from "react-native";
 
 import {
@@ -90,7 +91,7 @@ const PhonenumberVerification = (props) => {
 
   return (
     <ScrollView style={styles.main}>
-      <SafeAreaView>
+      <SafeAreaView style={{flex:1, paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10: 0}}>
         <View style={styles.logo}>
           <BooksappLogo />
         </View>

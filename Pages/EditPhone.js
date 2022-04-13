@@ -6,6 +6,7 @@ import {
   Alert,
   Pressable,
   Image,
+  StatusBar
 } from "react-native";
 import { ThemeContext } from "../Components/Theme";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,7 +20,6 @@ const EditPhone = (props) => {
   const user = useSelector((state) => state.user);
   const [newphoneno, setNewphoneno] = useState("");
   const [error, setError] = useState("");
-  const { setTheme, Theme } = React.useContext(ThemeContext);
   const dispatch = useDispatch();
 
   const editphone = () => {
@@ -70,12 +70,14 @@ const EditPhone = (props) => {
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
         <Text
           style={{
-            fontSize: 25,
+            fontSize: 22,
             fontWeight: "700",
             color: colors.text,
             marginLeft: 22,
+            fontFamily:'DMSansbold'
+            
           }}
-          theme={{ fonts: { regular: "DM Sans" } }}
+          
         >
           CHANGE PHONE
         </Text>
@@ -99,14 +101,13 @@ const EditPhone = (props) => {
           maxLength={10}
         />
 
-        <Text style={styles.error}>{error}</Text>
         <Button
           theme={{ roundness: 120 }}
           onPress={editphone}
           style={{
             width: 215,
             height: 40,
-            alignItems: "flex-start",
+            marginTop:25,
             justifyContent: "center",
           }}
           labelStyle={{
@@ -149,6 +150,8 @@ const styles = StyleSheet.create({
 
   layout: {
     flex: 1,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight +10: 0
   },
+
 });
 export default React.memo(EditPhone);

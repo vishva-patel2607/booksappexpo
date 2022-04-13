@@ -7,8 +7,8 @@ export default function Divider(){
     return(
         <View
         style={{
-          marginTop: 17,
-          height: 1,
+          marginTop: 10,
+          height: 0.6,
           backgroundColor:
             colors.text === "#000000" ? "#6E7A7D" : colors.text,
         }}

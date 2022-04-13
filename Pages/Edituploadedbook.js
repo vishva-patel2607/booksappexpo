@@ -17,6 +17,7 @@ import Svg, { Path } from "react-native-svg";
 import { logoutUser } from "../actions";
 import { Button, Text, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
+import SwitchSelector from "react-native-switch-selector";
 
 const Edituploadedbook = (props) => {
   const { colors } = useTheme();
@@ -25,16 +26,20 @@ const Edituploadedbook = (props) => {
   const [price, setPrice] = useState(String(Bookdata.book_price));
   const [imgurl, setImgurl] = useState(Bookdata.book_img);
   const [name, setName] = useState(Bookdata.book_name);
-  let [isbn, setIsbn] = useState("");
+  const [transaction_type, setTransaction_type] = useState(
+    'lend'
+  );
   const [author, setAuthor] = useState(Bookdata.book_author);
   const [year, setYear] = useState(String(Bookdata.book_year));
-  const [condition, setCondition] = useState(Bookdata.book_condition);
-  //
-  const [category, setCategory] = useState("");
-  const [bookCondition, setbookCondition] = useState("");
-  const [NewCondition, setNewCondition] = useState(
-    props.route.params?.book.book_condition
-  );
+
+  const [category, setCategory] = useState(Bookdata.book_category);
+  const [bookCondition, setbookCondition] = useState(Bookdata.book_condition);
+
+  const Option = [
+    { label: "Lend", value: "lend" },
+    { label: "Sell", value: "sell" },
+  ];
+  let initial = Bookdata.book_transaction_type === "lend" ? 0 : 1;
 
   useEffect(() => {
     if (
@@ -62,8 +67,8 @@ const Edituploadedbook = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
-  const editbooks = async () => {
-    console.log("edit books function call");
+  const editbooks = () => {
+    console.log("edit books function call",Bookdata.book_id,name,author,typeof(price),year,bookCondition,transaction_type);
 
     fetch("https://booksapp2021.herokuapp.com/Book/Lent/Edit", {
       method: "PUT",
@@ -76,10 +81,10 @@ const Edituploadedbook = (props) => {
         book_id: Bookdata.book_id,
         book_name: name,
         book_author: author,
-        book_price: price,
+        book_price: parseInt(price),
         book_year: year,
-        book_condition: condition,
-        book_transaction_type: "lend",
+        book_condition: bookCondition,
+        book_transaction_type: transaction_type,
       }),
     })
       .then((response) => {
@@ -118,13 +123,14 @@ const Edituploadedbook = (props) => {
           <Backbutton />
         </Pressable>
       </View>
-      <View style={{ flex: 4, flexDirection: "row", marginLeft: 10 }}>
+      <View style={{ flex: 6, flexDirection: "row", marginLeft: 10 }}>
         <View style={styles.inputfields}>
           <TextInput
             style={styles.inputtextbox}
             theme={{ colors: { text: colors.text, placeholder: colors.text } }}
             placeholder={Bookdata.book_name}
             value={name}
+            underlineColor={colors.text}
             onChangeText={(text) => setName(text)}
           />
           <TextInput
@@ -132,14 +138,17 @@ const Edituploadedbook = (props) => {
             theme={{ colors: { text: colors.text, placeholder: colors.text } }}
             placeholder={Bookdata.book_author}
             value={author}
+            underlineColor={colors.text}
             onChangeText={(text) => setAuthor(text)}
           />
+
           <View style={styles.container}>
             <TextInput
               style={[styles.inputtextbox, styles.subcontainer]}
               theme={{
                 colors: { text: colors.text, placeholder: colors.text },
               }}
+              underlineColor={colors.text}
               placeholder="Year"
               value={String(year)}
               onChangeText={(text) => setYear(text.replace(/[^0-9]/g, ""))}
@@ -151,6 +160,7 @@ const Edituploadedbook = (props) => {
               theme={{
                 colors: { text: colors.text, placeholder: colors.text },
               }}
+              underlineColor={colors.text}
               placeholder="Price"
               value={String(price)}
               onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ""))}
@@ -158,6 +168,7 @@ const Edituploadedbook = (props) => {
               maxLength={4}
             />
           </View>
+
           <RNPickerSelect
             onValueChange={(value) => setCategory(value)}
             items={[
@@ -172,14 +183,29 @@ const Edituploadedbook = (props) => {
             ]}
             selectedValue={category}
             placeholder={{
-              label: "Select the genre",
-              value: "",
-              color: "black",
+              label: category,
+              value: category,
+              color: colors.text,
             }}
-            place
             useNativeAndroidPickerStyle={false}
             style={customPickerStyles}
           />
+          <View style={{ alignSelf: "center" }}>
+            <SwitchSelector
+              options={Option}
+              initial={1}
+              style={{ width: 100 }}
+              textContainerStyle={{ fontFamily: "DMSans" }}
+              bold={true}
+              borderRadius={50}
+              borderColor={"#E96A59"}
+              buttonColor={"#E96A59"}
+              onPress={(value) => {
+                setTransaction_type(value);
+                console.log(value);
+              }}
+            />
+          </View>
         </View>
         <View
           style={{
@@ -192,8 +218,8 @@ const Edituploadedbook = (props) => {
           <View style={styles.uploadimage}>
             <Image
               style={{
-                height: "100%",
-                width: "100%",
+                height: 180,
+                width: 150,
 
                 borderRadius: 20,
               }}
@@ -226,7 +252,10 @@ const Edituploadedbook = (props) => {
               marginRight: 16,
             }}
           >
-            <View
+            <Pressable
+              onPress={() => {
+                setbookCondition("Bad");
+              }}
               style={[
                 styles.checkboxContainer,
                 {
@@ -242,15 +271,14 @@ const Edituploadedbook = (props) => {
                     color: bookCondition === "Bad" ? "#ffffff" : colors.text,
                   },
                 ]}
-                onPress={() => {
-                  setbookCondition("Bad");
-                }}
               >
                 Bad
               </Text>
-            </View>
-
-            <View
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                setbookCondition("Fair");
+              }}
               style={[
                 styles.checkboxContainer,
                 {
@@ -266,14 +294,11 @@ const Edituploadedbook = (props) => {
                     color: bookCondition === "Fair" ? "#ffffff" : colors.text,
                   },
                 ]}
-                onPress={() => {
-                  setbookCondition("Fair");
-                }}
               >
                 Fair
               </Text>
-            </View>
-            <View
+            </Pressable>
+            <Pressable
               style={[
                 styles.checkboxContainer,
                 {
@@ -281,6 +306,9 @@ const Edituploadedbook = (props) => {
                     bookCondition === "Good" ? "#0036F4" : "transparent",
                 },
               ]}
+              onPress={() => {
+                setbookCondition("Good");
+              }}
             >
               <Text
                 style={[
@@ -289,15 +317,11 @@ const Edituploadedbook = (props) => {
                     color: bookCondition === "Good" ? "#ffffff" : colors.text,
                   },
                 ]}
-                onPress={() => {
-                  setbookCondition("Good");
-                }}
               >
                 Good
               </Text>
-            </View>
-
-            <View
+            </Pressable>
+            <Pressable
               style={[
                 styles.checkboxContainer,
                 {
@@ -305,6 +329,9 @@ const Edituploadedbook = (props) => {
                     bookCondition === "Great" ? "#0036F4" : "transparent",
                 },
               ]}
+              onPress={() => {
+                setbookCondition("Great");
+              }}
             >
               <Text
                 style={[
@@ -313,13 +340,10 @@ const Edituploadedbook = (props) => {
                     color: bookCondition === "Great" ? "#ffffff" : colors.text,
                   },
                 ]}
-                onPress={() => {
-                  setbookCondition("Great");
-                }}
               >
                 Great
               </Text>
-            </View>
+            </Pressable>
           </View>
         </View>
         <View style={{ justifyContent: "center", marginRight: 16 }}>
@@ -332,7 +356,7 @@ const Edituploadedbook = (props) => {
                   { color: colors.text },
                 ]}
               >
-                {Bookdata.store.store_distance}
+                12 km
               </Text>
               <Text style={[styles.shopDetails, { color: colors.text }]}>
                 {Bookdata.store.store_name}
@@ -438,7 +462,7 @@ const QrcodeLogo = ({ setShowQR, showQR }) => {
 
 const styles = StyleSheet.create({
   main: {
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
     backgroundColor: "#ECEFEE",
   },
   heading: {
@@ -530,7 +554,7 @@ const styles = StyleSheet.create({
   },
   uploadimage: {
     marginBottom: 10,
-    backgroundColor: "#6E797C",
+    alignItems: "center",
     borderRadius: 20,
     marginLeft: 10,
     marginRight: 10,
@@ -573,22 +597,21 @@ const customPickerStyles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#0036F4",
     borderRadius: 20,
-    color: "#000000",
-    paddingRight: 30, // to ensure the text is never behind the icon
-    paddingLeft: 10,
-    height: 40,
-    marginTop: 25,
+
+    height: 35,
+    marginHorizontal: 1,
+    width: "100%",
   },
   inputAndroid: {
     fontSize: 14,
     borderWidth: 2,
     borderColor: "#0036F4",
-    color: "#0D1936",
-    borderRadius: 50,
-    paddingRight: 30, // to ensure the text is never behind the icon
-    paddingLeft: 10,
-    height: 40,
-    marginTop: 20,
+    borderRadius: 20,
+    paddingHorizontal: 5,
+    height: 35,
+    marginHorizontal: 10,
+    width: "80%",
+    marginLeft: 10,
   },
 });
 export default React.memo(Edituploadedbook);

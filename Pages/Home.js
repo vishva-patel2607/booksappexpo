@@ -369,6 +369,7 @@ const HomeRoute = (props) => {
       .then((data) => {
         if (data.status) {
           setLentbooks(data.response.books);
+          console.log(data.response.books,'lent');
         } else {
           if (data.message === "Could not verify") {
             dispatch(logoutUser());
@@ -489,8 +490,7 @@ const HomeRoute = (props) => {
 const styles = StyleSheet.create({
   AndroidSafeArea: {
     flex: 1,
-    
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
   },
   submitbutton: {
     fontSize: 18,

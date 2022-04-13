@@ -10,7 +10,7 @@ import { ThemeContext } from "../Components/Theme.js";
 import EmailVerification from "../Pages/EmailVerification.js";
 import SearchRoute from "../Pages/Search.js";
 import PrivacyPolicy from "../Pages/Privacypolicy.js";
-
+import Forgotpassword from "../Pages/Forgotpassword.js";
 import EditEmail from "../Pages/Editemail.js";
 import UploadRoute from "../Pages/Upload.js";
 import UserRoute from "../Pages/User.js";
@@ -29,7 +29,7 @@ import EditPhone from "../Pages/EditPhone.js";
 import Storemodal from "../Pages/Storemodal.js";
 import { useSelector, useDispatch } from "react-redux";
 import { getUser, logoutUser, setUser } from "../actions";
-import ForgotPassword from "../Pages/Forgotpassword.js";
+
 
 import Edituploadedbook from "../Pages/Edituploadedbook.js";
 const Stack = createStackNavigator();
@@ -72,9 +72,13 @@ const Bottomnavcomponent = () => {
     <Tab.Navigator
       initialRouteName="Home"
       shifting={true}
+      
       sceneAnimationEnabled={false}
       activeColor={"black"}
       inactiveColor={"black"}
+      screenOptions = {{
+        tabBarColor:'#ECEFEE'
+      }}
     >
       <Tab.Screen
         name="Home"
@@ -265,7 +269,7 @@ const Navigation = () => {
           <Stack.Screen
             name="Camerascreen"
             component={Camerascreen}
-            options={{ title: "" }}
+            options={{ headerShown:false }}
           />
           
           
@@ -328,7 +332,7 @@ const Navigation = () => {
 
           <Stack.Screen
             name="ForgotPassword"
-            component={ForgotPassword}
+            component={Forgotpassword}
             options={{ headerShown: false }}
           />
           <Stack.Screen

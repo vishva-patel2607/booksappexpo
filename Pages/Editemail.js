@@ -6,6 +6,7 @@ import {
   Alert,
   Pressable,
   Image,
+  StatusBar
 } from "react-native";
 import { ThemeContext } from "../Components/Theme";
 import { useDispatch, useSelector } from "react-redux";
@@ -70,12 +71,12 @@ const EditEmail = (props) => {
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
         <Text
           style={{
-            fontSize: 25,
+            fontSize: 22,
             fontWeight: "700",
             color: "#0D1936",
             marginLeft: 22,
+            fontFamily:'DMSansbold'
           }}
-          theme={{ fonts: { regular: "DM Sans" } }}
         >
           CHANGE EMAIL
         </Text>
@@ -100,7 +101,7 @@ const EditEmail = (props) => {
           maxLength={10}
         />
 
-        <Text style={styles.error}>{error}</Text>
+       
         <Button
           theme={{ roundness: 120 }}
           onPress={editemail}
@@ -108,8 +109,8 @@ const EditEmail = (props) => {
             width: 215,
             height: 40,
             alignItems: "flex-start",
-
-            justifyContent: "center",
+            marginTop:25
+            
           }}
           labelStyle={{
             fontSize: 16,
@@ -151,6 +152,7 @@ const styles = StyleSheet.create({
 
   layout: {
     flex: 1,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight+10 : 0
   },
 });
 export default React.memo(EditEmail);

@@ -9,13 +9,14 @@ import {
   Pressable,
   StatusBar,
   TouchableOpacity,
-  RefreshControl
+  RefreshControl,
 } from "react-native";
-import Divider from "../Components/Divider";
+import { logoutUser } from "../actions";
+import Searchresult from "../Components/Searchresult";
 import { ThemeContext } from "../Components/Theme";
-import {  IconButton } from "react-native-paper";
+import { IconButton } from "react-native-paper";
 import { debounce } from "lodash";
-import { Text, Searchbar } from "react-native-paper";
+import { Text, Searchbar,Divider } from "react-native-paper";
 import Queryinfo from "../Components/Queryinfo";
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
@@ -26,18 +27,22 @@ const SearchRoute = (props) => {
   const { setTheme, Theme } = useContext(ThemeContext);
   const [longitude, setLongitude] = useState();
   const [showcategoryoption, setShowcategoryoption] = useState(false);
+  const [showpricedown, setShowpricedown] = useState(false);
+  const [showcategorydown, setShowcategorydown] = useState(false);
+  const [showdistancedown, setShowdistancedown] = useState(false);
+  const [flag, setFlag] = useState(true);
   const [showdistanceoption, setShowdistanceoption] = useState(false);
-  const [distancefilterlist,setDistancefilterlist] = useState(new Set());
+  const [distancefilterlist, setDistancefilterlist] = useState(new Set());
   const [showpriceoption, setShowpriceoption] = useState(false);
   const [latitude, setLatitude] = useState();
   const [filterlist, setFilterlist] = useState(new Set());
-  const [pricefilterlist,setPricefilterlist] = useState(new Set());
+  const [pricefilterlist, setPricefilterlist] = useState(new Set());
   const [Receiveddata, setReceiveddata] = useState([]);
   const [count, setCount] = useState(0);
   const [SearchQuery, setSearchQuery] = useState("");
   const [text, setText] = useState("Search for a book");
   const [Message, setMessage] = useState("");
-  const [inset,setInset] = useState(1);
+  const [inset, setInset] = useState(1);
   const [categoryfilterset, setCategoryfilterset] = useState(new Set());
   const [pricefilter, setPricefilter] = useState(0);
   const [distancefilter, setDistancefilter] = useState(0);
@@ -51,30 +56,28 @@ const SearchRoute = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   let pricefilterobj = { "<250": 1, "250-500": 2, "500-750": 3, ">750": 4 };
-  let distancefilterobj = {"near to far":1,"far to near": 2}
+  let distancefilterobj = { "near to far": 1, "far to near": 2 };
 
   useEffect(() => {
-
     setRefreshing(props.route.params?.refreshing);
     setRefreshCount(count + 1);
   }, [props.route.params?.refreshing]);
 
   const removefilter = (val) => {
-    console.log(pricefilterobj[val],[...pricefilterlist],'pricef');
+    console.log(pricefilterobj[val], [...pricefilterlist], "pricef");
     if ([...categoryfilterset].indexOf(val) !== -1) {
       filterlist.delete(val);
       categoryfilterset.delete(val);
       console.log(categoryfilterset);
       setFiltercount(filtercount - 1);
-    } else if([...pricefilterlist].includes(val)) {
+    } else if ([...pricefilterlist].includes(val)) {
       pricefilterlist.clear();
       setPricefilter(0);
       setFiltercount(filtercount - 1);
-    }
-    else{
+    } else {
       distancefilterlist.clear();
       setDistancefilter(0);
-      setFiltercount(filtercount-1);
+      setFiltercount(filtercount - 1);
     }
   };
   let arrowdown =
@@ -82,7 +85,7 @@ const SearchRoute = (props) => {
       <Image
         source={require("../assets/arrowdown.png")}
         style={{
-          transform: [{ rotate: "0deg" }],
+          transform: [{ rotate: showdistancedown ? "180deg" : "0deg" }],
         }}
         resizeMode="cover"
       />
@@ -90,7 +93,7 @@ const SearchRoute = (props) => {
       <Image
         source={require("../assets/chevrondowndark.png")}
         style={{
-          transform: [{ rotate: "0deg" }],
+          transform: [{ rotate: showdistancedown ? "180deg" : "0deg" }],
         }}
         resizeMode="cover"
       />
@@ -116,7 +119,7 @@ const SearchRoute = (props) => {
   useEffect(() => {
     setLocation();
     if (typeof longitude != "undefined" && typeof latitude != "undefined") {
-      console.log(pricefilter,distancefilter)
+      console.log(pricefilter, distancefilter, inset);
       fetch(`https://booksapp2021.herokuapp.com/Book/Search/${inset}`, {
         method: "POST",
         headers: {
@@ -130,7 +133,7 @@ const SearchRoute = (props) => {
           latitude: latitude,
           price_filter: pricefilter,
           genre_filter: [...categoryfilterset],
-          distance_filter: distancefilter
+          distance_filter: distancefilter,
         }),
       })
         .then((response) => {
@@ -138,7 +141,7 @@ const SearchRoute = (props) => {
         })
         .then((data) => {
           if (data.status) {
-            if (data.response.book_list.length!==0) {
+            if (data.response.book_list.length !== 0) {
               console.log(data);
               setReceiveddata(data.response.book_list);
               setMessage(data.message);
@@ -158,7 +161,16 @@ const SearchRoute = (props) => {
         });
     }
     setRefreshing(false);
-  }, [longitude, latitude, count,inset,pricefilter,distancefilter,categoryfilterset,refreshcount]);
+  }, [
+    longitude,
+    latitude,
+    count,
+    inset,
+    pricefilter,
+    distancefilter,
+    categoryfilterset,
+    refreshcount,
+  ]);
 
   const Calltochangecount = debounce(() => setCount(!count), 500);
 
@@ -192,7 +204,7 @@ const SearchRoute = (props) => {
           flexDirection: "row",
           alignItems: "flex-start",
           marginHorizontal: 15,
-          paddingHorizontal: 10,
+
           justifyContent: "space-between",
         }}
       >
@@ -200,7 +212,10 @@ const SearchRoute = (props) => {
           <TouchableOpacity
             activeOpacity={0.8}
             style={styles.touchableopacitystyle}
-            onPress={() => setShowpriceoption(!showpriceoption)}
+            onPress={() => {
+              setShowpriceoption(!showpriceoption);
+              setShowpricedown(!showpricedown);
+            }}
           >
             <View>
               <Text
@@ -214,7 +229,23 @@ const SearchRoute = (props) => {
                 Price
               </Text>
             </View>
-            {arrowdown}
+            {Theme === "Light" ? (
+              <Image
+                source={require("../assets/arrowdown.png")}
+                style={{
+                  transform: [{ rotate: showpricedown ? "180deg" : "0deg" }],
+                }}
+                resizeMode="cover"
+              />
+            ) : (
+              <Image
+                source={require("../assets/chevrondowndark.png")}
+                style={{
+                  transform: [{ rotate: showpricedown ? "180deg" : "0deg" }],
+                }}
+                resizeMode="cover"
+              />
+            )}
           </TouchableOpacity>
           {showpriceoption && (
             <View>
@@ -254,12 +285,23 @@ const SearchRoute = (props) => {
         <View style={styles.filtercontainer}>
           <TouchableOpacity
             activeOpacity={0.8}
-            style={styles.touchableopacitystyle}
-            onPress={() => setShowcategoryoption(!showcategoryoption)}
+            style={{
+              alignItems: "center",
+              justifyContent: "space-around",
+              flexDirection: "row",
+              width: 100,
+              height: 30,
+              borderRadius: 20,
+            }}
+            onPress={() => {
+              setShowcategoryoption(!showcategoryoption);
+              setShowcategorydown(!showcategorydown);
+            }}
           >
-            <View style={{ alignItems: "center" }}>
+            <View>
               <Text
                 style={{
+                  justifyContent: "center",
                   fontFamily: "DMSans",
                   fontSize: 14,
                   color: colors.text,
@@ -268,7 +310,24 @@ const SearchRoute = (props) => {
                 Category
               </Text>
             </View>
-            {arrowdown}
+            {Theme === "Light" ? (
+              <Image
+                source={require("../assets/arrowdown.png")}
+                style={{
+                  transform: [{ rotate: showcategorydown ? "180deg" : "0deg" }],
+                  
+                }}
+                resizeMode="cover"
+              />
+            ) : (
+              <Image
+                source={require("../assets/chevrondowndark.png")}
+                style={{
+                  transform: [{ rotate: showcategorydown ? "180deg" : "0deg" }],
+                }}
+                resizeMode="cover"
+              />
+            )}
           </TouchableOpacity>
           {showcategoryoption && (
             <View>
@@ -277,16 +336,16 @@ const SearchRoute = (props) => {
                   <TouchableOpacity
                     key={id}
                     style={{
-                      paddingVertical: 5,
-                      paddingLeft: 10,
-                      alignItems: "flex-start",
                       height: 30,
                       borderRadius: 10,
+                      paddingVertical: 5,
+                      paddingHorizontal: 10,
+                      alignItems: "flex-start",
                     }}
                     onPress={() => {
                       filterlist.add(val.name);
                       categoryfilterset.add(val.name);
-                      setFiltercount(count + 1);
+                      setFiltercount(filtercount + 1);
                     }}
                   >
                     <Text
@@ -295,6 +354,7 @@ const SearchRoute = (props) => {
                         fontFamily: "DMSans",
                         fontSize: 14,
                       }}
+                      numberOfLines={2}
                     >
                       {val.name}
                     </Text>
@@ -308,7 +368,10 @@ const SearchRoute = (props) => {
           <TouchableOpacity
             activeOpacity={0.8}
             style={styles.touchableopacitystyle}
-            onPress={() => setShowdistanceoption(!showdistanceoption)}
+            onPress={() => {
+              setShowdistanceoption(!showdistanceoption);
+              setShowdistancedown(!showdistancedown);
+            }}
           >
             <View style={{ justifyContent: "center" }}>
               <Text
@@ -358,7 +421,7 @@ const SearchRoute = (props) => {
           )}
         </View>
       </View>
-      <Divider />
+      <Divider style={{marginTop:10,backgroundColor:colors.text==='#000000'?'#6E7A7D':'white',height:0.6}}/>
       <View
         style={{
           flexDirection: "row",
@@ -366,54 +429,57 @@ const SearchRoute = (props) => {
           flexWrap: "wrap",
         }}
       >
-        {[...filterlist,...pricefilterlist,...distancefilterlist].map((val, id) => (
-          <View
-            style={{
-              minwidth: 95,
-              flexWrap: "wrap",
-              borderRadius: 50,
-              alignItems: "center",
-              height: 35,
-              backgroundColor:
-                colors.background === "#ECEFEE" ? "white" : '#0036F4',
-              flexDirection: "row",
-              marginBottom: 5,
-              marginTop: 5,
-              marginLeft: 10,
-            }}
-            key={id}
-          >
-            <Text
+        {[...filterlist, ...pricefilterlist, ...distancefilterlist].map(
+          (val, id) => (
+            <View
               style={{
-                fontFamily: "DMSans",
-                marginLeft: 5,
-                color: colors.text,
+                minwidth: 95,
+                flexWrap: "wrap",
+                borderRadius: 50,
+                alignItems: "center",
+                height: 35,
+                backgroundColor:
+                  colors.background === "#ECEFEE" ? "white" : "#0036F4",
+                flexDirection: "row",
+                marginTop: 5,
+                marginLeft: 10,
+                paddingLeft: 8,
               }}
+              key={id}
             >
-              {val}
-            </Text>
-            <Pressable onPress={() => removefilter(val)} >
-              <IconButton
-                icon="close"
-                color={Theme==='Light'?'black':'white'}
-                size={15}
-                style={{ alignSelf: "flex-end" }}
-                
-              />
-            </Pressable>
-          </View>
-        ))}
+              <Text
+                style={{
+                  fontFamily: "DMSans",
+                  marginLeft: 5,
+                  color: colors.text,
+                }}
+              >
+                {val}
+              </Text>
+              <Pressable onPress={() => removefilter(val)}>
+                <IconButton
+                  icon="close"
+                  color={Theme === "Light" ? "black" : "white"}
+                  size={15}
+                  style={{ alignSelf: "flex-end" }}
+                />
+              </Pressable>
+            </View>
+          )
+        )}
       </View>
-      {[...filterlist].length !== 0 && (
-        <Divider  />
-      )}
+      {([...filterlist].length !== 0 || [...pricefilterlist].length !==0 || [...distancefilterlist].length!==0) && <Divider style={{marginTop:10,backgroundColor:colors.text==='#000000'?'#6E7A7D':'white',height:0.6}}/>}
 
       {Receiveddata.length !== 0 && (
-        <ScrollView style={{ flex: 1 }} onScrollEndDrag={() => {
-          setInset(inset+1) 
-        }}  refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
+        <ScrollView
+          style={{ flex: 1 }}
+          onScrollEndDrag={() => {
+            setInset(inset + 1);
+          }}
+          // refreshControl={
+          //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          // }
+        >
           {Receiveddata.map((book, idx) => (
             <Pressable
               key={idx}
@@ -425,7 +491,7 @@ const SearchRoute = (props) => {
                 style={{
                   flexDirection: "row",
                   marginHorizontal: 16,
-                  marginTop: 10,
+                  marginTop:6,
                   flex: 1,
                   justifyContent: "space-between",
                 }}
@@ -433,34 +499,29 @@ const SearchRoute = (props) => {
                 <View
                   style={{
                     flexDirection: "column",
-                    justifyContent: "space-between",
+                    justifyContent: "space-equal",
+                    
+                    paddingVertical:10,
                   }}
                 >
-                  <Queryinfo
+                  <Searchresult
                     bookname={book.book_name}
                     bookauthor={book.book_author}
                     bookcondition={book.book_condition}
                     bookprice={book.book_price}
                     bookdistance={book.store_distance}
-                    style={{ justifyContent: "flex-start" }}
+                    
                   />
                 </View>
                 <View style={{ alignSelf: "flex-end" }}>
                   <Image
                     source={{ uri: book.book_img }}
-                    style={{ height: 100, width: 100, borderRadius: 10 }}
+                    style={{ height: 112.5, width: 80, borderRadius: 10 }}
                     resizeMode="cover"
                   />
                 </View>
               </View>
-              <View
-                style={{
-                  marginTop: 17,
-                  height: 1,
-                  backgroundColor:
-                    colors.text === "#000000" ? "#6E7A7D" : colors.text,
-                }}
-              />
+              <Divider style={{marginTop:10,backgroundColor:colors.text==='#000000'?'#6E7A7D':'white',height:0.6}} />
             </Pressable>
           ))}
         </ScrollView>
@@ -481,7 +542,7 @@ const SearchRoute = (props) => {
 };
 const styles = StyleSheet.create({
   search: {
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
     flex: 1,
   },
   touchableopacitystyle: {
@@ -495,7 +556,6 @@ const styles = StyleSheet.create({
   filtercontainer: {
     flexDirection: "column",
     marginTop: 10,
-
     borderColor: "#0036F4",
     borderWidth: 2,
     borderRadius: 20,

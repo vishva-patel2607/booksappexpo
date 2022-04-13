@@ -80,7 +80,7 @@ const Storemodal = (props) => {
 
   if (loading && shops != null) {
     return (
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0 }}>
         <View>
           <Pressable onPress={() => props.navigation.navigate("Upload")}>
             <Backbutton />
@@ -111,7 +111,7 @@ const Storemodal = (props) => {
                   style={{
                     padding: 10,
                     borderRadius: 10,
-                    backgroundColor: "#D5DDEE",
+                    backgroundColor: Theme === 'Light' ? '#D5DDEE': '#6E797C',
                     marginTop: 10,
                   }}
                 >
@@ -180,7 +180,7 @@ const Storemodal = (props) => {
     );
   } else {
     return (
-      <SafeAreaView>
+      <SafeAreaView style={{flex:1, paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10: 0}}>
         <View style={styles.activityindicator}>
           <ActivityIndicator animating={true} size={100} />
         </View>
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
   uploadimage: {
     flex: 1,
     justifyContent: "center",
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
   },
   layout: {
     flex: 1,

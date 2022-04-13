@@ -7,9 +7,10 @@ import {
   StyleSheet,
   Pressable,
   Alert,
+  StatusBar
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { ThemeContext } from "../Components/Theme";
+
 import Backbutton from "../Components/Backbutton";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -25,7 +26,8 @@ const BookDetail = (props) => {
       <Text style={[styles.BookDetailTitle]}>{props.title}</Text>
       <Text
         style={[styles.BookDetailValue, { color: colors.text }]}
-        numberOfLines={2}
+        numberOfLines={3}
+        
       >
         {props.value}
       </Text>
@@ -53,8 +55,7 @@ const Bookdetail = (props) => {
     );
 
   const [book, setBook] = useState(props.route.params.book);
-  const { setTheme, Theme } = React.useContext(ThemeContext);
-
+  
   var status;
   if (book.book_transaction_status === undefined) {
     status = book.book_status;
@@ -150,6 +151,7 @@ const Bookdetail = (props) => {
       }
     } else {
       if (book.book_transaction_type === "lend") {
+        console.log('Data')
         fetch(`https://booksapp2021.herokuapp.com/Book/Borrowed/Remove`, {
           method: "DELETE",
           headers: {
@@ -231,11 +233,12 @@ const Bookdetail = (props) => {
     }
   };
   return (
-    <ScrollView>
-      <SafeAreaView>
+    
+      <SafeAreaView style={{flex:1, paddingTop: Platform.OS === "android" ? StatusBar.currentHeight+10 : 0}}>
         <Pressable onPress={() => props.navigation.navigate("Home")}>
          <Backbutton />
         </Pressable>
+        <ScrollView>
         <Title style={styles.title}>{props.route.params.title}</Title>
 
         <View style={styles.layout}>
@@ -252,9 +255,11 @@ const Bookdetail = (props) => {
           </View>
 
           <View style={styles.aside}>
+
             <View
               style={{
                 flex: 1,
+                alignItems:'center'
               }}
             >
               {/* <Image
@@ -267,10 +272,11 @@ const Bookdetail = (props) => {
                   uri: book.book_img,
                 }}
               /> */}
-              {showloading}
+              
               <Image
                 style={{
                   height: 200,
+                  width:150,
                   resizeMode: "cover",
                   borderRadius: 20,
                 }}
@@ -347,7 +353,7 @@ const Bookdetail = (props) => {
               borderRadius: 10,
               marginLeft: 20,
               marginRight: 20,
-              
+    
               overflow: "hidden",
             }}
           >
@@ -364,8 +370,9 @@ const Bookdetail = (props) => {
             </MapView>
           </View>
         </View>
+        </ScrollView>
       </SafeAreaView>
-    </ScrollView>
+    
   );
 };
 
@@ -384,7 +391,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   fields: {
-    width: "55%",
+    width: "45%",
   },
 
   BookDetailTitle: {
@@ -409,8 +416,10 @@ const styles = StyleSheet.create({
     width: "40%",
     height: 330,
     marginRight: 20,
+    alignItems:'center'
   },
   button: {
+    width:150,
     marginHorizontal: "auto",
     marginTop: 20,
     backgroundColor: "#E96A59",
@@ -423,14 +432,14 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
   shop: {
-    marginVertical: 20,
+    marginVertical: 8,
   },
 
   shopDetailsContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    alignItems: "center",
-    marginLeft: 20,
+    alignItems: "flex-start",
+    marginHorizontal: 20,
   },
   shopDetails: {
     flex: 3,

@@ -13,6 +13,8 @@ import { useTheme } from "@react-navigation/native";
 import { ThemeContext } from "../Components/Theme";
 import Backbutton from "../Components/Backbutton";
 import RenderButton from "../Components/Button";
+import Error from "../Components/Error";
+import StaticBooksApp from "../Components/StaticBooksApp";
 import { TextInput } from "react-native-paper";
 
 const Signup = (props) => {
@@ -29,11 +31,9 @@ const Signup = (props) => {
   const [password, setPassword] = useState(props.route.params.password);
   const [date, setDate] = useState("");
   const [trigger, setTrigger] = useState(false);
+  const [error, setError] = useState("");
 
-  const showDatePicker = () => {
-    setTrigger(true);
-    console.log(trigger);
-  };
+  let monthswiththirtyone = [1, 3, 5, 7, 8, 10, 12];
 
   const ref_day = useRef();
   const ref_month = useRef();
@@ -104,7 +104,7 @@ const Signup = (props) => {
               ]
             );
           } else {
-            console.log(data.message);
+            setError(data.message);
           }
 
           props.navigation.navigate("PhonenumberVerification", {
@@ -118,17 +118,28 @@ const Signup = (props) => {
         });
     }
   };
+
   const handleChangeDay = (value) => {
     if (/^\d+$/.test(value) || value == "") {
-      setDay(value);
-      if (value.length === 2) {
-        ref_year.current.focus();
+      if (value <= 30) {
+        setDay(value);
+        if (value.length === 2) {
+          ref_year.current.focus();
+        }
+      } else if (
+        value === 31 &&
+        monthswiththirtyone.includes(parseInt(month.slice(-1)))
+      ) {
+        setDay(value);
+        if (value.length === 2) {
+          ref_year.current.focus();
+        }
       }
     }
   };
 
   const handleChangeMonth = (value) => {
-    if (/^\d+$/.test(value) || value == "") {
+    if ((/^\d+$/.test(value) || value == "") && value <= 12) {
       setMonth(value);
       if (value.length === 2) {
         ref_day.current.focus();
@@ -146,105 +157,32 @@ const Signup = (props) => {
   };
   return (
     <SafeAreaView style={styles.loginlayout}>
-      
-        <View style={{ flex: 1, alignSelf: "flex-start",marginLeft:10 }}>
-          <Pressable onPress={() => props.navigation.navigate("InitialSignup")}>
-            <Backbutton />
-          </Pressable>
-        </View>
-        <KeyboardAvoidingView behavior="padding">
-        <View style={{ flex: 2, marginTop: 30,justifyContent:'center' }}>
-          {Theme === 'Light'? (
-            <Image
-            source={require("../assets/BAheader.png")}
-            style={{ alignSelf: "center" }}
-          />
-          ):(
-            <Image
-            source={require("../assets/BAlogindark.png")}
-            style={{ alignSelf: "center" }}
-          />
-          )}
-          
+      <View style={{ flex: 1, alignSelf: "flex-start", marginLeft: 10 }}>
+        <Pressable onPress={() => props.navigation.navigate("InitialSignup")}>
+          <Backbutton />
+        </Pressable>
+      </View>
+      <KeyboardAvoidingView behavior="padding">
+        <View style={{ flex: 2, marginTop: 30, justifyContent: "center",alignItems:'center' }}>
+          <StaticBooksApp />
         </View>
 
-        <View style={{ flex: 15, flexDirection: "column",justifyContent:'flex-start' }}>
-          <TextInput
-            style={styles.inputtextbox}
-            theme={{
-              colors: {
-                primary: colors.background,
-                placeholder: "#8e8e8e",
-              },
-              roundness: 120,
+        <View
+          style={{
+            flex: 15,
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            marginTop:11
+          }}
+        >
+          <View
+            style={{
+              height: 59,
+              overflow: "hidden",
             }}
-            // theme={{ colors: { primary: "transparent" } }}
-            placeholder="FirstName"
-            value={firstname}
-            onChangeText={(text) => setFirstname(text)}
-            autoCapitalize="none"
-            autoCompleteType="username"
-            autoCorrect={false}
-            underlineColor="transparent"
-            maxLength={20}
-            left={
-              <TextInput.Icon
-                name={() => <Image source={require("../assets/user.png")} />}
-              />
-            }
-          />
-          <TextInput
-            style={styles.inputtextbox}
-            theme={{
-              colors: {
-                primary: colors.background,
-                placeholder: "#8e8e8e",
-              },
-              roundness: 120,
-            }}
-            // theme={{ colors: { primary: "transparent" } }}
-            placeholder="Lastname"
-            value={lastname}
-            onChangeText={(text) => setLastname(text)}
-            autoCapitalize="none"
-            autoCorrect={false}
-            underlineColor="transparent"
-            maxLength={20}
-            left={
-              <TextInput.Icon
-                name={() => <Image source={require("../assets/user.png")} />}
-              />
-            }
-          />
-
-          <TextInput
-            style={styles.inputtextbox}
-            theme={{
-              colors: {
-                primary: colors.background,
-                placeholder: "#8e8e8e",
-              },
-              roundness: 120,
-            }}
-            // theme={{ colors: { primary: "transparent" } }}
-            placeholder="Phonenumber"
-            value={phoneNumber}
-            onChangeText={(text) => setPhoneNumber(text)}
-            autoCapitalize="none"
-            autoCompleteType="username"
-            autoCorrect={false}
-            underlineColor="transparent"
-            maxLength={20}
-            left={
-              <TextInput.Icon
-                name={() => <Image source={require("../assets/Phone.png")} />}
-              />
-            }
-          />
-
-          <View style={{ flexDirection: "row", marginTop: 11 }}>
+          >
             <TextInput
-              style={styles.datetextbox}
+              style={styles.inputtextbox}
               theme={{
                 colors: {
                   primary: colors.background,
@@ -252,59 +190,153 @@ const Signup = (props) => {
                 },
                 roundness: 120,
               }}
-              underlineColor="transparent"
-              placeholder="MM"
-              value={month}
-              onChangeText={(text) => handleChangeMonth(text)}
-              aHiutoCorrect={false}
-              maxLength={2}
-              // left={<TextInput.Icon name="calendar-month" />}
-              ref={ref_month}
-              keyboardType="number-pad"
-            />
-
-            <TextInput
-              style={styles.datetextbox}
-              theme={{
-                colors: {
-                  primary: colors.background,
-                  placeholder: "#8e8e8e",
-                },
-                roundness: 120,
-              }}
-              placeholder="DD"
-              value={day}
-              onChangeText={(text) => handleChangeDay(text)}
+              // theme={{ colors: { primary: "transparent" } }}
+              placeholder="FirstName"
+              value={firstname}
+              onChangeText={(text) => setFirstname(text)}
+              autoCapitalize="none"
+              autoCompleteType="username"
               autoCorrect={false}
-              maxLength={2}
               underlineColor="transparent"
-              // left={<TextInput.Icon name="calendar-today" />}
-              ref={ref_day}
-              keyboardType="number-pad"
-            />
-
-            <TextInput
-              style={styles.yeartextbox}
-              placeholder="YYYY"
-              underlineColor="#ECEFEE"
-              theme={{
-                colors: {
-                  primary: "#EEECEF",
-                  placeholder: "#8e8e8e",
-                },
-                roundness: 120,
-              }}
-              value={year}
-              onChangeText={(text) => handleChangeYear(text)}
-              autoCorrect={false}
-              maxLength={4}
-              // left={<TextInput.Icon name="calendar-blank" />}
-              ref={ref_year}
-              keyboardType="number-pad"
+              maxLength={20}
+              left={
+                <TextInput.Icon
+                  name={() => <Image source={require("../assets/user.png")} />}
+                />
+              }
             />
           </View>
+          <View
+            style={{
+              height: 59,
+              overflow: "hidden",
+            }}
+          >
+            <TextInput
+              style={styles.inputtextbox}
+              theme={{
+                colors: {
+                  primary: colors.background,
+                  placeholder: "#8e8e8e",
+                },
+                roundness: 120,
+              }}
+              // theme={{ colors: { primary: "transparent" } }}
+              placeholder="Lastname"
+              value={lastname}
+              onChangeText={(text) => setLastname(text)}
+              autoCapitalize="none"
+              autoCorrect={false}
+              underlineColor="transparent"
+              maxLength={20}
+              left={
+                <TextInput.Icon
+                  name={() => <Image source={require("../assets/user.png")} />}
+                />
+              }
+            />
+          </View>
+          <View
+            style={{
+              height: 59,
+              overflow: "hidden",
+            }}
+          >
+            <TextInput
+              style={styles.inputtextbox}
+              theme={{
+                colors: {
+                  primary: colors.background,
+                  placeholder: "#8e8e8e",
+                },
+                roundness: 120,
+              }}
+              // theme={{ colors: { primary: "transparent" } }}
+              placeholder="Phonenumber"
+              value={phoneNumber}
+              onChangeText={(text) => setPhoneNumber(text)}
+              autoCapitalize="none"
+              autoCompleteType="username"
+              autoCorrect={false}
+              underlineColor="transparent"
+              maxLength={20}
+              left={
+                <TextInput.Icon
+                  name={() => <Image source={require("../assets/Phone.png")} />}
+                />
+              }
+            />
+          </View>
+          <View style={{ flexDirection: "row", marginTop: 11 }}>
+              <TextInput
+                style={styles.datetextbox}
+                theme={{
+                  colors: {
+                    primary: colors.background,
+                    placeholder: "#8e8e8e",
+                  },
+                  roundness: 120,
+                }}
+                underlineColor="transparent"
+                placeholder="MM"
+                value={month}
+                onChangeText={(text) => handleChangeMonth(text)}
+                autoCorrect={false}
+                maxLength={2}
+                // left={<TextInput.Icon name="calendar-month" />}
+                ref={ref_month}
+                keyboardType="number-pad"
+              />
+                
+              <TextInput
+                style={styles.datetextbox}
+                theme={{
+                  colors: {
+                    primary: colors.background,
+                    placeholder: "#8e8e8e",
+                  },
+                  roundness: 120,
+                }}
+                placeholder="DD"
+                value={day}
+                onChangeText={(text) => handleChangeDay(text)}
+                autoCorrect={false}
+                maxLength={2}
+                underlineColor="transparent"
+                // left={<TextInput.Icon name="calendar-today" />}
+                ref={ref_day}
+                keyboardType="number-pad"
+              />
+            
+              <TextInput
+                style={styles.yeartextbox}
+                placeholder="YYYY"
+                underlineColor="#ECEFEE"
+                theme={{
+                  colors: {
+                    primary: "#EEECEF",
+                    placeholder: "#8e8e8e",
+                  },
+                  roundness: 120,
+                }}
+                value={year}
+                onChangeText={(text) => handleChangeYear(text)}
+                autoCorrect={false}
+                maxLength={4}
+                // left={<TextInput.Icon name="calendar-blank" />}
+                ref={ref_year}
+                keyboardType="number-pad"
+              />
+     
+          </View>
 
-          {/* <Text style={styles.error}>{error}</Text> */}
+          <View style={{ alignSelf: "center" }}>
+            {error !== "" && (
+              <View style={{ marginTop: 30 }}>
+                <Error text={error} />
+              </View>
+            )}
+          </View>
         </View>
 
         <View
@@ -317,6 +349,7 @@ const Signup = (props) => {
         >
           <RenderButton title="SignUp" Click={SignUpRequest} />
         </View>
+        <View style={{ flex: 1 }}></View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -368,8 +401,7 @@ const styles = StyleSheet.create({
   loginlayout: {
     flex: 1,
     alignItems: "center",
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-    
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
   },
 });
 

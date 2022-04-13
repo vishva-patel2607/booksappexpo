@@ -5,15 +5,15 @@ import RNPickerSelect from "react-native-picker-select";
 import { SafeAreaView, View, Image, StyleSheet, Pressable } from "react-native";
 import { logoutUser } from "../actions";
 import { Platform, StatusBar } from "react-native";
-import { Button, Text, TextInput } from "react-native-paper";
+import { Button, Text, TextInput,ActivityIndicator } from "react-native-paper";
 import { useTheme } from "@react-navigation/native";
-import BAheader from "../Components/StaticBooksApp";
 import StaticText from "../Components/StaticText";
 import BooksApp from "../Components/BooksApp";
 import { useDispatch, useSelector } from "react-redux";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import Svg, { Path } from "react-native-svg";
 import Changeshop from "../Components/Changeshop";
+
 
 const UploadRoute = (props) => {
   const { colors } = useTheme();
@@ -22,18 +22,23 @@ const UploadRoute = (props) => {
   let [isbn, setIsbn] = useState("");
   const [author, setAuthor] = useState("");
   const [year, setYear] = useState("");
-  const [condition, setCondition] = useState(null);
   const [shop, setShop] = useState(null);
-
+  const [imageloading,setImageloading] = useState(false);
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
 
-  const [margins, setMargins] = useState(0);
-  const [bookCondition, setbookCondition] = useState("");
+  const [bookCondition, setbookCondition] = useState("Fair");
 
-  const [transaction_type, setTransaction_type] = useState("lend");
+  const [transaction_type, setTransaction_type] = useState("");
   const [userBookPrice, setUserBookPrice] = useState(null);
-
+  let fieldcheck =
+    imgurl !== null &&
+    name !== "" &&
+    isbn !== "" &&
+    year !== "" &&
+    shop !== null &&
+    category !== "" &&
+    price !== "";
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
@@ -43,7 +48,7 @@ const UploadRoute = (props) => {
   ];
 
   const GetPreviousbookImage = async () => {
-    console.log("Working");
+    console.log("Getting previous book image");
     try {
       const resposne = await fetch(
         `https://booksapp2021.herokuapp.com/Book/Upload/Image`,
@@ -87,6 +92,7 @@ const UploadRoute = (props) => {
       };
 
       if (imgurl) {
+        console.log(imagedata);
         changeImage(imagedata);
         console.log("Changed image");
       } else {
@@ -99,6 +105,7 @@ const UploadRoute = (props) => {
   const uploadNewImage = async (imagedata) => {
     let formData = new FormData();
     formData.append("book_img", imagedata);
+    console.log(imagedata, "imagedata");
 
     const fetchRes = await fetch(
       "https://booksapp2021.herokuapp.com/Book/Upload/Image",
@@ -117,7 +124,7 @@ const UploadRoute = (props) => {
       console.log("API resposne: ", res.response.book);
       setImgurl(res.response.book);
     } else {
-      alert("Error ocuured while uploading the image");
+      alert("Error occured while uploading the image");
     }
   };
 
@@ -140,73 +147,78 @@ const UploadRoute = (props) => {
     );
     const res = await fetchRes.json();
     if (res.status === true) {
-      console.log("API resposne: ", res.response.book);
+      console.log(imgurl, imagedata, "imgurl and imagedata");
+      console.log("API response: ", res.response.book);
       setImgurl(res.response.book);
     } else {
-      alert("Error ocuured while changing the image");
+      alert("Error occured while changing the image");
     }
   };
 
   const uploaddetails = async () => {
-    let formData = new FormData();
-    formData.append("book_name", name);
-    formData.append("book_author", author);
-    formData.append("book_year", year);
-    formData.append("book_condition", condition);
-    formData.append("store_id", shop.store_id);
-    formData.append("book_price", price);
-    formData.append("book_img_url", imgurl);
-    formData.append("book_isbn", isbn);
-    formData.append("transaction_type", transaction_type);
-    formData.append("book_category", category);
+    if (fieldcheck) {
+      let formData = new FormData();
+      formData.append("book_name", name);
+      formData.append("book_author", author);
+      formData.append("book_year", year);
+      formData.append("book_condition", bookcondition);
+      formData.append("store_id", shop.store_id);
+      formData.append("book_price", price);
+      formData.append("book_img_url", imgurl);
 
-    console.log(formData);
-    fetch("https://booksapp2021.herokuapp.com/Book/Upload", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        "x-access-token": user.token,
-      },
+      formData.append("book_isbn", isbn);
+      formData.append("transaction_type", transaction_type);
+      formData.append("book_category", category);
 
-      body: formData,
-      usernumber: user.accountNumber,
-    })
-      .then((response) => {
-        return response.json();
+      console.log(formData);
+      fetch("https://booksapp2021.herokuapp.com/Book/Upload", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+          "x-access-token": user.token,
+        },
+
+        body: formData,
+        usernumber: user.accountNumber,
       })
-      .then((data) => {
-        if (data.status) {
-          console.log(data.message);
-          alert("Book Uploaded Succesfully");
-          setImgurl(null);
-          setAuthor("");
-          setCondition("good");
-          setName("");
-          setPrice("");
-          setShop(null);
-          setYear("");
-          setIsbn("");
-          console.log(data.response.book);
-          console.log(data.response.transaction);
-        } else {
-          if (data.message === "Could not verify") {
-            dispatch(logoutUser());
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          if (data.status) {
+            console.log(data.message);
+            alert("Book Uploaded Succesfully");
+            setImgurl(null);
+            setAuthor("");
+            setCondition("good");
+            setName("");
+            setPrice("");
+            setShop(null);
+            setYear("");
+            setIsbn("");
+            console.log(data.response.book);
+            console.log(data.response.transaction);
+          } else {
+            if (data.message === "Could not verify") {
+              dispatch(logoutUser());
+            }
           }
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      alert("Please fill all the fields");
+      return;
+    }
   };
 
   let selected;
   if (shop != null) {
     selected = (
       <>
-        <View
-          style={{ justifyContent: "center", marginRight: 16, marginTop: 5 }}
-        >
+        <View style={{ justifyContent: "flex-start", marginRight: 16 }}>
           <View style={styles.shop}>
             <View style={styles.shopDetailsContainer}>
               <Text
@@ -236,22 +248,28 @@ const UploadRoute = (props) => {
             </Text>
           </View>
         </View>
-        <View style={{ alignSelf: "center", marginTop: 10 }}>
-          <Pressable
-            onPress={() =>
-              props.navigation.navigate("Storemodal", {
-                params: { shop: shop },
-              })
-            }
-          >
-            <Changeshop />
-          </Pressable>
-        </View>
       </>
     );
+  }
+
+  let shopoption;
+  if (shop !== undefined) {
+    shopoption = (
+      <View style={{ alignSelf: "center" }}>
+        <Pressable
+          onPress={() =>
+            props.navigation.navigate("Storemodal", {
+              params: { shop: shop },
+            })
+          }
+        >
+          <Changeshop />
+        </Pressable>
+      </View>
+    );
   } else {
-    selected = (
-      <View style={{ marginTop: 20, alignSelf: "center" }}>
+    shopoption = (
+      <View style={{ alignSelf: "center" }}>
         <Pressable onPress={() => props.navigation.navigate("Storemodal")}>
           <Findashop />
         </Pressable>
@@ -274,9 +292,8 @@ const UploadRoute = (props) => {
         if (YearRegex.test(json.publish_date)) {
           console.log(json.publish_date);
           setYear(json.publish_date);
-        }
-        else{
-          setYear(json.publish_date.slice((json.publish_date.length)-4))
+        } else {
+          setYear(json.publish_date.slice(json.publish_date.length - 4));
         }
         try {
           const resauthor = await fetch(
@@ -356,15 +373,6 @@ const UploadRoute = (props) => {
     return <Text>No access to camera</Text>;
   }
 
-  const IsbnInput = (isbn) => {
-    setIsbn(isbn.replace(/[^0-9]/g, ""));
-    if (isbn.length === 11) {
-      FetchBookfromISBN();
-    } else if (isbn.length === 14) {
-      FetchBookfromISBN();
-    }
-  };
-
   return (
     <SafeAreaView style={{ flex: 1, flexDirection: "column" }}>
       <View style={{ flex: 2, justifyContent: "space-evenly" }}>
@@ -419,6 +427,8 @@ const UploadRoute = (props) => {
                 { color: colors.text },
               ]}
               placeholder="ISBN"
+              placeholderTextColor={"#6E7A7D"}
+              underlineColor={colors.text}
               value={isbn}
               onChangeText={(isbn) => FetchBookfromISBN(isbn)}
               keyboardType="number-pad"
@@ -432,7 +442,7 @@ const UploadRoute = (props) => {
                 if (showQR) setScanned(false);
               }}
             >
-              <View style={{ marginTop: 10, marginRight: 5 }}>
+              <View style={{ marginTop: 10, justifyContent: "center" }}>
                 <QrcodeLogo />
               </View>
             </Pressable>
@@ -441,7 +451,9 @@ const UploadRoute = (props) => {
             style={styles.inputtextbox}
             placeholder="Name of the book"
             numberOfLines={2}
+            placeholderTextColor={"#6E7A7D"}
             value={name}
+            underlineColor={colors.text}
             onChangeText={(text) => setName(text)}
             theme={{ colors: { text: colors.text, placeholder: colors.text } }}
           />
@@ -449,6 +461,8 @@ const UploadRoute = (props) => {
             style={styles.inputtextbox}
             placeholder="Author"
             value={author}
+            placeholderTextColor={"#6E7A7D"}
+            underlineColor={colors.text}
             onChangeText={(text) => setAuthor(text)}
             theme={{ colors: { text: colors.text, placeholder: colors.text } }}
           />
@@ -456,58 +470,69 @@ const UploadRoute = (props) => {
             <TextInput
               style={[styles.inputtextbox, styles.subcontainer]}
               placeholder="Year"
+              placeholderTextColor={"#6E7A7D"}
               value={year}
               onChangeText={(text) => setYear(text.replace(/[^0-9]/g, ""))}
               keyboardType="number-pad"
+              underlineColor={colors.text}
               maxLength={4}
               theme={{
                 colors: { text: colors.text, placeholder: colors.text },
               }}
             />
-            <TextInput
+            <View
+              style={{
+                alignSelf: "center",
+                alignItems: "center",
+                marginLeft: 10,
+              }}
+            >
+              <RNPickerSelect
+                onValueChange={(value) => setCategory(value)}
+                items={[
+                  { label: "Crime/Thriller", value: "crime/thriller" },
+                  { label: "Religious", value: "religious" },
+                  { label: "Self-Help", value: "selfhelp" },
+                  { label: "Romance", value: "romance" },
+                  { label: "Humor", value: "humor" },
+                  { label: "Sci-Fi", value: "scifi" },
+                  { label: "Biography", value: "biography" },
+                  { label: "History", value: "history" },
+                ]}
+                selectedValue={category}
+                placeholder={{
+                  label: "Genre",
+                  value: "",
+                  color: colors.text,
+                }}
+                place
+                useNativeAndroidPickerStyle={false}
+                style={customPickerStyles}
+              />
+              {/* <TextInput
               style={[styles.inputtextbox, styles.subcontainer]}
               placeholder="Price"
               value={price}
+              placeholderTextColor={'#6E7A7D'}
               onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ""))}
               keyboardType="number-pad"
+              underlineColor={colors.text}
               maxLength={4}
               theme={{
                 colors: { text: colors.text, placeholder: colors.text },
               }}
-            />
+            /> */}
+            </View>
           </View>
-          <RNPickerSelect
-            onValueChange={(value) => setCategory(value)}
-            items={[
-              { label: "Crime and Thriller", value: "crime/thriller" },
-              { label: "Religious", value: "religious" },
-              { label: "Self-Help", value: "selfhelp" },
-              { label: "Romance", value: "romance" },
-              { label: "Humor", value: "humor" },
-              { label: "Sci-Fi", value: "scifi" },
-              { label: "Biography", value: "biography" },
-              { label: "History", value: "history" },
-            ]}
-            selectedValue={category}
-            placeholder={{
-              label: "Select the genre",
-              value: "",
-              color: colors.text,
-            }}
-            place
-            useNativeAndroidPickerStyle={false}
-            style={customPickerStyles}
-          />
         </View>
-        <View
-          style={{ flexDirection: "column", flex: 1, justifyContent: "center" }}
-        >
+        <View style={{ flexDirection: "column", flex: 1 }}>
           <View style={styles.uploadimage}>
             {props.route.params?.photo && imgurl ? (
               <Pressable
                 style={{ width: "100%", height: "100%" }}
                 onPress={() => props.navigation.navigate("Camerascreen")}
               >
+                {imageloading && <ActivityIndicator style={{marginTop:20}}/>}
                 <Image
                   style={{
                     flex: 1,
@@ -517,8 +542,12 @@ const UploadRoute = (props) => {
                     width: "100%",
                     borderRadius: 20,
                   }}
+                  onLoadStart={() => setImageloading(true)}
+                  onLoadEnd={() => setImageloading(false)}
                   source={{ uri: imgurl }}
                 />
+                
+
                 <Button
                   style={{
                     backgroundColor: "#E96A59",
@@ -547,18 +576,38 @@ const UploadRoute = (props) => {
                     height: "50%",
                     width: "50%",
                     resizeMode: "contain",
-
-                    borderRadius: 20,
                   }}
                   source={require("../assets/Union.png")}
                 />
               </Pressable>
             )}
           </View>
-          <View style={{ marginLeft: 10, marginRight: 10 }}>
+        </View>
+      </View>
+      <View style={{ flex: 2, flexDirection: "row", marginLeft: 10 }}>
+        <View style={{ flex: 1, flexDirection: "row" }}>
+          <View style={{ alignSelf: "center", width: "45%" }}>
+            <TextInput
+              style={[styles.inputtextbox]}
+              placeholder="Price"
+              value={price}
+              placeholderTextColor={"#6E7A7D"}
+              onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ""))}
+              keyboardType="number-pad"
+              underlineColor={colors.text}
+              maxLength={4}
+              theme={{
+                colors: { text: colors.text, placeholder: colors.text },
+              }}
+            />
+          </View>
+          <View
+            style={{ marginLeft: 10, marginRight: 10, alignSelf: "center" }}
+          >
             <SwitchSelector
               options={Option}
               initial={1}
+              style={{ width: 100 }}
               textContainerStyle={{ fontFamily: "DMSans" }}
               bold={true}
               borderRadius={50}
@@ -571,6 +620,20 @@ const UploadRoute = (props) => {
             />
           </View>
         </View>
+        <View
+          style={{ flex: 1, flexDirection: "row", justifyContent:'center' }}
+        >
+          <Text
+            style={{
+              fontFamily: "DMSansbold",
+              color: "#E96A59",
+              alignSelf: "center",
+              fontSize:16,
+            }}
+          >
+            You'll get Rs {!price ? 0 : userBookPrice}
+          </Text>
+        </View>
       </View>
 
       <View
@@ -578,10 +641,10 @@ const UploadRoute = (props) => {
           flex: 6,
           flexDirection: "column",
           marginLeft: 20,
-          justifyContent: "space-around",
+          justifyContent: "flex-start",
         }}
       >
-        <View style={{ marginTop: 30 }}>
+        <View>
           <StaticText text="Condition of the book" fontS={16} />
           <View
             style={{
@@ -592,7 +655,10 @@ const UploadRoute = (props) => {
               marginRight: 16,
             }}
           >
-            <View
+            <Pressable
+              onPress={() => {
+                setbookCondition("Bad");
+              }}
               style={[
                 styles.checkboxContainer,
                 {
@@ -608,15 +674,14 @@ const UploadRoute = (props) => {
                     color: bookCondition === "Bad" ? "#ffffff" : colors.text,
                   },
                 ]}
-                onPress={() => {
-                  setbookCondition("Bad");
-                }}
               >
                 Bad
               </Text>
-            </View>
-
-            <View
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                setbookCondition("Fair");
+              }}
               style={[
                 styles.checkboxContainer,
                 {
@@ -632,14 +697,11 @@ const UploadRoute = (props) => {
                     color: bookCondition === "Fair" ? "#ffffff" : colors.text,
                   },
                 ]}
-                onPress={() => {
-                  setbookCondition("Fair");
-                }}
               >
                 Fair
               </Text>
-            </View>
-            <View
+            </Pressable>
+            <Pressable
               style={[
                 styles.checkboxContainer,
                 {
@@ -647,6 +709,9 @@ const UploadRoute = (props) => {
                     bookCondition === "Good" ? "#0036F4" : "transparent",
                 },
               ]}
+              onPress={() => {
+                setbookCondition("Good");
+              }}
             >
               <Text
                 style={[
@@ -655,15 +720,11 @@ const UploadRoute = (props) => {
                     color: bookCondition === "Good" ? "#ffffff" : colors.text,
                   },
                 ]}
-                onPress={() => {
-                  setbookCondition("Good");
-                }}
               >
                 Good
               </Text>
-            </View>
-
-            <View
+            </Pressable>
+            <Pressable
               style={[
                 styles.checkboxContainer,
                 {
@@ -671,6 +732,9 @@ const UploadRoute = (props) => {
                     bookCondition === "Great" ? "#0036F4" : "transparent",
                 },
               ]}
+              onPress={() => {
+                setbookCondition("Great");
+              }}
             >
               <Text
                 style={[
@@ -679,13 +743,10 @@ const UploadRoute = (props) => {
                     color: bookCondition === "Great" ? "#ffffff" : colors.text,
                   },
                 ]}
-                onPress={() => {
-                  setbookCondition("Great");
-                }}
               >
                 Great
               </Text>
-            </View>
+            </Pressable>
           </View>
         </View>
 
@@ -695,14 +756,12 @@ const UploadRoute = (props) => {
       <View
         style={{
           marginLeft: 20,
-          justifyContent: "flex-end",
+          justifyContent: "space-around",
           alignItems: "center",
-          flex: 2,
+          flex: 2.5,
         }}
       >
-        <Text style={{ fontFamily: "DMSansbold", color: "#E96A59" }}>
-          You'll get Rs {!price ? 0 : userBookPrice}
-        </Text>
+        {shopoption}
         <Button
           theme={{ roundness: 120 }}
           style={{
@@ -713,7 +772,7 @@ const UploadRoute = (props) => {
             justifyContent: "flex-end",
           }}
           labelStyle={{
-            fontSize: 14,
+            fontSize: 16,
             color: "white",
             flexDirection: "row",
             fontFamily: "DMSansbold",
@@ -773,7 +832,7 @@ const QrcodeLogo = () => {
 
 const styles = StyleSheet.create({
   main: {
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
     backgroundColor: "#ECEFEE",
   },
   heading: {
@@ -786,7 +845,7 @@ const styles = StyleSheet.create({
   },
   inputfields: {
     width: "50%",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
   },
   inputtextbox: {
     backgroundColor: "transparent",
@@ -801,11 +860,10 @@ const styles = StyleSheet.create({
     paddingTop: 2,
   },
   isbninput: {
-    width: "90%",
+    width: "85%",
   },
   container: {
     flexDirection: "row",
-    justifyContent: "space-between",
   },
   subcontainer: {
     marginHorizontal: 1,
@@ -883,10 +941,11 @@ const customPickerStyles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#0036F4",
     borderRadius: 20,
-    paddingRight: 30, // to ensure the text is never behind the icon
-    paddingLeft: 10,
-    height: 40,
-    marginTop: 25,
+    paddingHorizontal: 5,
+    height: 35,
+    marginHorizontal: 10,
+    width: "80%",
+    marginLeft: 10,
   },
   inputAndroid: {
     fontSize: 14,
@@ -896,7 +955,7 @@ const customPickerStyles = StyleSheet.create({
     paddingRight: 30, // to ensure the text is never behind the icon
     paddingLeft: 10,
     height: 40,
-    marginTop: 20,
+    marginTop: 10,
   },
 });
 

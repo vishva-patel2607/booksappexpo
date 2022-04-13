@@ -21,7 +21,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../actions";
 
 const UserRoute = (props) => {
-  
   const { setTheme, Theme } = React.useContext(ThemeContext);
   let userimage =
     Theme === "Light" ? (
@@ -60,21 +59,22 @@ const UserRoute = (props) => {
       />
     );
 
-  let disablededitimage = Theme === 'Light' ? (
-    <Image
+  let disablededitimage =
+    Theme === "Light" ? (
+      <Image
         source={require("../assets/Editdisabled.png")}
         style={{ marginRight: 25 }}
       />
-  ):(
-    <Image
+    ) : (
+      <Image
         source={require("../assets/Edit.png")}
         style={{ marginRight: 25 }}
       />
-  )
+    );
   const dispatch = useDispatch();
   const [LoadingData, setLoadingData] = useState(false);
   const [userobj, setUserobj] = useState(props.user);
-  const [switchon, setSwitchon] = useState(Theme==='Light'?false:true);
+  const [switchon, setSwitchon] = useState(Theme === "Light" ? false : true);
   const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
   const user = useSelector((state) => state.user);
 
@@ -126,83 +126,105 @@ const UserRoute = (props) => {
         <View style={{ flex: 2, justifyContent: "flex-start" }}>
           <BooksApp />
         </View>
-        <View style={{ flexDirection: "column", flex: 10, marginLeft: 15 }}>
+        <View style={{ flexDirection: "column", flex: 10, marginLeft: 5 }}>
           <View style={{ flexDirection: "column", flex: 6 }}>
             <View
               style={{
                 flexDirection: "row",
-                justifyContent: "space-around",
               }}
             >
-              {userimage}
-              <View style={{ flexDirection: "column", marginLeft: -20 }}>
-                <StaticText text={userobj.firstname + " " + userobj.lastname} />
-                {/* <Text>{userobj.firstname + " " + userobj.lastname}</Text> */}
-                <View
-                  style={{ borderBottomColor: "#6E7A7D", borderBottomWidth: 1 }}
-                />
-                <Image source={require("../assets/Line.png")} />
+              <View
+                style={{ width: "75%", flexDirection: "row", marginLeft: 15 }}
+              >
+                {userimage}
+                <View style={{ flexDirection: "column", marginLeft: 20 }}>
+                  <StaticText
+                    text={userobj.firstname + " " + userobj.lastname}
+                  />
+                  {/* <Text>{userobj.firstname + " " + userobj.lastname}</Text> */}
+                  <View
+                    style={{
+                      borderBottomColor: "#6E7A7D",
+                      borderBottomWidth: 1,
+                    }}
+                  />
+                  <Image source={require("../assets/Line.png")} />
+                </View>
               </View>
-              {disablededitimage}
             </View>
-            <View
-              style={{
-                flexDirection: "row",
-                marginTop: 25,
-                justifyContent: "space-around",
-              }}
-            >
-              {emailimage}
-              <View style={{ flexDirection: "column", marginLeft: -20 }}>
-                <StaticText text={userobj.email} />
-                <View
-                  style={{ borderBottomColor: "#6E7A7D", borderBottomWidth: 1 }}
-                />
-                <Image source={require("../assets/Line.png")} />
-              </View>
-              <Pressable
-                onPress={() => {
-                  props.navigation.navigate("EditEmail");
+            <View style={{ flexDirection: "row" }}>
+              <View
+                style={{
+                  width: "75%",
+                  flexDirection: "row",
+                  marginLeft: 15,
+                  marginTop: 25,
                 }}
               >
-                {editimage}
-              </Pressable>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                marginTop: 25,
-                justifyContent: "space-around",
-              }}
-            >
-              {phoneimage}
-              <View style={{ flexDirection: "column", marginLeft: -20 }}>
-                <StaticText text={userobj.phonenumber} />
-                <View
-                  style={{ borderBottomColor: "#6E7A7D", borderBottomWidth: 1 }}
-                />
-                <Image
-                  source={require("../assets/Line.png")}
-                  style={{ height: 5 }}
-                />
+                {emailimage}
+                <View style={{ flexDirection: "column", marginLeft: 20 }}>
+                  <StaticText text={userobj.email} />
+                  <View
+                    style={{
+                      borderBottomColor: "#6E7A7D",
+                      borderBottomWidth: 1,
+                    }}
+                  />
+                  <Image source={require("../assets/Line.png")} />
+                </View>
               </View>
-              <Pressable
-                onPress={() => {
-                  props.navigation.navigate("EditPhone");
+              <View style={{ alignSelf: "flex-end", marginLeft: 15 }}>
+                <Pressable
+                  onPress={() => {
+                    props.navigation.navigate("EditEmail");
+                  }}
+                >
+                  {editimage}
+                </Pressable>
+              </View>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+              <View
+                style={{
+                  width: "75%",
+                  flexDirection: "row",
+                  marginLeft: 15,
+                  marginTop: 25,
                 }}
               >
-                {editimage}
-              </Pressable>
+                {phoneimage}
+                <View style={{ flexDirection: "column", marginLeft: 20 }}>
+                  <StaticText text={userobj.phonenumber} />
+                  <View
+                    style={{
+                      borderBottomColor: "#6E7A7D",
+                      borderBottomWidth: 1,
+                    }}
+                  />
+                  <Image source={require("../assets/Line.png")} />
+                </View>
+              </View>
+              <View style={{ alignSelf: "flex-end", marginLeft: 15 }}>
+                <Pressable
+                  onPress={() => {
+                    props.navigation.navigate("EditEmail");
+                  }}
+                >
+                  {editimage}
+                </Pressable>
+              </View>
             </View>
-            <View
-              style={{
-                flexDirection: "row",
-                marginTop: 25,
-                justifyContent: "space-around",
-              }}
-            >
-              {birthdayimage}
-              <View style={{ flexDirection: "column", marginLeft: -20 }}>
+            <View style={{ flexDirection: "row" }}>
+              <View
+                style={{
+                  width: "75%",
+                  flexDirection: "row",
+                  marginLeft: 15,
+                  marginTop: 25,
+                }}
+              >
+                {birthdayimage}
+                <View style={{ flexDirection: "column", marginLeft: 20 }}>
                 <StaticText
                   text={
                     userobj.dob.split(" ")[1] +
@@ -212,15 +234,16 @@ const UserRoute = (props) => {
                     userobj.dob.split(" ")[3]
                   }
                 />
-                <View
-                  style={{ borderBottomColor: "#6E7A7D", borderBottomWidth: 1 }}
-                />
-                <Image
-                  source={require("../assets/Line.png")}
-                  style={{ height: 5 }}
-                />
+                  <View
+                    style={{
+                      borderBottomColor: "#6E7A7D",
+                      borderBottomWidth: 1,
+                    }}
+                  />
+                  <Image source={require("../assets/Line.png")} />
+                </View>
               </View>
-              {disablededitimage}
+              
             </View>
           </View>
           <View
@@ -230,7 +253,7 @@ const UserRoute = (props) => {
               justifyContent: "space-between",
               alignItems: "center",
               marginLeft: 15,
-              paddingHorizontal:5,
+              paddingHorizontal: 5,
             }}
           >
             <View style={{ justifyContent: "flex-start", marginTop: 10 }}>
@@ -265,7 +288,7 @@ const UserRoute = (props) => {
                   justifyContent: "center",
                 }}
                 labelStyle={{
-                  fontSize: 16,
+                  fontSize: 14,
                   color: "white",
                   flexDirection: "row",
                   fontFamily: "DMSansbold",
@@ -287,7 +310,7 @@ const UserRoute = (props) => {
           <View style={{ marginBottom: 6 }}>
             <ActionButton title="Deactivate account" fontS="14" />
           </View>
-          <View style={{ marginLeft: 2,marginTop:10 }}>
+          <View style={{ marginLeft: 2, marginTop: 10 }}>
             <StaticText text="Contact us" />
             <View style={{ marginTop: 5 }}>
               <StaticText text="Privacy policy" />
@@ -310,7 +333,7 @@ const UserRoute = (props) => {
 const styles = StyleSheet.create({
   safeareaview: {
     flex: 1,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
     // backgroundColor: "#ECEFEE",
     flexDirection: "column",
   },
