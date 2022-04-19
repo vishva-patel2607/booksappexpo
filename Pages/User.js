@@ -9,6 +9,7 @@ import UserIcon from "../Svg/Useruser";
 import PhoneIcon from "../Svg/Phoneuser";
 import EmailIcon from "../Svg/Emailuser";
 import Birthday from "../Svg/Birthday";
+import Edit from "../Svg/Edit";
 import {
   SafeAreaView,
   View,
@@ -26,30 +27,6 @@ import { logoutUser } from "../actions";
 
 const UserRoute = (props) => {
   const { setTheme, Theme } = React.useContext(ThemeContext);
-  let userimage =
-    Theme === "Light" ? (
-      <Image source={require("../assets/user.png")} />
-    ) : (
-      <Image source={require("../assets/userdark.png")} />
-    );
-  let emailimage =
-    Theme === "Light" ? (
-      <Image source={require("../assets/email.png")} />
-    ) : (
-      <Image source={require("../assets/emaildark.png")} />
-    );
-  let phoneimage =
-    Theme === "Light" ? (
-      <Image source={require("../assets/Phone.png")} />
-    ) : (
-      <Image source={require("../assets/Phonedark.png")} />
-    );
-  let birthdayimage =
-    Theme === "Light" ? (
-      <Image source={require("../assets/Birthday.png")} />
-    ) : (
-      <Image source={require("../assets/birthdatedark.png")} />
-    );
   let editimage =
     Theme === "Light" ? (
       <Image
@@ -59,19 +36,6 @@ const UserRoute = (props) => {
     ) : (
       <Image
         source={require("../assets/Editdisabled.png")}
-        style={{ marginRight: 25 }}
-      />
-    );
-
-  let disablededitimage =
-    Theme === "Light" ? (
-      <Image
-        source={require("../assets/Editdisabled.png")}
-        style={{ marginRight: 25 }}
-      />
-    ) : (
-      <Image
-        source={require("../assets/Edit.png")}
         style={{ marginRight: 25 }}
       />
     );
@@ -183,7 +147,7 @@ const UserRoute = (props) => {
                     props.navigation.navigate("EditEmail");
                   }}
                 >
-                  {editimage}
+                  <Edit />
                 </Pressable>
               </View>
             </View>
@@ -211,10 +175,10 @@ const UserRoute = (props) => {
               <View style={{ alignSelf: "flex-end", marginLeft: 15 }}>
                 <Pressable
                   onPress={() => {
-                    props.navigation.navigate("EditEmail");
+                    props.navigation.navigate("EditPhone");
                   }}
                 >
-                  {editimage}
+                 <Edit />
                 </Pressable>
               </View>
             </View>

@@ -12,6 +12,7 @@ import { ThemeContext } from "../Components/Theme";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../actions";
 import Backbutton from "../Components/Backbutton";
+import {styles} from '../Styles/Editemail.js';
 import { Button, TextInput, Text } from "react-native-paper";
 
 const EditEmail = (props) => {
@@ -127,32 +128,5 @@ const EditEmail = (props) => {
   );
 };
 
-const styles = StyleSheet.create({
-  error: {
-    textAlign: "center",
-    fontSize: 20,
-    color: "red",
-    padding: 20,
-  },
 
-  inputtextbox: {
-    marginTop: 11,
-    width: 215,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 120,
-    height: 50,
-    paddingLeft: 10,
-  },
-
-  submitbutton: {
-    margin: 10,
-    fontSize: 20,
-    color: "white",
-  },
-
-  layout: {
-    flex: 1,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight+10 : 0
-  },
-});
 export default React.memo(EditEmail);

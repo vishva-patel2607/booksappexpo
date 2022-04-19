@@ -19,6 +19,7 @@ import { Text, Button, ActivityIndicator } from "react-native-paper";
 const Bookscreen = (props) => {
   const { colors } = useTheme();
   const [book, setBook] = useState(props.route.params.book);
+  
   let store_latitude = book.store.store_latitude;
   let store_longitude = book.store.store_longitude;
   const [imageloading, setImageloading] = useState(false);

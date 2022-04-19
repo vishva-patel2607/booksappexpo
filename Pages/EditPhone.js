@@ -2,18 +2,14 @@ import React, { useState } from "react";
 import {
   SafeAreaView,
   View,
-  StyleSheet,
   Alert,
-  Pressable,
-  Image,
-  StatusBar
-} from "react-native";
-import { ThemeContext } from "../Components/Theme";
+  Pressable} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../actions";
 import { useTheme } from "@react-navigation/native";
 import Backbutton from "../Components/Backbutton";
 import { Button, TextInput, Text } from "react-native-paper";
+import { styles } from "../Styles/EditPhone";
 
 const EditPhone = (props) => {
   const { colors } = useTheme();
@@ -108,7 +104,7 @@ const EditPhone = (props) => {
             width: 215,
             height: 40,
             marginTop:25,
-            justifyContent: "center",
+            alignItems:'flex-start',
           }}
           labelStyle={{
             fontSize: 16,
@@ -124,34 +120,4 @@ const EditPhone = (props) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  error: {
-    textAlign: "center",
-    fontSize: 20,
-    color: "red",
-    padding: 20,
-  },
-
-  inputtextbox: {
-    marginTop: 11,
-    width: 215,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 120,
-    height: 50,
-    paddingLeft: 10,
-  },
-
-  submitbutton: {
-    margin: 10,
-    fontSize: 20,
-    color: "white",
-  },
-
-  layout: {
-    flex: 1,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight +10: 0
-  },
-
-});
 export default React.memo(EditPhone);

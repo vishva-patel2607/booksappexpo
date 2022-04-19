@@ -8,6 +8,7 @@ export default function Searchresult(props) {
       <View>
       <StaticText text={props.bookname} fontS={18}  />
       <StaticText text={props.bookcondition + " condition"}  />
+      <StaticText text={props.booktype} />
       </View>
       <View>
       <StaticText text={props.bookprice + " Rs"} />

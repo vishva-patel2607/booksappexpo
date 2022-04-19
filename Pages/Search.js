@@ -2,26 +2,25 @@ import React, { useState, useEffect, useContext } from "react";
 import { useTheme } from "@react-navigation/native";
 import {
   SafeAreaView,
-  ScrollView,
   View,
   Image,
-  StyleSheet,
   Pressable,
-  StatusBar,
   TouchableOpacity,
-  RefreshControl,
   FlatList,
 } from "react-native";
 import { logoutUser } from "../actions";
 import Searchresult from "../Components/Searchresult";
 import { ThemeContext } from "../Components/Theme";
 import { IconButton } from "react-native-paper";
+import { styles } from "../Styles/Searchstyles";
 import { debounce } from "lodash";
 import { Text, Searchbar, Divider } from "react-native-paper";
-import Queryinfo from "../Components/Queryinfo";
+import SearchbarIcon from "../Svg/Searchbaricon.js";
+import SearchbarIconFilled from "../Svg/Searchbariconfilled";
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
-import { Category, Distance, Price } from "../Components/filters.js";
+import { Category, Condition, Price } from "../Components/filters.js";
+
 
 const SearchRoute = (props) => {
   const { colors } = useTheme();
@@ -45,19 +44,14 @@ const SearchRoute = (props) => {
   const [Message, setMessage] = useState("");
   const [inset, setInset] = useState(1);
   const [categoryfilterset, setCategoryfilterset] = useState(new Set());
+  const [conditionfilterset,setConditionfilterset] = useState(new Set());
   const [pricefilter, setPricefilter] = useState(0);
   const [distancefilter, setDistancefilter] = useState(0);
   const [filtercount, setFiltercount] = useState(0);
   const [refreshcount, setRefreshCount] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
-  const onRefresh = () => {
-    setRefreshing(true);
-    setRefreshCount(count + 1);
-  };
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  let pricefilterobj = { "<250": 1, "250-500": 2, "500-750": 3, ">750": 4 };
-  let distancefilterobj = { "near to far": 1, "far to near": 2 };
 
   useEffect(() => {
     setRefreshing(props.route.params?.refreshing);
@@ -83,7 +77,7 @@ const SearchRoute = (props) => {
             flexDirection: "column",
             justifyContent: "space-equal",
 
-            paddingVertical: 10,
+            paddingBottom: 10,
           }}
         >
           <Searchresult
@@ -92,6 +86,7 @@ const SearchRoute = (props) => {
             bookcondition={item.book_condition}
             bookprice={item.book_price}
             bookdistance={item.store_distance}
+            booktype={item.transaction_type}
           />
         </View>
         <View style={{ alignSelf: "flex-end" }}>
@@ -107,7 +102,6 @@ const SearchRoute = (props) => {
 
   const removefilter = (val) => {
     setInset(1);
-    console.log(pricefilterobj[val], [...pricefilterlist], "pricef");
     if ([...categoryfilterset].indexOf(val) !== -1) {
       filterlist.delete(val);
       categoryfilterset.delete(val);
@@ -118,8 +112,8 @@ const SearchRoute = (props) => {
       setPricefilter(0);
       setFiltercount(filtercount - 1);
     } else {
-      distancefilterlist.clear();
-      setDistancefilter(0);
+      filterlist.delete(val)
+      conditionfilterset.delete(val);
       setFiltercount(filtercount - 1);
     }
   };
@@ -143,9 +137,9 @@ const SearchRoute = (props) => {
     );
   let icon =
     SearchQuery === "" ? (
-      <Image source={require("../assets/search.png")} />
+      <SearchbarIcon />
     ) : (
-      <Image source={require("../assets/searchfilled.png")} />
+      <SearchbarIconFilled />
     );
 
   const setLocation = async () => {
@@ -162,14 +156,12 @@ const SearchRoute = (props) => {
   
 
   useEffect(() => {
-    console.log(inset,pricefilter);
     setLocation();
     if (
       typeof longitude != "undefined" &&
       typeof latitude != "undefined" 
   
     ) {
-      console.log(SearchQuery);
       fetch(`https://booksapp2021.herokuapp.com/Book/Search/${inset}`, {
         method: "POST",
         headers: {
@@ -183,29 +175,26 @@ const SearchRoute = (props) => {
           latitude: latitude,
           price_filter: pricefilter,
           genre_filter: [...categoryfilterset],
-          distance_filter: distancefilter,
+          condition_filter: [...conditionfilterset],
         }),
       })
         .then((response) => {
           return response.json();
         })
         .then((data) => {
-          console.log(data);
           if (data.status) {
             if(inset===1){
               if (data.response.book_list.length !== 0) {
-                   console.log(data,'data');
                    setReceiveddata(data.response.book_list);
-                   console.log(Receiveddata);
                    setMessage(data.message);
                  } else {
                    setText("No books found");
+                   console.log("No books found");
                    setReceiveddata([]);
                  }
             }
             else{
               if (data.response.book_list.length !== 0) {
-                console.log(data,'data');
                 setReceiveddata([...Receiveddata,data.response.book_list]);
                 console.log(Receiveddata);
                 setMessage(data.message);
@@ -229,7 +218,8 @@ const SearchRoute = (props) => {
     count,
     longitude,
     latitude,
-    filtercount
+    filtercount,
+
   ]);
 
   const Calltochangecount = debounce(() => setCount(!count), 500);
@@ -265,7 +255,7 @@ const SearchRoute = (props) => {
           flexDirection: "row",
           alignItems: "flex-start",
           marginHorizontal: 15,
-
+            
           justifyContent: "space-between",
         }}
       >
@@ -367,6 +357,7 @@ const SearchRoute = (props) => {
                   fontFamily: "DMSans",
                   fontSize: 14,
                   color: colors.text,
+                  paddingLeft:5,
                 }}
               >
                 Category
@@ -377,6 +368,7 @@ const SearchRoute = (props) => {
                 source={require("../assets/arrowdown.png")}
                 style={{
                   transform: [{ rotate: showcategorydown ? "180deg" : "0deg" }],
+                  
                 }}
                 resizeMode="cover"
               />
@@ -441,16 +433,17 @@ const SearchRoute = (props) => {
                   fontFamily: "DMSans",
                   fontSize: 14,
                   color: colors.text,
+                  paddingLeft:5,
                 }}
               >
-                Distance
+                Condition
               </Text>
             </View>
             {arrowdown}
           </TouchableOpacity>
           {showdistanceoption && (
             <View>
-              {Distance.map((val, id) => {
+              {Condition.map((val, id) => {
                 return (
                   <TouchableOpacity
                     key={id}
@@ -461,9 +454,8 @@ const SearchRoute = (props) => {
                       paddingLeft: 10,
                     }}
                     onPress={() => {
-                      distancefilterlist.clear();
-                      distancefilterlist.add(val.name);
-                      setDistancefilter(val.name);
+                      conditionfilterset.add(val.name.toLowerCase());
+                      filterlist.add(val.name);
                       setFiltercount(count + 1);
                       setInset(1);
                     }}
@@ -498,7 +490,7 @@ const SearchRoute = (props) => {
           flexWrap: "wrap",
         }}
       >
-        {[...filterlist, ...pricefilterlist, ...distancefilterlist].map(
+        {[...filterlist, ...pricefilterlist].map(
           (val, id) => (
             <View
               style={{
@@ -549,73 +541,6 @@ const SearchRoute = (props) => {
         />
       )}
 
-      {/* {Receiveddata.length !== 0 && (
-        <ScrollView
-          style={{ flex: 1 }}
-          onScrollEndDrag={() => {
-            setInset(inset + 1);
-          }}
-          // refreshControl={
-          //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          // }
-        >
-          {Receiveddata.map((book, idx) => (
-            <Pressable
-              key={idx}
-              onPress={() =>
-                props.navigation.navigate("Bookscreen", { book: book })
-              }
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  marginHorizontal: 16,
-                  marginTop:6,
-                  flex: 1,
-                  justifyContent: "space-between",
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "column",
-                    justifyContent: "space-equal",
-                    
-                    paddingVertical:10,
-                  }}
-                >
-                  <Searchresult
-                    bookname={book.book_name}
-                    bookauthor={book.book_author}
-                    bookcondition={book.book_condition}
-                    bookprice={book.book_price}
-                    bookdistance={book.store_distance}
-                    
-                  />
-                </View>
-                <View style={{ alignSelf: "flex-end" }}>
-                  <Image
-                    source={{ uri: book.book_img }}
-                    style={{ height: 112.5, width: 80, borderRadius: 10 }}
-                    resizeMode="cover"
-                  />
-                </View>
-              </View>
-             
-            </Pressable>
-          ))}
-        </ScrollView>
-      )}
-      {Receiveddata.length == 0 && (
-        <View
-          style={{ justifyContent: "center", alignSelf: "center", margin: 50 }}
-        >
-          <Text
-            style={{ fontFamily: "DMSans", fontSize: 16, color: colors.text }}
-          >
-            No books found
-          </Text>
-        </View>
-      )} */}
       <FlatList
         data={Receiveddata}
         renderItem={renderData}
@@ -626,26 +551,6 @@ const SearchRoute = (props) => {
     </SafeAreaView>
   );
 };
-const styles = StyleSheet.create({
-  search: {
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
-    flex: 1,
-  },
-  touchableopacitystyle: {
-    alignItems: "center",
-    justifyContent: "space-around",
-    flexDirection: "row",
-    width: 100,
-    height: 30,
-    borderRadius: 20,
-  },
-  filtercontainer: {
-    flexDirection: "column",
-    marginTop: 10,
-    borderColor: "#0036F4",
-    borderWidth: 2,
-    borderRadius: 20,
-  },
-});
+
 
 export default React.memo(SearchRoute);

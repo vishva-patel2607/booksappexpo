@@ -1,10 +1,7 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   SafeAreaView,
-  StatusBar,
-  StyleSheet,
   View,
-  Image,
   Pressable,
   KeyboardAvoidingView,
 } from "react-native";
@@ -17,8 +14,9 @@ import { TextInput } from "react-native-paper";
 import UserIcon from "../Svg/User";
 import PasswordIcon from "../Svg/Password";
 import EmailIcon from "../Svg/Email";
+import { styles } from "../Styles/Initialsignup";
 
-import { ThemeContext } from "../Components/Theme";
+
 
 const InitialSignUp = (props) => {
   const { colors } = useTheme();
@@ -27,6 +25,21 @@ const InitialSignUp = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  useEffect(() => {
+    let unmounted = false;
+
+    setTimeout(() => {
+      if(!unmounted){
+      setError("")
+      }
+    },3000)
+    return () => {
+      unmounted = true;
+    }
+
+  },[error])
+  
   let emailRegex = new RegExp(
     /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
   );
@@ -238,57 +251,22 @@ const InitialSignUp = (props) => {
           style={{
             flex: 4,
             alignItems: "center",
-            justifyContent: "center",
+            justifyContent: "flex-end",
           }}
         >
           <RenderButton title="Next" Click={ISignup} />
           <Pressable
             onPress={() => props.navigation.navigate("Login")}
-            style={{ marginTop: 5 }}
+            style={{ marginTop: 10 }}
           >
             <StaticText text="Already have an account! Login" />
           </Pressable>
         </View>
-        <View style={{ flex: 1 }}></View>
+        <View style={{ marginTop:10 }}></View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  textbox: {
-    textAlign: "center",
-    padding: 20,
-  },
-
-  error: {
-    textAlign: "center",
-    fontSize: 20,
-    color: "red",
-    padding: 20,
-  },
-
-  inputtextbox: {
-    marginTop: 11,
-    width: 270,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 120,
-    height: 50,
-  },
-
-  submitbutton: {
-    margin: 10,
-    fontSize: 20,
-    color: "white",
-    width: 200,
-    borderRadius: 20,
-  },
-
-  loginlayout: {
-    flex: 1,
-    alignItems: "center",
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-  },
-});
 
 export default React.memo(InitialSignUp);

@@ -2,29 +2,44 @@ import React, { useState, useEffect } from "react";
 import SwitchSelector from "react-native-switch-selector";
 import Findashop from "../Components/Findashop";
 import RNPickerSelect from "react-native-picker-select";
-import { SafeAreaView, View, Image, StyleSheet, Pressable } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  Image,
+  StyleSheet,
+  Pressable,
+  Modal,
+  TouchableOpacity
+} from "react-native";
 import { logoutUser } from "../actions";
+import Closemodal from "../Svg/Closemodal";
+import {styles,customPickerStyles} from '../Styles/Uploadstyles.js';
 import { Platform, StatusBar } from "react-native";
-import { Button, Text, TextInput,ActivityIndicator } from "react-native-paper";
+import { Button, Text, TextInput, ActivityIndicator } from "react-native-paper";
+import QrcodeLogo from '../Svg/Qrcode';
 import { useTheme } from "@react-navigation/native";
 import StaticText from "../Components/StaticText";
 import BooksApp from "../Components/BooksApp";
+import Error from "../Components/Error";
 import { useDispatch, useSelector } from "react-redux";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import Svg, { Path } from "react-native-svg";
 import Changeshop from "../Components/Changeshop";
+import Addphoto from "../Svg/Addphoto";
+import Info from "../Svg/Info";
 
 
 const UploadRoute = (props) => {
   const { colors } = useTheme();
   const [imgurl, setImgurl] = useState(null);
+  const [visible, setVisible] = useState(false);
   const [name, setName] = useState("");
   let [isbn, setIsbn] = useState("");
   const [author, setAuthor] = useState("");
   const [year, setYear] = useState("");
   const [shop, setShop] = useState(null);
-  const [imageloading,setImageloading] = useState(false);
+  const [imageloading, setImageloading] = useState(false);
   const [category, setCategory] = useState("");
+  const [error, setError] = useState("");
   const [price, setPrice] = useState("");
 
   const [bookCondition, setbookCondition] = useState("Fair");
@@ -128,6 +143,10 @@ const UploadRoute = (props) => {
     }
   };
 
+  useEffect(() => {
+    setTimeout(() => setError(""), 3000);
+  }, [error]);
+
   const changeImage = async (imagedata) => {
     let formData = new FormData();
     formData.append("old_book_img_url", imgurl);
@@ -161,7 +180,7 @@ const UploadRoute = (props) => {
       formData.append("book_name", name);
       formData.append("book_author", author);
       formData.append("book_year", year);
-      formData.append("book_condition", bookcondition);
+      formData.append("book_condition", bookCondition);
       formData.append("store_id", shop.store_id);
       formData.append("book_price", price);
       formData.append("book_img_url", imgurl);
@@ -209,7 +228,7 @@ const UploadRoute = (props) => {
           console.log(error);
         });
     } else {
-      alert("Please fill all the fields");
+      setError("Please fill all the fields");
       return;
     }
   };
@@ -374,7 +393,15 @@ const UploadRoute = (props) => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, flexDirection: "column" }}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        flexDirection: "column",
+        paddingTop:
+          Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
+        opacity:visible?0.1:1
+      }}
+    >
       <View style={{ flex: 2, justifyContent: "space-evenly" }}>
         <BooksApp />
         <Text
@@ -394,10 +421,10 @@ const UploadRoute = (props) => {
       {showQR && (
         <View
           style={{
-            width: "100%",
+            width: "80%",
             flexDirection: "column",
             top: 20,
-            right: "20%",
+            
             justifyContent: "center",
             alignItems: "center",
             zIndex: 1000,
@@ -482,8 +509,7 @@ const UploadRoute = (props) => {
             />
             <View
               style={{
-                alignSelf: "center",
-                alignItems: "center",
+                flex:1,
                 marginLeft: 10,
               }}
             >
@@ -509,44 +535,33 @@ const UploadRoute = (props) => {
                 useNativeAndroidPickerStyle={false}
                 style={customPickerStyles}
               />
-              {/* <TextInput
-              style={[styles.inputtextbox, styles.subcontainer]}
-              placeholder="Price"
-              value={price}
-              placeholderTextColor={'#6E7A7D'}
-              onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ""))}
-              keyboardType="number-pad"
-              underlineColor={colors.text}
-              maxLength={4}
-              theme={{
-                colors: { text: colors.text, placeholder: colors.text },
-              }}
-            /> */}
             </View>
           </View>
         </View>
         <View style={{ flexDirection: "column", flex: 1 }}>
           <View style={styles.uploadimage}>
             {props.route.params?.photo && imgurl ? (
-              <Pressable
-                style={{ width: "100%", height: "100%" }}
-                onPress={() => props.navigation.navigate("Camerascreen")}
-              >
-                {imageloading && <ActivityIndicator style={{marginTop:20}}/>}
+              <View style={{width:'100%',height:'100%'}}>
+                {imageloading && (
+                  <ActivityIndicator style={{ marginTop: 20 }} />
+                )}
                 <Image
                   style={{
-                    flex: 1,
+                    flex:1,
                     height: "100%",
                     width: "100%",
                     resizeMode: "cover",
-                    width: "100%",
-                    borderRadius: 20,
+                  
+                    borderTopLeftRadius:20,
+                    borderTopRightRadius:20,
+                    borderBottomLeftRadius: 0,
+                    borderBottomRightRadius:0,
+                    
                   }}
                   onLoadStart={() => setImageloading(true)}
                   onLoadEnd={() => setImageloading(false)}
                   source={{ uri: imgurl }}
                 />
-                
 
                 <Button
                   style={{
@@ -554,39 +569,33 @@ const UploadRoute = (props) => {
                     marginTop: -10,
                     borderRadius: 20,
                     fontFamily: "DMSans",
+                    height:40
                   }}
                   labelStyle={{ color: "white", fontSize: 14 }}
+                  onPress={() => props.navigation.navigate('Camerascreen')}
                 >
                   Edit Photo
                 </Button>
-              </Pressable>
+              </View>
             ) : (
               <Pressable
                 style={{
                   width: "100%",
                   height: "100%",
                   justifyContent: "center",
+                  alignItems: "center",
                 }}
                 onPress={() => props.navigation.navigate("Camerascreen")}
               >
-                <Image
-                  style={{
-                    alignSelf: "center",
-
-                    height: "50%",
-                    width: "50%",
-                    resizeMode: "contain",
-                  }}
-                  source={require("../assets/Union.png")}
-                />
+                <Addphoto />
               </Pressable>
             )}
           </View>
         </View>
       </View>
       <View style={{ flex: 2, flexDirection: "row", marginLeft: 10 }}>
-        <View style={{ flex: 1, flexDirection: "row" }}>
-          <View style={{ alignSelf: "center", width: "45%" }}>
+        <View style={{ width:'55%',flexDirection: "row" }}>
+          <View style={{ alignSelf: "center", width: "40%" }}>
             <TextInput
               style={[styles.inputtextbox]}
               placeholder="Price"
@@ -602,12 +611,11 @@ const UploadRoute = (props) => {
             />
           </View>
           <View
-            style={{ marginLeft: 10, marginRight: 10, alignSelf: "center" }}
+            style={{  alignSelf: "center",flex:1,marginLeft:10 }}
           >
             <SwitchSelector
               options={Option}
               initial={1}
-              style={{ width: 100 }}
               textContainerStyle={{ fontFamily: "DMSans" }}
               bold={true}
               borderRadius={50}
@@ -621,14 +629,14 @@ const UploadRoute = (props) => {
           </View>
         </View>
         <View
-          style={{ flex: 1, flexDirection: "row", justifyContent:'center' }}
+          style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}
         >
           <Text
             style={{
               fontFamily: "DMSansbold",
               color: "#E96A59",
               alignSelf: "center",
-              fontSize:16,
+              fontSize: 16,
             }}
           >
             You'll get Rs {!price ? 0 : userBookPrice}
@@ -640,12 +648,61 @@ const UploadRoute = (props) => {
         style={{
           flex: 6,
           flexDirection: "column",
-          marginLeft: 20,
+          marginLeft: 10,
           justifyContent: "flex-start",
         }}
       >
         <View>
-          <StaticText text="Condition of the book" fontS={16} />
+          <View style={{ flexDirection: "row" }}>
+            <StaticText text="Condition of the book" fontS={16} />
+            <View style={{ justifyContent: "center", marginLeft: 5 }}>
+              <Pressable
+                onPress={() => {
+                  setVisible(true);
+                  console.log("Pressed");
+                }}
+              >
+                <Info />
+              </Pressable>
+              <Modal animationType="slide" transparent={true} visible={visible}>
+                <TouchableOpacity style={styles.centeredView} onPress={() => setVisible(false)}>
+                  <Pressable onPress={() => setVisible(false)} style={{
+                       
+                        alignSelf: "flex-end",
+                        marginRight: "18%",
+                      }}>
+                    <Closemodal />
+                  </Pressable>
+                  <View style={styles.modalView}>
+                    <Text style={styles.headerText}>
+                      Guideline for selecting condition
+                    </Text>
+                    <Text style={styles.modalTextColor}>Great</Text>
+                    <Text style={styles.modalText}>
+                      The book looks as new but allowing for the normal effects
+                      of time on an unused book that has been protected.
+                    </Text>
+                    <Text style={styles.modalTextColor}>Good</Text>
+                    <Text style={styles.modalText}>
+                      Book that shows some small signs of wear - but no tears -
+                      on either binding or paper.No pages are missing.
+                    </Text>
+                    <Text style={styles.modalTextColor}>Fair</Text>
+                    <Text style={styles.modalText}>
+                      Book that shows some small signs of wear - but no tears -
+                      on either binding or paper.No pages are missing.
+                    </Text>
+                    <Text style={styles.modalTextColor}>Bad</Text>
+                    <Text style={styles.modalText}>
+                      Shows wear and tear but all the text pages and
+                      illustrations or maps are present. It may lack endpapers,
+                      half-title, and even the title page
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </Modal>
+            </View>
+          </View>
           <View
             style={{
               flexDirection: "row",
@@ -656,49 +713,26 @@ const UploadRoute = (props) => {
             }}
           >
             <Pressable
-              onPress={() => {
-                setbookCondition("Bad");
-              }}
               style={[
                 styles.checkboxContainer,
                 {
                   backgroundColor:
-                    bookCondition === "Bad" ? "#0036F4" : "transparent",
+                    bookCondition === "Great" ? "#0036F4" : "transparent",
                 },
               ]}
+              onPress={() => {
+                setbookCondition("Great");
+              }}
             >
               <Text
                 style={[
                   styles.checkboxText,
                   {
-                    color: bookCondition === "Bad" ? "#ffffff" : colors.text,
+                    color: bookCondition === "Great" ? "#ffffff" : colors.text,
                   },
                 ]}
               >
-                Bad
-              </Text>
-            </Pressable>
-            <Pressable
-              onPress={() => {
-                setbookCondition("Fair");
-              }}
-              style={[
-                styles.checkboxContainer,
-                {
-                  backgroundColor:
-                    bookCondition === "Fair" ? "#0036F4" : "transparent",
-                },
-              ]}
-            >
-              <Text
-                style={[
-                  styles.checkboxText,
-                  {
-                    color: bookCondition === "Fair" ? "#ffffff" : colors.text,
-                  },
-                ]}
-              >
-                Fair
+                Great
               </Text>
             </Pressable>
             <Pressable
@@ -724,41 +758,72 @@ const UploadRoute = (props) => {
                 Good
               </Text>
             </Pressable>
+
             <Pressable
+              onPress={() => {
+                setbookCondition("Fair");
+              }}
               style={[
                 styles.checkboxContainer,
                 {
                   backgroundColor:
-                    bookCondition === "Great" ? "#0036F4" : "transparent",
+                    bookCondition === "Fair" ? "#0036F4" : "transparent",
                 },
               ]}
-              onPress={() => {
-                setbookCondition("Great");
-              }}
             >
               <Text
                 style={[
                   styles.checkboxText,
                   {
-                    color: bookCondition === "Great" ? "#ffffff" : colors.text,
+                    color: bookCondition === "Fair" ? "#ffffff" : colors.text,
                   },
                 ]}
               >
-                Great
+                Fair
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                setbookCondition("Bad");
+              }}
+              style={[
+                styles.checkboxContainer,
+                {
+                  backgroundColor:
+                    bookCondition === "Bad" ? "#0036F4" : "transparent",
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.checkboxText,
+                  {
+                    color: bookCondition === "Bad" ? "#ffffff" : colors.text,
+                  },
+                ]}
+              >
+                Bad
               </Text>
             </Pressable>
           </View>
         </View>
 
         {selected}
+        <View style={{ alignSelf: "center" }}>
+          {error !== "" && (
+            <View style={{ marginTop: 30 }}>
+              <Error text={error} />
+            </View>
+          )}
+        </View>
       </View>
 
       <View
         style={{
           marginLeft: 20,
-          justifyContent: "space-around",
           alignItems: "center",
           flex: 2.5,
+          justifyContent:'flex-end'
         }}
       >
         {shopoption}
@@ -767,9 +832,9 @@ const UploadRoute = (props) => {
           style={{
             width: 215,
             height: 40,
-            margin: 10,
+            marginBottom:10,
             alignSelf: "center",
-            justifyContent: "flex-end",
+          
           }}
           labelStyle={{
             fontSize: 16,
@@ -787,177 +852,6 @@ const UploadRoute = (props) => {
   );
 };
 
-const QrcodeLogo = () => {
-  return (
-    <Svg
-      width="18"
-      height="19"
-      viewBox="0 0 18 19"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <Path d="M17 5.57143V1H12.4286" stroke="#0D1936" stroke-width="2" />
-      <Path
-        d="M12.4286 17.7619L17 17.7619L17 13.1905"
-        stroke="#0D1936"
-        stroke-width="2"
-      />
-      <Path
-        d="M0.999997 13.1905L0.999998 17.7619L5.57143 17.7619"
-        stroke="#0D1936"
-        stroke-width="2"
-      />
-      <Path
-        d="M5.57143 0.999982L1 0.999982L1 5.57141"
-        stroke="#0D1936"
-        stroke-width="2"
-      />
-      <Path
-        d="M8.43033 12.0511C10.0093 12.0511 11.2892 10.7711 11.2892 9.19221C11.2892 7.61329 10.0093 6.33331 8.43033 6.33331C6.8514 6.33331 5.57143 7.61329 5.57143 9.19221C5.57143 10.7711 6.8514 12.0511 8.43033 12.0511Z"
-        stroke="#0D1936"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-      <Path
-        d="M12.4286 13.1904L10.4505 11.2124"
-        stroke="#0D1936"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </Svg>
-  );
-};
 
-const styles = StyleSheet.create({
-  main: {
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
-    backgroundColor: "#ECEFEE",
-  },
-  heading: {
-    marginVertical: 10,
-    fontWeight: "700",
-    color: "#E96A59",
-  },
-  layout: {
-    flexDirection: "row",
-  },
-  inputfields: {
-    width: "50%",
-    justifyContent: "space-between",
-  },
-  inputtextbox: {
-    backgroundColor: "transparent",
-    justifyContent: "center",
-    height: 35,
-    marginTop: 10,
-  },
-  isbn: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    paddingTop: 2,
-  },
-  isbninput: {
-    width: "85%",
-  },
-  container: {
-    flexDirection: "row",
-  },
-  subcontainer: {
-    marginHorizontal: 1,
-    width: "45%",
-  },
-  checkboxContainer: {
-    width: "20%",
-    borderWidth: 2,
-    borderColor: "#0036F4",
-    borderRadius: 20,
-    alignItems: "center",
-    paddingVertical: 5,
-  },
-  checkboxText: {
-    fontWeight: "700",
-  },
-  button: {
-    width: 215,
-    margin: 10,
-    padding: 5,
-    fontSize: 18,
-    fontWeight: "700",
-    backgroundColor: "#E96A59",
-    borderRadius: 25,
-
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
-  },
-  uploadimage: {
-    justifyContent: "flex-end",
-    marginBottom: 10,
-    backgroundColor: "#6E797C",
-    borderRadius: 20,
-    marginLeft: 10,
-    marginRight: 10,
-  },
-  shop: {
-    marginVertical: 15,
-    marginBottom: 2,
-  },
-
-  shopDetailsContainer: {
-    flexDirection: "row",
-
-    alignItems: "center",
-  },
-  shopDetails: {
-    flex: 8,
-    paddingVertical: 6,
-    borderWidth: 2,
-    fontWeight: "700",
-    borderColor: "#0036F4",
-    borderRadius: 20,
-    textAlign: "center",
-    fontFamily: "DMSans",
-  },
-  shopDistance: {
-    flex: 5,
-    marginRight: 20,
-  },
-  storeDetails: {
-    lineHeight: 20,
-  },
-  map: {
-    marginBottom: 20,
-  },
-});
-
-const customPickerStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 14,
-    borderWidth: 2,
-    borderColor: "#0036F4",
-    borderRadius: 20,
-    paddingHorizontal: 5,
-    height: 35,
-    marginHorizontal: 10,
-    width: "80%",
-    marginLeft: 10,
-    color:'black'
-  },
-  inputAndroid: {
-    fontSize: 14,
-    borderWidth: 2,
-    borderColor: "#0036F4",
-    borderRadius: 50,
-    paddingRight: 30, // to ensure the text is never behind the icon
-    paddingLeft: 10,
-    height: 40,
-    marginTop: 10,
-  },
-});
 
 export default React.memo(UploadRoute);

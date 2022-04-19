@@ -4,7 +4,7 @@ import { Camera } from "expo-camera";
 import { Text, StyleSheet, View, SafeAreaView, Pressable } from "react-native";
 import Backbutton from "../Components/Backbutton";
 import { IconButton } from "react-native-paper";
-
+import {styles} from "../Styles/CameraScreenstyles.js";
 import * as ImagePicker from "expo-image-picker";
 
 const CamerScreen = (props) => {
@@ -107,43 +107,6 @@ const CamerScreen = (props) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  camera: {
-    flex: 1,
-  },
-  buttonContainer: {
-    flex: 1,
-    backgroundColor: "transparent",
-    flexDirection: "row",
-    margin: 20,
-  },
-  buttonrightleft: {
-    flex: 0.25,
-    alignSelf: "flex-end",
-    alignItems: "center",
-    alignContent: "center",
-  },
-  buttonrightright: {
-    flex: 0.25,
-    alignSelf: "flex-end",
-    alignItems: "center",
-    alignContent: "center",
-  },
 
-  button: {
-    flex: 0.5,
-    alignSelf: "flex-end",
-    alignItems: "center",
-    alignContent: "center",
-  },
-
-  text: {
-    fontSize: 18,
-    color: "white",
-  },
-});
 
 export default React.memo(CamerScreen);

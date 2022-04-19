@@ -33,39 +33,21 @@ const Login = (props) => {
   const [email, setEmail] = useState("");
   //const selector = useSelector();
 
+  useEffect(() => {
+    let unmounted = false;
+
+    setTimeout(() => {
+      if(!unmounted){
+      setError("")
+      }
+    },3000)
+    return () => {
+      unmounted = true;
+    }
+
+  },[error])
   
 
-  forgotpassword = () => {
-    if (username !== "") {
-      fetch("https://booksapp2021.herokuapp.com/User/Forgotpassword", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: username,
-        }),
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          if (data.status) {
-            Alert.alert(
-              "Password reset link to change you password has been sent to your registered email",
-              "Please Check!"[
-                {
-                  text: "OK",
-                }
-              ]
-            );
-          } else {
-            setError(data.message);
-          }
-        });
-    }
-  };
   loginrequest = () => {
     // let tokenvalue = "";
     // var truevalue = true;
@@ -249,18 +231,18 @@ const Login = (props) => {
           style={{
             flex: 4,
             alignItems: "center",
-            justifyContent: "center",
+            justifyContent: "flex-end",
           }}
         >
           <RenderButton title="LogIn" Click={loginrequest} />
           <Pressable
             onPress={() => props.navigation.navigate("InitialSignup")}
-            style={{ marginTop: 5 }}
+            style={{ marginTop: 10 }}
           >
             <StaticText text="Don't have an account? SignUp" />
           </Pressable>
         </View>
-        <View style={{ flex: 0.8 }}></View>
+        <View style={{ marginTop:10}}></View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

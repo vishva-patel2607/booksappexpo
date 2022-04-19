@@ -45,7 +45,7 @@ const Horizontalscrollview = (props) => {
                 source={{ uri: book.book_img }}
               />
             </View>
-            <View style={{ alignSelf:'center' }}>
+            <View style={{ alignSelf:'flex-start' }}>
               <StaticText text={book.book_name} />
               <StaticText text={book.book_price} />
             </View>

@@ -18,7 +18,6 @@ import StaticBooksApp from "../Components/StaticBooksApp";
 import { TextInput } from "react-native-paper";
 import UserIcon from "../Svg/User";
 import PhoneIcon from "../Svg/Phone";
-import { Use } from "react-native-svg";
 
 const Signup = (props) => {
   const { colors } = useTheme();
@@ -36,6 +35,20 @@ const Signup = (props) => {
   const [trigger, setTrigger] = useState(false);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    let unmounted = false;
+
+    setTimeout(() => {
+      if(!unmounted){
+      setError("")
+      }
+    },3000)
+    return () => {
+      unmounted = true;
+    }
+
+  },[error])
+
   let monthswiththirtyone = [1, 3, 5, 7, 8, 10, 12];
 
   const ref_day = useRef();
@@ -51,22 +64,14 @@ const Signup = (props) => {
       "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})"
     );
 
-    if (firstname.length === 0) {
-      alert("Enter your Firstname");
-      return;
-    } else if (lastname.length === 0) {
-      alert("enter your Lastname");
-      return;
-    } else if (username.length === 0) {
-      alert("Enter your username!");
-      return;
-    } else if (
-      email.length === 0 ||
-      !emailRegex.test(email.trim().toLowerCase())
+    if (
+      firstname.length === 0 ||
+      lastname.length === 0 ||
+      phoneNumber.length === 0
     ) {
-      alert("Enter a valid E-mail");
+      alert("Please enter all the details");
       return;
-    } else if (phoneNumber.length === 0 || !/^\d+$/.test(phoneNumber)) {
+    } else if (!/^\d+$/.test(phoneNumber)) {
       alert("Check your Phonenumber");
       return;
     } else if (day.length !== 2 || month.length !== 2 || year.length !== 4) {
@@ -166,7 +171,14 @@ const Signup = (props) => {
         </Pressable>
       </View>
       <KeyboardAvoidingView behavior="padding">
-        <View style={{ flex: 2, marginTop: 30, justifyContent: "center",alignItems:'center' }}>
+        <View
+          style={{
+            flex: 2,
+            marginTop: 30,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <StaticBooksApp />
         </View>
 
@@ -175,7 +187,7 @@ const Signup = (props) => {
             flex: 15,
             flexDirection: "column",
             justifyContent: "flex-start",
-            marginTop:11
+            marginTop: 11,
           }}
         >
           <View
@@ -202,11 +214,7 @@ const Signup = (props) => {
               autoCorrect={false}
               underlineColor="transparent"
               maxLength={20}
-              left={
-                <TextInput.Icon
-                  name={() =><UserIcon />}
-                />
-              }
+              left={<TextInput.Icon name={() => <UserIcon />} />}
             />
           </View>
           <View
@@ -232,11 +240,7 @@ const Signup = (props) => {
               autoCorrect={false}
               underlineColor="transparent"
               maxLength={20}
-              left={
-                <TextInput.Icon
-                  name={() => <UserIcon />}
-                />
-              }
+              left={<TextInput.Icon name={() => <UserIcon />} />}
             />
           </View>
           <View
@@ -263,74 +267,69 @@ const Signup = (props) => {
               autoCorrect={false}
               underlineColor="transparent"
               maxLength={20}
-              left={
-                <TextInput.Icon
-                  name={() => <PhoneIcon />}
-                />
-              }
+              left={<TextInput.Icon name={() => <PhoneIcon />} />}
             />
           </View>
           <View style={{ flexDirection: "row", marginTop: 11 }}>
-              <TextInput
-                style={styles.datetextbox}
-                theme={{
-                  colors: {
-                    primary: colors.background,
-                    placeholder: "#8e8e8e",
-                  },
-                  roundness: 120,
-                }}
-                underlineColor="transparent"
-                placeholder="MM"
-                value={month}
-                onChangeText={(text) => handleChangeMonth(text)}
-                autoCorrect={false}
-                maxLength={2}
-                // left={<TextInput.Icon name="calendar-month" />}
-                ref={ref_month}
-                keyboardType="number-pad"
-              />
-                
-              <TextInput
-                style={styles.datetextbox}
-                theme={{
-                  colors: {
-                    primary: colors.background,
-                    placeholder: "#8e8e8e",
-                  },
-                  roundness: 120,
-                }}
-                placeholder="DD"
-                value={day}
-                onChangeText={(text) => handleChangeDay(text)}
-                autoCorrect={false}
-                maxLength={2}
-                underlineColor="transparent"
-                // left={<TextInput.Icon name="calendar-today" />}
-                ref={ref_day}
-                keyboardType="number-pad"
-              />
-            
-              <TextInput
-                style={styles.yeartextbox}
-                placeholder="YYYY"
-                underlineColor="#ECEFEE"
-                theme={{
-                  colors: {
-                    primary: colors.background,
-                    placeholder: "#8e8e8e",
-                  },
-                  roundness: 120,
-                }}
-                value={year}
-                onChangeText={(text) => handleChangeYear(text)}
-                autoCorrect={false}
-                maxLength={4}
-                // left={<TextInput.Icon name="calendar-blank" />}
-                ref={ref_year}
-                keyboardType="number-pad"
-              />
-     
+            <TextInput
+              style={styles.datetextbox}
+              theme={{
+                colors: {
+                  primary: colors.background,
+                  placeholder: "#8e8e8e",
+                },
+                roundness: 120,
+              }}
+              underlineColor="transparent"
+              placeholder="MM"
+              value={month}
+              onChangeText={(text) => handleChangeMonth(text)}
+              autoCorrect={false}
+              maxLength={2}
+              // left={<TextInput.Icon name="calendar-month" />}
+              ref={ref_month}
+              keyboardType="number-pad"
+            />
+
+            <TextInput
+              style={styles.datetextbox}
+              theme={{
+                colors: {
+                  primary: colors.background,
+                  placeholder: "#8e8e8e",
+                },
+                roundness: 120,
+              }}
+              placeholder="DD"
+              value={day}
+              onChangeText={(text) => handleChangeDay(text)}
+              autoCorrect={false}
+              maxLength={2}
+              underlineColor="transparent"
+              // left={<TextInput.Icon name="calendar-today" />}
+              ref={ref_day}
+              keyboardType="number-pad"
+            />
+
+            <TextInput
+              style={styles.yeartextbox}
+              placeholder="YYYY"
+              underlineColor="#ECEFEE"
+              theme={{
+                colors: {
+                  primary: colors.background,
+                  placeholder: "#8e8e8e",
+                },
+                roundness: 120,
+              }}
+              value={year}
+              onChangeText={(text) => handleChangeYear(text)}
+              autoCorrect={false}
+              maxLength={4}
+              // left={<TextInput.Icon name="calendar-blank" />}
+              ref={ref_year}
+              keyboardType="number-pad"
+            />
           </View>
 
           <View style={{ alignSelf: "center" }}>

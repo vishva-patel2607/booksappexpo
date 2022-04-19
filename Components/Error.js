@@ -42,6 +42,7 @@ export default function Error(props) {
           fontSize: 16,
           marginLeft: 10,
           marginRight: 10,
+          marginVertical:5,
           fontFamily: "DMSansbold",
           color: "#E96A59",
         }}

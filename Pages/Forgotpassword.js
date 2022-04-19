@@ -25,7 +25,17 @@ const Forgotpassword = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setTimeout(() => setError(""),3000)
+    let unmounted = false;
+
+    setTimeout(() => {
+      if(!unmounted){
+      setError("")
+      }
+    },3000)
+    return () => {
+      unmounted = true;
+    }
+
   },[error])
   const forgotpassword = () => {
    

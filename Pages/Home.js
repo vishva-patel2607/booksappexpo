@@ -13,9 +13,6 @@ import Constants from "expo-constants";
 import Newbooks from "../Components/Newbooks";
 import * as Notifications from "expo-notifications";
 
-const wait = (timeout) => {
-  return new Promise((resolve) => setTimeout(resolve, timeout));
-};
 
 const HomeRoute = (props) => {
   const [devicePushToken, setDevicePushToken] = useState("");
