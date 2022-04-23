@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import SwitchSelector from "react-native-switch-selector";
 import Findashop from "../Components/Findashop";
 import RNPickerSelect from "react-native-picker-select";
+import Svg, { Path } from "react-native-svg";
 import {
   SafeAreaView,
   View,
@@ -15,7 +16,8 @@ import { logoutUser } from "../actions";
 import Closemodal from "../Svg/Closemodal";
 import {styles,customPickerStyles} from '../Styles/Uploadstyles.js';
 import { Platform, StatusBar } from "react-native";
-import { Button, Text, TextInput, ActivityIndicator } from "react-native-paper";
+import { Button, Text, TextInput, ActivityIndicator,Snackbar } from "react-native-paper";
+import CustomSnackbar from "../Components/Snackbar";
 import QrcodeLogo from '../Svg/Qrcode';
 import { useTheme } from "@react-navigation/native";
 import StaticText from "../Components/StaticText";
@@ -32,6 +34,7 @@ const UploadRoute = (props) => {
   const { colors } = useTheme();
   const [imgurl, setImgurl] = useState(null);
   const [visible, setVisible] = useState(false);
+  const [snackvisible,setSnackvisible] = useState(false);
   const [name, setName] = useState("");
   let [isbn, setIsbn] = useState("");
   const [author, setAuthor] = useState("");
@@ -144,8 +147,18 @@ const UploadRoute = (props) => {
   };
 
   useEffect(() => {
-    setTimeout(() => setError(""), 3000);
-  }, [error]);
+    let unmounted = false;
+
+    setTimeout(() => {
+      if(!unmounted){
+      setError("")
+      }
+    },3000)
+    return () => {
+      unmounted = true;
+    }
+
+  },[error])
 
   const changeImage = async (imagedata) => {
     let formData = new FormData();
@@ -229,7 +242,6 @@ const UploadRoute = (props) => {
         });
     } else {
       setError("Please fill all the fields");
-      return;
     }
   };
 
@@ -677,22 +689,22 @@ const UploadRoute = (props) => {
                     <Text style={styles.headerText}>
                       Guideline for selecting condition
                     </Text>
-                    <Text style={styles.modalTextColor}>Great</Text>
+                    <Text style={styles.modalTextColor}>Great(Tight and unopened)</Text>
                     <Text style={styles.modalText}>
                       The book looks as new but allowing for the normal effects
                       of time on an unused book that has been protected.
                     </Text>
-                    <Text style={styles.modalTextColor}>Good</Text>
+                    <Text style={styles.modalTextColor}>Good(Shelfwear and EdgeWorn)</Text>
                     <Text style={styles.modalText}>
                       Book that shows some small signs of wear - but no tears -
                       on either binding or paper.No pages are missing.
                     </Text>
-                    <Text style={styles.modalTextColor}>Fair</Text>
+                    <Text style={styles.modalTextColor}>Fair(Chipped and Dampstained)</Text>
                     <Text style={styles.modalText}>
                       Book that shows some small signs of wear - but no tears -
                       on either binding or paper.No pages are missing.
                     </Text>
-                    <Text style={styles.modalTextColor}>Bad</Text>
+                    <Text style={styles.modalTextColor}>Bad(Price Clipped and wormless)</Text>
                     <Text style={styles.modalText}>
                       Shows wear and tear but all the text pages and
                       illustrations or maps are present. It may lack endpapers,
@@ -809,13 +821,54 @@ const UploadRoute = (props) => {
         </View>
 
         {selected}
-        <View style={{ alignSelf: "center" }}>
+       
           {error !== "" && (
-            <View style={{ marginTop: 30 }}>
-              <Error text={error} />
-            </View>
+             <Snackbar
+             visible= {true}
+             
+             style={{
+               flexDirection: "row",
+               borderColor: "#E96A59",
+               alignSelf:'center',
+               justifyContent:'center',
+               borderWidth: 2,
+               borderRadius: 20,
+               backgroundColor: "#FFFFFF",
+               width:'80%',
+               height: 50,
+             }}
+           >
+             <Svg
+               width="22"
+               height="20"
+               viewBox="0 0 22 20"
+               fill="none"
+               xmlns="http://www.w3.org/2000/svg"
+             >
+               <Path
+                 d="M1.69774 16.3181L9.19481 3.12325C9.96913 1.76045 11.939 1.77753 12.6895 3.15357L19.8867 16.3484C20.6137 17.6812 19.649 19.3061 18.1309 19.3061H3.43665C1.90318 19.3061 0.940188 17.6514 1.69774 16.3181Z"
+                 fill="#E96A59"
+               />
+               <Path
+                 d="M10.9792 8.61069C10.6525 8.61069 10.3819 8.51269 10.1672 8.31669C9.96187 8.12069 9.8592 7.87336 9.8592 7.57469C9.8592 7.27602 9.96187 7.03336 10.1672 6.84669C10.3819 6.65069 10.6525 6.55269 10.9792 6.55269C11.3059 6.55269 11.5719 6.65069 11.7772 6.84669C11.9919 7.03336 12.0992 7.27602 12.0992 7.57469C12.0992 7.87336 11.9919 8.12069 11.7772 8.31669C11.5719 8.51269 11.3059 8.61069 10.9792 8.61069ZM10.0832 16.6327V9.68869H11.8752V16.6327H10.0832Z"
+                 fill="white"
+               />
+             </Svg>
+             
+               <Text
+                 style={{
+                   fontSize: 16,
+                   
+                   fontFamily: "DMSansbold",
+                   color: "#E96A59",
+                 }}
+               >
+                 Please fill all the fields
+               </Text>
+             
+           </Snackbar>
           )}
-        </View>
+        
       </View>
 
       <View
