@@ -1,11 +1,10 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet,StatusBar } from "react-native";
 export const styles = StyleSheet.create({
     centeredView: {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
       marginTop: 22,
-      
     },
     modalView: {
       width: "70%",
@@ -176,10 +175,11 @@ export const styles = StyleSheet.create({
       borderWidth: 2,
       borderColor: "#0036F4",
       borderRadius: 20,
-      paddingHorizontal: 10,
+      color: '#FFFFFF',
+      paddingHorizontal:10,
       height: 40,
       marginHorizontal: 1,
-      width: "80%",
-      marginLeft: 10,
+      width: "100%",
+      backgroundColor:'#0036F4'
     },
   });

@@ -7,7 +7,7 @@ import {
   Pressable,
   TouchableOpacity,
   FlatList,
-  RefreshControl
+  RefreshControl,
 } from "react-native";
 import { logoutUser } from "../actions";
 import Searchresult from "../Components/Searchresult";
@@ -22,7 +22,6 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
 import { Category, Condition, Price } from "../Components/filters.js";
 import Seperator from "../Components/Seperator";
-
 
 const SearchRoute = (props) => {
   const { colors } = useTheme();
@@ -45,22 +44,18 @@ const SearchRoute = (props) => {
   const [text, setText] = useState("Search for a book");
   const [inset, setInset] = useState(1);
   const [categoryfilterset, setCategoryfilterset] = useState(new Set());
-  const [conditionfilterset,setConditionfilterset] = useState(new Set());
+  const [conditionfilterset, setConditionfilterset] = useState(new Set());
   const [pricefilter, setPricefilter] = useState(0);
   const [filtercount, setFiltercount] = useState(0);
   const [refreshing, setRefreshing] = useState(true);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  let color = Theme === "Light" ? "#70768B" : "#FFFFFF";
 
   const loadbooks = () => {
     setLocation();
-    if (
-      typeof longitude != "undefined" &&
-      typeof latitude != "undefined" 
-  
-    ) {
+    if (typeof longitude != "undefined" && typeof latitude != "undefined") {
       fetch(`https://booksapp2021.herokuapp.com/Book/Search/${inset}`, {
-        
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -81,25 +76,24 @@ const SearchRoute = (props) => {
         })
         .then((data) => {
           if (data.status) {
-            if(inset===1){
+            if (inset === 1) {
               if (data.response.book_list.length !== 0) {
-                   setReceiveddata(data.response.book_list);
-                   setRefreshing(false);
-                 } else {
-                   setText("No books found");
-                   setReceiveddata([]);
-                   setRefreshing(false);
-                 }
-            }
-            else{
+                setReceiveddata(data.response.book_list);
+                setRefreshing(false);
+              } else {
+                setText("No books found");
+                setReceiveddata([]);
+                setRefreshing(false);
+              }
+            } else {
               if (data.response.book_list.length !== 0) {
-                setReceiveddata([...Receiveddata,data.response.book_list]);
+                setReceiveddata([...Receiveddata, data.response.book_list]);
                 setRefreshing(false);
               } else {
                 setText("No books found");
                 setReceiveddata(Receiveddata);
                 setRefreshing(false);
-              }  
+              }
             }
           } else {
             if (data.message === "Could not verify") {
@@ -111,8 +105,7 @@ const SearchRoute = (props) => {
           console.log(error);
         });
     }
-  }
-
+  };
 
   const renderData = ({ item }) => (
     <Pressable
@@ -157,7 +150,6 @@ const SearchRoute = (props) => {
   );
 
   const removefilter = (val) => {
-    
     if ([...categoryfilterset].indexOf(val) !== -1) {
       filterlist.delete(val);
       categoryfilterset.delete(val);
@@ -169,7 +161,7 @@ const SearchRoute = (props) => {
       setFiltercount(filtercount - 1);
       setInset(1);
     } else {
-      filterlist.delete(val)
+      filterlist.delete(val);
       conditionfilterset.delete(val.toLowerCase());
       setFiltercount(filtercount - 1);
       setInset(1);
@@ -193,20 +185,23 @@ const SearchRoute = (props) => {
         resizeMode="cover"
       />
     );
-  let icon =
-    SearchQuery === "" ? (
-      <SearchbarIcon />
-    ) : (
-      <SearchbarIconFilled />
-    );
+  let icon = SearchQuery === "" ? <SearchbarIcon /> : <SearchbarIconFilled />;
 
   const Emptymessage = () => {
-    return(
-      <Text style={{fontFamily:'DMSans',fontSize:16,marginTop:40,alignSelf:'center',color:colors.text}}>
+    return (
+      <Text
+        style={{
+          fontFamily: "DMSans",
+          fontSize: 16,
+          marginTop: 40,
+          alignSelf: "center",
+          color: colors.text,
+        }}
+      >
         No books found
       </Text>
-    )
-  }
+    );
+  };
 
   const setLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -220,12 +215,9 @@ const SearchRoute = (props) => {
   };
 
   useEffect(() => {
-    console.log(pricefilter,[...categoryfilterset],[...conditionfilterset])
+    console.log(pricefilter, [...categoryfilterset], [...conditionfilterset]);
     setLocation();
-    if (
-      typeof longitude != "undefined" &&
-      typeof latitude != "undefined" 
-    ) {
+    if (typeof longitude != "undefined" && typeof latitude != "undefined") {
       fetch(`https://booksapp2021.herokuapp.com/Book/Search/${inset}`, {
         method: "POST",
         headers: {
@@ -248,23 +240,22 @@ const SearchRoute = (props) => {
         .then((data) => {
           console.log(data);
           if (data.status) {
-            if(inset===1){
+            if (inset === 1) {
               if (data.response.book_list.length !== 0) {
-                   setReceiveddata(data.response.book_list);
-                   setRefreshing(false);
-                 } else {
-                   setReceiveddata([]);
-                   setRefreshing(false);
-                 }
-            }
-            else{
+                setReceiveddata(data.response.book_list);
+                setRefreshing(false);
+              } else {
+                setReceiveddata([]);
+                setRefreshing(false);
+              }
+            } else {
               if (data.response.book_list.length !== 0) {
-                setReceiveddata([...Receiveddata,data.response.book_list]);
+                setReceiveddata([...Receiveddata, data.response.book_list]);
                 setRefreshing(false);
               } else {
                 setReceiveddata(Receiveddata);
                 setRefreshing(false);
-              }  
+              }
             }
           } else {
             if (data.message === "Could not verify") {
@@ -276,15 +267,7 @@ const SearchRoute = (props) => {
           console.log(error);
         });
     }
-  }, [
-    inset,
-    count,
-    longitude,
-    latitude,
-    filtercount,
-    filterlist,
-    flag
-  ]);
+  }, [inset, count, longitude, latitude, filtercount, filterlist, flag]);
 
   const Calltochangecount = debounce(() => setCount(!count), 500);
 
@@ -320,9 +303,16 @@ const SearchRoute = (props) => {
           alignItems: "flex-start",
           marginHorizontal: 15,
           justifyContent: "space-between",
+          height: 45,
+          zIndex: 1000,
         }}
       >
-        <View style={styles.filtercontainer}>
+        <View
+          style={[
+            styles.filtercontainer,
+            { backgroundColor: Theme === "Light" ? "#ECEFEE" : "#0D1936" },
+          ]}
+        >
           <TouchableOpacity
             activeOpacity={0.8}
             style={styles.touchableopacitystyle}
@@ -361,51 +351,72 @@ const SearchRoute = (props) => {
               />
             )}
           </TouchableOpacity>
+
           {showpriceoption && (
-            <View>
-              {Price.map((val, id) => {
-                return (
-                  <TouchableOpacity
-                    key={id}
-                    style={{
-                      height: 30,
-                      borderRadius: 10,
-                      paddingVertical: 5,
-                      paddingHorizontal: 10,
-                      alignItems: "flex-start",
-                    }}
-                    onPress={() => {
-                      pricefilterlist.clear();
-                      pricefilterlist.add(val.name);
-                      setPricefilter(val.id);
-                      setFiltercount(filtercount + 1);
-                      setInset(1);
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: colors.text,
-                        fontFamily: "DMSans",
-                        fontSize: 14,
-                      }}
-                    >
-                      {val.name}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
+            <>
+              <Divider
+                style={[styles.dividerstyles, { backgroundColor: color }]}
+              />
+              <View>
+                {Price.map((val, id) => {
+                  return (
+                    <View key={id}>
+                      <TouchableOpacity
+                        key={id}
+                        style={{
+                          height: 30,
+                          borderRadius: 10,
+                          paddingVertical: 5,
+                          paddingHorizontal: 10,
+                          alignItems: "flex-start",
+                        }}
+                        onPress={() => {
+                          pricefilterlist.clear();
+                          pricefilterlist.add(val.name);
+                          setPricefilter(val.id);
+                          setFiltercount(filtercount + 1);
+                          setInset(1);
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: colors.text,
+                            fontFamily: "DMSans",
+                            fontSize: 14,
+                          }}
+                        >
+                          {val.name}
+                        </Text>
+                      </TouchableOpacity>
+                      {id !== 3 && (
+                        <Divider
+                          style={[
+                            styles.dividerstyles,
+                            { backgroundColor: color },
+                          ]}
+                        />
+                      )}
+                    </View>
+                  );
+                })}
+              </View>
+            </>
           )}
         </View>
-        <View style={styles.filtercontainer}>
+        <View
+          style={[
+            styles.filtercontainer,
+            { backgroundColor: Theme === "Light" ? "#ECEFEE" : "#0D1936" },
+          ]}
+        >
           <TouchableOpacity
             activeOpacity={0.8}
             style={{
               alignItems: "center",
               // paddingHorizontal:10,
               flexDirection: "row",
-              justifyContent:'space-around',
-              width:125,
+              justifyContent: "space-around",
+              width: 125,
               height: 30,
               borderRadius: 20,
             }}
@@ -421,7 +432,6 @@ const SearchRoute = (props) => {
                   fontFamily: "DMSans",
                   fontSize: 14,
                   color: colors.text,
-                  
                 }}
               >
                 Category
@@ -432,7 +442,6 @@ const SearchRoute = (props) => {
                 source={require("../assets/arrowdown.png")}
                 style={{
                   transform: [{ rotate: showcategorydown ? "180deg" : "0deg" }],
-                  
                 }}
                 resizeMode="cover"
               />
@@ -446,43 +455,64 @@ const SearchRoute = (props) => {
               />
             )}
           </TouchableOpacity>
+          <Divider style={styles.dividerstyles} />
           {showcategoryoption && (
-            <View>
-              {Category.map((val, id) => {
-                return (
-                  <TouchableOpacity
-                    key={id}
-                    style={{
-                      height: 30,
-                      borderRadius: 10,
-                      paddingVertical: 5,
-                      paddingHorizontal: 12,
-                      alignItems: "flex-start",
-                    }}
-                    onPress={() => {
-                      filterlist.add(val.name);
-                      categoryfilterset.add(val.name);
-                      setFiltercount(filtercount + 1);
-                      setInset(1);
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: colors.text,
-                        fontFamily: "DMSans",
-                        fontSize: 14,
-                      }}
-                      numberOfLines={2}
-                    >
-                      {val.name}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
+            <>
+              <Divider
+                style={[styles.dividerstyles, { backgroundColor: color }]}
+              />
+              <View>
+                {Category.map((val, id) => {
+                  return (
+                    <View key={id}>
+                      <TouchableOpacity
+                        key={id}
+                        style={{
+                          height: 30,
+                          borderRadius: 10,
+                          paddingVertical: 5,
+                          paddingHorizontal: 12,
+                          alignItems: "flex-start",
+                        }}
+                        onPress={() => {
+                          filterlist.add(val.name);
+                          categoryfilterset.add(val.name);
+                          setFiltercount(filtercount + 1);
+                          setInset(1);
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: colors.text,
+                            fontFamily: "DMSans",
+                            fontSize: 14,
+                          }}
+                          numberOfLines={2}
+                        >
+                          {val.name}
+                        </Text>
+                      </TouchableOpacity>
+                      {id !== 7 && (
+                        <Divider
+                          style={[
+                            styles.dividerstyles,
+                            { backgroundColor: color },
+                          ]}
+                        />
+                      )}
+                    </View>
+                  );
+                })}
+              </View>
+            </>
           )}
         </View>
-        <View style={styles.filtercontainer}>
+        <View
+          style={[
+            styles.filtercontainer,
+            { backgroundColor: Theme === "Light" ? "#ECEFEE" : "#0D1936" },
+          ]}
+        >
           <TouchableOpacity
             activeOpacity={0.8}
             style={styles.touchableopacitystyle}
@@ -497,7 +527,7 @@ const SearchRoute = (props) => {
                   fontFamily: "DMSans",
                   fontSize: 14,
                   color: colors.text,
-                  paddingLeft:5,
+                  paddingLeft: 5,
                 }}
               >
                 Condition
@@ -505,40 +535,59 @@ const SearchRoute = (props) => {
             </View>
             {arrowdown}
           </TouchableOpacity>
+
           {showdistanceoption && (
-            <View>
-              {Condition.map((val, id) => {
-                return (
-                  <TouchableOpacity
-                    key={id}
-                    style={{
-                      paddingVertical: 5,
-                      height: 30,
-                      borderRadius: 10,
-                      paddingLeft: 10,
-                    }}
-                    onPress={() => {
-                      filterlist.add(val.name);
-                      conditionfilterset.add(val.name.toLowerCase());
-                      
-                      setFiltercount(count + 1);
-                      setInset(1);
-                      setFlag(!flag);
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: colors.text,
-                        fontFamily: "DMSans",
-                        fontSize: 14,
-                      }}
-                    >
-                      {val.name}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
+            <>
+             
+              <View>
+                {Condition.map((val, id) => {
+                  return (
+                    <><Divider
+                      style={[
+                        styles.dividerstyles,
+                        { backgroundColor: color },
+                      ]} /><View key={id}>
+
+                        <TouchableOpacity
+                          key={id}
+                          style={{
+                            paddingVertical: 5,
+                            height: 30,
+                            borderRadius: 10,
+                            paddingLeft: 10,
+                          }}
+                          onPress={() => {
+                            filterlist.add(val.name);
+                            conditionfilterset.add(val.name.toLowerCase());
+
+                            setFiltercount(count + 1);
+                            setInset(1);
+                            setFlag(!flag);
+                          } }
+                        >
+                          <Text
+                            style={{
+                              color: colors.text,
+                              fontFamily: "DMSans",
+                              fontSize: 14,
+                            }}
+                          >
+                            {val.name}
+                          </Text>
+                        </TouchableOpacity>
+                        {id !== 3 && (
+                        <Divider
+                          style={[
+                            
+                            { backgroundColor: color },
+                          ]}
+                        />
+                      )}
+                      </View></>
+                  );
+                })}
+              </View>
+            </>
           )}
         </View>
       </View>
@@ -556,44 +605,42 @@ const SearchRoute = (props) => {
           flexWrap: "wrap",
         }}
       >
-        {[...filterlist, ...pricefilterlist].map(
-          (val, id) => (
-            <View
+        {[...filterlist, ...pricefilterlist].map((val, id) => (
+          <View
+            style={{
+              minwidth: 95,
+              flexWrap: "wrap",
+              borderRadius: 50,
+              alignItems: "center",
+              height: 35,
+              backgroundColor:
+                colors.background === "#ECEFEE" ? "white" : "#0036F4",
+              flexDirection: "row",
+              marginTop: 5,
+              marginLeft: 10,
+              paddingLeft: 8,
+            }}
+            key={id}
+          >
+            <Text
               style={{
-                minwidth: 95,
-                flexWrap: "wrap",
-                borderRadius: 50,
-                alignItems: "center",
-                height: 35,
-                backgroundColor:
-                  colors.background === "#ECEFEE" ? "white" : "#0036F4",
-                flexDirection: "row",
-                marginTop: 5,
-                marginLeft: 10,
-                paddingLeft: 8,
+                fontFamily: "DMSans",
+                marginLeft: 5,
+                color: colors.text,
               }}
-              key={id}
             >
-              <Text
-                style={{
-                  fontFamily: "DMSans",
-                  marginLeft: 5,
-                  color: colors.text,
-                }}
-              >
-                {val}
-              </Text>
-              <Pressable onPress={() => removefilter(val)}>
-                <IconButton
-                  icon="close"
-                  color={Theme === "Light" ? "black" : "white"}
-                  size={15}
-                  style={{ alignSelf: "flex-end" }}
-                />
-              </Pressable>
-            </View>
-          )
-        )}
+              {val}
+            </Text>
+            <Pressable onPress={() => removefilter(val)}>
+              <IconButton
+                icon="close"
+                color={Theme === "Light" ? "black" : "white"}
+                size={15}
+                style={{ alignSelf: "flex-end" }}
+              />
+            </Pressable>
+          </View>
+        ))}
       </View>
       {([...filterlist].length !== 0 ||
         [...pricefilterlist].length !== 0 ||
@@ -612,20 +659,19 @@ const SearchRoute = (props) => {
         renderItem={renderData}
         onEndReachedThreshold={0.1}
         onEndReached={() => {
-          if(Receiveddata.length>=10){
-          setInset(inset+1)
-        }}}
+          if (Receiveddata.length >= 10) {
+            setInset(inset + 1);
+          }
+        }}
         ItemSeparatorComponent={Seperator}
         keyExtractor={(item, index) => index.toString()}
-        ListEmptyComponent = {Emptymessage}
+        ListEmptyComponent={Emptymessage}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={loadbooks} />
         }
-
       />
     </SafeAreaView>
   );
 };
-
 
 export default React.memo(SearchRoute);

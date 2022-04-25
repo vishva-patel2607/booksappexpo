@@ -1,15 +1,12 @@
 import React, { useState } from "react";
-import {
-  SafeAreaView,
-  View,
-  Alert,
-  Pressable} from "react-native";
+import { SafeAreaView, View, Alert, Pressable } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../actions";
 import { useTheme } from "@react-navigation/native";
 import Backbutton from "../Components/Backbutton";
-import { Button, TextInput, Text } from "react-native-paper";
+import { TextInput, Text } from "react-native-paper";
 import { styles } from "../Styles/EditPhone";
+import ActionButton from '../Components/Actionbutton';
 
 const EditPhone = (props) => {
   const { colors } = useTheme();
@@ -70,10 +67,8 @@ const EditPhone = (props) => {
             fontWeight: "700",
             color: colors.text,
             marginLeft: 22,
-            fontFamily:'DMSansbold'
-            
+            fontFamily: "DMSansbold",
           }}
-          
         >
           CHANGE PHONE
         </Text>
@@ -97,26 +92,14 @@ const EditPhone = (props) => {
           maxLength={10}
         />
 
-        <Button
-          theme={{ roundness: 120 }}
-          onPress={editphone}
-          style={{
-            width: 215,
-            height: 40,
-            marginTop:25,
-            alignItems:'flex-start',
-          }}
-          labelStyle={{
-            fontSize: 16,
-            color: "white",
-            flexDirection: "row",
-            fontFamily: "DMSansbold",
-            paddingLeft:8
-          }}
-          mode="contained"
-        >
-          SAVE
-        </Button>
+        <View style={{ marginTop: 25 }}>
+          <ActionButton
+            title="SAVE"
+            Click={editphone}
+            fontS="14"
+            style={{ marginTop: 25 }}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );

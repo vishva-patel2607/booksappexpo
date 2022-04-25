@@ -244,28 +244,13 @@ const UserRoute = (props) => {
           }}
         >
           <View style={{ marginBottom: 6 }}>
-            <Pressable
-              onPress={() => props.navigation.navigate("Changepassword")}
-            >
-              <Button
-                theme={{ roundness: 50 }}
-                style={{
-                  width: 215,
-                  height: 40,
-                  alignItems: "flex-start",
-                  justifyContent: "center",
-                }}
-                labelStyle={{
-                  fontSize: 14,
-                  color: "white",
-                  flexDirection: "row",
-                  fontFamily: "DMSansbold",
-                }}
-                mode="contained"
-              >
-                Change Password
-              </Button>
-            </Pressable>
+            
+                <ActionButton
+              title="Change Password"
+              Click={() => props.navigation.navigate("Changepassword")}
+              fontS="14"
+              style={{ marginTop: 15 }}
+            />
           </View>
           <View style={{ marginBottom: 6 }}>
             <ActionButton
@@ -278,7 +263,7 @@ const UserRoute = (props) => {
           <View style={{ marginBottom: 6 }}>
             <ActionButton title="Deactivate account" fontS="14" />
           </View>
-          <View style={{ marginLeft: 2, marginTop: 10 }}>
+          <View style={{ marginLeft: 5, marginTop: 10 }}>
             <StaticText text="Contact us" />
             <View style={{ marginTop: 5 }}>
               <StaticText text="Privacy policy" />

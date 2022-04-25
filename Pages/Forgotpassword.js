@@ -6,7 +6,7 @@ import {
   Alert,
   Pressable,
   Image,
-  StatusBar
+  StatusBar,
 } from "react-native";
 import Error from "../Components/Error";
 import { ThemeContext } from "../Components/Theme";
@@ -19,54 +19,51 @@ import { Button, TextInput, Text } from "react-native-paper";
 const Forgotpassword = (props) => {
   const { colors } = useTheme();
   const user = useSelector((state) => state.user);
-  const [username,setUsername] = useState("");
+  const [username, setUsername] = useState("");
   const [message, setMessage] = useState("");
-  const [error,setError] = useState("");
+  const [error, setError] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
     let unmounted = false;
 
     setTimeout(() => {
-      if(!unmounted){
-      setError("")
+      if (!unmounted) {
+        setError("");
       }
-    },3000)
+    }, 3000);
     return () => {
       unmounted = true;
-    }
-
-  },[error])
+    };
+  }, [error]);
   const forgotpassword = () => {
-   
-      fetch("https://booksapp2021.herokuapp.com/User/Forgotpassword", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: username,
-        }),
+    fetch("https://booksapp2021.herokuapp.com/User/Forgotpassword", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: username,
+      }),
+    })
+      .then((response) => {
+        return response.json();
       })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          if (data.status) {
-            setMessage(data.message);
-            Alert.alert(message, "Kindly verify", [
-              { text: "Ok", onPress: () => props.navigation.navigate("Login") },
-            ]);
-          } else {
-            console.log(data.message);
-           setError(data.message);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    
+      .then((data) => {
+        if (data.status) {
+          setMessage(data.message);
+          Alert.alert(message, "Kindly verify", [
+            { text: "Ok", onPress: () => props.navigation.navigate("Login") },
+          ]);
+        } else {
+          console.log(data.message);
+          setError(data.message);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -83,10 +80,8 @@ const Forgotpassword = (props) => {
             fontWeight: "700",
             color: colors.text,
             marginLeft: 22,
-            fontFamily:'DMSansbold'
-            
+            fontFamily: "DMSansbold",
           }}
-          
         >
           Forgot Password?
         </Text>
@@ -116,26 +111,27 @@ const Forgotpassword = (props) => {
           style={{
             width: 215,
             height: 40,
-            marginTop:25,
-            justifyContent: "center",
+            marginTop: 25,
+            alignItems: "flex-start",
           }}
           labelStyle={{
             fontSize: 16,
             color: "white",
             flexDirection: "row",
             fontFamily: "DMSansbold",
+            paddingLeft: 8,
           }}
           mode="contained"
         >
           SAVE
         </Button>
         <View style={{ alignSelf: "center" }}>
-            {error !== "" && (
-              <View style={{ marginTop: 30 }}>
-                <Error text={error} />
-              </View>
-            )}
-          </View>
+          {error !== "" && (
+            <View style={{ marginTop: 30 }}>
+              <Error text={error} />
+            </View>
+          )}
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -166,8 +162,7 @@ const styles = StyleSheet.create({
 
   layout: {
     flex: 1,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight +10: 0
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
   },
-
 });
 export default React.memo(Forgotpassword);

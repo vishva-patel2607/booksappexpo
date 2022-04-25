@@ -12,7 +12,7 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 import { Dimensions } from "react-native";
 
 const Barcode = ({ setIsbn, FetchBookfromISBN, showQR, setShowQR }) => {
-  const windowHeight = Dimensions.get("window").height;
+  const windowHeight = 400;
 
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -32,12 +32,7 @@ const Barcode = ({ setIsbn, FetchBookfromISBN, showQR, setShowQR }) => {
       setHasPermission(status === "granted");
     })();
   }, []);
-  if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
+  
   return (
     <View style={{
         zIndex:1000,
@@ -57,6 +52,7 @@ const Barcode = ({ setIsbn, FetchBookfromISBN, showQR, setShowQR }) => {
               StyleSheet.absoluteFillObject,
               {
                 height: windowHeight,
+                
                 width: "100%",
                 zIndex: 1000,
               },

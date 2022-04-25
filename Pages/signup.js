@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef,useEffect } from "react";
 import {
   SafeAreaView,
   StatusBar,
@@ -264,13 +264,17 @@ const Signup = (props) => {
               onChangeText={(text) => setPhoneNumber(text)}
               autoCapitalize="none"
               autoCompleteType="username"
+              returnKeyLabel='Done' 
+              returnKeyType='done' 
               autoCorrect={false}
               underlineColor="transparent"
+              keyboardType="number-pad"
               maxLength={20}
               left={<TextInput.Icon name={() => <PhoneIcon />} />}
             />
           </View>
           <View style={{ flexDirection: "row", marginTop: 11 }}>
+            
             <TextInput
               style={styles.datetextbox}
               theme={{
@@ -282,6 +286,8 @@ const Signup = (props) => {
               }}
               underlineColor="transparent"
               placeholder="MM"
+              returnKeyLabel='Done' 
+              returnKeyType='done' 
               value={month}
               onChangeText={(text) => handleChangeMonth(text)}
               autoCorrect={false}
@@ -290,6 +296,7 @@ const Signup = (props) => {
               ref={ref_month}
               keyboardType="number-pad"
             />
+          
 
             <TextInput
               style={styles.datetextbox}
@@ -301,6 +308,8 @@ const Signup = (props) => {
                 roundness: 120,
               }}
               placeholder="DD"
+              returnKeyLabel='Done' 
+              returnKeyType='done' 
               value={day}
               onChangeText={(text) => handleChangeDay(text)}
               autoCorrect={false}
@@ -323,6 +332,8 @@ const Signup = (props) => {
                 roundness: 120,
               }}
               value={year}
+              returnKeyLabel='Done' 
+              returnKeyType='done' 
               onChangeText={(text) => handleChangeYear(text)}
               autoCorrect={false}
               maxLength={4}

@@ -1,4 +1,7 @@
-import { StyleSheet } from "react-native";
+import * as React from 'react';
+import { StyleSheet,StatusBar } from "react-native";
+import { ThemeContext } from "../Components/Theme";
+
 export const styles = StyleSheet.create({
     search: {
       paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
@@ -18,5 +21,11 @@ export const styles = StyleSheet.create({
       borderColor: "#0036F4",
       borderWidth: 2,
       borderRadius: 20,
+      
+      
     },
+    dividerstyles:{
+      height:1,
+      
+    }
   });

@@ -1,7 +1,7 @@
-import React, { Component, useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { Camera } from "expo-camera";
-import { Text, StyleSheet, View, SafeAreaView, Pressable } from "react-native";
+import { Text, View, SafeAreaView, Pressable,StatusBar } from "react-native";
 import Backbutton from "../Components/Backbutton";
 import { IconButton } from "react-native-paper";
 import {styles} from "../Styles/CameraScreenstyles.js";

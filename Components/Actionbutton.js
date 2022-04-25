@@ -9,7 +9,10 @@ export default function RenderActionButton({Click,fontS,title}) {
 
   
   return (
-    <Pressable onPress={Click}>
+    <Pressable onPress={Click}  style={({ pressed }) => [
+            
+      pressed ? { opacity: 0.9 } : {},
+    ]}>
       <Button
         theme={{ roundness: 50 }}
         style={{

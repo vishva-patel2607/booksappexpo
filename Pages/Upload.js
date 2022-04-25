@@ -10,14 +10,20 @@ import {
   StyleSheet,
   Pressable,
   Modal,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { logoutUser } from "../actions";
 import Closemodal from "../Svg/Closemodal";
-import {styles,customPickerStyles} from '../Styles/Uploadstyles.js';
-import { Platform, StatusBar,Dimensions } from "react-native";
-import { Button, Text, TextInput, ActivityIndicator,Snackbar } from "react-native-paper";
-import QrcodeLogo from '../Svg/Qrcode';
+import { styles, customPickerStyles } from "../Styles/Uploadstyles.js";
+import { Platform, StatusBar, Dimensions } from "react-native";
+import {
+  Button,
+  Text,
+  TextInput,
+  ActivityIndicator,
+  Snackbar,
+} from "react-native-paper";
+import QrcodeLogo from "../Svg/Qrcode";
 import { useTheme } from "@react-navigation/native";
 import StaticText from "../Components/StaticText";
 import BooksApp from "../Components/BooksApp";
@@ -27,13 +33,11 @@ import Addphoto from "../Svg/Addphoto";
 import Info from "../Svg/Info";
 import Barcode from "../Components/Barcodescanner";
 
-
 const UploadRoute = (props) => {
-  const windowHeight = Dimensions.get("window").height;
   const { colors } = useTheme();
   const [imgurl, setImgurl] = useState(null);
   const [visible, setVisible] = useState(false);
-  const [snackvisible,setSnackvisible] = useState(false);
+  const [snackvisible, setSnackvisible] = useState(false);
   const [name, setName] = useState("");
   let [isbn, setIsbn] = useState("");
   const [author, setAuthor] = useState("");
@@ -149,17 +153,14 @@ const UploadRoute = (props) => {
     let unmounted = false;
 
     setTimeout(() => {
-      if(!unmounted){
-      setError("")
+      if (!unmounted) {
+        setError("");
       }
-    },3000)
+    }, 3000);
     return () => {
       unmounted = true;
-    }
-
-  },[error])
-
-  
+    };
+  }, [error]);
 
   const changeImage = async (imagedata) => {
     let formData = new FormData();
@@ -352,8 +353,6 @@ const UploadRoute = (props) => {
   const [scanned, setScanned] = useState(false);
   const [showQR, setShowQR] = useState(false);
 
-  
-
   const getPricing = async () => {
     if (!price) return;
     try {
@@ -384,7 +383,6 @@ const UploadRoute = (props) => {
     getPricing();
   }, [price, transaction_type]);
 
-
   return (
     <SafeAreaView
       style={{
@@ -392,7 +390,7 @@ const UploadRoute = (props) => {
         flexDirection: "column",
         paddingTop:
           Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
-        opacity:visible?0.1:1
+        opacity: visible || showQR ? 0.35 : 1,
       }}
     >
       <View style={{ flex: 2, justifyContent: "space-evenly" }}>
@@ -412,24 +410,35 @@ const UploadRoute = (props) => {
         </Text>
       </View>
       {showQR && (
-        <TouchableOpacity
-        style={{
-          position: "absolute",
-          height: windowHeight,
-          width: "100%",
-         
-          opacity: showQR ? 0.7 : 0,
-          zIndex: 1000,
-        }}
-        onPress={() => setShowQR(false)}
-      >
-          <Barcode
-          setIsbn={setIsbn}
-          FetchBookfromISBN={FetchBookfromISBN}
-          showQR={showQR}
-          setShowQR={setShowQR}
-        />
-        </TouchableOpacity>
+        <Modal visible={showQR} transparent={true}>
+          <TouchableOpacity
+            style={{
+              position: "absolute",
+              height: "100%",
+              width: "100%",
+              marginTop: 100,
+              opacity: showQR ? 0.7 : 0,
+              zIndex: 1000,
+            }}
+            onPress={() => setShowQR(false)}
+          >
+            <Pressable
+              onPress={() => setShowQR(false)}
+              style={{
+                alignSelf: "flex-end",
+                marginRight: "15%",
+              }}
+            >
+              <Closemodal />
+            </Pressable>
+            <Barcode
+              setIsbn={setIsbn}
+              FetchBookfromISBN={FetchBookfromISBN}
+              showQR={showQR}
+              setShowQR={setShowQR}
+            />
+          </TouchableOpacity>
+        </Modal>
       )}
 
       <View style={{ flex: 6, flexDirection: "row", marginLeft: 10 }}>
@@ -442,7 +451,10 @@ const UploadRoute = (props) => {
                 { color: colors.text },
               ]}
               placeholder="ISBN"
+
               placeholderTextColor={"#6E7A7D"}
+              returnKeyLabel='Done' 
+              returnKeyType='done' 
               underlineColor={colors.text}
               value={isbn}
               onChangeText={(isbn) => FetchBookfromISBN(isbn)}
@@ -450,6 +462,7 @@ const UploadRoute = (props) => {
               theme={{
                 colors: { text: colors.text, placeholder: colors.text },
               }}
+
             />
             <Pressable
               onPress={() => {
@@ -487,6 +500,8 @@ const UploadRoute = (props) => {
               placeholder="Year"
               placeholderTextColor={"#6E7A7D"}
               value={year}
+              returnKeyLabel='Done' 
+              returnKeyType='done' 
               onChangeText={(text) => setYear(text.replace(/[^0-9]/g, ""))}
               keyboardType="number-pad"
               underlineColor={colors.text}
@@ -497,9 +512,9 @@ const UploadRoute = (props) => {
             />
             <View
               style={{
-                flex:1,
+                flex: 1,
                 marginLeft: 10,
-                justifyContent:'flex-end'
+                justifyContent: "flex-end",
               }}
             >
               <RNPickerSelect
@@ -530,22 +545,21 @@ const UploadRoute = (props) => {
         <View style={{ flexDirection: "column", flex: 1 }}>
           <View style={styles.uploadimage}>
             {props.route.params?.photo && imgurl ? (
-              <View style={{width:'100%',height:'100%'}}>
+              <View style={{ width: "100%", height: "100%" }}>
                 {imageloading && (
                   <ActivityIndicator style={{ marginTop: 20 }} />
                 )}
                 <Image
                   style={{
-                    flex:1,
+                    flex: 1,
                     height: "100%",
                     width: "100%",
                     resizeMode: "cover",
-                  
-                    borderTopLeftRadius:20,
-                    borderTopRightRadius:20,
+
+                    borderTopLeftRadius: 20,
+                    borderTopRightRadius: 20,
                     borderBottomLeftRadius: 0,
-                    borderBottomRightRadius:0,
-                    
+                    borderBottomRightRadius: 0,
                   }}
                   onLoadStart={() => setImageloading(true)}
                   onLoadEnd={() => setImageloading(false)}
@@ -558,10 +572,10 @@ const UploadRoute = (props) => {
                     marginTop: -10,
                     borderRadius: 20,
                     fontFamily: "DMSans",
-                    height:40
+                    height: 40,
                   }}
                   labelStyle={{ color: "white", fontSize: 14 }}
-                  onPress={() => props.navigation.navigate('Camerascreen')}
+                  onPress={() => props.navigation.navigate("Camerascreen")}
                 >
                   Edit Photo
                 </Button>
@@ -583,12 +597,14 @@ const UploadRoute = (props) => {
         </View>
       </View>
       <View style={{ flex: 2, flexDirection: "row", marginLeft: 10 }}>
-        <View style={{ width:'55%',flexDirection: "row" }}>
+        <View style={{ width: "55%", flexDirection: "row" }}>
           <View style={{ alignSelf: "center", width: "40%" }}>
             <TextInput
               style={[styles.inputtextbox]}
               placeholder="Price"
               value={price}
+              returnKeyLabel='Done' 
+              returnKeyType='done'
               placeholderTextColor={"#6E7A7D"}
               onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ""))}
               keyboardType="number-pad"
@@ -599,9 +615,7 @@ const UploadRoute = (props) => {
               }}
             />
           </View>
-          <View
-            style={{  alignSelf: "center",flex:1,marginLeft:10 }}
-          >
+          <View style={{ alignSelf: "center", flex: 1, marginLeft: 10 }}>
             <SwitchSelector
               options={Option}
               initial={1}
@@ -654,34 +668,47 @@ const UploadRoute = (props) => {
                 <Info />
               </Pressable>
               <Modal animationType="slide" transparent={true} visible={visible}>
-                <TouchableOpacity style={styles.centeredView} onPress={() => setVisible(false)}>
-                  <Pressable onPress={() => setVisible(false)} style={{
-                       
-                        alignSelf: "flex-end",
-                        marginRight: "18%",
-                      }}>
+                <TouchableOpacity
+                  style={styles.centeredView}
+                  onPress={() => setVisible(false)}
+                >
+                  <Pressable
+                    onPress={() => setVisible(false)}
+                    style={{
+                      alignSelf: "flex-end",
+                      marginRight: "18%",
+                    }}
+                  >
                     <Closemodal />
                   </Pressable>
                   <View style={styles.modalView}>
                     <Text style={styles.headerText}>
                       Guideline for selecting condition
                     </Text>
-                    <Text style={styles.modalTextColor}>Great(Tight and unopened)</Text>
+                    <Text style={styles.modalTextColor}>
+                      Great(Tight and unopened)
+                    </Text>
                     <Text style={styles.modalText}>
                       The book looks as new but allowing for the normal effects
                       of time on an unused book that has been protected.
                     </Text>
-                    <Text style={styles.modalTextColor}>Good(Shelfwear and EdgeWorn)</Text>
+                    <Text style={styles.modalTextColor}>
+                      Good(Shelfwear and EdgeWorn)
+                    </Text>
                     <Text style={styles.modalText}>
                       Book that shows some small signs of wear - but no tears -
                       on either binding or paper.No pages are missing.
                     </Text>
-                    <Text style={styles.modalTextColor}>Fair(Chipped and Dampstained)</Text>
+                    <Text style={styles.modalTextColor}>
+                      Fair(Chipped and Dampstained)
+                    </Text>
                     <Text style={styles.modalText}>
                       Book that shows some small signs of wear - but no tears -
                       on either binding or paper.No pages are missing.
                     </Text>
-                    <Text style={styles.modalTextColor}>Bad(Price Clipped and wormless)</Text>
+                    <Text style={styles.modalTextColor}>
+                      Bad(Price Clipped and wormless)
+                    </Text>
                     <Text style={styles.modalText}>
                       Shows wear and tear but all the text pages and
                       illustrations or maps are present. It may lack endpapers,
@@ -798,54 +825,51 @@ const UploadRoute = (props) => {
         </View>
 
         {selected}
-       
-          {error !== "" && (
-             <Snackbar
-             visible= {true}
-             
-             style={{
-               flexDirection: "row",
-               borderColor: "#E96A59",
-               alignSelf:'center',
-               justifyContent:'center',
-               borderWidth: 2,
-               borderRadius: 20,
-               backgroundColor: "#FFFFFF",
-               width:'80%',
-               height: 50,
-             }}
-           >
-             <Svg
-               width="22"
-               height="20"
-               viewBox="0 0 22 20"
-               fill="none"
-               xmlns="http://www.w3.org/2000/svg"
-             >
-               <Path
-                 d="M1.69774 16.3181L9.19481 3.12325C9.96913 1.76045 11.939 1.77753 12.6895 3.15357L19.8867 16.3484C20.6137 17.6812 19.649 19.3061 18.1309 19.3061H3.43665C1.90318 19.3061 0.940188 17.6514 1.69774 16.3181Z"
-                 fill="#E96A59"
-               />
-               <Path
-                 d="M10.9792 8.61069C10.6525 8.61069 10.3819 8.51269 10.1672 8.31669C9.96187 8.12069 9.8592 7.87336 9.8592 7.57469C9.8592 7.27602 9.96187 7.03336 10.1672 6.84669C10.3819 6.65069 10.6525 6.55269 10.9792 6.55269C11.3059 6.55269 11.5719 6.65069 11.7772 6.84669C11.9919 7.03336 12.0992 7.27602 12.0992 7.57469C12.0992 7.87336 11.9919 8.12069 11.7772 8.31669C11.5719 8.51269 11.3059 8.61069 10.9792 8.61069ZM10.0832 16.6327V9.68869H11.8752V16.6327H10.0832Z"
-                 fill="white"
-               />
-             </Svg>
-             
-               <Text
-                 style={{
-                   fontSize: 16,
-                   
-                   fontFamily: "DMSansbold",
-                   color: "#E96A59",
-                 }}
-               >
-                 Please fill all the fields
-               </Text>
-             
-           </Snackbar>
-          )}
-        
+
+        {error !== "" && (
+          <Snackbar
+            visible={true}
+            style={{
+              flexDirection: "row",
+              borderColor: "#E96A59",
+              alignSelf: "center",
+              justifyContent: "center",
+              borderWidth: 2,
+              borderRadius: 20,
+              backgroundColor: "#FFFFFF",
+              width: "80%",
+              height: 50,
+            }}
+          >
+            <Svg
+              width="22"
+              height="20"
+              viewBox="0 0 22 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <Path
+                d="M1.69774 16.3181L9.19481 3.12325C9.96913 1.76045 11.939 1.77753 12.6895 3.15357L19.8867 16.3484C20.6137 17.6812 19.649 19.3061 18.1309 19.3061H3.43665C1.90318 19.3061 0.940188 17.6514 1.69774 16.3181Z"
+                fill="#E96A59"
+              />
+              <Path
+                d="M10.9792 8.61069C10.6525 8.61069 10.3819 8.51269 10.1672 8.31669C9.96187 8.12069 9.8592 7.87336 9.8592 7.57469C9.8592 7.27602 9.96187 7.03336 10.1672 6.84669C10.3819 6.65069 10.6525 6.55269 10.9792 6.55269C11.3059 6.55269 11.5719 6.65069 11.7772 6.84669C11.9919 7.03336 12.0992 7.27602 12.0992 7.57469C12.0992 7.87336 11.9919 8.12069 11.7772 8.31669C11.5719 8.51269 11.3059 8.61069 10.9792 8.61069ZM10.0832 16.6327V9.68869H11.8752V16.6327H10.0832Z"
+                fill="white"
+              />
+            </Svg>
+
+            <Text
+              style={{
+                fontSize: 16,
+
+                fontFamily: "DMSansbold",
+                color: "#E96A59",
+              }}
+            >
+              Please fill all the fields
+            </Text>
+          </Snackbar>
+        )}
       </View>
 
       <View
@@ -853,7 +877,7 @@ const UploadRoute = (props) => {
           marginLeft: 20,
           alignItems: "center",
           flex: 2.5,
-          justifyContent:'flex-end'
+          justifyContent: "flex-end",
         }}
       >
         {shopoption}
@@ -862,9 +886,8 @@ const UploadRoute = (props) => {
           style={{
             width: 215,
             height: 40,
-            marginBottom:10,
+            marginBottom: 10,
             alignSelf: "center",
-          
           }}
           labelStyle={{
             fontSize: 16,
@@ -881,7 +904,5 @@ const UploadRoute = (props) => {
     </SafeAreaView>
   );
 };
-
-
 
 export default React.memo(UploadRoute);

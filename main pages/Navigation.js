@@ -60,7 +60,8 @@ const theme = {
     button: "#E96A59",
     desctext: "#0D1936",
     background: "#ECEFEE",
-    seperator:'#6E7A7D'
+    seperator:'#6E7A7D',
+    divider:'#70768B'
   },
 };
 const Dtheme = {
@@ -73,7 +74,8 @@ const Dtheme = {
     border: "rgb(39, 39, 41)",
     notification: "rgb(255, 69, 58)",
     mapcolor: "#ffffff",
-    seperator:'#ECEFEE'
+    seperator:'#ECEFEE',
+    divider:'#70768B'
   },
 };
 

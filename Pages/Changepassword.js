@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Backbutton from "../Components/Backbutton";
 import { Button, TextInput } from "react-native-paper";
 import { logoutUser } from "../actions";
+import ActionButton from "../Components/Actionbutton";
 
 const Changepassword = (props) => {
   const { colors } = useTheme();
@@ -32,16 +33,10 @@ const Changepassword = (props) => {
       "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})"
     );
 
-    if (oldpassword.length === 0 || !passwordRegex.test(oldpassword)) {
-      alert("Check your old Password!");
+    if (oldpassword.length === 0 || newpassword1.length === 0 || newpassword2.length === 0 ) {
+      alert("Please fill all the fields!");
       return;
-    } else if (newpassword1.length === 0) {
-      alert("Enter your new password");
-      return;
-    } else if (newpassword2.length === 0) {
-      alert("Re-type your new password");
-      return;
-    } else if (
+    }  else if (
       newpassword1 !== newpassword2 ||
       !passwordRegex.test(newpassword1) ||
       !passwordRegex.test(newpassword2)
@@ -171,26 +166,13 @@ const Changepassword = (props) => {
           />
         </View>
         <Text style={styles.error}>{error}</Text>
-        <Button
-          theme={{ roundness: 120 }}
-          onPress={changepassword}
-          style={{
-            width: 215,
-            height: 40,
-            alignItems: "flex-start",
 
-            justifyContent: "center",
-          }}
-          labelStyle={{
-            fontSize: 16,
-            color: "white",
-            flexDirection: "row",
-            fontFamily: "DMSansbold",
-          }}
-          mode="contained"
-        >
-          SAVE
-        </Button>
+        <ActionButton
+              title="SAVE"
+              Click={changepassword}
+              fontS="14"
+              style={{ marginTop: 15 }}
+            />
       </View>
     </SafeAreaView>
   );

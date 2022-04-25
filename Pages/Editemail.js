@@ -6,13 +6,14 @@ import {
   Alert,
   Pressable,
   Image,
-  StatusBar
+  StatusBar,
 } from "react-native";
 import { ThemeContext } from "../Components/Theme";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../actions";
 import Backbutton from "../Components/Backbutton";
-import {styles} from '../Styles/Editemail.js';
+import { styles } from "../Styles/Editemail.js";
+import ActionButton from "../Components/Actionbutton";
 import { Button, TextInput, Text } from "react-native-paper";
 
 const EditEmail = (props) => {
@@ -21,11 +22,15 @@ const EditEmail = (props) => {
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const { setTheme, Theme } = React.useContext(ThemeContext);
-
+  let emailRegex = new RegExp(
+    /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+  );
   const editemail = () => {
-    if (newphoneno.length === 0 || !/^\d+$/.test(newphoneno)) {
-      alert("Check your Phonenumber");
+    if (newemail.length === 0) {
+      alert("Please enter Email");
       return;
+    }else if(!emailRegex.test(newemail.trim().toLowerCase())){
+      alert('Check your Email');
     } else {
       fetch("https://booksapp2021.herokuapp.com/User/Changeemail", {
         method: "PUT",
@@ -76,7 +81,7 @@ const EditEmail = (props) => {
             fontWeight: "700",
             color: "#0D1936",
             marginLeft: 22,
-            fontFamily:'DMSansbold'
+            fontFamily: "DMSansbold",
           }}
         >
           CHANGE EMAIL
@@ -101,33 +106,17 @@ const EditEmail = (props) => {
           underlineColor="transparent"
           maxLength={10}
         />
-
-       
-        <Button
-          theme={{ roundness: 120 }}
-          onPress={editemail}
-          style={{
-            width: 215,
-            height: 40,
-            alignItems: "flex-start",
-            marginTop:25
-            
-          }}
-          labelStyle={{
-            fontSize: 16,
-            color: "white",
-            flexDirection: "row",
-            fontFamily: "DMSansbold",
-            paddingLeft:8,
-          }}
-          mode="contained"
-        >
-          SAVE
-        </Button>
+        <View style={{ marginTop: 25 }}>
+          <ActionButton
+            title="SAVE"
+            Click={editemail}
+            fontS="14"
+            style={{ marginTop: 25 }}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
 };
-
 
 export default React.memo(EditEmail);
