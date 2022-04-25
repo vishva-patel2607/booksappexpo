@@ -7,6 +7,7 @@ import {
   Pressable,
   TouchableOpacity,
   FlatList,
+  RefreshControl
 } from "react-native";
 import { logoutUser } from "../actions";
 import Searchresult from "../Components/Searchresult";
@@ -20,6 +21,7 @@ import SearchbarIconFilled from "../Svg/Searchbariconfilled";
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
 import { Category, Condition, Price } from "../Components/filters.js";
+import Seperator from "../Components/Seperator";
 
 
 const SearchRoute = (props) => {
@@ -41,22 +43,76 @@ const SearchRoute = (props) => {
   const [count, setCount] = useState(0);
   const [SearchQuery, setSearchQuery] = useState("");
   const [text, setText] = useState("Search for a book");
-  const [Message, setMessage] = useState("");
   const [inset, setInset] = useState(1);
   const [categoryfilterset, setCategoryfilterset] = useState(new Set());
   const [conditionfilterset,setConditionfilterset] = useState(new Set());
   const [pricefilter, setPricefilter] = useState(0);
-  const [distancefilter, setDistancefilter] = useState(0);
   const [filtercount, setFiltercount] = useState(0);
-  const [refreshcount, setRefreshCount] = useState(1);
-  const [refreshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState(true);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
-  useEffect(() => {
-    setRefreshing(props.route.params?.refreshing);
-    setRefreshCount(count + 1);
-  }, [props.route.params?.refreshing]);
+  const loadbooks = () => {
+    setLocation();
+    if (
+      typeof longitude != "undefined" &&
+      typeof latitude != "undefined" 
+  
+    ) {
+      fetch(`https://booksapp2021.herokuapp.com/Book/Search/${inset}`, {
+        
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "x-access-token": user.token,
+        },
+        body: JSON.stringify({
+          book_query: SearchQuery,
+          longitude: longitude,
+          latitude: latitude,
+          price_filter: pricefilter,
+          genre_filter: [...categoryfilterset],
+          condition_filter: [...conditionfilterset],
+        }),
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          if (data.status) {
+            if(inset===1){
+              if (data.response.book_list.length !== 0) {
+                   setReceiveddata(data.response.book_list);
+                   setRefreshing(false);
+                 } else {
+                   setText("No books found");
+                   setReceiveddata([]);
+                   setRefreshing(false);
+                 }
+            }
+            else{
+              if (data.response.book_list.length !== 0) {
+                setReceiveddata([...Receiveddata,data.response.book_list]);
+                setRefreshing(false);
+              } else {
+                setText("No books found");
+                setReceiveddata(Receiveddata);
+                setRefreshing(false);
+              }  
+            }
+          } else {
+            if (data.message === "Could not verify") {
+              dispatch(logoutUser());
+            }
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
+
 
   const renderData = ({ item }) => (
     <Pressable
@@ -101,20 +157,22 @@ const SearchRoute = (props) => {
   );
 
   const removefilter = (val) => {
-    setInset(1);
+    
     if ([...categoryfilterset].indexOf(val) !== -1) {
       filterlist.delete(val);
       categoryfilterset.delete(val);
-      console.log(categoryfilterset);
       setFiltercount(filtercount - 1);
+      setInset(1);
     } else if ([...pricefilterlist].includes(val)) {
       pricefilterlist.clear();
       setPricefilter(0);
       setFiltercount(filtercount - 1);
+      setInset(1);
     } else {
       filterlist.delete(val)
-      conditionfilterset.delete(val);
+      conditionfilterset.delete(val.toLowerCase());
       setFiltercount(filtercount - 1);
+      setInset(1);
     }
   };
   let arrowdown =
@@ -142,6 +200,14 @@ const SearchRoute = (props) => {
       <SearchbarIconFilled />
     );
 
+  const Emptymessage = () => {
+    return(
+      <Text style={{fontFamily:'DMSans',fontSize:16,marginTop:40,alignSelf:'center',color:colors.text}}>
+        No books found
+      </Text>
+    )
+  }
+
   const setLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -153,14 +219,12 @@ const SearchRoute = (props) => {
     setLatitude(loc.coords.latitude);
   };
 
-  
-
   useEffect(() => {
+    console.log(pricefilter,[...categoryfilterset],[...conditionfilterset])
     setLocation();
     if (
       typeof longitude != "undefined" &&
       typeof latitude != "undefined" 
-  
     ) {
       fetch(`https://booksapp2021.herokuapp.com/Book/Search/${inset}`, {
         method: "POST",
@@ -182,25 +246,24 @@ const SearchRoute = (props) => {
           return response.json();
         })
         .then((data) => {
+          console.log(data);
           if (data.status) {
             if(inset===1){
               if (data.response.book_list.length !== 0) {
                    setReceiveddata(data.response.book_list);
-                   setMessage(data.message);
+                   setRefreshing(false);
                  } else {
-                   setText("No books found");
-                   console.log("No books found");
                    setReceiveddata([]);
+                   setRefreshing(false);
                  }
             }
             else{
               if (data.response.book_list.length !== 0) {
                 setReceiveddata([...Receiveddata,data.response.book_list]);
-                console.log(Receiveddata);
-                setMessage(data.message);
+                setRefreshing(false);
               } else {
-                setText("No books found");
                 setReceiveddata(Receiveddata);
+                setRefreshing(false);
               }  
             }
           } else {
@@ -219,7 +282,8 @@ const SearchRoute = (props) => {
     longitude,
     latitude,
     filtercount,
-
+    filterlist,
+    flag
   ]);
 
   const Calltochangecount = debounce(() => setCount(!count), 500);
@@ -255,7 +319,6 @@ const SearchRoute = (props) => {
           flexDirection: "row",
           alignItems: "flex-start",
           marginHorizontal: 15,
-            
           justifyContent: "space-between",
         }}
       >
@@ -339,9 +402,10 @@ const SearchRoute = (props) => {
             activeOpacity={0.8}
             style={{
               alignItems: "center",
-              justifyContent: "space-around",
+              // paddingHorizontal:10,
               flexDirection: "row",
-              width: 100,
+              justifyContent:'space-around',
+              width:125,
               height: 30,
               borderRadius: 20,
             }}
@@ -357,7 +421,7 @@ const SearchRoute = (props) => {
                   fontFamily: "DMSans",
                   fontSize: 14,
                   color: colors.text,
-                  paddingLeft:5,
+                  
                 }}
               >
                 Category
@@ -392,7 +456,7 @@ const SearchRoute = (props) => {
                       height: 30,
                       borderRadius: 10,
                       paddingVertical: 5,
-                      paddingHorizontal: 10,
+                      paddingHorizontal: 12,
                       alignItems: "flex-start",
                     }}
                     onPress={() => {
@@ -454,10 +518,12 @@ const SearchRoute = (props) => {
                       paddingLeft: 10,
                     }}
                     onPress={() => {
-                      conditionfilterset.add(val.name.toLowerCase());
                       filterlist.add(val.name);
+                      conditionfilterset.add(val.name.toLowerCase());
+                      
                       setFiltercount(count + 1);
                       setInset(1);
+                      setFlag(!flag);
                     }}
                   >
                     <Text
@@ -545,8 +611,17 @@ const SearchRoute = (props) => {
         data={Receiveddata}
         renderItem={renderData}
         onEndReachedThreshold={0.1}
-        onEndReached={() => setInset(inset+1)}
+        onEndReached={() => {
+          if(Receiveddata.length>=10){
+          setInset(inset+1)
+        }}}
+        ItemSeparatorComponent={Seperator}
         keyExtractor={(item, index) => index.toString()}
+        ListEmptyComponent = {Emptymessage}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={loadbooks} />
+        }
+
       />
     </SafeAreaView>
   );

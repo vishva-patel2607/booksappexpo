@@ -1,7 +1,8 @@
 import { Text } from "react-native";
 import * as React from "react";
+import { PropTypes } from "prop-types";
 
-export default function Actions(props) {
+export default function Actions({text,length}) {
   return (
     <Text
       style={{
@@ -14,7 +15,12 @@ export default function Actions(props) {
       }}
       theme={{ fonts: { regular: "DM Sans" } }}
     >
-      {props.text} ({props.length})
+      {text} ({length})
     </Text>
   );
+}
+
+Actions.propTypes = {
+  text:PropTypes.string,
+  length:PropTypes.number
 }

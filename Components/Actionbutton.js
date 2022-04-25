@@ -1,14 +1,15 @@
 import * as React from "react";
 import { Button } from "react-native-paper";
 import { Pressable } from "react-native";
+import { PropTypes } from "prop-types";
 
 
-export default function RenderActionButton(props) {
+export default function RenderActionButton({Click,fontS,title}) {
   
 
   
   return (
-    <Pressable onPress={props.Click}>
+    <Pressable onPress={Click}>
       <Button
         theme={{ roundness: 50 }}
         style={{
@@ -19,7 +20,7 @@ export default function RenderActionButton(props) {
           justifyContent: "center",
         }}
         labelStyle={{
-          fontSize: parseInt(props.fontS),
+          fontSize: parseInt(fontS),
           paddingLeft:5,
           color: '#FFFFFF',
           flexDirection: "row",
@@ -27,7 +28,7 @@ export default function RenderActionButton(props) {
         }}
         mode="contained"
       >
-        {props.title}
+        {title}
       </Button>
     </Pressable>
   );
@@ -35,3 +36,9 @@ export default function RenderActionButton(props) {
 RenderActionButton.defaultProps = {
   fontSize: 20,
 };
+
+RenderActionButton.propTypes = {
+  Click:PropTypes.func,
+  fontS:PropTypes.string,
+  title:PropTypes.string
+}

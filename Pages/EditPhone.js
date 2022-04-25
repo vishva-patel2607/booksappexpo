@@ -111,6 +111,7 @@ const EditPhone = (props) => {
             color: "white",
             flexDirection: "row",
             fontFamily: "DMSansbold",
+            paddingLeft:8
           }}
           mode="contained"
         >

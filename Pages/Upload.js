@@ -15,22 +15,21 @@ import {
 import { logoutUser } from "../actions";
 import Closemodal from "../Svg/Closemodal";
 import {styles,customPickerStyles} from '../Styles/Uploadstyles.js';
-import { Platform, StatusBar } from "react-native";
+import { Platform, StatusBar,Dimensions } from "react-native";
 import { Button, Text, TextInput, ActivityIndicator,Snackbar } from "react-native-paper";
-import CustomSnackbar from "../Components/Snackbar";
 import QrcodeLogo from '../Svg/Qrcode';
 import { useTheme } from "@react-navigation/native";
 import StaticText from "../Components/StaticText";
 import BooksApp from "../Components/BooksApp";
-import Error from "../Components/Error";
 import { useDispatch, useSelector } from "react-redux";
-import { BarCodeScanner } from "expo-barcode-scanner";
 import Changeshop from "../Components/Changeshop";
 import Addphoto from "../Svg/Addphoto";
 import Info from "../Svg/Info";
+import Barcode from "../Components/Barcodescanner";
 
 
 const UploadRoute = (props) => {
+  const windowHeight = Dimensions.get("window").height;
   const { colors } = useTheme();
   const [imgurl, setImgurl] = useState(null);
   const [visible, setVisible] = useState(false);
@@ -110,12 +109,12 @@ const UploadRoute = (props) => {
       };
 
       if (imgurl) {
-        console.log(imagedata);
         changeImage(imagedata);
+        setImageloading(true);
         console.log("Changed image");
       } else {
         uploadNewImage(imagedata);
-        console.log("New image upload");
+        setImageloading(true);
       }
     }
   }, [props.route.params?.photo]);
@@ -160,6 +159,8 @@ const UploadRoute = (props) => {
 
   },[error])
 
+  
+
   const changeImage = async (imagedata) => {
     let formData = new FormData();
     formData.append("old_book_img_url", imgurl);
@@ -193,7 +194,7 @@ const UploadRoute = (props) => {
       formData.append("book_name", name);
       formData.append("book_author", author);
       formData.append("book_year", year);
-      formData.append("book_condition", bookCondition);
+      formData.append("book_condition", bookCondition.toLowerCase());
       formData.append("store_id", shop.store_id);
       formData.append("book_price", price);
       formData.append("book_img_url", imgurl);
@@ -346,26 +347,12 @@ const UploadRoute = (props) => {
       }
     }
   };
-  const handleBarCodeScanned = ({ data }) => {
-    setScanned(true);
-    alert(`ISBN code scanned successfully!`);
-    FetchBookfromISBN();
-    setShowQR(false);
-    setIsbn(data);
-    if (showQR) setScanned(false);
-  };
 
   /*Barcode scanner */
-  const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [showQR, setShowQR] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === "granted");
-    })();
-  }, []);
+  
 
   const getPricing = async () => {
     if (!price) return;
@@ -397,12 +384,6 @@ const UploadRoute = (props) => {
     getPricing();
   }, [price, transaction_type]);
 
-  if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
 
   return (
     <SafeAreaView
@@ -431,29 +412,24 @@ const UploadRoute = (props) => {
         </Text>
       </View>
       {showQR && (
-        <View
-          style={{
-            width: "80%",
-            flexDirection: "column",
-            top: 20,
-            
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1000,
-          }}
-        >
-          <BarCodeScanner
-            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-            style={[
-              StyleSheet.absoluteFillObject,
-              {
-                height: 300,
-                width: 500,
-                zIndex: 1000,
-              },
-            ]}
-          />
-        </View>
+        <TouchableOpacity
+        style={{
+          position: "absolute",
+          height: windowHeight,
+          width: "100%",
+         
+          opacity: showQR ? 0.7 : 0,
+          zIndex: 1000,
+        }}
+        onPress={() => setShowQR(false)}
+      >
+          <Barcode
+          setIsbn={setIsbn}
+          FetchBookfromISBN={FetchBookfromISBN}
+          showQR={showQR}
+          setShowQR={setShowQR}
+        />
+        </TouchableOpacity>
       )}
 
       <View style={{ flex: 6, flexDirection: "row", marginLeft: 10 }}>
@@ -523,6 +499,7 @@ const UploadRoute = (props) => {
               style={{
                 flex:1,
                 marginLeft: 10,
+                justifyContent:'flex-end'
               }}
             >
               <RNPickerSelect

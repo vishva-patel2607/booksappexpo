@@ -449,7 +449,7 @@ const HomeRoute = (props) => {
   }, [count]);
 
   useEffect(() => {
-    console.log("refreshing from edit book");
+    console.log("refreshing from Home page");
     setRefreshing(props.route.params?.refreshing);
     setCount(count + 1);
   }, [props.route.params?.refreshing]);

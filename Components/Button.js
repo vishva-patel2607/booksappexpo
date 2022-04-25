@@ -1,7 +1,8 @@
 import * as React from "react";
 import { Button } from "react-native-paper";
+import { PropTypes } from "prop-types";
 
-export default function RenderButton(props) {
+export default function RenderButton({title,Click}) {
   return (
     <Button
       theme={{ roundness: 120 }}
@@ -11,10 +12,16 @@ export default function RenderButton(props) {
         color: "white",
         padding: 3,
       }}
-      onPress={props.Click}
+      onPress={Click}
       mode="contained"
     >
-      {props.title}
+      {title}
     </Button>
   );
+}
+
+
+RenderButton.propTypes = {
+  title:PropTypes.string,
+  Click:PropTypes.func
 }

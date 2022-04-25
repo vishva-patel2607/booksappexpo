@@ -1,12 +1,12 @@
 import { Text } from "react-native";
 
 import { View } from "react-native";
-import { useTheme } from "@react-navigation/native";
 import * as React from "react";
 import Svg, { Path } from "react-native-svg";
+import { PropTypes } from "prop-types";
 
-export default function Error(props) {
-  const { colors } = useTheme();
+
+export default function Error({text}) {
   return (
     <View
       style={{
@@ -48,7 +48,7 @@ export default function Error(props) {
         }}
         numberOfLines={3}
       >
-        {props.text}
+        {text}
       </Text>
     </View>
   );
@@ -57,3 +57,7 @@ export default function Error(props) {
 Error.defaultProps = {
   fontSize: 14,
 };
+
+Error.propTypes = {
+  text:PropTypes.string
+}

@@ -56,6 +56,8 @@ export const styles = StyleSheet.create({
     shop: {
       marginVertical: 8,
     },
+
+
   
     shopDetailsContainer: {
       flexDirection: "row",

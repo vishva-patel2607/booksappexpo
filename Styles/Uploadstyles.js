@@ -49,8 +49,8 @@ export const styles = StyleSheet.create({
     },
     modalTextColor: {
       marginBottom: 10,
-      fontFamily: "DMSans",
       color: "#0036F4",
+      fontFamily:"DMSansbold"
     },
   
     main: {
@@ -164,20 +164,22 @@ export const styles = StyleSheet.create({
       borderWidth: 2,
       borderColor: "#0036F4",
       borderRadius: 20,
-      paddingLeft:15,
+      color: '#FFFFFF',
+      paddingHorizontal:10,
       height: 40,
       marginHorizontal: 1,
       width: "100%",
+      backgroundColor:'#0036F4'
     },
     inputAndroid: {
       fontSize: 14,
       borderWidth: 2,
       borderColor: "#0036F4",
       borderRadius: 20,
-      paddingLeft:15,
+      paddingHorizontal: 10,
       height: 40,
       marginHorizontal: 1,
-      width: "100%",
+      width: "80%",
+      marginLeft: 10,
     },
   });
-  

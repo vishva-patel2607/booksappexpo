@@ -1,13 +1,11 @@
-import React from "react";
-
-
+import React, { useState } from "react";
 
 import { ScrollView, View, Image, StyleSheet, Pressable } from "react-native";
 import StaticText from "../Components/StaticText";
-import { Text } from "react-native-paper";
+import { ActivityIndicator, Text } from "react-native-paper";
 
 const Horizontalscrollview = (props) => {
-
+  const [loading, showLoading] = useState(false);
   return (
     <ScrollView style={styles.cardscroll} horizontal={true}>
       {props.booklist.map((book, idx) => (
@@ -24,12 +22,17 @@ const Horizontalscrollview = (props) => {
             style={{
               flexDirection: "column",
               marginRight: 12,
-              marginTop:6,
+              marginTop: 6,
               // alignContent: "center",
               // justifyContent: "center",
             }}
           >
             <View>
+            {loading ? 
+                <View style={{ alignItems: "center", marginBottom: 30 }}>
+                  <ActivityIndicator size="small" />
+                </View> : null
+              }
               <Image
                 style={{
                   resizeMode: "cover",
@@ -43,9 +46,12 @@ const Horizontalscrollview = (props) => {
                   borderRadius: 10,
                 }}
                 source={{ uri: book.book_img }}
+                onLoadStart={() => showLoading(true)}
+                onLoadEnd={() => showLoading(false)}
               />
+              
             </View>
-            <View style={{ alignSelf:'flex-start' }}>
+            <View style={{ alignSelf: "flex-start" }}>
               <StaticText text={book.book_name} />
               <StaticText text={book.book_price} />
             </View>

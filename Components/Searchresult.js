@@ -1,19 +1,28 @@
 import * as React from "react";
 import {View } from 'react-native';
 import StaticText from "./StaticText";
+import { PropTypes } from "prop-types";
 
-export default function Searchresult(props) {
+export default function Searchresult({bookname,bookcondition,booktype,bookprice,bookdistance}) {
   return (
     <View style={{justifyContent:'space-between',flex:1}}>
       <View>
-      <StaticText text={props.bookname} fontS={18}  />
-      <StaticText text={props.bookcondition + " condition"}  />
-      <StaticText text={props.booktype} />
+      <StaticText text={bookname} fontS={18}  />
+      <StaticText text={bookcondition + " condition"}  />
+      <StaticText text={booktype} />
       </View>
       <View>
-      <StaticText text={props.bookprice + " Rs"} />
-      <StaticText text={props.bookdistance + " km(s) away"} />
+      <StaticText text={bookprice + " Rs"} />
+      <StaticText text={bookdistance + " km(s) away"} />
       </View>
     </View>
   );
+}
+
+Searchresult.propTypes = {
+  bookname:PropTypes.string,
+  bookcondition:PropTypes.string,
+  booktype:PropTypes.string,
+  booktype:PropTypes.string,
+  bookdistance:PropTypes.string
 }

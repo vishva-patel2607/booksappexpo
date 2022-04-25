@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -7,11 +7,13 @@ import {
   StyleSheet,
   Pressable,
   Alert,
-  StatusBar
+  StatusBar,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import {styles} from '../Styles/Bookdetail.js'
+import { styles } from "../Styles/Bookdetail.js";
 import Backbutton from "../Components/Backbutton";
+import * as Location from "expo-location";
+import { getDistance, getPreciseDistance } from "geolib"
 
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Title, Text, ActivityIndicator } from "react-native-paper";
@@ -20,6 +22,10 @@ import MapView, { Marker } from "react-native-maps";
 const BookDetail = (props) => {
   const { colors } = useTheme();
   const user = useSelector((state) => state.user);
+  const [loading, setLoading] = useState(false);
+  
+
+
 
   return (
     <View>
@@ -27,7 +33,6 @@ const BookDetail = (props) => {
       <Text
         style={[styles.BookDetailValue, { color: colors.text }]}
         numberOfLines={3}
-        
       >
         {props.value}
       </Text>
@@ -47,15 +52,35 @@ const Bookdetail = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [imageloading, setImageloading] = useState(false);
-  let showloading =
-    imageloading === true ? (
-      <ActivityIndicator style={{ alignSelf: "center" }} />
-    ) : (
-      <View></View>
-    );
-
   const [book, setBook] = useState(props.route.params.book);
+  const [distance,setDistance] = useState("");
   
+
+  
+  const setLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
+      return;
+    }
+    let loc = await Location.getCurrentPositionAsync({});
+    let lat = loc.coords.latitude
+    let long = loc.coords.longitude
+    console.log(lat,long);
+    console.log(book.store.store_latitude,book.store.store_longitude);
+    const DISTANCE = getPreciseDistance(
+      { latitude: lat, longitude: long },
+      { latitude:book.store.store_latitude, longitude: book.store.store_longitude }
+    )/1000
+    
+    setDistance(DISTANCE.toString().slice(0,4));
+    console.log(distance);
+  };
+
+  useEffect(() => {
+    setLocation();
+  },[])
+
   var status;
   if (book.book_transaction_status === undefined) {
     status = book.book_status;
@@ -151,7 +176,7 @@ const Bookdetail = (props) => {
       }
     } else {
       if (book.book_transaction_type === "lend") {
-        console.log('Data')
+        console.log("Data");
         fetch(`https://booksapp2021.herokuapp.com/Book/Borrowed/Remove`, {
           method: "DELETE",
           headers: {
@@ -232,13 +257,19 @@ const Bookdetail = (props) => {
       }
     }
   };
+
   return (
-    
-      <SafeAreaView style={{flex:1, paddingTop: Platform.OS === "android" ? StatusBar.currentHeight+10 : 0}}>
-        <Pressable onPress={() => props.navigation.navigate("Home")}>
-         <Backbutton />
-        </Pressable>
-        <ScrollView>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        paddingTop:
+          Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
+      }}
+    >
+      <Pressable onPress={() => props.navigation.navigate("Home")}>
+        <Backbutton />
+      </Pressable>
+      <ScrollView>
         <Title style={styles.title}>{props.route.params.title}</Title>
 
         <View style={styles.layout}>
@@ -255,11 +286,10 @@ const Bookdetail = (props) => {
           </View>
 
           <View style={styles.aside}>
-
             <View
               style={{
                 flex: 1,
-                alignItems:'center'
+                alignItems: "center",
               }}
             >
               {/* <Image
@@ -272,11 +302,15 @@ const Bookdetail = (props) => {
                   uri: book.book_img,
                 }}
               /> */}
-              
+              {imageloading && (
+                <View style={{ alignItems: "flex-start" }}>
+                  <ActivityIndicator size="small" />
+                </View>
+              )}
               <Image
                 style={{
                   height: 200,
-                  width:150,
+                  width: 150,
                   resizeMode: "cover",
                   borderRadius: 20,
                 }}
@@ -302,13 +336,21 @@ const Bookdetail = (props) => {
                   })
                 }
               >
-                <Button style={styles.button} color="#ffffff">
+                <Button
+                  style={styles.button}
+                  color="#ffffff"
+                  labelStyle={{ fontFamily: "DMSansbold", fontWeight: "700" }}
+                >
                   EDIT
                 </Button>
               </Pressable>
             )}
             <Pressable onPress={removebook}>
-              <Button style={styles.button} color="#ffffff">
+              <Button
+                style={styles.button}
+                color="#ffffff"
+                labelStyle={{ fontFamily: "DMSansbold", fontWeight: "700" }}
+              >
                 REMOVE
               </Button>
             </Pressable>
@@ -327,7 +369,7 @@ const Bookdetail = (props) => {
                 { color: colors.text },
               ]}
             >
-              12 kms
+              {distance} kms
             </Text>
             <Text style={[styles.shopDetails, { color: colors.text }]}>
               {book.store.store_name}
@@ -353,7 +395,7 @@ const Bookdetail = (props) => {
               borderRadius: 10,
               marginLeft: 20,
               marginRight: 20,
-    
+
               overflow: "hidden",
             }}
           >
@@ -370,12 +412,9 @@ const Bookdetail = (props) => {
             </MapView>
           </View>
         </View>
-        </ScrollView>
-      </SafeAreaView>
-    
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 export default Bookdetail;
-
-
