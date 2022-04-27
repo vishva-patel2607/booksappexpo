@@ -3,16 +3,13 @@ import { useTheme } from "@react-navigation/native";
 import {
   SafeAreaView,
   StatusBar,
-  StyleSheet,
   View,
   Alert,
-  Image,
   Pressable,
   KeyboardAvoidingView,
 } from "react-native";
 import RenderButton from "../Components/Button";
-import { TextInput, Text } from "react-native-paper";
-import { ThemeContext } from "../Components/Theme";
+import { TextInput } from "react-native-paper";
 import StaticText from "../Components/StaticText";
 import { useDispatch } from "react-redux";
 import Error from "../Components/Error";
@@ -20,11 +17,10 @@ import { setUser } from "../actions";
 import StaticBooksApp from "../Components/StaticBooksApp";
 import UserIcon from "../Svg/User";
 import PasswordIcon from "../Svg/Password";
+import { styles } from "../Styles/Loginstyles";
 
 const Login = (props) => {
   const { colors } = useTheme();
-  const [bordercolor, setBordercolor] = useState("black");
-  const { setTheme, Theme } = React.useContext(ThemeContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -49,11 +45,7 @@ const Login = (props) => {
   
 
   loginrequest = () => {
-    // let tokenvalue = "";
-    // var truevalue = true;
     if (username !== "" && password !== "") {
-      console.log("API");
-
       fetch("https://booksapp2021.herokuapp.com/User/Login", {
         method: "POST",
         headers: {
@@ -120,7 +112,7 @@ const Login = (props) => {
         flex: 1,
         alignItems: "center",
         paddingTop:
-          Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
+        Platform.OS === "android" ? StatusBar.currentHeight  : 0,
         backgroundColor: colors.background,
       }}
     >
@@ -151,12 +143,11 @@ const Login = (props) => {
             theme={{
               colors: {
                 primary: colors.background,
-                placeholder: "#8e8e8e",
+               
               },
               roundness: 120,
             }}
-            // theme={{ roundness: 20 }}
-            // label="Username"
+            
             placeholder="Username"
             value={username}
             onChangeText={(text) => setUsername(text)}
@@ -248,22 +239,5 @@ const Login = (props) => {
   );
 };
 
-const styles = StyleSheet.create({
-  error: {
-    textAlign: "center",
-    fontSize: 20,
-    color: "red",
-    padding: 20,
-  },
-
-  inputtextbox: {
-    marginTop: 11,
-    width: 270,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 120,
-    height: 50,
-    overflow: 'hidden',
-  },
-});
 
 export default React.memo(Login);

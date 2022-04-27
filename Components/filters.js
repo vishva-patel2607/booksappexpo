@@ -20,7 +20,7 @@ export let Category = [
     { id: 8, name: "Crime/thriller" },
     { id: 9, name: "Self help" },
     { id: 10, name: "Humor" },
-    { id: 11, name: "Science Fiction" },
+    { id: 11, name: "Sci/Fi" },
     { id: 12, name: "Biography" },
     { id: 13, name: "History" },
     { id: 14, name: "Religious" },

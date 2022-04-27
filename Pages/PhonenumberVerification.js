@@ -91,7 +91,7 @@ const PhonenumberVerification = (props) => {
 
   return (
     <ScrollView style={styles.main}>
-      <SafeAreaView style={{flex:1, paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10: 0}}>
+      <SafeAreaView style={{flex:1, paddingTop: Platform.OS === "android" ? StatusBar.currentHeight: 0}}>
         <View style={styles.logo}>
           <BooksappLogo />
         </View>

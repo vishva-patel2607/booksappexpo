@@ -28,11 +28,7 @@ const Horizontalscrollview = (props) => {
             }}
           >
             <View>
-            {loading ? 
-                <View style={{ alignItems: "center", marginBottom: 30 }}>
-                  <ActivityIndicator size="small" />
-                </View> : null
-              }
+           
               <Image
                 style={{
                   resizeMode: "cover",

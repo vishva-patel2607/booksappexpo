@@ -66,7 +66,7 @@ const CamerScreen = (props) => {
       style={{
         flex: 1,
         paddingTop:
-          Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
+          Platform.OS === "android" ? StatusBar.currentHeight : 0,
       }}
     >
       <Pressable onPress={() => props.navigation.navigate("Upload")} style={{marginBottom:10}}>

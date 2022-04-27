@@ -286,7 +286,7 @@ const UserRoute = (props) => {
 const styles = StyleSheet.create({
   safeareaview: {
     flex: 1,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight  : 0,
     // backgroundColor: "#ECEFEE",
     flexDirection: "column",
   },

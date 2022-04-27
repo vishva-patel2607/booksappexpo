@@ -4,7 +4,7 @@ import { ThemeContext } from "../Components/Theme";
 
 export const styles = StyleSheet.create({
     search: {
-      paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
+      paddingTop: Platform.OS === "android" ? StatusBar.currentHeight +10: 0,
       flex: 1,
     },
     touchableopacitystyle: {

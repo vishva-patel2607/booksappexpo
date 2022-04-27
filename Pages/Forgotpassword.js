@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
 
   layout: {
     flex: 1,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
 });
 export default React.memo(Forgotpassword);

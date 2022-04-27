@@ -9,6 +9,8 @@ import {
   FlatList,
   RefreshControl,
 } from "react-native";
+import SearchbarIcon from "../Svg/Searchbaricon.js";
+import SearchbarIconFilled from "../Svg/Searchbariconfilled";
 import { logoutUser } from "../actions";
 import Searchresult from "../Components/Searchresult";
 import { ThemeContext } from "../Components/Theme";
@@ -16,8 +18,7 @@ import { IconButton } from "react-native-paper";
 import { styles } from "../Styles/Searchstyles";
 import { debounce } from "lodash";
 import { Text, Searchbar, Divider } from "react-native-paper";
-import SearchbarIcon from "../Svg/Searchbaricon.js";
-import SearchbarIconFilled from "../Svg/Searchbariconfilled";
+
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
 import { Category, Condition, Price } from "../Components/filters.js";
@@ -47,13 +48,16 @@ const SearchRoute = (props) => {
   const [conditionfilterset, setConditionfilterset] = useState(new Set());
   const [pricefilter, setPricefilter] = useState(0);
   const [filtercount, setFiltercount] = useState(0);
-  const [refreshing, setRefreshing] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   let color = Theme === "Light" ? "#70768B" : "#FFFFFF";
-
+  let icon = SearchQuery === "" ? <SearchbarIcon /> : <SearchbarIconFilled />;
   const loadbooks = () => {
     setLocation();
+    setInset(1);
+    setRefreshing(true);
     if (typeof longitude != "undefined" && typeof latitude != "undefined") {
       fetch(`https://booksapp2021.herokuapp.com/Book/Search/${inset}`, {
         method: "POST",
@@ -167,41 +171,7 @@ const SearchRoute = (props) => {
       setInset(1);
     }
   };
-  let arrowdown =
-    Theme === "Light" ? (
-      <Image
-        source={require("../assets/arrowdown.png")}
-        style={{
-          transform: [{ rotate: showdistancedown ? "180deg" : "0deg" }],
-        }}
-        resizeMode="cover"
-      />
-    ) : (
-      <Image
-        source={require("../assets/chevrondowndark.png")}
-        style={{
-          transform: [{ rotate: showdistancedown ? "180deg" : "0deg" }],
-        }}
-        resizeMode="cover"
-      />
-    );
-  let icon = SearchQuery === "" ? <SearchbarIcon /> : <SearchbarIconFilled />;
-
-  const Emptymessage = () => {
-    return (
-      <Text
-        style={{
-          fontFamily: "DMSans",
-          fontSize: 16,
-          marginTop: 40,
-          alignSelf: "center",
-          color: colors.text,
-        }}
-      >
-        No books found
-      </Text>
-    );
-  };
+  
 
   const setLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -215,9 +185,10 @@ const SearchRoute = (props) => {
   };
 
   useEffect(() => {
-    console.log(pricefilter, [...categoryfilterset], [...conditionfilterset]);
+    
     setLocation();
     if (typeof longitude != "undefined" && typeof latitude != "undefined") {
+      
       fetch(`https://booksapp2021.herokuapp.com/Book/Search/${inset}`, {
         method: "POST",
         headers: {
@@ -242,17 +213,21 @@ const SearchRoute = (props) => {
           if (data.status) {
             if (inset === 1) {
               if (data.response.book_list.length !== 0) {
+                
                 setReceiveddata(data.response.book_list);
                 setRefreshing(false);
               } else {
+                
                 setReceiveddata([]);
                 setRefreshing(false);
               }
             } else {
               if (data.response.book_list.length !== 0) {
+                
                 setReceiveddata([...Receiveddata, data.response.book_list]);
                 setRefreshing(false);
               } else {
+                
                 setReceiveddata(Receiveddata);
                 setRefreshing(false);
               }
@@ -416,7 +391,7 @@ const SearchRoute = (props) => {
               // paddingHorizontal:10,
               flexDirection: "row",
               justifyContent: "space-around",
-              width: 125,
+              width: 110,
               height: 30,
               borderRadius: 20,
             }}
@@ -533,7 +508,23 @@ const SearchRoute = (props) => {
                 Condition
               </Text>
             </View>
-            {arrowdown}
+            {Theme === "Light" ? (
+      <Image
+        source={require("../assets/arrowdown.png")}
+        style={{
+          transform: [{ rotate: showdistancedown ? "180deg" : "0deg" }],
+        }}
+        resizeMode="cover"
+      />
+    ) : (
+      <Image
+        source={require("../assets/chevrondowndark.png")}
+        style={{
+          transform: [{ rotate: showdistancedown ? "180deg" : "0deg" }],
+        }}
+        resizeMode="cover"
+      />
+    )}
           </TouchableOpacity>
 
           {showdistanceoption && (
@@ -665,7 +656,7 @@ const SearchRoute = (props) => {
         }}
         ItemSeparatorComponent={Seperator}
         keyExtractor={(item, index) => index.toString()}
-        ListEmptyComponent={Emptymessage}
+        // ListEmptyComponent={<}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={loadbooks} />
         }

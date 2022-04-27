@@ -18,15 +18,15 @@ import Backbutton from "../Components/Backbutton";
 import { Text, Button, ActivityIndicator } from "react-native-paper";
 const Bookscreen = (props) => {
   const { colors } = useTheme();
-  const [book, setBook] = useState(props.route.params.book);
-  
-  let store_latitude = book.store.store_latitude;
-  let store_longitude = book.store.store_longitude;
   const [imageloading, setImageloading] = useState(false);
   const [distance,setDistance] = useState("");
   const { setTheme, Theme } = React.useContext(ThemeContext);
   const [latitude, setLatitude] = useState();
   const [longitude, setLongitude] = useState();
+  const {book } = props.route.params;
+  let store_latitude = book.store.store_latitude;
+  let store_longitude = book.store.store_longitude;
+  
 
   let showloading =
     imageloading === true ? (
@@ -153,7 +153,7 @@ const Bookscreen = (props) => {
       style={{
         flex: 1,
         paddingTop:
-          Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
+          Platform.OS === "android" ? StatusBar.currentHeight  : 0,
       }}
     >
       <View style={{ justifyContent: "flex-start" }}>
@@ -181,7 +181,7 @@ const Bookscreen = (props) => {
         />
         {/* </View> */}
         <View>
-          {showloading}
+          
           <Image
             source={{ uri: book.book_img }}
             resizeMode="cover"

@@ -15,7 +15,7 @@ import UserIcon from "../Svg/User";
 import PasswordIcon from "../Svg/Password";
 import EmailIcon from "../Svg/Email";
 import { styles } from "../Styles/Initialsignup";
-
+import { emailRegex,passwordRegex } from "../Components/Checks";
 
 
 const InitialSignUp = (props) => {
@@ -40,10 +40,6 @@ const InitialSignUp = (props) => {
 
   },[error])
   
-  let emailRegex = new RegExp(
-    /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-  );
-  var passwordRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
   const ISignup = () => {
     if (
       username.length === 0 ||
@@ -110,10 +106,7 @@ const InitialSignUp = (props) => {
         </View>
         <View style={{ flex: 18, flexDirection: "column" }}>
           <View
-            style={{
-              height: 59,
-              overflow: "hidden",
-            }}
+            style={styles.containerstyle}
           >
             <TextInput
               style={styles.inputtextbox}
@@ -124,7 +117,6 @@ const InitialSignUp = (props) => {
                 },
                 roundness: 120,
               }}
-              // theme={{ colors: { primary: "transparent" } }}
               placeholder="Username"
               value={username}
               onChangeText={(text) => setUsername(text)}
@@ -132,7 +124,6 @@ const InitialSignUp = (props) => {
               underlineColor="transparent"
               autoCompleteType="username"
               autoCorrect={false}
-              // underlineColor="transparent"
               maxLength={20}
               left={
                 <TextInput.Icon
@@ -143,10 +134,7 @@ const InitialSignUp = (props) => {
           </View>
 
           <View
-            style={{
-              height: 59,
-              overflow: "hidden",
-            }}
+            style={styles.containerstyle}
           >
             <TextInput
               style={styles.inputtextbox}
@@ -157,7 +145,6 @@ const InitialSignUp = (props) => {
                 },
                 roundness: 120,
               }}
-              // theme={{ colors: { primary: "transparent" } }}
               placeholder="Email"
               value={email}
               onChangeText={(text) => setEmail(text)}
@@ -174,10 +161,7 @@ const InitialSignUp = (props) => {
             />
           </View>
           <View
-            style={{
-              height: 59,
-              overflow: "hidden",
-            }}
+            style={styles.containerstyle}
           >
             <TextInput
               theme={{
@@ -206,10 +190,7 @@ const InitialSignUp = (props) => {
             />
           </View>
           <View
-            style={{
-              height: 59,
-              overflow: "hidden",
-            }}
+            style={styles.containerstyle}
           >
             <TextInput
               theme={{

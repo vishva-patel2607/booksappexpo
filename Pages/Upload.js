@@ -389,7 +389,7 @@ const UploadRoute = (props) => {
         flex: 1,
         flexDirection: "column",
         paddingTop:
-          Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
+          Platform.OS === "android" ? StatusBar.currentHeight  : 0,
         opacity: visible || showQR ? 0.35 : 1,
       }}
     >
@@ -453,8 +453,7 @@ const UploadRoute = (props) => {
               placeholder="ISBN"
 
               placeholderTextColor={"#6E7A7D"}
-              returnKeyLabel='Done' 
-              returnKeyType='done' 
+              
               underlineColor={colors.text}
               value={isbn}
               onChangeText={(isbn) => FetchBookfromISBN(isbn)}
@@ -500,8 +499,7 @@ const UploadRoute = (props) => {
               placeholder="Year"
               placeholderTextColor={"#6E7A7D"}
               value={year}
-              returnKeyLabel='Done' 
-              returnKeyType='done' 
+              
               onChangeText={(text) => setYear(text.replace(/[^0-9]/g, ""))}
               keyboardType="number-pad"
               underlineColor={colors.text}
@@ -603,8 +601,7 @@ const UploadRoute = (props) => {
               style={[styles.inputtextbox]}
               placeholder="Price"
               value={price}
-              returnKeyLabel='Done' 
-              returnKeyType='done'
+              
               placeholderTextColor={"#6E7A7D"}
               onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ""))}
               keyboardType="number-pad"

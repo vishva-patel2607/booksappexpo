@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
     uploadimage: {
       flex: 1,
       justifyContent: "center",
-      paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
+      paddingTop: Platform.OS === "android" ? StatusBar.currentHeight  : 0,
     },
     layout: {
       flex: 1,

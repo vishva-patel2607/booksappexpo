@@ -13,7 +13,7 @@ import { useTheme } from "@react-navigation/native";
 import { styles } from "../Styles/Bookdetail.js";
 import Backbutton from "../Components/Backbutton";
 import * as Location from "expo-location";
-import { getDistance, getPreciseDistance } from "geolib"
+import { getDistance, getPreciseDistance } from "geolib";
 
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Title, Text, ActivityIndicator } from "react-native-paper";
@@ -23,9 +23,6 @@ const BookDetail = (props) => {
   const { colors } = useTheme();
   const user = useSelector((state) => state.user);
   const [loading, setLoading] = useState(false);
-  
-
-
 
   return (
     <View>
@@ -40,23 +37,14 @@ const BookDetail = (props) => {
   );
 };
 
-// const type = {
-//   LENT: "Lent",
-//   SOLD: "Sold",
-//   BORROWED: "Borrowed",
-//   BOUGHT: "Bought",
-// };
-
 const Bookdetail = (props) => {
   const { colors } = useTheme();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [imageloading, setImageloading] = useState(false);
-  const [book, setBook] = useState(props.route.params.book);
-  const [distance,setDistance] = useState("");
-  
+  const [distance, setDistance] = useState("");
+  const {book} = props.route.params;
 
-  
   const setLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -64,35 +52,91 @@ const Bookdetail = (props) => {
       return;
     }
     let loc = await Location.getCurrentPositionAsync({});
-    let lat = loc.coords.latitude
-    let long = loc.coords.longitude
-    console.log(lat,long);
-    console.log(book.store.store_latitude,book.store.store_longitude);
-    const DISTANCE = getPreciseDistance(
-      { latitude: lat, longitude: long },
-      { latitude:book.store.store_latitude, longitude: book.store.store_longitude }
-    )/1000
-    
-    setDistance(DISTANCE.toString().slice(0,4));
+    let lat = loc.coords.latitude;
+    let long = loc.coords.longitude;
+    console.log(lat, long);
+    console.log(book.store.store_latitude, book.store.store_longitude);
+    const DISTANCE =
+      getPreciseDistance(
+        { latitude: lat, longitude: long },
+        {
+          latitude: book.store.store_latitude,
+          longitude: book.store.store_longitude,
+        }
+      ) / 1000;
+
+    setDistance(DISTANCE.toString().slice(0, 4));
     console.log(distance);
   };
 
   useEffect(() => {
-    setLocation();
-  },[])
+    let unmounted = false;
+    if (!unmounted) {
+      setLocation();
+    }
+    return () => {
+      unmounted = true;
+    };
+  }, []);
 
   var status;
+  if(book.usernumber!==user.accountNumber){
+    status="N/A";
+  }
+  else{
   if (book.book_transaction_status === undefined) {
     status = book.book_status;
   } else {
     status = book.book_transaction_status;
   }
+}
   const [mapRegion, setmapRegion] = useState({
     latitude: book.store.store_latitude,
     longitude: book.store.store_longitude,
     latitudeDelta: 0,
     longitudeDelta: 0,
   });
+
+  const markaslost = () => {
+    fetch(`https://booksapp2021.herokuapp.com/Book/Borrowed/Lost`, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "x-access-token": user.token,
+      },
+      body: JSON.stringify({
+        book_id: book.book_id,
+      }),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.status) {
+          Alert.alert("Success", data.message, [
+            {
+              text: "Ok",
+              onPress: () =>
+                props.navigation.navigate("Mainpage", {
+                  screen: "Home",
+                  params: { refreshing: true },
+                }),
+            },
+          ]);
+        } else {
+          if (data.message === "Could not verify") {
+            dispatch(logoutUser());
+          } else {
+            Alert.alert("Note", data.message, [
+              {
+                text: "Ok",
+              },
+            ]);
+          }
+        }
+      });
+  };
   const removebook = () => {
     if (book.usernumber === user.accountNumber) {
       if (book.book_transaction_type === "lend") {
@@ -262,8 +306,7 @@ const Bookdetail = (props) => {
     <SafeAreaView
       style={{
         flex: 1,
-        paddingTop:
-          Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
+        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
       }}
     >
       <Pressable onPress={() => props.navigation.navigate("Home")}>
@@ -292,16 +335,6 @@ const Bookdetail = (props) => {
                 alignItems: "center",
               }}
             >
-              {/* <Image
-                style={{
-                  height: 200,
-                  resizeMode: "cover",
-                  borderRadius: 20,
-                }}
-                source={{
-                  uri: book.book_img,
-                }}
-              /> */}
               {imageloading && (
                 <View style={{ alignItems: "flex-start" }}>
                   <ActivityIndicator size="small" />
@@ -354,6 +387,19 @@ const Bookdetail = (props) => {
                 REMOVE
               </Button>
             </Pressable>
+            {(props.route.params.title === "BORROWED") && (
+              <Pressable
+                onPress={markaslost}
+              >
+                <Button
+                  style={[styles.button,{alignItems:'flex-start'}]}
+                  color="#ffffff"
+                  labelStyle={{ fontFamily: "DMSansbold", fontWeight: "700",fontSize:13 }}
+                >
+                  MARK AS LOST
+                </Button>
+              </Pressable>
+            )}
           </View>
         </View>
 

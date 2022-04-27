@@ -6,7 +6,7 @@ import Svg, { Path } from "react-native-svg";
 export default function BooksApp() {
   const { setTheme, Theme } = React.useContext(ThemeContext);
   return (
-    <View style={{ marginLeft: 25,marginTop:14 }}>
+    <View style={{ marginLeft: 21,marginTop:14 }}>
       {Theme === "Light" ? (
         <Svg
           width="90"

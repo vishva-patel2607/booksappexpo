@@ -53,7 +53,7 @@ export const styles = StyleSheet.create({
     },
   
     main: {
-      paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
+      paddingTop: Platform.OS === "android" ? StatusBar.currentHeight  : 0,
       backgroundColor: "#ECEFEE",
     },
     heading: {

@@ -487,7 +487,7 @@ const HomeRoute = (props) => {
 const styles = StyleSheet.create({
   AndroidSafeArea: {
     flex: 1,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight  : 0,
   },
   submitbutton: {
     fontSize: 18,

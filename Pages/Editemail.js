@@ -2,29 +2,26 @@ import React, { useState } from "react";
 import {
   SafeAreaView,
   View,
-  StyleSheet,
   Alert,
   Pressable,
-  Image,
-  StatusBar,
 } from "react-native";
-import { ThemeContext } from "../Components/Theme";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../actions";
 import Backbutton from "../Components/Backbutton";
 import { styles } from "../Styles/Editemail.js";
 import ActionButton from "../Components/Actionbutton";
-import { Button, TextInput, Text } from "react-native-paper";
+import { TextInput, Text } from "react-native-paper";
+import {emailRegex} from '../Components/Checks';
+import {useTheme} from '@react-navigation/native';
 
 const EditEmail = (props) => {
+  const {colors} = useTheme();
   const user = useSelector((state) => state.user);
   const [newemail, setNewemail] = useState("");
   const [error, setError] = useState("");
   const dispatch = useDispatch();
-  const { setTheme, Theme } = React.useContext(ThemeContext);
-  let emailRegex = new RegExp(
-    /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-  );
+
+
   const editemail = () => {
     if (newemail.length === 0) {
       alert("Please enter Email");
@@ -79,7 +76,7 @@ const EditEmail = (props) => {
           style={{
             fontSize: 22,
             fontWeight: "700",
-            color: "#0D1936",
+            color: colors.text,
             marginLeft: 22,
             fontFamily: "DMSansbold",
           }}

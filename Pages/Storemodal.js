@@ -81,7 +81,7 @@ const Storemodal = (props) => {
 
   if (loading && shops != null) {
     return (
-      <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0 }}>
+      <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0 }}>
         <View>
           <Pressable onPress={() => props.navigation.navigate("Upload")}>
             <Backbutton />
@@ -181,7 +181,7 @@ const Storemodal = (props) => {
     );
   } else {
     return (
-      <SafeAreaView style={{flex:1, paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10: 0}}>
+      <SafeAreaView style={{flex:1, paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0}}>
         <View style={styles.activityindicator}>
           <ActivityIndicator animating={true} size={100} />
         </View>

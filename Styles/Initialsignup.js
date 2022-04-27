@@ -33,4 +33,9 @@ export const styles = StyleSheet.create({
       alignItems: "center",
       paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     },
+
+    containerstyle:{
+      height: 59,
+      overflow: "hidden",
+    }
   });
