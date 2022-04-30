@@ -2,7 +2,7 @@ import { Text } from "react-native";
 import * as React from "react";
 import { PropTypes } from "prop-types";
 
-export default function Actions({text,length}) {
+ function Actions({text,length}) {
   return (
     <Text
       style={{
@@ -24,3 +24,4 @@ Actions.propTypes = {
   text:PropTypes.string,
   length:PropTypes.number
 }
+export default React.memo(Actions);

@@ -3,7 +3,7 @@ import {View } from 'react-native';
 import StaticText from "./StaticText";
 import { PropTypes } from "prop-types";
 
-export default function Searchresult({bookname,bookcondition,booktype,bookprice,bookdistance}) {
+function Searchresult({bookname,bookcondition,booktype,bookprice,bookdistance}) {
   return (
     <View style={{justifyContent:'space-between',flex:1}}>
       <View>
@@ -26,3 +26,4 @@ Searchresult.propTypes = {
   booktype:PropTypes.string,
   bookdistance:PropTypes.string
 }
+export default React.memo(Searchresult);

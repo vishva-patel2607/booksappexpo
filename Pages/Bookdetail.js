@@ -4,16 +4,17 @@ import {
   ScrollView,
   View,
   Image,
-  StyleSheet,
   Pressable,
   Alert,
   StatusBar,
+  TouchableOpacity
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { styles } from "../Styles/Bookdetail.js";
 import Backbutton from "../Components/Backbutton";
 import * as Location from "expo-location";
-import { getDistance, getPreciseDistance } from "geolib";
+import { getPreciseDistance } from "geolib";
+import { ThemeContext } from "../Components/Theme.js";
 
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Title, Text, ActivityIndicator } from "react-native-paper";
@@ -22,6 +23,7 @@ import MapView, { Marker } from "react-native-maps";
 const BookDetail = (props) => {
   const { colors } = useTheme();
   const user = useSelector((state) => state.user);
+  const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
   return (
@@ -38,12 +40,16 @@ const BookDetail = (props) => {
 };
 
 const Bookdetail = (props) => {
+  
   const { colors } = useTheme();
+  const {Theme} = React.useContext(ThemeContext);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [imageloading, setImageloading] = useState(false);
   const [distance, setDistance] = useState("");
-  const {book} = props.route.params;
+  const { book } = props.route.params;
+
+  let textcolor = Theme === 'Light'?'#0D1936':'#ECEFEE';
 
   const setLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -54,8 +60,6 @@ const Bookdetail = (props) => {
     let loc = await Location.getCurrentPositionAsync({});
     let lat = loc.coords.latitude;
     let long = loc.coords.longitude;
-    console.log(lat, long);
-    console.log(book.store.store_latitude, book.store.store_longitude);
     const DISTANCE =
       getPreciseDistance(
         { latitude: lat, longitude: long },
@@ -66,7 +70,6 @@ const Bookdetail = (props) => {
       ) / 1000;
 
     setDistance(DISTANCE.toString().slice(0, 4));
-    console.log(distance);
   };
 
   useEffect(() => {
@@ -80,16 +83,15 @@ const Bookdetail = (props) => {
   }, []);
 
   var status;
-  if(book.usernumber!==user.accountNumber){
-    status="N/A";
-  }
-  else{
-  if (book.book_transaction_status === undefined) {
-    status = book.book_status;
+  if (book.usernumber !== user.accountNumber) {
+    status = "N/A";
   } else {
-    status = book.book_transaction_status;
+    if (book.book_transaction_status === undefined) {
+      status = book.book_status;
+    } else {
+      status = book.book_transaction_status;
+    }
   }
-}
   const [mapRegion, setmapRegion] = useState({
     latitude: book.store.store_latitude,
     longitude: book.store.store_longitude,
@@ -335,11 +337,11 @@ const Bookdetail = (props) => {
                 alignItems: "center",
               }}
             >
-              {imageloading && (
+              {/* {imageloading && (
                 <View style={{ alignItems: "flex-start" }}>
                   <ActivityIndicator size="small" />
                 </View>
-              )}
+              )} */}
               <Image
                 style={{
                   height: 200,
@@ -387,18 +389,88 @@ const Bookdetail = (props) => {
                 REMOVE
               </Button>
             </Pressable>
-            {(props.route.params.title === "BORROWED") && (
-              <Pressable
-                onPress={markaslost}
-              >
-                <Button
-                  style={[styles.button,{alignItems:'flex-start'}]}
-                  color="#ffffff"
-                  labelStyle={{ fontFamily: "DMSansbold", fontWeight: "700",fontSize:13 }}
+            {props.route.params.title === "BORROWED" && (
+              <>
+                <Pressable onPress={() => setModalVisible(true)}>
+                  <Button
+                    style={[styles.button, { alignItems: "flex-start" }]}
+                    color="#ffffff"
+                    labelStyle={{
+                      fontFamily: "DMSansbold",
+                      fontWeight: "700",
+                      fontSize: 13,
+                    }}
+                  >
+                    MARK AS LOST
+                  </Button>
+                </Pressable>
+                <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={modalVisible}
+                  onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                  }}
                 >
-                  MARK AS LOST
-                </Button>
-              </Pressable>
+                  <TouchableOpacity style={styles.centeredView} onPress={() => setModalVisible(false)}>
+                    <View
+                      style={[
+                        styles.modalView,
+                        {
+                          backgroundColor:
+                            colors.background === "#ECEFEE"
+                              ? "#FFFFFF"
+                              : "#0D1936",
+                        },
+                      ]}
+                    >
+                      <Text style={[styles.textStyle, { color: textcolor }]}>
+                        CONFIRM
+                      </Text>
+                      <Text style={[styles.modalText, { color: textcolor }]}>
+                        Is the book lost?
+                      </Text>
+                      <View style={{ flexDirection: "row" }}>
+                        <Pressable
+                          style={[
+                            styles.buttonmodal,
+                            {
+                              color: (colors.text = "#000000"
+                                ? "#FFFFFF"
+                                : "#0036F4"),
+                            },
+                          ]}
+                          onPress={markaslost}
+                        >
+                          <Text
+                            style={[styles.textStyle, { color: textcolor }]}
+                          >
+                            YES
+                          </Text>
+                        </Pressable>
+                        <Pressable
+                          style={[
+                            styles.buttonmodal,
+                            styles.buttonCloseNegative,
+                            {
+                              color: (colors.text = "#000000"
+                                ? "#FFFFFF"
+                                : "#0036F4"),
+                            },
+                          ]}
+                          onPress={() => setModalVisible(!modalVisible)}
+                        >
+                          <Text
+                            style={[styles.textStyle, { color: textcolor }]}
+                          >
+                            NO
+                          </Text>
+                        </Pressable>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                </Modal>
+              </>
             )}
           </View>
         </View>
@@ -463,4 +535,4 @@ const Bookdetail = (props) => {
   );
 };
 
-export default Bookdetail;
+export default React.memo(Bookdetail);

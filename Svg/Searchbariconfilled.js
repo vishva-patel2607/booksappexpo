@@ -2,7 +2,7 @@ import * as React from "react";
 import Svg, { Path } from "react-native-svg";
 import { ThemeContext } from "../Components/Theme";
 
-export default function SearchbarIconFilled() {
+ function SearchbarIconFilled() {
   return (
     <Svg
       width="19"
@@ -27,3 +27,4 @@ export default function SearchbarIconFilled() {
     </Svg>
   );
 }
+export default React.memo(SearchbarIconFilled);

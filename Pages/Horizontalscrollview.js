@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 import { ScrollView, View, Image, StyleSheet, Pressable } from "react-native";
 import StaticText from "../Components/StaticText";
-import { ActivityIndicator, Text } from "react-native-paper";
 
 const Horizontalscrollview = (props) => {
   const [loading, showLoading] = useState(false);
@@ -23,8 +22,7 @@ const Horizontalscrollview = (props) => {
               flexDirection: "column",
               marginRight: 12,
               marginTop: 6,
-              // alignContent: "center",
-              // justifyContent: "center",
+              
             }}
           >
             <View>

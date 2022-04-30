@@ -64,4 +64,4 @@ const Barcode = ({ setIsbn, FetchBookfromISBN, showQR, setShowQR }) => {
   );
 };
 
-export default Barcode;
+export default React.memo(Barcode);

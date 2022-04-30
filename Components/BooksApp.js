@@ -3,7 +3,7 @@ import { Image, View } from "react-native";
 import { ThemeContext } from "./Theme";
 import Svg, { Path } from "react-native-svg";
 
-export default function BooksApp() {
+ function BooksApp() {
   const { setTheme, Theme } = React.useContext(ThemeContext);
   return (
     <View style={{ marginLeft: 21,marginTop:14 }}>
@@ -125,3 +125,4 @@ export default function BooksApp() {
     </View>
   );
 }
+export default React.memo(BooksApp);

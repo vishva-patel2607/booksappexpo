@@ -15,7 +15,7 @@ import {
 import { logoutUser } from "../actions";
 import Closemodal from "../Svg/Closemodal";
 import { styles, customPickerStyles } from "../Styles/Uploadstyles.js";
-import { Platform, StatusBar, Dimensions } from "react-native";
+import { Platform, StatusBar, Dimensions, ScrollView } from "react-native";
 import {
   Button,
   Text,
@@ -49,9 +49,10 @@ const UploadRoute = (props) => {
   const [price, setPrice] = useState("");
 
   const [bookCondition, setbookCondition] = useState("Fair");
-
+  const [viewheight,setViewheight] = useState();
   const [transaction_type, setTransaction_type] = useState("");
   const [userBookPrice, setUserBookPrice] = useState(null);
+
   let fieldcheck =
     imgurl !== null &&
     name !== "" &&
@@ -382,521 +383,529 @@ const UploadRoute = (props) => {
   useEffect(() => {
     getPricing();
   }, [price, transaction_type]);
+  
+  
 
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        flexDirection: "column",
-        paddingTop:
-          Platform.OS === "android" ? StatusBar.currentHeight  : 0,
+        
+        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
         opacity: visible || showQR ? 0.35 : 1,
       }}
     >
-      <View style={{ flex: 2, justifyContent: "space-evenly" }}>
-        <BooksApp />
-        <Text
-          style={{
-            fontSize: 18,
-            fontWeight: "700",
-            color: "#E96A59",
-            marginLeft: 21,
-            marginTop: 10,
-            marginBottom: 2,
-            fontFamily: "DMSansbold",
-          }}
-        >
-          NEW BOOK
-        </Text>
-      </View>
-      {showQR && (
-        <Modal visible={showQR} transparent={true}>
-          <TouchableOpacity
+      <View style={{flex:1}}>
+        <View style={{ flex: 2, justifyContent: "space-evenly" }}>
+          <BooksApp />
+          <Text
             style={{
-              position: "absolute",
-              height: "100%",
-              width: "100%",
-              marginTop: 100,
-              opacity: showQR ? 0.7 : 0,
-              zIndex: 1000,
+              fontSize: 18,
+              fontWeight: "700",
+              color: "#E96A59",
+              marginLeft: 21,
+              marginTop: 10,
+              marginBottom: 2,
+              fontFamily: "DMSansbold",
             }}
-            onPress={() => setShowQR(false)}
           >
-            <Pressable
+            NEW BOOK
+          </Text>
+        </View>
+        {showQR && (
+          <Modal visible={showQR} transparent={true}>
+            <TouchableOpacity
+              style={{
+                position: "absolute",
+                height: "100%",
+                width: "100%",
+                marginTop: 100,
+                opacity: showQR ? 0.7 : 0,
+                zIndex: 1000,
+              }}
               onPress={() => setShowQR(false)}
-              style={{
-                alignSelf: "flex-end",
-                marginRight: "15%",
-              }}
             >
-              <Closemodal />
-            </Pressable>
-            <Barcode
-              setIsbn={setIsbn}
-              FetchBookfromISBN={FetchBookfromISBN}
-              showQR={showQR}
-              setShowQR={setShowQR}
-            />
-          </TouchableOpacity>
-        </Modal>
-      )}
-
-      <View style={{ flex: 6, flexDirection: "row", marginLeft: 10 }}>
-        <View style={styles.inputfields}>
-          <View style={styles.isbn}>
-            <TextInput
-              style={[
-                styles.inputtextbox,
-                styles.isbninput,
-                { color: colors.text },
-              ]}
-              placeholder="ISBN"
-
-              placeholderTextColor={"#6E7A7D"}
-              
-              underlineColor={colors.text}
-              value={isbn}
-              onChangeText={(isbn) => FetchBookfromISBN(isbn)}
-              keyboardType="number-pad"
-              theme={{
-                colors: { text: colors.text, placeholder: colors.text },
-              }}
-
-            />
-            <Pressable
-              onPress={() => {
-                setShowQR(!showQR);
-                if (showQR) setScanned(false);
-              }}
-            >
-              <View style={{ marginTop: 10, justifyContent: "center" }}>
-                <QrcodeLogo />
-              </View>
-            </Pressable>
-          </View>
-          <TextInput
-            style={styles.inputtextbox}
-            placeholder="Name of the book"
-            numberOfLines={2}
-            placeholderTextColor={"#6E7A7D"}
-            value={name}
-            underlineColor={colors.text}
-            onChangeText={(text) => setName(text)}
-            theme={{ colors: { text: colors.text, placeholder: colors.text } }}
-          />
-          <TextInput
-            style={styles.inputtextbox}
-            placeholder="Author"
-            value={author}
-            placeholderTextColor={"#6E7A7D"}
-            underlineColor={colors.text}
-            onChangeText={(text) => setAuthor(text)}
-            theme={{ colors: { text: colors.text, placeholder: colors.text } }}
-          />
-          <View style={styles.container}>
-            <TextInput
-              style={[styles.inputtextbox, styles.subcontainer]}
-              placeholder="Year"
-              placeholderTextColor={"#6E7A7D"}
-              value={year}
-              
-              onChangeText={(text) => setYear(text.replace(/[^0-9]/g, ""))}
-              keyboardType="number-pad"
-              underlineColor={colors.text}
-              maxLength={4}
-              theme={{
-                colors: { text: colors.text, placeholder: colors.text },
-              }}
-            />
-            <View
-              style={{
-                flex: 1,
-                marginLeft: 10,
-                justifyContent: "flex-end",
-              }}
-            >
-              <RNPickerSelect
-                onValueChange={(value) => setCategory(value)}
-                items={[
-                  { label: "Crime/Thriller", value: "crime/thriller" },
-                  { label: "Religious", value: "religious" },
-                  { label: "Self-Help", value: "selfhelp" },
-                  { label: "Romance", value: "romance" },
-                  { label: "Humor", value: "humor" },
-                  { label: "Sci-Fi", value: "scifi" },
-                  { label: "Biography", value: "biography" },
-                  { label: "History", value: "history" },
-                ]}
-                selectedValue={category}
-                placeholder={{
-                  label: "Genre",
-                  value: "",
-                  color: colors.text,
+              <Pressable
+                onPress={() => setShowQR(false)}
+                style={{
+                  alignSelf: "flex-end",
+                  marginRight: "15%",
                 }}
-                place
-                useNativeAndroidPickerStyle={false}
-                style={customPickerStyles}
+              >
+                <Closemodal />
+              </Pressable>
+              <Barcode
+                setIsbn={setIsbn}
+                FetchBookfromISBN={FetchBookfromISBN}
+                showQR={showQR}
+                setShowQR={setShowQR}
               />
+            </TouchableOpacity>
+          </Modal>
+        )}
+
+        <View style={{ flex: 6, flexDirection: "row", marginLeft: 10 }}>
+          <View style={styles.inputfields}>
+            <View style={styles.isbn}>
+              <TextInput
+                style={[
+                  styles.inputtextbox,
+                  styles.isbninput,
+                  { color: colors.text },
+                ]}
+                placeholder="ISBN"
+                placeholderTextColor={"#6E7A7D"}
+                underlineColor={colors.text}
+                value={isbn}
+                onChangeText={(isbn) => FetchBookfromISBN(isbn)}
+                keyboardType="number-pad"
+                theme={{
+                  colors: { text: colors.text, placeholder: colors.text },
+                }}
+              />
+              <Pressable
+                onPress={() => {
+                  setShowQR(!showQR);
+                  if (showQR) setScanned(false);
+                }}
+              >
+                <View style={{ marginTop: 10, justifyContent: "center" }}>
+                  <QrcodeLogo />
+                </View>
+              </Pressable>
+            </View>
+            <TextInput
+              style={styles.inputtextbox}
+              placeholder="Name of the book"
+              numberOfLines={2}
+              placeholderTextColor={"#6E7A7D"}
+              value={name}
+              underlineColor={colors.text}
+              onChangeText={(text) => setName(text)}
+              theme={{
+                colors: { text: colors.text, placeholder: colors.text },
+              }}
+            />
+            <TextInput
+              style={styles.inputtextbox}
+              placeholder="Author"
+              value={author}
+              placeholderTextColor={"#6E7A7D"}
+              underlineColor={colors.text}
+              onChangeText={(text) => setAuthor(text)}
+              theme={{
+                colors: { text: colors.text, placeholder: colors.text },
+              }}
+            />
+            <View style={styles.container}>
+              <TextInput
+                style={[styles.inputtextbox, styles.subcontainer]}
+                placeholder="Year"
+                placeholderTextColor={"#6E7A7D"}
+                value={year}
+                onChangeText={(text) => setYear(text.replace(/[^0-9]/g, ""))}
+                keyboardType="number-pad"
+                underlineColor={colors.text}
+                maxLength={4}
+                theme={{
+                  colors: { text: colors.text, placeholder: colors.text },
+                }}
+              />
+              <View
+                style={{
+                  flex: 1,
+                  marginLeft: 10,
+                  justifyContent: "flex-end",
+                }}
+              >
+                <RNPickerSelect
+                  onValueChange={(value) => setCategory(value)}
+                  items={[
+                    { label: "Crime/Thriller", value: "crime/thriller" },
+                    { label: "Religious", value: "religious" },
+                    { label: "Self-Help", value: "selfhelp" },
+                    { label: "Romance", value: "romance" },
+                    { label: "Humor", value: "humor" },
+                    { label: "Sci-Fi", value: "scifi" },
+                    { label: "Biography", value: "biography" },
+                    { label: "History", value: "history" },
+                  ]}
+                  selectedValue={category}
+                  placeholder={{
+                    label: "Genre",
+                    value: "",
+                    color: colors.text,
+                  }}
+                  place
+                  useNativeAndroidPickerStyle={false}
+                  style={customPickerStyles}
+                />
+              </View>
+            </View>
+          </View>
+          <View style={{ flexDirection: "column", flex: 1 }}>
+            <View style={styles.uploadimage}>
+              {props.route.params?.photo && imgurl ? (
+                <View style={{ width: "100%", height: "100%" }}>
+                  {imageloading && (
+                    <ActivityIndicator style={{ marginTop: 20 }} />
+                  )}
+                  <Image
+                    style={{
+                      flex: 1,
+                      height: "100%",
+                      width: "100%",
+                      resizeMode: "cover",
+
+                      borderTopLeftRadius: 20,
+                      borderTopRightRadius: 20,
+                      borderBottomLeftRadius: 0,
+                      borderBottomRightRadius: 0,
+                    }}
+                    onLoadStart={() => setImageloading(true)}
+                    onLoadEnd={() => setImageloading(false)}
+                    source={{ uri: imgurl }}
+                  />
+
+                  <Button
+                    style={{
+                      backgroundColor: "#E96A59",
+                      marginTop: -10,
+                      borderRadius: 20,
+                      fontFamily: "DMSans",
+                      height: 40,
+                    }}
+                    labelStyle={{ color: "white", fontSize: 14 }}
+                    onPress={() => props.navigation.navigate("Camerascreen")}
+                  >
+                    Edit Photo
+                  </Button>
+                </View>
+              ) : (
+                <Pressable
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  onPress={() => props.navigation.navigate("Camerascreen")}
+                >
+                  <Addphoto />
+                </Pressable>
+              )}
             </View>
           </View>
         </View>
-        <View style={{ flexDirection: "column", flex: 1 }}>
-          <View style={styles.uploadimage}>
-            {props.route.params?.photo && imgurl ? (
-              <View style={{ width: "100%", height: "100%" }}>
-                {imageloading && (
-                  <ActivityIndicator style={{ marginTop: 20 }} />
-                )}
-                <Image
-                  style={{
-                    flex: 1,
-                    height: "100%",
-                    width: "100%",
-                    resizeMode: "cover",
-
-                    borderTopLeftRadius: 20,
-                    borderTopRightRadius: 20,
-                    borderBottomLeftRadius: 0,
-                    borderBottomRightRadius: 0,
-                  }}
-                  onLoadStart={() => setImageloading(true)}
-                  onLoadEnd={() => setImageloading(false)}
-                  source={{ uri: imgurl }}
-                />
-
-                <Button
-                  style={{
-                    backgroundColor: "#E96A59",
-                    marginTop: -10,
-                    borderRadius: 20,
-                    fontFamily: "DMSans",
-                    height: 40,
-                  }}
-                  labelStyle={{ color: "white", fontSize: 14 }}
-                  onPress={() => props.navigation.navigate("Camerascreen")}
-                >
-                  Edit Photo
-                </Button>
-              </View>
-            ) : (
-              <Pressable
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
+        <View style={{ flex: 2, flexDirection: "row", marginLeft: 10 }}>
+          <View style={{ width: "55%", flexDirection: "row" }}>
+            <View style={{ alignSelf: "center", width: "40%" }}>
+              <TextInput
+                style={[styles.inputtextbox]}
+                placeholder="Price"
+                value={price}
+                placeholderTextColor={"#6E7A7D"}
+                onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ""))}
+                keyboardType="number-pad"
+                underlineColor={colors.text}
+                maxLength={4}
+                theme={{
+                  colors: { text: colors.text, placeholder: colors.text },
                 }}
-                onPress={() => props.navigation.navigate("Camerascreen")}
-              >
-                <Addphoto />
-              </Pressable>
-            )}
-          </View>
-        </View>
-      </View>
-      <View style={{ flex: 2, flexDirection: "row", marginLeft: 10 }}>
-        <View style={{ width: "55%", flexDirection: "row" }}>
-          <View style={{ alignSelf: "center", width: "40%" }}>
-            <TextInput
-              style={[styles.inputtextbox]}
-              placeholder="Price"
-              value={price}
-              
-              placeholderTextColor={"#6E7A7D"}
-              onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ""))}
-              keyboardType="number-pad"
-              underlineColor={colors.text}
-              maxLength={4}
-              theme={{
-                colors: { text: colors.text, placeholder: colors.text },
-              }}
-            />
-          </View>
-          <View style={{ alignSelf: "center", flex: 1, marginLeft: 10 }}>
-            <SwitchSelector
-              options={Option}
-              initial={1}
-              textContainerStyle={{ fontFamily: "DMSans" }}
-              bold={true}
-              borderRadius={50}
-              borderColor={"#E96A59"}
-              buttonColor={"#E96A59"}
-              onPress={(value) => {
-                setTransaction_type(value);
-                console.log(value);
-              }}
-            />
-          </View>
-        </View>
-        <View
-          style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}
-        >
-          <Text
-            style={{
-              fontFamily: "DMSansbold",
-              color: "#E96A59",
-              alignSelf: "center",
-              fontSize: 16,
-            }}
-          >
-            You'll get Rs {!price ? 0 : userBookPrice}
-          </Text>
-        </View>
-      </View>
-
-      <View
-        style={{
-          flex: 6,
-          flexDirection: "column",
-          marginLeft: 10,
-          justifyContent: "flex-start",
-        }}
-      >
-        <View>
-          <View style={{ flexDirection: "row" }}>
-            <StaticText text="Condition of the book" fontS={16} />
-            <View style={{ justifyContent: "center", marginLeft: 5 }}>
-              <Pressable
-                onPress={() => {
-                  setVisible(true);
-                  console.log("Pressed");
+              />
+            </View>
+            <View style={{ alignSelf: "center", flex: 1, marginLeft: 10 }}>
+              <SwitchSelector
+                options={Option}
+                initial={1}
+                textContainerStyle={{ fontFamily: "DMSans" }}
+                bold={true}
+                borderRadius={50}
+                borderColor={"#E96A59"}
+                buttonColor={"#E96A59"}
+                onPress={(value) => {
+                  setTransaction_type(value);
+                  console.log(value);
                 }}
-              >
-                <Info />
-              </Pressable>
-              <Modal animationType="slide" transparent={true} visible={visible}>
-                <TouchableOpacity
-                  style={styles.centeredView}
-                  onPress={() => setVisible(false)}
-                >
-                  <Pressable
-                    onPress={() => setVisible(false)}
-                    style={{
-                      alignSelf: "flex-end",
-                      marginRight: "18%",
-                    }}
-                  >
-                    <Closemodal />
-                  </Pressable>
-                  <View style={styles.modalView}>
-                    <Text style={styles.headerText}>
-                      Guideline for selecting condition
-                    </Text>
-                    <Text style={styles.modalTextColor}>
-                      Great(Tight and unopened)
-                    </Text>
-                    <Text style={styles.modalText}>
-                      The book looks as new but allowing for the normal effects
-                      of time on an unused book that has been protected.
-                    </Text>
-                    <Text style={styles.modalTextColor}>
-                      Good(Shelfwear and EdgeWorn)
-                    </Text>
-                    <Text style={styles.modalText}>
-                      Book that shows some small signs of wear - but no tears -
-                      on either binding or paper.No pages are missing.
-                    </Text>
-                    <Text style={styles.modalTextColor}>
-                      Fair(Chipped and Dampstained)
-                    </Text>
-                    <Text style={styles.modalText}>
-                      Book that shows some small signs of wear - but no tears -
-                      on either binding or paper.No pages are missing.
-                    </Text>
-                    <Text style={styles.modalTextColor}>
-                      Bad(Price Clipped and wormless)
-                    </Text>
-                    <Text style={styles.modalText}>
-                      Shows wear and tear but all the text pages and
-                      illustrations or maps are present. It may lack endpapers,
-                      half-title, and even the title page
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </Modal>
+              />
             </View>
           </View>
           <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginTop: 12,
-              marginRight: 16,
-            }}
+            style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}
           >
-            <Pressable
-              style={[
-                styles.checkboxContainer,
-                {
-                  backgroundColor:
-                    bookCondition === "Great" ? "#0036F4" : "transparent",
-                },
-              ]}
-              onPress={() => {
-                setbookCondition("Great");
+            <Text
+              style={{
+                fontFamily: "DMSansbold",
+                color: "#E96A59",
+                alignSelf: "center",
+                fontSize: 16,
               }}
             >
-              <Text
-                style={[
-                  styles.checkboxText,
-                  {
-                    color: bookCondition === "Great" ? "#ffffff" : colors.text,
-                  },
-                ]}
-              >
-                Great
-              </Text>
-            </Pressable>
-            <Pressable
-              style={[
-                styles.checkboxContainer,
-                {
-                  backgroundColor:
-                    bookCondition === "Good" ? "#0036F4" : "transparent",
-                },
-              ]}
-              onPress={() => {
-                setbookCondition("Good");
-              }}
-            >
-              <Text
-                style={[
-                  styles.checkboxText,
-                  {
-                    color: bookCondition === "Good" ? "#ffffff" : colors.text,
-                  },
-                ]}
-              >
-                Good
-              </Text>
-            </Pressable>
-
-            <Pressable
-              onPress={() => {
-                setbookCondition("Fair");
-              }}
-              style={[
-                styles.checkboxContainer,
-                {
-                  backgroundColor:
-                    bookCondition === "Fair" ? "#0036F4" : "transparent",
-                },
-              ]}
-            >
-              <Text
-                style={[
-                  styles.checkboxText,
-                  {
-                    color: bookCondition === "Fair" ? "#ffffff" : colors.text,
-                  },
-                ]}
-              >
-                Fair
-              </Text>
-            </Pressable>
-            <Pressable
-              onPress={() => {
-                setbookCondition("Bad");
-              }}
-              style={[
-                styles.checkboxContainer,
-                {
-                  backgroundColor:
-                    bookCondition === "Bad" ? "#0036F4" : "transparent",
-                },
-              ]}
-            >
-              <Text
-                style={[
-                  styles.checkboxText,
-                  {
-                    color: bookCondition === "Bad" ? "#ffffff" : colors.text,
-                  },
-                ]}
-              >
-                Bad
-              </Text>
-            </Pressable>
+              You'll get Rs {!price ? 0 : userBookPrice}
+            </Text>
           </View>
         </View>
 
-        {selected}
-
-        {error !== "" && (
-          <Snackbar
-            visible={true}
-            style={{
-              flexDirection: "row",
-              borderColor: "#E96A59",
-              alignSelf: "center",
-              justifyContent: "center",
-              borderWidth: 2,
-              borderRadius: 20,
-              backgroundColor: "#FFFFFF",
-              width: "80%",
-              height: 50,
-            }}
-          >
-            <Svg
-              width="22"
-              height="20"
-              viewBox="0 0 22 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <Path
-                d="M1.69774 16.3181L9.19481 3.12325C9.96913 1.76045 11.939 1.77753 12.6895 3.15357L19.8867 16.3484C20.6137 17.6812 19.649 19.3061 18.1309 19.3061H3.43665C1.90318 19.3061 0.940188 17.6514 1.69774 16.3181Z"
-                fill="#E96A59"
-              />
-              <Path
-                d="M10.9792 8.61069C10.6525 8.61069 10.3819 8.51269 10.1672 8.31669C9.96187 8.12069 9.8592 7.87336 9.8592 7.57469C9.8592 7.27602 9.96187 7.03336 10.1672 6.84669C10.3819 6.65069 10.6525 6.55269 10.9792 6.55269C11.3059 6.55269 11.5719 6.65069 11.7772 6.84669C11.9919 7.03336 12.0992 7.27602 12.0992 7.57469C12.0992 7.87336 11.9919 8.12069 11.7772 8.31669C11.5719 8.51269 11.3059 8.61069 10.9792 8.61069ZM10.0832 16.6327V9.68869H11.8752V16.6327H10.0832Z"
-                fill="white"
-              />
-            </Svg>
-
-            <Text
+        <View
+          style={{
+            flex: 6,
+            flexDirection: "column",
+            marginLeft: 10,
+            justifyContent: "flex-start",
+          }}
+        >
+          <View>
+            <View style={{ flexDirection: "row" }}>
+              <StaticText text="Condition of the book" fontS={16} />
+              <View style={{ justifyContent: "center", marginLeft: 5 }}>
+                <Pressable
+                  onPress={() => {
+                    setVisible(true);
+                    console.log("Pressed");
+                  }}
+                >
+                  <Info />
+                </Pressable>
+                <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={visible}
+                >
+                  <TouchableOpacity
+                    style={styles.centeredView}
+                    onPress={() => setVisible(false)}
+                  >
+                    <Pressable
+                      onPress={() => setVisible(false)}
+                      style={{
+                        alignSelf: "flex-end",
+                        marginRight: "18%",
+                      }}
+                    >
+                      <Closemodal />
+                    </Pressable>
+                    <View style={styles.modalView}>
+                      <Text style={styles.headerText}>
+                        Guideline for selecting condition
+                      </Text>
+                      <Text style={styles.modalTextColor}>
+                        Great(Tight and unopened)
+                      </Text>
+                      <Text style={styles.modalText}>
+                        The book looks as new but allowing for the normal
+                        effects of time on an unused book that has been
+                        protected.
+                      </Text>
+                      <Text style={styles.modalTextColor}>
+                        Good(Shelfwear and EdgeWorn)
+                      </Text>
+                      <Text style={styles.modalText}>
+                        Book that shows some small signs of wear - but no tears
+                        - on either binding or paper.No pages are missing.
+                      </Text>
+                      <Text style={styles.modalTextColor}>
+                        Fair(Chipped and Dampstained)
+                      </Text>
+                      <Text style={styles.modalText}>
+                        Book that shows some small signs of wear - but no tears
+                        - on either binding or paper.No pages are missing.
+                      </Text>
+                      <Text style={styles.modalTextColor}>
+                        Bad(Price Clipped and wormless)
+                      </Text>
+                      <Text style={styles.modalText}>
+                        Shows wear and tear but all the text pages and
+                        illustrations or maps are present. It may lack
+                        endpapers, half-title, and even the title page
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </Modal>
+              </View>
+            </View>
+            <View
               style={{
-                fontSize: 16,
-
-                fontFamily: "DMSansbold",
-                color: "#E96A59",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginTop: 12,
+                marginRight: 16,
               }}
             >
-              Please fill all the fields
-            </Text>
-          </Snackbar>
-        )}
-      </View>
+              <Pressable
+                style={[
+                  styles.checkboxContainer,
+                  {
+                    backgroundColor:
+                      bookCondition === "Great" ? "#0036F4" : "transparent",
+                  },
+                ]}
+                onPress={() => {
+                  setbookCondition("Great");
+                }}
+              >
+                <Text
+                  style={[
+                    styles.checkboxText,
+                    {
+                      color:
+                        bookCondition === "Great" ? "#ffffff" : colors.text,
+                    },
+                  ]}
+                >
+                  Great
+                </Text>
+              </Pressable>
+              <Pressable
+                style={[
+                  styles.checkboxContainer,
+                  {
+                    backgroundColor:
+                      bookCondition === "Good" ? "#0036F4" : "transparent",
+                  },
+                ]}
+                onPress={() => {
+                  setbookCondition("Good");
+                }}
+              >
+                <Text
+                  style={[
+                    styles.checkboxText,
+                    {
+                      color: bookCondition === "Good" ? "#ffffff" : colors.text,
+                    },
+                  ]}
+                >
+                  Good
+                </Text>
+              </Pressable>
 
-      <View
-        style={{
-          marginLeft: 20,
-          alignItems: "center",
-          flex: 2.5,
-          justifyContent: "flex-end",
-        }}
-      >
-        {shopoption}
-        <Button
-          theme={{ roundness: 120 }}
+              <Pressable
+                onPress={() => {
+                  setbookCondition("Fair");
+                }}
+                style={[
+                  styles.checkboxContainer,
+                  {
+                    backgroundColor:
+                      bookCondition === "Fair" ? "#0036F4" : "transparent",
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.checkboxText,
+                    {
+                      color: bookCondition === "Fair" ? "#ffffff" : colors.text,
+                    },
+                  ]}
+                >
+                  Fair
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  setbookCondition("Bad");
+                }}
+                style={[
+                  styles.checkboxContainer,
+                  {
+                    backgroundColor:
+                      bookCondition === "Bad" ? "#0036F4" : "transparent",
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.checkboxText,
+                    {
+                      color: bookCondition === "Bad" ? "#ffffff" : colors.text,
+                    },
+                  ]}
+                >
+                  Bad
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+
+          {selected}
+
+          {error !== "" && (
+            <Snackbar
+              visible={true}
+              style={{
+                flexDirection: "row",
+                borderColor: "#E96A59",
+                alignSelf: "center",
+                justifyContent: "center",
+                borderWidth: 2,
+                borderRadius: 20,
+                backgroundColor: "#FFFFFF",
+                width: "80%",
+                height: 50,
+              }}
+            >
+              <Svg
+                width="22"
+                height="20"
+                viewBox="0 0 22 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <Path
+                  d="M1.69774 16.3181L9.19481 3.12325C9.96913 1.76045 11.939 1.77753 12.6895 3.15357L19.8867 16.3484C20.6137 17.6812 19.649 19.3061 18.1309 19.3061H3.43665C1.90318 19.3061 0.940188 17.6514 1.69774 16.3181Z"
+                  fill="#E96A59"
+                />
+                <Path
+                  d="M10.9792 8.61069C10.6525 8.61069 10.3819 8.51269 10.1672 8.31669C9.96187 8.12069 9.8592 7.87336 9.8592 7.57469C9.8592 7.27602 9.96187 7.03336 10.1672 6.84669C10.3819 6.65069 10.6525 6.55269 10.9792 6.55269C11.3059 6.55269 11.5719 6.65069 11.7772 6.84669C11.9919 7.03336 12.0992 7.27602 12.0992 7.57469C12.0992 7.87336 11.9919 8.12069 11.7772 8.31669C11.5719 8.51269 11.3059 8.61069 10.9792 8.61069ZM10.0832 16.6327V9.68869H11.8752V16.6327H10.0832Z"
+                  fill="white"
+                />
+              </Svg>
+
+              <Text
+                style={{
+                  fontSize: 16,
+
+                  fontFamily: "DMSansbold",
+                  color: "#E96A59",
+                }}
+              >
+                Please fill all the fields
+              </Text>
+            </Snackbar>
+          )}
+        </View>
+
+        <View
           style={{
-            width: 215,
-            height: 40,
-            marginBottom: 10,
-            alignSelf: "center",
+            marginLeft: 20,
+            alignItems: "center",
+            flex: 2.5,
+            justifyContent: "flex-end",
           }}
-          labelStyle={{
-            fontSize: 16,
-            color: "white",
-            flexDirection: "row",
-            fontFamily: "DMSansbold",
-          }}
-          onPress={uploaddetails}
-          mode="contained"
         >
-          Upload
-        </Button>
+          {shopoption}
+          <Button
+            theme={{ roundness: 120 }}
+            style={{
+              width: 215,
+              height: 40,
+              marginBottom: 10,
+              alignSelf: "center",
+            }}
+            labelStyle={{
+              fontSize: 16,
+              color: "white",
+              flexDirection: "row",
+              fontFamily: "DMSansbold",
+            }}
+            onPress={uploaddetails}
+            mode="contained"
+          >
+            Upload
+          </Button>
+        </View>
       </View>
     </SafeAreaView>
   );

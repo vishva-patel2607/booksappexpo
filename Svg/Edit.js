@@ -1,7 +1,7 @@
 import * as React from "react";
 import Svg, { Path } from "react-native-svg";
 import { ThemeContext } from "../Components/Theme";
-export default function Edit() {
+function Edit() {
   const { setTheme, Theme } = React.useContext(ThemeContext);
   if (Theme === "Light") {
     return (
@@ -41,3 +41,4 @@ export default function Edit() {
     );
   }
 }
+export default React.memo(Edit);

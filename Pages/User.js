@@ -27,18 +27,6 @@ import { logoutUser } from "../actions";
 
 const UserRoute = (props) => {
   const { setTheme, Theme } = React.useContext(ThemeContext);
-  let editimage =
-    Theme === "Light" ? (
-      <Image
-        source={require("../assets/Edit.png")}
-        style={{ marginRight: 25 }}
-      />
-    ) : (
-      <Image
-        source={require("../assets/Editdisabled.png")}
-        style={{ marginRight: 25 }}
-      />
-    );
   const dispatch = useDispatch();
   const [LoadingData, setLoadingData] = useState(false);
   const [userobj, setUserobj] = useState(props.user);
@@ -178,7 +166,7 @@ const UserRoute = (props) => {
                     props.navigation.navigate("EditPhone");
                   }}
                 >
-                 <Edit />
+                  <Edit />
                 </Pressable>
               </View>
             </View>
@@ -193,15 +181,15 @@ const UserRoute = (props) => {
               >
                 <Birthday />
                 <View style={{ flexDirection: "column", marginLeft: 20 }}>
-                <StaticText
-                  text={
-                    userobj.dob.split(" ")[1] +
-                    "/ " +
-                    userobj.dob.split(" ")[2] +
-                    "/ " +
-                    userobj.dob.split(" ")[3]
-                  }
-                />
+                  <StaticText
+                    text={
+                      userobj.dob.split(" ")[1] +
+                      "/ " +
+                      userobj.dob.split(" ")[2] +
+                      "/ " +
+                      userobj.dob.split(" ")[3]
+                    }
+                  />
                   <View
                     style={{
                       borderBottomColor: "#6E7A7D",
@@ -211,7 +199,6 @@ const UserRoute = (props) => {
                   <Image source={require("../assets/Line.png")} />
                 </View>
               </View>
-              
             </View>
           </View>
           <View
@@ -244,8 +231,7 @@ const UserRoute = (props) => {
           }}
         >
           <View style={{ marginBottom: 6 }}>
-            
-                <ActionButton
+            <ActionButton
               title="Change Password"
               Click={() => props.navigation.navigate("Changepassword")}
               fontS="14"
@@ -286,7 +272,7 @@ const UserRoute = (props) => {
 const styles = StyleSheet.create({
   safeareaview: {
     flex: 1,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight  : 0,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     // backgroundColor: "#ECEFEE",
     flexDirection: "column",
   },
@@ -316,4 +302,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UserRoute;
+export default React.memo(UserRoute);

@@ -1,4 +1,3 @@
-Storemodal;
 import React, { useState, useEffect } from "react";
 import { ThemeContext } from "../Components/Theme";
 import {
@@ -24,11 +23,11 @@ const Storemodal = (props) => {
   const [longitude, setLongitude] = useState();
   const [latitude, setLatitude] = useState();
   const [selectedShop, setSelectedShop] = useState(null);
+  const [selectedshopoption,setSelectedShopOption] = useState(null);
   const [shops, setShops] = useState([]);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const { setTheme, Theme } = React.useContext(ThemeContext);
-
   const setLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -104,13 +103,13 @@ const Storemodal = (props) => {
           {shops.map((shop, idx) => {
             if (
               selectedShop != null &&
-              selectedShop.store_id === shop.store_id
+              selectedShop === shop.store_id
             ) {
+              
               return (
                 <View
                   key={idx}
                   style={{
-                    padding: 10,
                     borderRadius: 10,
                     backgroundColor: Theme === 'Light' ? '#D5DDEE': '#6E797C',
                     marginTop: 10,
@@ -124,17 +123,17 @@ const Storemodal = (props) => {
                     distance={shop.store_distance}
                     contactNo={shop.store_number}
                     latitude={shop.store_latitude}
+                    Indshop = {shop}
                     longitude={shop.store_longitude}
+                    id={shop.store_id}
+                    Selectshop = {(selectedShop) => setSelectedShop(selectedShop)}
+                    Selectshopoption = {(selectedshopoption) => setSelectedShopOption(selectedshopoption)}
                   />
                 </View>
               );
             } else {
               return (
-                <Pressable
-                  key={idx}
-                  onPress={() => setSelectedShop(shop)}
-                  style={{ marginTop: 10,padding:10 }}
-                >
+                <View key={idx}>
                   <Storemodalcard
                     shopName={shop.store_name}
                     storeInchargeName={shop.store_incharge}
@@ -144,8 +143,12 @@ const Storemodal = (props) => {
                     contactNo={shop.store_number}
                     latitude={shop.store_latitude}
                     longitude={shop.store_longitude}
+                    id={shop.store_id}
+                    Indshop = {shop}
+                    Selectshop = {(selectedShop) => setSelectedShop(selectedShop)}
+                    Selectshopoption = {(selectedshopoption) => setSelectedShopOption(selectedshopoption)}
                   />
-                </Pressable>
+               </View>
               );
             }
           })}
@@ -169,7 +172,7 @@ const Storemodal = (props) => {
             onPress={() =>
               props.navigation.navigate("Mainpage", {
                 screen: "Upload",
-                params: { shop: selectedShop },
+                params: { shop: selectedshopoption },
               })
             }
             mode="contained"

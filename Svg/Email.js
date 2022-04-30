@@ -2,7 +2,7 @@ import * as React from "react";
 import Svg, { Path } from "react-native-svg";
 import { ThemeContext } from "../Components/Theme";
 
-export default function EmailIcon() {
+function EmailIcon() {
     return (
       <Svg
         width="17"
@@ -24,3 +24,4 @@ export default function EmailIcon() {
       </Svg>
     ); 
 }
+export default React.memo(EmailIcon);

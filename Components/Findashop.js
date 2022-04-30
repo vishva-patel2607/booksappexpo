@@ -1,7 +1,7 @@
 import * as React from "react";
 import Svg, { G, Path, Rect, Defs } from "react-native-svg";
 
-export default function Findashop() {
+function Findashop() {
   return (
     <Svg
       width="221"
@@ -35,3 +35,4 @@ export default function Findashop() {
     </Svg>
   );
 }
+export default React.memo(Findashop);

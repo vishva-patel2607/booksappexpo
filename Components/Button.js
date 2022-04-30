@@ -3,7 +3,7 @@ import { Pressable } from "react-native";
 import { Button} from "react-native-paper";
 import { PropTypes } from "prop-types";
 
-export default function RenderButton({ title, Click }) {
+ function RenderButton({ title, Click }) {
   return (
     <Pressable
       onPress={Click}
@@ -34,3 +34,4 @@ RenderButton.propTypes = {
   title: PropTypes.string,
   Click: PropTypes.func,
 };
+export default React.memo(RenderButton);

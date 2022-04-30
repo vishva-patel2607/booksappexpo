@@ -2,7 +2,7 @@ import * as React from "react";
 import Svg, { Path } from "react-native-svg";
 import { ThemeContext } from "../Components/Theme";
 
-export default function UserIcon() {
+function UserIcon() {
     return (
       <Svg
         width="16"
@@ -26,3 +26,4 @@ export default function UserIcon() {
       </Svg>
     );
 }
+export default React.memo(UserIcon);

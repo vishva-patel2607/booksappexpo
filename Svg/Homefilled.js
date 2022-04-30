@@ -2,7 +2,7 @@ import * as React from "react";
 import Svg, { Path } from "react-native-svg";
 import { ThemeContext } from "../Components/Theme";
 
-export default function HomeIconFilled() {
+ function HomeIconFilled() {
   const { setTheme, Theme } = React.useContext(ThemeContext);
   if (Theme === "Light") {
     return (
@@ -42,3 +42,4 @@ export default function HomeIconFilled() {
     );
   }
 }
+export default React.memo(HomeIconFilled);

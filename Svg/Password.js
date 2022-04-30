@@ -3,7 +3,7 @@ import Svg, { Path } from "react-native-svg";
 import { ThemeContext } from "../Components/Theme";
 
 
-export default function PasswordIcon() {
+ function PasswordIcon() {
   const {setTheme,Theme} = React.useContext(ThemeContext);
   return (
     <Svg
@@ -34,3 +34,4 @@ export default function PasswordIcon() {
     </Svg>
   );
 }
+export default React.memo(PasswordIcon);

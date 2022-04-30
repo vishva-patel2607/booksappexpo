@@ -4,7 +4,7 @@ import { Pressable } from "react-native";
 import { PropTypes } from "prop-types";
 
 
-export default function RenderActionButton({Click,fontS,title}) {
+function RenderActionButton({Click,fontS,title}) {
   
 
   
@@ -45,3 +45,4 @@ RenderActionButton.propTypes = {
   fontS:PropTypes.string,
   title:PropTypes.string
 }
+export default React.memo(RenderActionButton);

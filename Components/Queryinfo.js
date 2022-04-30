@@ -2,7 +2,7 @@ import * as React from "react";
 import {View } from 'react-native';
 import StaticText from "./StaticText";
 
-export default function Queryinfo(props) {
+ function Queryinfo(props) {
   return (
     <View style={{justifyContent:'space-around',flex:1}}>
       
@@ -15,3 +15,4 @@ export default function Queryinfo(props) {
     </View>
   );
 }
+export default React.memo(Queryinfo);

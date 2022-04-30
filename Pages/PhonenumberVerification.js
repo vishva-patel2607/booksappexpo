@@ -290,4 +290,4 @@ const BooksappLogo = () => {
 
 
 
-export default PhonenumberVerification;
+export default React.memo(PhonenumberVerification);

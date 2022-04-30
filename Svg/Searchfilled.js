@@ -2,7 +2,7 @@ import * as React from "react";
 import Svg, { Path } from "react-native-svg";
 import { ThemeContext } from "../Components/Theme";
 
-export default function SearchIconFilled() {
+function SearchIconFilled() {
   const { setTheme, Theme } = React.useContext(ThemeContext);
   if (Theme === "Light") {
     return (
@@ -54,3 +54,4 @@ export default function SearchIconFilled() {
     );
   }
 }
+export default React.memo(SearchIconFilled);

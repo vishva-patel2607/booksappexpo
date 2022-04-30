@@ -2,7 +2,7 @@ import * as React from "react";
 import Svg, { Path, Circle } from "react-native-svg";
 import { ThemeContext } from "../Components/Theme";
 
-export default function Info() {
+ function Info() {
   const { setTheme, Theme } = React.useContext(ThemeContext);
   if (Theme === "Light") {
     return (
@@ -38,3 +38,4 @@ export default function Info() {
     );
   }
 }
+export default React.memo(Info);

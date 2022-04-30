@@ -2,7 +2,7 @@ import * as React from "react";
 import Svg, { Path, G, Rect, Defs, F } from "react-native-svg";
 import { ThemeContext } from "../Components/Theme";
 
-export default function Closemodal() {
+function Closemodal() {
   return (
     <Svg
       width="27"
@@ -29,3 +29,4 @@ export default function Closemodal() {
     </Svg>
   );
 }
+export default React.memo(Closemodal);

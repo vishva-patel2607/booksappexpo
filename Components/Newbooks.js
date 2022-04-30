@@ -3,7 +3,7 @@ import { View } from "react-native";
 import StaticText from "./StaticText";
 import { PropTypes } from "prop-types";
 
-export default function Newbooks({text}) {
+function Newbooks({text}) {
   return (
     <View style={{ flexDirection: "column", marginHorizontal: 21 }}>
       <View
@@ -22,3 +22,4 @@ export default function Newbooks({text}) {
 Newbooks.propTypes = {
   text:PropTypes.string,
 }
+export default React.memo(Newbooks);

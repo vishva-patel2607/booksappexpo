@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { Snackbar, Text } from "react-native-paper";
 import Svg, { Path } from "react-native-svg";
 
-export default function CustomSnackbar() {
+ function CustomSnackbar() {
   return (
     <Snackbar
       visible= {true}
@@ -50,3 +50,5 @@ export default function CustomSnackbar() {
     </Snackbar>
   );
 }
+
+export default React.memo(CustomSnackbar);

@@ -26,7 +26,7 @@ import Seperator from "../Components/Seperator";
 
 const SearchRoute = (props) => {
   const { colors } = useTheme();
-  const { setTheme, Theme } = useContext(ThemeContext);
+  const { Theme } = useContext(ThemeContext);
   const [longitude, setLongitude] = useState();
   const [showcategoryoption, setShowcategoryoption] = useState(false);
   const [showpricedown, setShowpricedown] = useState(false);
@@ -49,7 +49,7 @@ const SearchRoute = (props) => {
   const [pricefilter, setPricefilter] = useState(0);
   const [filtercount, setFiltercount] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
-  
+
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   let color = Theme === "Light" ? "#70768B" : "#FFFFFF";
@@ -171,7 +171,6 @@ const SearchRoute = (props) => {
       setInset(1);
     }
   };
-  
 
   const setLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -184,64 +183,73 @@ const SearchRoute = (props) => {
     setLatitude(loc.coords.latitude);
   };
 
+  const Nobookfound = () => {
+    return(
+      <Text style={{fontSize:14,fontFamily:'DMSans',alignSelf:'center',marginTop:30}}>
+        {text}
+      </Text>
+    )
+  }
+
   useEffect(() => {
-    
-    setLocation();
-    if (typeof longitude != "undefined" && typeof latitude != "undefined") {
-      
-      fetch(`https://booksapp2021.herokuapp.com/Book/Search/${inset}`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "x-access-token": user.token,
-        },
-        body: JSON.stringify({
-          book_query: SearchQuery,
-          longitude: longitude,
-          latitude: latitude,
-          price_filter: pricefilter,
-          genre_filter: [...categoryfilterset],
-          condition_filter: [...conditionfilterset],
-        }),
-      })
-        .then((response) => {
-          return response.json();
+    let unmounted = false;
+    if (!unmounted) {
+      setLocation();
+      if (typeof longitude != "undefined" && typeof latitude != "undefined") {
+        fetch(`https://booksapp2021.herokuapp.com/Book/Search/${inset}`, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "x-access-token": user.token,
+          },
+          body: JSON.stringify({
+            book_query: SearchQuery,
+            longitude: longitude,
+            latitude: latitude,
+            price_filter: pricefilter,
+            genre_filter: [...categoryfilterset],
+            condition_filter: [...conditionfilterset],
+          }),
         })
-        .then((data) => {
-          console.log(data);
-          if (data.status) {
-            if (inset === 1) {
-              if (data.response.book_list.length !== 0) {
-                
-                setReceiveddata(data.response.book_list);
-                setRefreshing(false);
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            console.log(data);
+            if (data.status) {
+              if (inset === 1) {
+                if (data.response.book_list.length !== 0) {
+                  setReceiveddata(data.response.book_list);
+                  setRefreshing(false);
+                } else {
+                  setReceiveddata([]);
+                  setText("No books found");
+                  setRefreshing(false);
+                }
               } else {
-                
-                setReceiveddata([]);
-                setRefreshing(false);
+                if (data.response.book_list.length !== 0) {
+                  setReceiveddata([...Receiveddata, data.response.book_list]);
+                  setRefreshing(false);
+                } else {
+                  setReceiveddata(Receiveddata);
+                  setRefreshing(false);
+                }
               }
             } else {
-              if (data.response.book_list.length !== 0) {
-                
-                setReceiveddata([...Receiveddata, data.response.book_list]);
-                setRefreshing(false);
-              } else {
-                
-                setReceiveddata(Receiveddata);
-                setRefreshing(false);
+              if (data.message === "Could not verify") {
+                dispatch(logoutUser());
               }
             }
-          } else {
-            if (data.message === "Could not verify") {
-              dispatch(logoutUser());
-            }
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     }
+    return () => {
+      unmounted = true;
+    };
   }, [inset, count, longitude, latitude, filtercount, filterlist, flag]);
 
   const Calltochangecount = debounce(() => setCount(!count), 500);
@@ -509,36 +517,37 @@ const SearchRoute = (props) => {
               </Text>
             </View>
             {Theme === "Light" ? (
-      <Image
-        source={require("../assets/arrowdown.png")}
-        style={{
-          transform: [{ rotate: showdistancedown ? "180deg" : "0deg" }],
-        }}
-        resizeMode="cover"
-      />
-    ) : (
-      <Image
-        source={require("../assets/chevrondowndark.png")}
-        style={{
-          transform: [{ rotate: showdistancedown ? "180deg" : "0deg" }],
-        }}
-        resizeMode="cover"
-      />
-    )}
+              <Image
+                source={require("../assets/arrowdown.png")}
+                style={{
+                  transform: [{ rotate: showdistancedown ? "180deg" : "0deg" }],
+                }}
+                resizeMode="cover"
+              />
+            ) : (
+              <Image
+                source={require("../assets/chevrondowndark.png")}
+                style={{
+                  transform: [{ rotate: showdistancedown ? "180deg" : "0deg" }],
+                }}
+                resizeMode="cover"
+              />
+            )}
           </TouchableOpacity>
 
           {showdistanceoption && (
             <>
-             
               <View>
                 {Condition.map((val, id) => {
                   return (
-                    <><Divider
-                      style={[
-                        styles.dividerstyles,
-                        { backgroundColor: color },
-                      ]} /><View key={id}>
-
+                    <>
+                      <Divider
+                        style={[
+                          styles.dividerstyles,
+                          { backgroundColor: color },
+                        ]}
+                      />
+                      <View key={id}>
                         <TouchableOpacity
                           key={id}
                           style={{
@@ -554,7 +563,7 @@ const SearchRoute = (props) => {
                             setFiltercount(count + 1);
                             setInset(1);
                             setFlag(!flag);
-                          } }
+                          }}
                         >
                           <Text
                             style={{
@@ -567,14 +576,10 @@ const SearchRoute = (props) => {
                           </Text>
                         </TouchableOpacity>
                         {id !== 3 && (
-                        <Divider
-                          style={[
-                            
-                            { backgroundColor: color },
-                          ]}
-                        />
-                      )}
-                      </View></>
+                          <Divider style={[{ backgroundColor: color }]} />
+                        )}
+                      </View>
+                    </>
                   );
                 })}
               </View>
@@ -656,7 +661,7 @@ const SearchRoute = (props) => {
         }}
         ItemSeparatorComponent={Seperator}
         keyExtractor={(item, index) => index.toString()}
-        // ListEmptyComponent={<}
+        ListEmptyComponent={Nobookfound}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={loadbooks} />
         }

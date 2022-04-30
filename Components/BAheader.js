@@ -3,7 +3,7 @@ import { Image, View } from "react-native";
 import { ThemeContext } from "./Theme";
 import Svg, { Path } from "react-native-svg";
 
-export default function BAheader() {
+ function BAheader() {
   const { setTheme, Theme } = React.useContext(ThemeContext);
 
   return (
@@ -148,3 +148,4 @@ export default function BAheader() {
     </View>
   );
 }
+export default React.memo(BAheader);

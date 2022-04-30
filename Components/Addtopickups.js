@@ -1,7 +1,7 @@
 import * as React from "react";
 import Svg, { G, Path, Rect, Defs } from "react-native-svg";
 
-export default function () {
+ function AddtoPickups() {
   return (
     <Svg
       width="221"
@@ -16,3 +16,4 @@ export default function () {
     </Svg>
   );
 };
+export default React.memo(AddtoPickups);

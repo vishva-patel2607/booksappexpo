@@ -56,9 +56,6 @@ export const styles = StyleSheet.create({
     shop: {
       marginVertical: 8,
     },
-
-
-  
     shopDetailsContainer: {
       flexDirection: "row",
       justifyContent: "space-around",
@@ -85,5 +82,46 @@ export const styles = StyleSheet.create({
     map: {
       marginBottom: 20,
     },
+    centeredView: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    modalView: {
+      marginHorizontal: 10,
+      width: 320,
+      borderRadius: 20,
+      padding: 35,
+      alignItems: "center",
+      justifyContent: "flex-start",
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
+    },
+    buttonmodal: {
+      borderRadius: 20,
+      padding: 10,
+      elevation: 2,
+      marginTop: 10,
+      width: 110,
+      borderWidth: 2,
+      borderColor: "#0036F4",
+      alignItems: "center",
+    },
+    buttonCloseNegative: {
+      marginLeft: 10,
+    },
+    textStyle: {
+      fontWeight: "bold",
+    },
+    modalText: {
+      marginTop: 10,
+    },
   });
+
   

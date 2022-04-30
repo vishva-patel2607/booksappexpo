@@ -6,7 +6,7 @@ import Svg, { Path } from "react-native-svg";
 import { PropTypes } from "prop-types";
 
 
-export default function Error({text}) {
+ function Error({text}) {
   return (
     <View
       style={{
@@ -61,3 +61,4 @@ Error.defaultProps = {
 Error.propTypes = {
   text:PropTypes.string
 }
+export default React.memo(Error);

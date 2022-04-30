@@ -6,7 +6,6 @@ import {
   DefaultTheme,
   DarkTheme,
 } from "@react-navigation/native";
-
 import { createStackNavigator } from "@react-navigation/stack";
 import Bookdetail from "../Pages/Bookdetail.js";
 import { ThemeContext } from "../Components/Theme.js";
@@ -80,7 +79,7 @@ const Dtheme = {
 };
 
 const Bottomnavcomponent = () => {
-  const { setTheme, Theme } = React.useContext(ThemeContext);
+  const {Theme } = React.useContext(ThemeContext);
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -90,7 +89,10 @@ const Bottomnavcomponent = () => {
       inactiveColor={Theme==='Light'?'black':'white'}
       screenOptions={{
         tabBarColor: Theme==='Light'?'#ECEFEE':'#0D1936',
+    
       }}
+      keyboardHidesNavigationBar={false}
+      
     >
       <Tab.Screen
         name="Home"

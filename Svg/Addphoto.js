@@ -2,7 +2,7 @@ import * as React from "react";
 import Svg, { Path } from "react-native-svg";
 import { ThemeContext } from "../Components/Theme";
 
-export default function Addphoto() {
+function Addphoto() {
   return (
     <Svg
       width="68"
@@ -20,3 +20,4 @@ export default function Addphoto() {
     </Svg>
   );
 }
+export default React.memo(Addphoto);
