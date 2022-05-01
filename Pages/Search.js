@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { useTheme } from "@react-navigation/native";
 import {
   SafeAreaView,
   View,
   Image,
   Pressable,
-  TouchableOpacity,
   FlatList,
   RefreshControl,
+  Platform,
 } from "react-native";
 import SearchbarIcon from "../Svg/Searchbaricon.js";
 import SearchbarIconFilled from "../Svg/Searchbariconfilled";
@@ -17,8 +17,8 @@ import { ThemeContext } from "../Components/Theme";
 import { IconButton } from "react-native-paper";
 import { styles } from "../Styles/Searchstyles";
 import { debounce } from "lodash";
-import { Text, Searchbar, Divider } from "react-native-paper";
-
+import { Text, Searchbar, Divider,ActivityIndicator } from "react-native-paper";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
 import { Category, Condition, Price } from "../Components/filters.js";
@@ -49,10 +49,12 @@ const SearchRoute = (props) => {
   const [pricefilter, setPricefilter] = useState(0);
   const [filtercount, setFiltercount] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
+  const [imageloading, setImageloading] = useState(false);
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   let color = Theme === "Light" ? "#70768B" : "#FFFFFF";
+  let textcolor = Theme === "Light" ? '#0D1936' : '#ECEFEE';
   let icon = SearchQuery === "" ? <SearchbarIcon /> : <SearchbarIconFilled />;
   const loadbooks = () => {
     setLocation();
@@ -143,10 +145,31 @@ const SearchRoute = (props) => {
           />
         </View>
         <View style={{ alignSelf: "flex-end" }}>
+          {imageloading && (
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                alignContent: "center",
+                zIndex: 0,
+                position: "absolute",
+              }}
+            >
+              <ActivityIndicator size="small" />
+            </View>
+          )}
           <Image
             source={{ uri: item.book_img }}
             style={{ height: 112.5, width: 80, borderRadius: 10 }}
             resizeMode="cover"
+            onLoadStart={() => {
+              setImageloading(true);
+              console.log("In");
+            }}
+            onLoadEnd={() => {
+              setImageloading(false);
+              console.log("Out");
+            }}
           />
         </View>
       </View>
@@ -183,13 +206,21 @@ const SearchRoute = (props) => {
     setLatitude(loc.coords.latitude);
   };
 
-  const Nobookfound = () => {
-    return(
-      <Text style={{fontSize:14,fontFamily:'DMSans',alignSelf:'center',marginTop:30}}>
+  const Nobookfound = useMemo(() => {
+    return (
+      <Text
+        style={{
+          fontSize: 14,
+          fontFamily: "DMSans",
+          alignSelf: "center",
+          marginTop: 30,
+          color:textcolor
+        }}
+      >
         {text}
       </Text>
-    )
-  }
+    );
+  });
 
   useEffect(() => {
     let unmounted = false;
@@ -288,6 +319,7 @@ const SearchRoute = (props) => {
           justifyContent: "space-between",
           height: 45,
           zIndex: 1000,
+          elevation: Platform.OS === "android" ? 1 : 0,
         }}
       >
         <View
@@ -310,7 +342,7 @@ const SearchRoute = (props) => {
                   justifyContent: "center",
                   fontFamily: "DMSans",
                   fontSize: 14,
-                  color: colors.text,
+                  color: textcolor,
                 }}
               >
                 Price
@@ -352,6 +384,7 @@ const SearchRoute = (props) => {
                           paddingVertical: 5,
                           paddingHorizontal: 10,
                           alignItems: "flex-start",
+                          elevation: Platform.OS === "android" ? 1001 : 0,
                         }}
                         onPress={() => {
                           pricefilterlist.clear();
@@ -363,7 +396,7 @@ const SearchRoute = (props) => {
                       >
                         <Text
                           style={{
-                            color: colors.text,
+                            color: textcolor,
                             fontFamily: "DMSans",
                             fontSize: 14,
                           }}
@@ -414,7 +447,7 @@ const SearchRoute = (props) => {
                   justifyContent: "center",
                   fontFamily: "DMSans",
                   fontSize: 14,
-                  color: colors.text,
+                  color: textcolor,
                 }}
               >
                 Category
@@ -466,7 +499,7 @@ const SearchRoute = (props) => {
                       >
                         <Text
                           style={{
-                            color: colors.text,
+                            color: textcolor,
                             fontFamily: "DMSans",
                             fontSize: 14,
                           }}
@@ -509,7 +542,7 @@ const SearchRoute = (props) => {
                 style={{
                   fontFamily: "DMSans",
                   fontSize: 14,
-                  color: colors.text,
+                  color: textcolor,
                   paddingLeft: 5,
                 }}
               >
@@ -547,9 +580,9 @@ const SearchRoute = (props) => {
                           { backgroundColor: color },
                         ]}
                       />
-                      <View key={id}>
+                      <View key={val}>
                         <TouchableOpacity
-                          key={id}
+                          key={val}
                           style={{
                             paddingVertical: 5,
                             height: 30,
@@ -567,7 +600,7 @@ const SearchRoute = (props) => {
                         >
                           <Text
                             style={{
-                              color: colors.text,
+                              color: textcolor,
                               fontFamily: "DMSans",
                               fontSize: 14,
                             }}
@@ -590,7 +623,7 @@ const SearchRoute = (props) => {
       <Divider
         style={{
           marginTop: 10,
-          backgroundColor: colors.text === "#000000" ? "#6E7A7D" : "white",
+          backgroundColor: color,
           height: 0.6,
         }}
       />
@@ -622,7 +655,7 @@ const SearchRoute = (props) => {
               style={{
                 fontFamily: "DMSans",
                 marginLeft: 5,
-                color: colors.text,
+                color: textcolor,
               }}
             >
               {val}
@@ -644,7 +677,7 @@ const SearchRoute = (props) => {
         <Divider
           style={{
             marginTop: 10,
-            backgroundColor: colors.text === "#000000" ? "#6E7A7D" : "white",
+            backgroundColor: color,
             height: 0.6,
           }}
         />

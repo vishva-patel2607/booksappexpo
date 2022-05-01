@@ -2,7 +2,6 @@ import React, { Component, useState, useEffect, useRef } from "react";
 import { SafeAreaView, ScrollView, View, StyleSheet } from "react-native";
 import { Platform, StatusBar, RefreshControl } from "react-native";
 import { logoutUser, setUser } from "../actions";
-import { Title, Text, Headline, Card, Button } from "react-native-paper";
 import Actions from "../Components/Actions";
 import Horizontalscrollview from "./Horizontalscrollview";
 import { useDispatch, useSelector } from "react-redux";
@@ -430,7 +429,7 @@ const HomeRoute = (props) => {
       })
       .then((data) => {
         if (data.status) {
-          console.log(data.response.books);
+          console.log(data.response.books,'Dropoffff');
           setDropoffbooks(data.response.books);
         } else {
           if (data.message === "Could not verify") {

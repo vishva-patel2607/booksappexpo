@@ -15,7 +15,8 @@ import {
 import { logoutUser } from "../actions";
 import Closemodal from "../Svg/Closemodal";
 import { styles, customPickerStyles } from "../Styles/Uploadstyles.js";
-import { Platform, StatusBar, Dimensions, ScrollView } from "react-native";
+import { Platform, StatusBar} from "react-native";
+import { ThemeContext } from "../Components/Theme";
 import {
   Button,
   Text,
@@ -49,9 +50,11 @@ const UploadRoute = (props) => {
   const [price, setPrice] = useState("");
 
   const [bookCondition, setbookCondition] = useState("Fair");
-  const [viewheight,setViewheight] = useState();
   const [transaction_type, setTransaction_type] = useState("");
   const [userBookPrice, setUserBookPrice] = useState(null);
+  const {Theme} = React.useContext(ThemeContext);
+  let textColor = Theme === 'Light' ? '#0D1936' : '#ECEFEE';
+
 
   let fieldcheck =
     imgurl !== null &&
@@ -259,25 +262,25 @@ const UploadRoute = (props) => {
                 style={[
                   styles.shopDetails,
                   styles.shopDistance,
-                  { color: colors.text },
+                  { color: textColor },
                 ]}
               >
                 {shop.store_distance}
               </Text>
-              <Text style={[styles.shopDetails, { color: colors.text }]}>
+              <Text style={[styles.shopDetails, { color: textColor }]}>
                 {shop.store_name}
               </Text>
             </View>
           </View>
 
           <View>
-            <Text style={[styles.storeDetails, { color: colors.text }]}>
+            <Text style={[styles.storeDetails, { color: textColor }]}>
               {shop.store_incharge}{" "}
             </Text>
-            <Text style={[styles.storeDetails, { color: colors.text }]}>
+            <Text style={[styles.storeDetails, { color: textColor }]}>
               {shop.store_address}{" "}
             </Text>
-            <Text style={[styles.storeDetails, { color: colors.text }]}>
+            <Text style={[styles.storeDetails, { color: textColor }]}>
               {shop.store_number}
             </Text>
           </View>
@@ -451,16 +454,16 @@ const UploadRoute = (props) => {
                 style={[
                   styles.inputtextbox,
                   styles.isbninput,
-                  { color: colors.text },
+                  { color: textColor },
                 ]}
                 placeholder="ISBN"
                 placeholderTextColor={"#6E7A7D"}
-                underlineColor={colors.text}
+                underlineColor={textColor}
                 value={isbn}
                 onChangeText={(isbn) => FetchBookfromISBN(isbn)}
                 keyboardType="number-pad"
                 theme={{
-                  colors: { text: colors.text, placeholder: colors.text },
+                  colors: { text: textColor, placeholder: textColor },
                 }}
               />
               <Pressable
@@ -480,10 +483,10 @@ const UploadRoute = (props) => {
               numberOfLines={2}
               placeholderTextColor={"#6E7A7D"}
               value={name}
-              underlineColor={colors.text}
+              underlineColor={textColor}
               onChangeText={(text) => setName(text)}
               theme={{
-                colors: { text: colors.text, placeholder: colors.text },
+                colors: { text: textColor, placeholder: textColor},
               }}
             />
             <TextInput
@@ -491,10 +494,10 @@ const UploadRoute = (props) => {
               placeholder="Author"
               value={author}
               placeholderTextColor={"#6E7A7D"}
-              underlineColor={colors.text}
+              underlineColor={textColor}
               onChangeText={(text) => setAuthor(text)}
               theme={{
-                colors: { text: colors.text, placeholder: colors.text },
+                colors: { text: textColor, placeholder: textColor},
               }}
             />
             <View style={styles.container}>
@@ -505,10 +508,10 @@ const UploadRoute = (props) => {
                 value={year}
                 onChangeText={(text) => setYear(text.replace(/[^0-9]/g, ""))}
                 keyboardType="number-pad"
-                underlineColor={colors.text}
+                underlineColor={textColor}
                 maxLength={4}
                 theme={{
-                  colors: { text: colors.text, placeholder: colors.text },
+                  colors: { text: textColor, placeholder: textColor },
                 }}
               />
               <View
@@ -534,7 +537,7 @@ const UploadRoute = (props) => {
                   placeholder={{
                     label: "Genre",
                     value: "",
-                    color: colors.text,
+                    color: textColor,
                   }}
                   place
                   useNativeAndroidPickerStyle={false}
@@ -607,10 +610,10 @@ const UploadRoute = (props) => {
                 placeholderTextColor={"#6E7A7D"}
                 onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ""))}
                 keyboardType="number-pad"
-                underlineColor={colors.text}
+                underlineColor={textColor}
                 maxLength={4}
                 theme={{
-                  colors: { text: colors.text, placeholder: colors.text },
+                  colors: { text: textColor, placeholder: textColor },
                 }}
               />
             </View>
@@ -749,7 +752,7 @@ const UploadRoute = (props) => {
                     styles.checkboxText,
                     {
                       color:
-                        bookCondition === "Great" ? "#ffffff" : colors.text,
+                        bookCondition === "Great" ? "#ffffff" : textColor,
                     },
                   ]}
                 >
@@ -772,7 +775,7 @@ const UploadRoute = (props) => {
                   style={[
                     styles.checkboxText,
                     {
-                      color: bookCondition === "Good" ? "#ffffff" : colors.text,
+                      color: bookCondition === "Good" ? "#ffffff" : textColor,
                     },
                   ]}
                 >
@@ -796,7 +799,7 @@ const UploadRoute = (props) => {
                   style={[
                     styles.checkboxText,
                     {
-                      color: bookCondition === "Fair" ? "#ffffff" : colors.text,
+                      color: bookCondition === "Fair" ? "#ffffff" : textColor,
                     },
                   ]}
                 >
@@ -819,7 +822,7 @@ const UploadRoute = (props) => {
                   style={[
                     styles.checkboxText,
                     {
-                      color: bookCondition === "Bad" ? "#ffffff" : colors.text,
+                      color: bookCondition === "Bad" ? "#ffffff" : textColor,
                     },
                   ]}
                 >

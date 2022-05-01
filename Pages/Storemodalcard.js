@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import { View ,Pressable } from "react-native";
+import { ThemeContext } from "../Components/Theme";
 import { useTheme } from "@react-navigation/native";
-import { Platform, StatusBar, Text } from "react-native";
+import {  Text } from "react-native";
 // import DateTimePicker from "@react-native-community/datetimepicker";
 
 import MapView, { Marker } from "react-native-maps";
 
 const Storemodalcard = (props) => {
+  const {Theme} = React.useContext(ThemeContext);
   const { colors } = useTheme();
   const [showMap, setShowMap] = useState(false);
   const [storeInchargeName, setStoreInchargeName] = useState(
@@ -19,6 +21,7 @@ const Storemodalcard = (props) => {
   const [contactNo, setContactNo] = useState(props.contactNo);
   const [Latitude, setLatitude] = useState(props.latitude);
   const [Longitude, setLongitude] = useState(props.longitude);
+  let textColor = Theme === 'Light' ? '#0D1936' : '#ECEFEE';
   
   const mapRegion = {
     latitude: Latitude,
@@ -104,7 +107,7 @@ const Storemodalcard = (props) => {
               borderRadius: 18,
               textAlign: "center",
               fontFamily: "DMSans",
-              color: colors.text,
+              color: textColor,
             }}
           >
             {distance} kms
@@ -120,7 +123,7 @@ const Storemodalcard = (props) => {
               borderRadius: 18,
               textAlign: "center",
               fontFamily: "DMSans",
-              color: colors.text,
+              color: textColor,
             }}
           >
             {shopName}
@@ -135,13 +138,13 @@ const Storemodalcard = (props) => {
         }}
       >
         <View style={{ flexDirection: "column", alignSelf: "flex-end",marginLeft:2 }}>
-          <Text style={{ fontFamily: "DMSans", color: colors.text }}>
+          <Text style={{ fontFamily: "DMSans", color: textColor }}>
             {storeInchargeName}
           </Text>
-          <Text style={{ fontFamily: "DMSans", color: colors.text }}>
+          <Text style={{ fontFamily: "DMSans", color: textColor }}>
             {address}
           </Text>
-          <Text style={{ fontFamily: "DMSans", color: colors.text }}>
+          <Text style={{ fontFamily: "DMSans", color: textColor }}>
             {contactNo}
           </Text>
         </View>

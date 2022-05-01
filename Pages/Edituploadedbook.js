@@ -20,7 +20,7 @@ import {styles,customPickerStyles} from '../Styles/Edituploadedbook';
 
 const Edituploadedbook = (props) => {
   const { colors } = useTheme();
-  const { setTheme, Theme } = React.useContext(ThemeContext);
+  const { Theme } = React.useContext(ThemeContext);
   const [Bookdata, setBookdata] = useState(props.route.params?.book);
   const [price, setPrice] = useState(String(Bookdata.book_price));
   const [imgurl, setImgurl] = useState(Bookdata.book_img);
@@ -33,7 +33,7 @@ const Edituploadedbook = (props) => {
 
   const [category, setCategory] = useState(Bookdata.book_category);
   const [bookCondition, setbookCondition] = useState(Bookdata.book_condition);
-
+  let textColor = Theme === 'Light' ? '#0D1936' : '#ECEFEE';
   const Option = [
     { label: "Lend", value: "lend" },
     { label: "Sell", value: "sell" },
@@ -126,18 +126,18 @@ const Edituploadedbook = (props) => {
         <View style={styles.inputfields}>
           <TextInput
             style={styles.inputtextbox}
-            theme={{ colors: { text: colors.text, placeholder: colors.text } }}
+            theme={{ colors: { text: textColor, placeholder: textColor } }}
             placeholder={Bookdata.book_name}
             value={name}
-            underlineColor={colors.text}
+            underlineColor={textColor}
             onChangeText={(text) => setName(text)}
           />
           <TextInput
             style={styles.inputtextbox}
-            theme={{ colors: { text: colors.text, placeholder: colors.text } }}
+            theme={{ colors: { text: textColor, placeholder: textColor } }}
             placeholder={Bookdata.book_author}
             value={author}
-            underlineColor={colors.text}
+            underlineColor={textColor}
             onChangeText={(text) => setAuthor(text)}
           />
 
@@ -145,9 +145,9 @@ const Edituploadedbook = (props) => {
             <TextInput
               style={[styles.inputtextbox, styles.subcontainer]}
               theme={{
-                colors: { text: colors.text, placeholder: colors.text },
+                colors: { text: textColor, placeholder: textColor },
               }}
-              underlineColor={colors.text}
+              underlineColor={textColor}
               placeholder="Year"
               value={String(year)}
               onChangeText={(text) => setYear(text.replace(/[^0-9]/g, ""))}
@@ -157,9 +157,9 @@ const Edituploadedbook = (props) => {
             <TextInput
               style={[styles.inputtextbox, styles.subcontainer]}
               theme={{
-                colors: { text: colors.text, placeholder: colors.text },
+                colors: { text: textColor, placeholder: textColor },
               }}
-              underlineColor={colors.text}
+              underlineColor={textColor}
               placeholder="Price"
               value={String(price)}
               onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ""))}
@@ -184,7 +184,7 @@ const Edituploadedbook = (props) => {
             placeholder={{
               label: category,
               value: category,
-              color: colors.text,
+              color: textColor,
             }}
             useNativeAndroidPickerStyle={false}
             style={customPickerStyles}
@@ -267,7 +267,7 @@ const Edituploadedbook = (props) => {
                 style={[
                   styles.checkboxText,
                   {
-                    color: bookCondition === "Bad" ? "#ffffff" : colors.text,
+                    color: bookCondition === "Bad" ? "#ffffff" : textColor,
                   },
                 ]}
               >
@@ -290,7 +290,7 @@ const Edituploadedbook = (props) => {
                 style={[
                   styles.checkboxText,
                   {
-                    color: bookCondition === "Fair" ? "#ffffff" : colors.text,
+                    color: bookCondition === "Fair" ? "#ffffff" : textColor,
                   },
                 ]}
               >
@@ -313,7 +313,7 @@ const Edituploadedbook = (props) => {
                 style={[
                   styles.checkboxText,
                   {
-                    color: bookCondition === "Good" ? "#ffffff" : colors.text,
+                    color: bookCondition === "Good" ? "#ffffff" : textColor,
                   },
                 ]}
               >
@@ -336,7 +336,7 @@ const Edituploadedbook = (props) => {
                 style={[
                   styles.checkboxText,
                   {
-                    color: bookCondition === "Great" ? "#ffffff" : colors.text,
+                    color: bookCondition === "Great" ? "#ffffff" : textColor,
                   },
                 ]}
               >
@@ -352,25 +352,25 @@ const Edituploadedbook = (props) => {
                 style={[
                   styles.shopDetails,
                   styles.shopDistance,
-                  { color: colors.text },
+                  { color: textColor },
                 ]}
               >
                 12 km
               </Text>
-              <Text style={[styles.shopDetails, { color: colors.text }]}>
+              <Text style={[styles.shopDetails, { color: textColor }]}>
                 {Bookdata.store.store_name}
               </Text>
             </View>
           </View>
 
           <View>
-            <Text style={[styles.storeDetails, { color: colors.text }]}>
+            <Text style={[styles.storeDetails, { color: textColor }]}>
               {Bookdata.store.store_incharge}{" "}
             </Text>
-            <Text style={[styles.storeDetails, { color: colors.text }]}>
+            <Text style={[styles.storeDetails, { color: textColor }]}>
               {Bookdata.store.store_address}{" "}
             </Text>
-            <Text style={[styles.storeDetails, { color: colors.text }]}>
+            <Text style={[styles.storeDetails, { color: textColor }]}>
               {Bookdata.store.store_number}
             </Text>
           </View>

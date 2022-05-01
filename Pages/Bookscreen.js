@@ -20,12 +20,13 @@ const Bookscreen = (props) => {
   const { colors } = useTheme();
   const [imageloading, setImageloading] = useState(false);
   const [distance,setDistance] = useState("");
-  const { setTheme, Theme } = React.useContext(ThemeContext);
+  const {Theme } = React.useContext(ThemeContext);
   const [latitude, setLatitude] = useState();
   const [longitude, setLongitude] = useState();
   const {book } = props.route.params;
   let store_latitude = book.store.store_latitude;
   let store_longitude = book.store.store_longitude;
+  let textColor = Theme === 'Light' ? '#0D1936' : '#ECEFEE';
   
 
   let showloading =
@@ -220,7 +221,7 @@ const Bookscreen = (props) => {
               borderRadius: 18,
               textAlign: "center",
               fontFamily: "DMSans",
-              color: colors.text,
+              color: textColor,
             }}
           >
             {book.store_distance} km(s)
@@ -230,7 +231,7 @@ const Bookscreen = (props) => {
           <Text
             style={{
               borderWidth: 2,
-              color: colors.text,
+              color: textColor,
               paddingVertical: 6,
               fontWeight: "700",
               borderColor: "#0036F4",
@@ -252,13 +253,13 @@ const Bookscreen = (props) => {
           marginTop: 9,
         }}
       >
-        <Text style={[styles.textStyle, { color: colors.text }]}>
+        <Text style={[styles.textStyle, { color: textColor }]}>
           {book.store.store_incharge}
         </Text>
-        <Text style={[styles.textStyle, { color: colors.text }]}>
+        <Text style={[styles.textStyle, { color: textColor }]}>
           {book.store.store_address}
         </Text>
-        <Text style={[styles.textStyle, { color: colors.text }]}>
+        <Text style={[styles.textStyle, { color: textColor }]}>
           {book.store.store_number}
         </Text>
       </View>

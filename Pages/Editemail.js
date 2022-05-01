@@ -76,7 +76,7 @@ const EditEmail = (props) => {
           style={{
             fontSize: 22,
             fontWeight: "700",
-            color: colors.text,
+            color: textColor,
             marginLeft: 22,
             fontFamily: "DMSansbold",
           }}

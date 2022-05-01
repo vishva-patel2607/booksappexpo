@@ -7,7 +7,8 @@ import {
   Pressable,
   Alert,
   StatusBar,
-  TouchableOpacity
+  TouchableOpacity,
+  Modal
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { styles } from "../Styles/Bookdetail.js";
@@ -21,16 +22,14 @@ import { Button, Title, Text, ActivityIndicator } from "react-native-paper";
 import MapView, { Marker } from "react-native-maps";
 
 const BookDetail = (props) => {
-  const { colors } = useTheme();
-  const user = useSelector((state) => state.user);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const {Theme} = React.useContext(ThemeContext);
+  let textcolor = Theme === 'Light'?'#0D1936':'#ECEFEE';
 
   return (
     <View>
       <Text style={[styles.BookDetailTitle]}>{props.title}</Text>
       <Text
-        style={[styles.BookDetailValue, { color: colors.text }]}
+        style={[styles.BookDetailValue, { color: textcolor }]}
         numberOfLines={3}
       >
         {props.value}
@@ -43,9 +42,11 @@ const Bookdetail = (props) => {
   
   const { colors } = useTheme();
   const {Theme} = React.useContext(ThemeContext);
+  
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [imageloading, setImageloading] = useState(false);
+  const [modalVisible,setModalVisible] = useState(false);
   const [distance, setDistance] = useState("");
   const { book } = props.route.params;
 
@@ -89,9 +90,15 @@ const Bookdetail = (props) => {
     if (book.book_transaction_status === undefined) {
       status = book.book_status;
     } else {
+      if(book.book_transaction_status==="Book Lost by borrower! You'll get your full book price shortly"){
+        status="Book lost by borrower!You'll get your full book price.";
+      }
+      else{
       status = book.book_transaction_status;
+      }
     }
   }
+
   const [mapRegion, setmapRegion] = useState({
     latitude: book.store.store_latitude,
     longitude: book.store.store_longitude,
@@ -309,6 +316,7 @@ const Bookdetail = (props) => {
       style={{
         flex: 1,
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        opacity:modalVisible === true ? 0.35 : 1
       }}
     >
       <Pressable onPress={() => props.navigation.navigate("Home")}>
@@ -337,17 +345,18 @@ const Bookdetail = (props) => {
                 alignItems: "center",
               }}
             >
-              {/* {imageloading && (
-                <View style={{ alignItems: "flex-start" }}>
-                  <ActivityIndicator size="small" />
-                </View>
-              )} */}
-              <Image
+              {imageloading && (
+               <View style={{justifyContent:'center',alignItems:'center',alignContent:'center',zIndex:0,position:'absolute',marginTop:10}}>
+               <ActivityIndicator size="small" />
+               </View>
+              )}
+              {<Image
                 style={{
                   height: 200,
                   width: 150,
                   resizeMode: "cover",
                   borderRadius: 20,
+                  zIndex:0
                 }}
                 source={{
                   uri: book.book_img,
@@ -360,7 +369,7 @@ const Bookdetail = (props) => {
                   setImageloading(false);
                   console.log("Out");
                 }}
-              />
+              />}
             </View>
             {(props.route.params.title === "LENT" ||
               props.route.params.title === "SOLD") && (
@@ -435,7 +444,7 @@ const Bookdetail = (props) => {
                           style={[
                             styles.buttonmodal,
                             {
-                              color: (colors.text = "#000000"
+                              color: (textcolor = '#0D1936' 
                                 ? "#FFFFFF"
                                 : "#0036F4"),
                             },
@@ -453,7 +462,7 @@ const Bookdetail = (props) => {
                             styles.buttonmodal,
                             styles.buttonCloseNegative,
                             {
-                              color: (colors.text = "#000000"
+                              color: (textcolor = "#0D1936"
                                 ? "#FFFFFF"
                                 : "#0036F4"),
                             },
@@ -476,7 +485,7 @@ const Bookdetail = (props) => {
         </View>
 
         <View style={styles.shop}>
-          <Text style={[styles.BookDetailTitle, { color: colors.text }]}>
+          <Text style={[styles.BookDetailTitle, { color: textcolor }]}>
             Shop
           </Text>
           <View style={styles.shopDetailsContainer}>
@@ -484,25 +493,25 @@ const Bookdetail = (props) => {
               style={[
                 styles.shopDetails,
                 styles.shopDistance,
-                { color: colors.text },
+                { color: textcolor },
               ]}
             >
               {distance} kms
             </Text>
-            <Text style={[styles.shopDetails, { color: colors.text }]}>
+            <Text style={[styles.shopDetails, { color: textcolor }]}>
               {book.store.store_name}
             </Text>
           </View>
         </View>
 
         <View style={{ marginLeft: 20 }}>
-          <Text style={[styles.storeDetails, { color: colors.text }]}>
+          <Text style={[styles.storeDetails, { color: textcolor }]}>
             {book.store.store_incharge}{" "}
           </Text>
-          <Text style={[styles.storeDetails, { color: colors.text }]}>
+          <Text style={[styles.storeDetails, { color: textcolor }]}>
             {book.store.store_address}
           </Text>
-          <Text style={[styles.storeDetails, { color: colors.text }]}>
+          <Text style={[styles.storeDetails, { color: textcolor }]}>
             {book.store.store_number}
           </Text>
         </View>

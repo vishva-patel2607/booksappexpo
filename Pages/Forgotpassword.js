@@ -17,12 +17,14 @@ import Backbutton from "../Components/Backbutton";
 import { Button, TextInput, Text } from "react-native-paper";
 
 const Forgotpassword = (props) => {
-  const { colors } = useTheme();
-  const user = useSelector((state) => state.user);
+  
   const [username, setUsername] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const dispatch = useDispatch();
+  const { colors } = useTheme();
+  const user = useSelector((state) => state.user);
+  const {Theme} = React.useContext(ThemeContext);
 
   useEffect(() => {
     let unmounted = false;
@@ -78,7 +80,7 @@ const Forgotpassword = (props) => {
           style={{
             fontSize: 22,
             fontWeight: "700",
-            color: colors.text,
+            color: textColor,
             marginLeft: 22,
             fontFamily: "DMSansbold",
           }}

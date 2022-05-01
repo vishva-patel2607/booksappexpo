@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { ScrollView, View, Image, StyleSheet, Pressable } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
 import StaticText from "../Components/StaticText";
 
 const Horizontalscrollview = (props) => {
@@ -27,13 +28,18 @@ const Horizontalscrollview = (props) => {
           >
             <View>
            
+           {loading && 
+           <View style={{justifyContent:'center',alignItems:'center',alignContent:'center',zIndex:0,position:'absolute'}}>
+             <ActivityIndicator size="small" />
+             </View>}
+             {
               <Image
                 style={{
                   resizeMode: "cover",
                   // maxWidth: 150,
                   height: 130,
                   width: 100,
-
+                  zIndex:0,
                   // maxHeight: 200,
                   // minWidth: 150,
                   // minHeight: 200,
@@ -43,7 +49,7 @@ const Horizontalscrollview = (props) => {
                 onLoadStart={() => showLoading(true)}
                 onLoadEnd={() => showLoading(false)}
               />
-              
+}
             </View>
             <View style={{ alignSelf: "flex-start" }}>
               <StaticText text={book.book_name} />

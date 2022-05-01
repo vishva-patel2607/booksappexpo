@@ -7,13 +7,18 @@ import Backbutton from "../Components/Backbutton";
 import { TextInput, Text } from "react-native-paper";
 import { styles } from "../Styles/EditPhone";
 import ActionButton from '../Components/Actionbutton';
+import { ThemeContext } from "../Components/Theme";
 
 const EditPhone = (props) => {
-  const { colors } = useTheme();
+  
   const user = useSelector((state) => state.user);
   const [newphoneno, setNewphoneno] = useState("");
   const [error, setError] = useState("");
   const dispatch = useDispatch();
+  const { colors } = useTheme();
+  const {Theme} = React.useContext(ThemeContext);
+  let textColor = Theme === 'Light' ? '#0D1936' : '#ECEFEE';
+
 
   const editphone = () => {
     if (newphoneno.length === 0 || !/^\d+$/.test(newphoneno)) {
@@ -65,7 +70,7 @@ const EditPhone = (props) => {
           style={{
             fontSize: 22,
             fontWeight: "700",
-            color: colors.text,
+            color: textColor,
             marginLeft: 22,
             fontFamily: "DMSansbold",
           }}
