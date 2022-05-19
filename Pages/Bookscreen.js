@@ -29,14 +29,6 @@ const Bookscreen = (props) => {
   let textColor = Theme === 'Light' ? '#0D1936' : '#ECEFEE';
   
 
-  let showloading =
-    imageloading === true ? (
-      <ActivityIndicator style={{ alignSelf: "center" }} />
-    ) : (
-      <View></View>
-    );
-
-
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();

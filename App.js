@@ -69,8 +69,5 @@ export default function App() {
 }
 
 //  <Loggedin token={"hello"} theme={{theme}} />
-const theme = {
-  ...DefaultTheme,
-};
 
 

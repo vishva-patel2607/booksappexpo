@@ -83,7 +83,7 @@ const Storemodalcard = (props) => {
           props.Selectshopoption(props.Indshop);
         }}
 
-        style={{ marginTop: 10, padding: 10 }}
+        style={{  padding: 10 }}
       >
       <View
         style={{

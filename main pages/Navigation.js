@@ -37,6 +37,7 @@ import Login from "../Pages/login";
 import Signup from "../Pages/signup";
 import EditPhone from "../Pages/EditPhone.js";
 import Storemodal from "../Pages/Storemodal.js";
+import Alertbookscreen from "../Components/Alertbookscreen.js";
 import { useSelector, useDispatch } from "react-redux";
 import { getUser, logoutUser, setUser } from "../actions";
 
@@ -191,6 +192,11 @@ const Navigation = () => {
             <Stack.Screen
               name="Bookdetail"
               component={Bookdetail}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Alertbookscreen"
+              component={Alertbookscreen}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

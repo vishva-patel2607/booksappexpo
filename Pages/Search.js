@@ -116,7 +116,7 @@ const SearchRoute = (props) => {
   const renderData = ({ item }) => (
     <Pressable
       // key={idx}
-      onPress={() => props.navigation.navigate("Bookscreen", { book: item })}
+       onPress={() => props.navigation.navigate('Bookscreen',{book:item})}
     >
       <View
         style={{
@@ -153,6 +153,7 @@ const SearchRoute = (props) => {
                 alignContent: "center",
                 zIndex: 0,
                 position: "absolute",
+                
               }}
             >
               <ActivityIndicator size="small" />

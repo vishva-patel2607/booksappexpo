@@ -1,7 +1,7 @@
-import React, { Component, useState, useEffect, useRef } from "react";
+import React, {  useState, useEffect, useRef } from "react";
 import { SafeAreaView, ScrollView, View, StyleSheet } from "react-native";
-import { Platform, StatusBar, RefreshControl } from "react-native";
-import { logoutUser, setUser } from "../actions";
+import { Platform, StatusBar, RefreshControl,Text } from "react-native";
+import { logoutUser } from "../actions";
 import Actions from "../Components/Actions";
 import Horizontalscrollview from "./Horizontalscrollview";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +11,7 @@ import BAheader from "../Components/BAheader";
 import Constants from "expo-constants";
 import Newbooks from "../Components/Newbooks";
 import * as Notifications from "expo-notifications";
-
+import Alert from "../Components/Alerts";
 
 const HomeRoute = (props) => {
   const [devicePushToken, setDevicePushToken] = useState("");
@@ -239,9 +239,9 @@ const HomeRoute = (props) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data,'data');
+        
         if (data.status) {
-          console.log(data.response.books);
+          
           setPickupbooks(data.response.books);
         } else {
           if (data.message === "Could not verify") {
@@ -271,7 +271,7 @@ const HomeRoute = (props) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data,'borrowed data');
+  
         if (data.status) {
           setBorrowedbooks(data.response.books);
         } else {
@@ -302,7 +302,7 @@ const HomeRoute = (props) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
+        
         if (data.status) {
           setSoldbooks(data.response.books);
         } else {
@@ -365,7 +365,7 @@ const HomeRoute = (props) => {
       .then((data) => {
         if (data.status) {
           setLentbooks(data.response.books);
-          console.log(data.response.books,'lent');
+          
         } else {
           if (data.message === "Could not verify") {
             dispatch(logoutUser());
@@ -429,7 +429,7 @@ const HomeRoute = (props) => {
       })
       .then((data) => {
         if (data.status) {
-          console.log(data.response.books,'Dropoffff');
+          
           setDropoffbooks(data.response.books);
         } else {
           if (data.message === "Could not verify") {
@@ -446,9 +446,40 @@ const HomeRoute = (props) => {
     setDropoffbooks([]);
     setRefreshing(false);
   }, [count]);
+  let countalert=0;
+  useEffect(() => {
+    
+    fetch("https://booksapp2021.herokuapp.com/Book/Alerts", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "x-access-token": user.token,
+      },
+      body: null,
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        if (data.status) {
+          countalert=data.response.books.length;
+        } else {
+          countalert=0;
+          if (data.message === "Could not verify") {
+            dispatch(logoutUser());
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [count]);
+
 
   useEffect(() => {
-    console.log("refreshing from Home page");
+    
     setRefreshing(props.route.params?.refreshing);
     setCount(count + 1);
   }, [props.route.params?.refreshing]);
@@ -461,6 +492,11 @@ const HomeRoute = (props) => {
       >
         <BAheader />
         <BookConditions />
+        {/* {countalert!==0 && (
+          <Alert />
+        )} */}
+        <Alert />
+        
         <Actions text="DROPOFFS" length={dropoffbooks.length} />
         <View style={styles.cardview}>{dropoff}</View>
         <Actions text="PICKUPS" length={pickupbooks.length} />

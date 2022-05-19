@@ -25,6 +25,7 @@ const Signup = (props) => {
   const [month, setMonth] = useState("");
   const [day, setDay] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [loading,setloading] = useState("");
   const [error, setError] = useState("");
   const { email, username, password } = props.route.params;
   
@@ -46,6 +47,7 @@ const Signup = (props) => {
   const ref_year = useRef();
 
   const SignUpRequest = () => {
+   
     if (
       firstname.length === 0 ||
       lastname.length === 0 ||
@@ -60,6 +62,7 @@ const Signup = (props) => {
       alert("Enter valid date");
       return;
     } else {
+      setloading(true);
       fetch("https://booksapp2021.herokuapp.com/User/Signup", {
         method: "POST",
         headers: {
@@ -82,6 +85,7 @@ const Signup = (props) => {
           return response.json();
         })
         .then((data) => {
+          setloading(false);
           if (data.status) {
             console.log(data.message);
             Alert.alert(

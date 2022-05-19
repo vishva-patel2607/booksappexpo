@@ -229,7 +229,7 @@ const UploadRoute = (props) => {
             alert("Book Uploaded Succesfully");
             setImgurl(null);
             setAuthor("");
-            setCondition("good");
+            setbookCondition("good");
             setName("");
             setPrice("");
             setShop(null);

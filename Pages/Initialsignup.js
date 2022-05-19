@@ -25,6 +25,7 @@ const InitialSignUp = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading,setloading] = useState("");
 
   useEffect(() => {
     let unmounted = false;
@@ -58,6 +59,7 @@ const InitialSignUp = (props) => {
     } else if (password !== confirmPassword) {
       alert("Passwords do not match");
     } else {
+      setloading(true);
       fetch(
         `https://booksapp2021.herokuapp.com/User/Signup/${username}/${email}`,
         {
@@ -72,6 +74,7 @@ const InitialSignUp = (props) => {
           return response.json();
         })
         .then((data) => {
+          setloading(false);
           if (data.status) {
             console.log(data.message);
             props.navigation.navigate("Signup", {

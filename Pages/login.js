@@ -25,7 +25,9 @@ const Login = (props) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [token, setToken] = useState("");
+  const [loading,setloading] = useState("");
   const dispatch = useDispatch();
+
   const [email, setEmail] = useState("");
   //const selector = useSelector();
 
@@ -45,6 +47,7 @@ const Login = (props) => {
   
 
   loginrequest = () => {
+    setloading(true);
     if (username !== "" && password !== "") {
       fetch("https://booksapp2021.herokuapp.com/User/Login", {
         method: "POST",
@@ -61,6 +64,7 @@ const Login = (props) => {
           return response.json();
         })
         .then((data) => {
+          setloading(false);
           if (data.status) {
             dispatch(
               setUser(
@@ -71,6 +75,7 @@ const Login = (props) => {
               )
             );
           } else {
+
             console.log(data);
             if (data.message === "User is not verified") {
               setToken(data.response.token);
@@ -95,6 +100,7 @@ const Login = (props) => {
                   data.response.email
               );
             } else {
+              setloading(false);
               setError(data.message);
               console.log(data.message);
             }
@@ -103,6 +109,10 @@ const Login = (props) => {
         .catch((error) => {
           console.log(error);
         });
+    }
+    else
+    {
+      alert("Please fill all the fields");
     }
   };
 
