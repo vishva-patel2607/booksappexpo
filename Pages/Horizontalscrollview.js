@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 
-import { ScrollView, View, Image, StyleSheet, Pressable } from "react-native";
+import { ScrollView, View, Image, StyleSheet, Pressable,FlatList } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import StaticText from "../Components/StaticText";
 
 const Horizontalscrollview = (props) => {
+ 
+   
   const [loading, showLoading] = useState(false);
   return (
+    
     <ScrollView style={styles.cardscroll} horizontal={true} showsHorizontalScrollIndicator={false}>
       {props.booklist.map((book, idx) => (
         <Pressable

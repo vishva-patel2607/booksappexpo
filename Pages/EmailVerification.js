@@ -19,7 +19,7 @@ const EmailVerification = (props) => {
   const [newemail, setNewemail] = useState("");
 
   changeemail = () => {
-    var emailRegex = new RegExp(
+    let emailRegex = new RegExp(
       /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
     );
     if (email.length === 0 || !emailRegex.test(email.trim().toLowerCase())) {

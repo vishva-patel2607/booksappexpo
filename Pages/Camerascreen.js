@@ -8,7 +8,7 @@ import {styles} from "../Styles/CameraScreenstyles.js";
 import * as ImagePicker from "expo-image-picker";
 
 const CamerScreen = (props) => {
-  console.log(props);
+  
   const [gallerypermission, setGallerypermission] = useState(false);
   const [permission, setPermission] = useState(false);
   const [cameratype, setCameratype] = useState(Camera.Constants.Type.back);

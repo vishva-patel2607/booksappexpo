@@ -87,7 +87,7 @@ const Signup = (props) => {
         .then((data) => {
           setloading(false);
           if (data.status) {
-            console.log(data.message);
+            
             Alert.alert(
               "Verification email has been sent to your email",
               "Please Verify."[
@@ -106,7 +106,7 @@ const Signup = (props) => {
           });
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     }
   };

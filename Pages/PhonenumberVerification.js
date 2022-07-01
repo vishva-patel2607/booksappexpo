@@ -30,7 +30,7 @@ const PhonenumberVerification = (props) => {
   const smsRef = useRef([]);
 
   const sendOTP = async () => {
-    console.log("Send OTP", usernumber, newphonenumber);
+    
     try {
       setLoading(true);
       const response = await fetch(
@@ -43,17 +43,17 @@ const PhonenumberVerification = (props) => {
         }
       );
       let jsonData = await response.json();
-      console.log(jsonData);
+      
 
       setLoading(false);
       alert(jsonData.message);
     } catch (e) {
-      console.log(e);
+      
     }
   };
 
   const verifyOTP = async () => {
-    console.log("Verify OTP", usernumber, newphonenumber, otp);
+    
     try {
       const response = await fetch(
         `${URL}/User/Verify/Phonenumber/${usernumber}/${newphonenumber}`,
@@ -85,7 +85,7 @@ const PhonenumberVerification = (props) => {
         setOTP(null);
       }
     } catch (e) {
-      console.log("Error encountered : ", e);
+      
     }
   };
 

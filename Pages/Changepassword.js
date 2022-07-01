@@ -24,11 +24,10 @@ const Changepassword = (props) => {
   const [oldpassword, setOldpassword] = useState("");
   const [newpassword1, setNewpassword1] = useState("");
   const [newpassword2, setNewpassword2] = useState("");
-  const { Theme } = React.useContext(ThemeContext);
+  const { textcolor } = React.useContext(ThemeContext);
   const [error, setError] = useState("");
   const { colors } = useTheme();
   const user = useSelector((state) => state.user);
-  let textColor = Theme === 'Light' ? '#0D1936' : '#ECEFEE';
 
   const changepassword = () => {
     var passwordRegex = new RegExp(
@@ -64,7 +63,7 @@ const Changepassword = (props) => {
           return response.json();
         })
         .then((data) => {
-          console.log("Going in ");
+          
           if (data.status) {
             setError(data.message);
             Alert.alert(error, "Please log in again with your new password", [
@@ -79,7 +78,7 @@ const Changepassword = (props) => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     }
   };
@@ -96,7 +95,7 @@ const Changepassword = (props) => {
           style={{
             fontSize: 25,
             fontWeight: "700",
-            color: textColor,
+            color: textcolor,
             marginLeft: 22,
           }}
           theme={{ fonts: { regular: "DM Sans" } }}

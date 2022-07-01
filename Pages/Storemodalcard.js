@@ -8,7 +8,7 @@ import {  Text } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
 const Storemodalcard = (props) => {
-  const {Theme} = React.useContext(ThemeContext);
+  const {textcolor} = React.useContext(ThemeContext);
   const { colors } = useTheme();
   const [showMap, setShowMap] = useState(false);
   const [storeInchargeName, setStoreInchargeName] = useState(
@@ -21,7 +21,6 @@ const Storemodalcard = (props) => {
   const [contactNo, setContactNo] = useState(props.contactNo);
   const [Latitude, setLatitude] = useState(props.latitude);
   const [Longitude, setLongitude] = useState(props.longitude);
-  let textColor = Theme === 'Light' ? '#0D1936' : '#ECEFEE';
   
   const mapRegion = {
     latitude: Latitude,
@@ -107,7 +106,7 @@ const Storemodalcard = (props) => {
               borderRadius: 18,
               textAlign: "center",
               fontFamily: "DMSans",
-              color: textColor,
+              color: textcolor,
             }}
           >
             {distance} kms
@@ -123,7 +122,7 @@ const Storemodalcard = (props) => {
               borderRadius: 18,
               textAlign: "center",
               fontFamily: "DMSans",
-              color: textColor,
+              color: textcolor,
             }}
           >
             {shopName}
@@ -138,13 +137,13 @@ const Storemodalcard = (props) => {
         }}
       >
         <View style={{ flexDirection: "column", alignSelf: "flex-end",marginLeft:2 }}>
-          <Text style={{ fontFamily: "DMSans", color: textColor }}>
+          <Text style={{ fontFamily: "DMSans", color: textcolor }}>
             {storeInchargeName}
           </Text>
-          <Text style={{ fontFamily: "DMSans", color: textColor }}>
+          <Text style={{ fontFamily: "DMSans", color: textcolor }}>
             {address}
           </Text>
-          <Text style={{ fontFamily: "DMSans", color: textColor }}>
+          <Text style={{ fontFamily: "DMSans", color: textcolor }}>
             {contactNo}
           </Text>
         </View>

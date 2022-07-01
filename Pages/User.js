@@ -27,20 +27,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../actions";
 
 const UserRoute = (props) => {
-  const { setTheme, Theme } = React.useContext(ThemeContext);
+  const { setTheme, Theme,textcolor,setTextColor } = React.useContext(ThemeContext);
   const dispatch = useDispatch();
   const [LoadingData, setLoadingData] = useState(false);
   const [userobj, setUserobj] = useState(props.user);
   const [switchon, setSwitchon] = useState(Theme === "Light" ? false : true);
-  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
   const user = useSelector((state) => state.user);
 
   const switchchanged = () => {
     setSwitchon(!switchon);
     setTheme(Theme === "Light" ? "Dark" : "Light");
+    setTextColor(textcolor === "#0D1936"? "#ECEFEE" : "#0D1936")
   };
   useEffect(() => {
-    console.log(user.token);
+    
     setLoadingData(false);
     fetch("https://booksapp2021.herokuapp.com/User", {
       method: "POST",
@@ -55,20 +55,20 @@ const UserRoute = (props) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
+        
         if (data.status) {
-          console.log("True");
+          
           setUserobj(data.response.user);
           setLoadingData(true);
         } else {
-          console.log(data.status);
+          
           if (data.message === "Could not verify") {
             dispatch(logoutUser());
           }
         }
       })
       .catch((error) => {
-        console.log(error);
+        
       });
   }, []);
 

@@ -7,7 +7,6 @@ import {
   SafeAreaView,
   View,
   Image,
-  StyleSheet,
   Pressable,
   Modal,
   TouchableOpacity,
@@ -25,7 +24,6 @@ import {
   Snackbar,
 } from "react-native-paper";
 import QrcodeLogo from "../Svg/Qrcode";
-import { useTheme } from "@react-navigation/native";
 import StaticText from "../Components/StaticText";
 import BooksApp from "../Components/BooksApp";
 import { useDispatch, useSelector } from "react-redux";
@@ -35,10 +33,8 @@ import Info from "../Svg/Info";
 import Barcode from "../Components/Barcodescanner";
 
 const UploadRoute = (props) => {
-  const { colors } = useTheme();
   const [imgurl, setImgurl] = useState(null);
   const [visible, setVisible] = useState(false);
-  const [snackvisible, setSnackvisible] = useState(false);
   const [name, setName] = useState("");
   let [isbn, setIsbn] = useState("");
   const [author, setAuthor] = useState("");
@@ -52,8 +48,7 @@ const UploadRoute = (props) => {
   const [bookCondition, setbookCondition] = useState("Fair");
   const [transaction_type, setTransaction_type] = useState("");
   const [userBookPrice, setUserBookPrice] = useState(null);
-  const {Theme} = React.useContext(ThemeContext);
-  let textColor = Theme === 'Light' ? '#0D1936' : '#ECEFEE';
+  const {textcolor} = React.useContext(ThemeContext);
 
 
   let fieldcheck =
@@ -73,7 +68,7 @@ const UploadRoute = (props) => {
   ];
 
   const GetPreviousbookImage = async () => {
-    console.log("Getting previous book image");
+    
     try {
       const resposne = await fetch(
         `https://booksapp2021.herokuapp.com/Book/Upload/Image`,
@@ -87,12 +82,12 @@ const UploadRoute = (props) => {
       );
 
       const resImage = await resposne.json();
-      console.log(resImage);
+      
       if (resImage.status) {
         setImgurl(resImage.url);
       }
     } catch (e) {
-      console.log(e);
+      
     }
   };
   useEffect(() => {
@@ -119,7 +114,7 @@ const UploadRoute = (props) => {
       if (imgurl) {
         changeImage(imagedata);
         setImageloading(true);
-        console.log("Changed image");
+        
       } else {
         uploadNewImage(imagedata);
         setImageloading(true);
@@ -130,7 +125,7 @@ const UploadRoute = (props) => {
   const uploadNewImage = async (imagedata) => {
     let formData = new FormData();
     formData.append("book_img", imagedata);
-    console.log(imagedata, "imagedata");
+    
 
     const fetchRes = await fetch(
       "https://booksapp2021.herokuapp.com/Book/Upload/Image",
@@ -146,7 +141,7 @@ const UploadRoute = (props) => {
     );
     const res = await fetchRes.json();
     if (res.status === true) {
-      console.log("API resposne: ", res.response.book);
+      
       setImgurl(res.response.book);
     } else {
       alert("Error occured while uploading the image");
@@ -185,8 +180,8 @@ const UploadRoute = (props) => {
     );
     const res = await fetchRes.json();
     if (res.status === true) {
-      console.log(imgurl, imagedata, "imgurl and imagedata");
-      console.log("API response: ", res.response.book);
+      
+      
       setImgurl(res.response.book);
     } else {
       alert("Error occured while changing the image");
@@ -208,7 +203,7 @@ const UploadRoute = (props) => {
       formData.append("transaction_type", transaction_type);
       formData.append("book_category", category);
 
-      console.log(formData);
+      
       fetch("https://booksapp2021.herokuapp.com/Book/Upload", {
         method: "POST",
         headers: {
@@ -225,7 +220,7 @@ const UploadRoute = (props) => {
         })
         .then((data) => {
           if (data.status) {
-            console.log(data.message);
+            
             alert("Book Uploaded Succesfully");
             setImgurl(null);
             setAuthor("");
@@ -235,8 +230,8 @@ const UploadRoute = (props) => {
             setShop(null);
             setYear("");
             setIsbn("");
-            console.log(data.response.book);
-            console.log(data.response.transaction);
+            
+            
           } else {
             if (data.message === "Could not verify") {
               dispatch(logoutUser());
@@ -244,7 +239,7 @@ const UploadRoute = (props) => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     } else {
       setError("Please fill all the fields");
@@ -262,25 +257,25 @@ const UploadRoute = (props) => {
                 style={[
                   styles.shopDetails,
                   styles.shopDistance,
-                  { color: textColor },
+                  { color: textcolor },
                 ]}
               >
                 {shop.store_distance}
               </Text>
-              <Text style={[styles.shopDetails, { color: textColor }]}>
+              <Text style={[styles.shopDetails, { color: textcolor }]}>
                 {shop.store_name}
               </Text>
             </View>
           </View>
 
           <View>
-            <Text style={[styles.storeDetails, { color: textColor }]}>
+            <Text style={[styles.storeDetails, { color: textcolor }]}>
               {shop.store_incharge}{" "}
             </Text>
-            <Text style={[styles.storeDetails, { color: textColor }]}>
+            <Text style={[styles.storeDetails, { color: textcolor }]}>
               {shop.store_address}{" "}
             </Text>
-            <Text style={[styles.storeDetails, { color: textColor }]}>
+            <Text style={[styles.storeDetails, { color: textcolor }]}>
               {shop.store_number}
             </Text>
           </View>
@@ -316,18 +311,18 @@ const UploadRoute = (props) => {
 
   const FetchBookfromISBN = async (isbn) => {
     setIsbn(isbn.replace(/[^0-9]/g, ""));
-    console.log(isbn);
+    
     if (isbn.length === 10 || isbn.length === 13) {
       const YearRegex = new RegExp("^[12][0-9]{3}$");
       try {
-        console.log(isbn);
+        
         const res = await fetch(`https://openlibrary.org/isbn/${isbn}.json`);
 
         const json = await res.json();
         setName(json.title);
 
         if (YearRegex.test(json.publish_date)) {
-          console.log(json.publish_date);
+          
           setYear(json.publish_date);
         } else {
           setYear(json.publish_date.slice(json.publish_date.length - 4));
@@ -339,10 +334,10 @@ const UploadRoute = (props) => {
           const jsonauthor = await resauthor.json();
           setAuthor(jsonauthor.name);
         } catch (e) {
-          console.log(e);
+          
         }
       } catch (e) {
-        console.log(e);
+        
         if (isbn.length === 13) {
           alert(
             "Unable to find the book from the ISBN number. Please provide the details"
@@ -373,13 +368,13 @@ const UploadRoute = (props) => {
 
       const res = await response.json();
       if (res.status) {
-        console.log(res.response.pricing);
+        
         setUserBookPrice(res.response.pricing);
       } else {
         setUserBookPrice(0);
       }
     } catch (e) {
-      console.log(e);
+      
     }
   };
 
@@ -454,16 +449,16 @@ const UploadRoute = (props) => {
                 style={[
                   styles.inputtextbox,
                   styles.isbninput,
-                  { color: textColor },
+                  { color: textcolor },
                 ]}
                 placeholder="ISBN"
-                placeholderTextColor={"#6E7A7D"}
-                underlineColor={textColor}
+                placeholdertextcolor={"#6E7A7D"}
+                underlineColor={textcolor}
                 value={isbn}
                 onChangeText={(isbn) => FetchBookfromISBN(isbn)}
                 keyboardType="number-pad"
                 theme={{
-                  colors: { text: textColor, placeholder: textColor },
+                  colors: { text: textcolor, placeholder: textcolor },
                 }}
               />
               <Pressable
@@ -481,37 +476,37 @@ const UploadRoute = (props) => {
               style={styles.inputtextbox}
               placeholder="Name of the book"
               numberOfLines={2}
-              placeholderTextColor={"#6E7A7D"}
+              placeholdertextcolor={"#6E7A7D"}
               value={name}
-              underlineColor={textColor}
+              underlineColor={textcolor}
               onChangeText={(text) => setName(text)}
               theme={{
-                colors: { text: textColor, placeholder: textColor},
+                colors: { text: textcolor, placeholder: textcolor},
               }}
             />
             <TextInput
               style={styles.inputtextbox}
               placeholder="Author"
               value={author}
-              placeholderTextColor={"#6E7A7D"}
-              underlineColor={textColor}
+              placeholdertextcolor={"#6E7A7D"}
+              underlineColor={textcolor}
               onChangeText={(text) => setAuthor(text)}
               theme={{
-                colors: { text: textColor, placeholder: textColor},
+                colors: { text: textcolor, placeholder: textcolor},
               }}
             />
             <View style={styles.container}>
               <TextInput
                 style={[styles.inputtextbox, styles.subcontainer]}
                 placeholder="Year"
-                placeholderTextColor={"#6E7A7D"}
+                placeholdertextcolor={"#6E7A7D"}
                 value={year}
                 onChangeText={(text) => setYear(text.replace(/[^0-9]/g, ""))}
                 keyboardType="number-pad"
-                underlineColor={textColor}
+                underlineColor={textcolor}
                 maxLength={4}
                 theme={{
-                  colors: { text: textColor, placeholder: textColor },
+                  colors: { text: textcolor, placeholder: textcolor },
                 }}
               />
               <View
@@ -537,7 +532,7 @@ const UploadRoute = (props) => {
                   placeholder={{
                     label: "Genre",
                     value: "",
-                    color: textColor,
+                    color: textcolor,
                   }}
                   place
                   useNativeAndroidPickerStyle={false}
@@ -607,13 +602,13 @@ const UploadRoute = (props) => {
                 style={[styles.inputtextbox]}
                 placeholder="Price"
                 value={price}
-                placeholderTextColor={"#6E7A7D"}
+                placeholdertextcolor={"#6E7A7D"}
                 onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ""))}
                 keyboardType="number-pad"
-                underlineColor={textColor}
+                underlineColor={textcolor}
                 maxLength={4}
                 theme={{
-                  colors: { text: textColor, placeholder: textColor },
+                  colors: { text: textcolor, placeholder: textcolor },
                 }}
               />
             </View>
@@ -628,7 +623,7 @@ const UploadRoute = (props) => {
                 buttonColor={"#E96A59"}
                 onPress={(value) => {
                   setTransaction_type(value);
-                  console.log(value);
+                  
                 }}
               />
             </View>
@@ -664,7 +659,7 @@ const UploadRoute = (props) => {
                 <Pressable
                   onPress={() => {
                     setVisible(true);
-                    console.log("Pressed");
+                    
                   }}
                 >
                   <Info />
@@ -691,7 +686,7 @@ const UploadRoute = (props) => {
                       <Text style={styles.headerText}>
                         Guideline for selecting condition
                       </Text>
-                      <Text style={styles.modalTextColor}>
+                      <Text style={styles.modaltextcolor}>
                         Great(Tight and unopened)
                       </Text>
                       <Text style={styles.modalText}>
@@ -699,21 +694,21 @@ const UploadRoute = (props) => {
                         effects of time on an unused book that has been
                         protected.
                       </Text>
-                      <Text style={styles.modalTextColor}>
+                      <Text style={styles.modaltextcolor}>
                         Good(Shelfwear and EdgeWorn)
                       </Text>
                       <Text style={styles.modalText}>
                         Book that shows some small signs of wear - but no tears
                         - on either binding or paper.No pages are missing.
                       </Text>
-                      <Text style={styles.modalTextColor}>
+                      <Text style={styles.modaltextcolor}>
                         Fair(Chipped and Dampstained)
                       </Text>
                       <Text style={styles.modalText}>
                         Book that shows some small signs of wear - but no tears
                         - on either binding or paper.No pages are missing.
                       </Text>
-                      <Text style={styles.modalTextColor}>
+                      <Text style={styles.modaltextcolor}>
                         Bad(Price Clipped and wormless)
                       </Text>
                       <Text style={styles.modalText}>
@@ -752,7 +747,7 @@ const UploadRoute = (props) => {
                     styles.checkboxText,
                     {
                       color:
-                        bookCondition === "Great" ? "#ffffff" : textColor,
+                        bookCondition === "Great" ? "#ffffff" : textcolor,
                     },
                   ]}
                 >
@@ -775,7 +770,7 @@ const UploadRoute = (props) => {
                   style={[
                     styles.checkboxText,
                     {
-                      color: bookCondition === "Good" ? "#ffffff" : textColor,
+                      color: bookCondition === "Good" ? "#ffffff" : textcolor,
                     },
                   ]}
                 >
@@ -799,7 +794,7 @@ const UploadRoute = (props) => {
                   style={[
                     styles.checkboxText,
                     {
-                      color: bookCondition === "Fair" ? "#ffffff" : textColor,
+                      color: bookCondition === "Fair" ? "#ffffff" : textcolor,
                     },
                   ]}
                 >
@@ -822,7 +817,7 @@ const UploadRoute = (props) => {
                   style={[
                     styles.checkboxText,
                     {
-                      color: bookCondition === "Bad" ? "#ffffff" : textColor,
+                      color: bookCondition === "Bad" ? "#ffffff" : textcolor,
                     },
                   ]}
                 >

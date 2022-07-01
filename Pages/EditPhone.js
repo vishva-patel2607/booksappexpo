@@ -17,8 +17,7 @@ const EditPhone = (props) => {
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const { colors } = useTheme();
-  const {Theme} = React.useContext(ThemeContext);
-  let textColor = Theme === 'Light' ? '#0D1936' : '#ECEFEE';
+  const {textcolor} = React.useContext(ThemeContext);
 
 
   const editphone = () => {
@@ -42,7 +41,7 @@ const EditPhone = (props) => {
         })
         .then((data) => {
           if (data.status) {
-            console.log("Status true");
+            
             setError(data.message);
             Alert.alert(error, "Please log in again with your new Phone No.", [
               { text: "Login", onPress: () => dispatch(logoutUser()) },
@@ -54,7 +53,7 @@ const EditPhone = (props) => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     }
   };
@@ -71,7 +70,7 @@ const EditPhone = (props) => {
           style={{
             fontSize: 22,
             fontWeight: "700",
-            color: textColor,
+            color: textcolor,
             marginLeft: 22,
             fontFamily: "DMSansbold",
           }}

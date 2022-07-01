@@ -17,7 +17,7 @@ import { getPreciseDistance } from "geolib";
 import { useDispatch, useSelector } from "react-redux";
 
 const Alertbookscreen = (props) => {
-  const { Theme } = React.useContext(ThemeContext);
+  const { textcolor } = React.useContext(ThemeContext);
   const [distance, setDistance] = useState("");
   const { book } = props.route.params;
   const user = useSelector((state) => state.user);
@@ -26,7 +26,7 @@ const Alertbookscreen = (props) => {
       ? "Claim lost"
       : "Remove";
 
-  let textColor = Theme === "Light" ? "#0D1936" : "#ECEFEE";
+
 
   const markaslost = () => {
     fetch(`https://booksapp2021.herokuapp.com/Book/Borrowed/Lost`, {
@@ -152,7 +152,7 @@ const Alertbookscreen = (props) => {
       }
     } else {
       if (book.book_transaction_type === "lend") {
-        console.log("Data");
+        
         fetch(`https://booksapp2021.herokuapp.com/Book/Borrowed/Remove`, {
           method: "DELETE",
           headers: {
@@ -327,7 +327,7 @@ const Alertbookscreen = (props) => {
               borderRadius: 18,
               textAlign: "center",
               fontFamily: "DMSans",
-              color: textColor,
+              color: textcolor,
             }}
           >
             {distance} km(s)
@@ -337,7 +337,7 @@ const Alertbookscreen = (props) => {
           <Text
             style={{
               borderWidth: 2,
-              color: textColor,
+              color: textcolor,
               paddingVertical: 6,
               fontWeight: "700",
               borderColor: "#0036F4",
@@ -359,13 +359,13 @@ const Alertbookscreen = (props) => {
           marginTop: 9,
         }}
       >
-        <Text style={[styles.textStyle, { color: textColor }]}>
+        <Text style={[styles.textStyle, { color: textcolor }]}>
           {book.book_store_info.store_incharge}
         </Text>
-        <Text style={[styles.textStyle, { color: textColor }]}>
+        <Text style={[styles.textStyle, { color: textcolor }]}>
           {book.book_store_info.store_address}
         </Text>
-        <Text style={[styles.textStyle, { color: textColor }]}>
+        <Text style={[styles.textStyle, { color: textcolor }]}>
           {book.book_store_info.store_number}
         </Text>
       </View>

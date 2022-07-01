@@ -9,7 +9,6 @@ import {
   StatusBar,
 } from "react-native";
 import * as Location from "expo-location";
-import { useTheme } from "@react-navigation/native";
 import { ThemeContext } from "../Components/Theme";
 import Queryinfo from "../Components/Queryinfo";
 import MapView, { Marker } from "react-native-maps";
@@ -17,16 +16,14 @@ import { useDispatch, useSelector } from "react-redux";
 import Backbutton from "../Components/Backbutton";
 import { Text, Button, ActivityIndicator } from "react-native-paper";
 const Bookscreen = (props) => {
-  const { colors } = useTheme();
   const [imageloading, setImageloading] = useState(false);
   const [distance,setDistance] = useState("");
-  const {Theme } = React.useContext(ThemeContext);
+  const {textcolor} = React.useContext(ThemeContext);
   const [latitude, setLatitude] = useState();
   const [longitude, setLongitude] = useState();
   const {book } = props.route.params;
   let store_latitude = book.store.store_latitude;
   let store_longitude = book.store.store_longitude;
-  let textColor = Theme === 'Light' ? '#0D1936' : '#ECEFEE';
   
 
   useEffect(() => {
@@ -40,7 +37,7 @@ const Bookscreen = (props) => {
       let loc = await Location.getCurrentPositionAsync({});
       setLatitude(loc.coords.latitude);
       setLongitude(loc.coords.longitude);
-      console.log(latitude,longitude);
+      
     });
     setLatitude((latitude * Math.PI) / 180);
     setLongitude((longitude * Math.PI) / 180);
@@ -65,7 +62,7 @@ const Bookscreen = (props) => {
 
   const addtopickup = () => {
     if (book.transaction_type === "lend") {
-      console.log("lend");
+      
       fetch("https://booksapp2021.herokuapp.com/Book/Borrowed/Add", {
         method: "PUT",
         headers: {
@@ -122,7 +119,7 @@ const Bookscreen = (props) => {
         .then((data) => {
           if (data.status) {
             if (data.message === "Pickup added") {
-              console.log("added");
+              
             } else {
               Alert.alert("Error in adding pickup", [
                 {
@@ -137,7 +134,7 @@ const Bookscreen = (props) => {
           }
         })
         .catch((error) => {
-          console.log("error");
+          
         });
     }
   };
@@ -181,11 +178,11 @@ const Bookscreen = (props) => {
             style={{ height: 130, width: 100, borderRadius: 10 }}
             onLoadStart={() => {
               setImageloading(true);
-              console.log("In");
+              
             }}
             onLoadEnd={() => {
               setImageloading(false);
-              console.log("Out");
+              
             }}
           />
         </View>
@@ -213,7 +210,7 @@ const Bookscreen = (props) => {
               borderRadius: 18,
               textAlign: "center",
               fontFamily: "DMSans",
-              color: textColor,
+              color: textcolor,
             }}
           >
             {book.store_distance} km(s)
@@ -223,7 +220,7 @@ const Bookscreen = (props) => {
           <Text
             style={{
               borderWidth: 2,
-              color: textColor,
+              color: textcolor,
               paddingVertical: 6,
               fontWeight: "700",
               borderColor: "#0036F4",
@@ -245,13 +242,13 @@ const Bookscreen = (props) => {
           marginTop: 9,
         }}
       >
-        <Text style={[styles.textStyle, { color: textColor }]}>
+        <Text style={[styles.textStyle, { color: textcolor }]}>
           {book.store.store_incharge}
         </Text>
-        <Text style={[styles.textStyle, { color: textColor }]}>
+        <Text style={[styles.textStyle, { color: textcolor }]}>
           {book.store.store_address}
         </Text>
-        <Text style={[styles.textStyle, { color: textColor }]}>
+        <Text style={[styles.textStyle, { color: textcolor }]}>
           {book.store.store_number}
         </Text>
       </View>

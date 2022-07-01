@@ -16,14 +16,13 @@ import {emailRegex} from '../Components/Checks';
 import { ThemeContext } from "../Components/Theme";
 
 const EditEmail = (props) => {
-  const { Theme } = React.useContext(ThemeContext);
+  const { textcolor } = React.useContext(ThemeContext);
   const { colors } = useTheme();
   const user = useSelector((state) => state.user);
   const [newemail, setNewemail] = useState("");
   const [error, setError] = useState("");
   const dispatch = useDispatch();
 
-  let textColor = Theme === "Light" ? "#0D1936" : "#ECEFEE";
   const editemail = () => {
     if (newemail.length === 0) {
       alert("Please enter Email");
@@ -47,7 +46,7 @@ const EditEmail = (props) => {
         })
         .then((data) => {
           if (data.status) {
-            console.log("Status true");
+            
             setError(data.message);
             Alert.alert(
               error,
@@ -61,7 +60,7 @@ const EditEmail = (props) => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     }
   };
@@ -78,7 +77,7 @@ const EditEmail = (props) => {
           style={{
             fontSize: 22,
             fontWeight: "700",
-            color: textColor,
+            color: textcolor,
             marginLeft: 22,
             fontFamily: "DMSansbold",
           }}

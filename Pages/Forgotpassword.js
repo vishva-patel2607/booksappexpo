@@ -11,8 +11,6 @@ import {
 import Error from "../Components/Error";
 import { ThemeContext } from "../Components/Theme";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutUser } from "../actions";
-import { useTheme } from "@react-navigation/native";
 import Backbutton from "../Components/Backbutton";
 import { Button, TextInput, Text } from "react-native-paper";
 
@@ -22,9 +20,8 @@ const Forgotpassword = (props) => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const dispatch = useDispatch();
-  const { colors } = useTheme();
   const user = useSelector((state) => state.user);
-  const {Theme} = React.useContext(ThemeContext);
+  const {textcolor} = React.useContext(ThemeContext);
 
   useEffect(() => {
     let unmounted = false;
@@ -59,12 +56,12 @@ const Forgotpassword = (props) => {
             { text: "Ok", onPress: () => props.navigation.navigate("Login") },
           ]);
         } else {
-          console.log(data.message);
+          
           setError(data.message);
         }
       })
       .catch((error) => {
-        console.log(error);
+        
       });
   };
 
@@ -80,7 +77,7 @@ const Forgotpassword = (props) => {
           style={{
             fontSize: 22,
             fontWeight: "700",
-            color: textColor,
+            color: textcolor,
             marginLeft: 22,
             fontFamily: "DMSansbold",
           }}

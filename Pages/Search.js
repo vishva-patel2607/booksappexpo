@@ -53,8 +53,7 @@ const SearchRoute = (props) => {
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  let color = Theme === "Light" ? "#70768B" : "#FFFFFF";
-  let textcolor = Theme === "Light" ? '#0D1936' : '#ECEFEE';
+  const {textcolor} = useContext(ThemeContext);
   let icon = SearchQuery === "" ? <SearchbarIcon /> : <SearchbarIconFilled />;
   const loadbooks = () => {
     setLocation();
@@ -108,7 +107,7 @@ const SearchRoute = (props) => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     }
   };
@@ -166,11 +165,11 @@ const SearchRoute = (props) => {
             resizeMode="cover"
             onLoadStart={() => {
               setImageloading(true);
-              console.log("In");
+              
             }}
             onLoadEnd={() => {
               setImageloading(false);
-              console.log("Out");
+              
             }}
           />
         </View>
@@ -249,7 +248,7 @@ const SearchRoute = (props) => {
             return response.json();
           })
           .then((data) => {
-            console.log(data);
+            
             if (data.status) {
               if (inset === 1) {
                 if (data.response.book_list.length !== 0) {
@@ -276,7 +275,7 @@ const SearchRoute = (props) => {
             }
           })
           .catch((error) => {
-            console.log(error);
+            
           });
       }
     }

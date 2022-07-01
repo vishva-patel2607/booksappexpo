@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   Modal
 } from "react-native";
-import { useTheme } from "@react-navigation/native";
 import { styles } from "../Styles/Bookdetail.js";
 import Backbutton from "../Components/Backbutton";
 import * as Location from "expo-location";
@@ -22,8 +21,7 @@ import { Button, Title, Text, ActivityIndicator } from "react-native-paper";
 import MapView, { Marker } from "react-native-maps";
 
 const BookDetail = (props) => {
-  const {Theme} = React.useContext(ThemeContext);
-  let textcolor = Theme === 'Light'?'#0D1936':'#ECEFEE';
+  const {textcolor} = React.useContext(ThemeContext);
 
   return (
     <View>
@@ -40,8 +38,7 @@ const BookDetail = (props) => {
 
 const Bookdetail = (props) => {
   
-  const { colors } = useTheme();
-  const {Theme} = React.useContext(ThemeContext);
+  const {textcolor} = React.useContext(ThemeContext);
   
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
@@ -49,8 +46,6 @@ const Bookdetail = (props) => {
   const [modalVisible,setModalVisible] = useState(false);
   const [distance, setDistance] = useState("");
   const { book } = props.route.params;
-
-  let textcolor = Theme === 'Light'?'#0D1936':'#ECEFEE';
 
   const setLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -229,7 +224,7 @@ const Bookdetail = (props) => {
       }
     } else {
       if (book.book_transaction_type === "lend") {
-        console.log("Data");
+        
         fetch(`https://booksapp2021.herokuapp.com/Book/Borrowed/Remove`, {
           method: "DELETE",
           headers: {
@@ -363,11 +358,11 @@ const Bookdetail = (props) => {
                 }}
                 onLoadStart={() => {
                   setImageloading(true);
-                  console.log("In");
+                  
                 }}
                 onLoadEnd={() => {
                   setImageloading(false);
-                  console.log("Out");
+                  
                 }}
               />}
             </View>

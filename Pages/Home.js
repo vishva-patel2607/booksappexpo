@@ -140,7 +140,7 @@ const HomeRoute = (props) => {
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response);
+        
       });
 
     return () => {
@@ -156,12 +156,12 @@ const HomeRoute = (props) => {
     try {
       const phonetoken = await AsyncStorage.getItem("@storage_token");
       if (phonetoken !== null) {
-        console.log("token exists", phonetoken);
+        
       } else {
-        console.log(phonetoken);
+        
         if (token !== undefined && devicePushToken.length !== 0) {
           await AsyncStorage.setItem("@storage_token", token);
-          console.log(user.accountNumber, devicePushToken, Platform.OS);
+          
           fetch("https://booksapp2021.herokuapp.com/Notification/Subscribe", {
             method: "POST",
             headers: {
@@ -188,7 +188,7 @@ const HomeRoute = (props) => {
         }
       }
     } catch (e) {
-      console.log(e);
+      
     }
   };
 
@@ -250,7 +250,7 @@ const HomeRoute = (props) => {
         }
       })
       .catch((error) => {
-        console.log(error);
+        
       });
 
     setPickupbooks([]);
@@ -281,7 +281,7 @@ const HomeRoute = (props) => {
         }
       })
       .catch((error) => {
-        console.log(error);
+        
       });
 
     setBorrowedbooks([]);
@@ -312,7 +312,7 @@ const HomeRoute = (props) => {
         }
       })
       .catch((error) => {
-        console.log(error);
+        
       });
 
     setSoldbooks([]);
@@ -342,7 +342,7 @@ const HomeRoute = (props) => {
         }
       })
       .catch((error) => {
-        console.log(error);
+        
       });
 
     setBoughtbooks([]);
@@ -373,7 +373,7 @@ const HomeRoute = (props) => {
         }
       })
       .catch((error) => {
-        console.log(error);
+        
       });
 
     setLentbooks([]);
@@ -396,17 +396,17 @@ const HomeRoute = (props) => {
   //     .then((data) => {
   //       if (data.status) {
   //         setPrevioustransactions(data.response.books);
-  //         console.log("Pr", data.response.books);
+  //         
   //       } else {
   //         if (data.message === "Could not verify") {
   //           dispatch(logoutUser());
   //         } else {
-  //           console.log(data.message);
+  //           
   //         }
   //       }
   //     })
   //     .catch((error) => {
-  //       console.log(error);
+  //       
   //     });
 
   //   setPrevioustransactions([]);
@@ -435,12 +435,12 @@ const HomeRoute = (props) => {
           if (data.message === "Could not verify") {
             dispatch(logoutUser());
           } else {
-            console.log(data.message);
+            
           }
         }
       })
       .catch((error) => {
-        console.log(error);
+        
       });
 
     setDropoffbooks([]);
@@ -462,7 +462,7 @@ const HomeRoute = (props) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
+        
         if (data.status) {
           countalert=data.response.books.length;
         } else {
@@ -473,7 +473,7 @@ const HomeRoute = (props) => {
         }
       })
       .catch((error) => {
-        console.log(error);
+        
       });
   }, [count]);
 
@@ -493,9 +493,6 @@ const HomeRoute = (props) => {
       >
         <BAheader />
         <BookConditions />
-        {/* {countalert!==0 && (
-          <Alert />
-        )} */}
         <Alert />
         
         <Actions text="DROPOFFS" length={dropoffbooks.length} />

@@ -135,11 +135,12 @@ const Navigation = () => {
   const dispatch = useDispatch();
 
   dispatch(getUser());
-  const [response, setResponse] = useState(false);
-  const [isAuthenticated, setisAuthenticated] = useState(false);
+  // const [response, setResponse] = useState(false);
+  // const [isAuthenticated, setisAuthenticated] = useState(false);
   const [Theme, setTheme] = useState("Light");
+  const [textcolor,setTextColor] = useState('#0D1936');
 
-  const themeData = { Theme, setTheme };
+  const themeData = { Theme, setTheme,textcolor,setTextColor };
 
   const user = useSelector((state) => state.user);
 

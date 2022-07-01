@@ -62,7 +62,7 @@ const Storemodal = (props) => {
         })
         .then((data) => {
           if (data.status) {
-            console.log(data.response.stores);
+            
             setShops(data.response.stores);
           } else {
             if (data.message === "Could not verify") {
@@ -71,7 +71,7 @@ const Storemodal = (props) => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
       setLoading(true);
     }

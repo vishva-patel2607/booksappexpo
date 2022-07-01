@@ -19,8 +19,7 @@ import SwitchSelector from "react-native-switch-selector";
 import {styles,customPickerStyles} from '../Styles/Edituploadedbook';
 
 const Edituploadedbook = (props) => {
-  const { colors } = useTheme();
-  const { Theme } = React.useContext(ThemeContext);
+  const { textcolor } = React.useContext(ThemeContext);
   const [Bookdata, setBookdata] = useState(props.route.params?.book);
   const [price, setPrice] = useState(String(Bookdata.book_price));
   const [imgurl, setImgurl] = useState(Bookdata.book_img);
@@ -33,12 +32,11 @@ const Edituploadedbook = (props) => {
 
   const [category, setCategory] = useState(Bookdata.book_category);
   const [bookCondition, setbookCondition] = useState(Bookdata.book_condition);
-  let textColor = Theme === 'Light' ? '#0D1936' : '#ECEFEE';
   const Option = [
     { label: "Lend", value: "lend" },
     { label: "Sell", value: "sell" },
   ];
-  let initial = Bookdata.book_transaction_type === "lend" ? 0 : 1;
+  // let initial = Bookdata.book_transaction_type === "lend" ? 0 : 1;
 
   useEffect(() => {
     if (
@@ -55,10 +53,10 @@ const Edituploadedbook = (props) => {
 
       if (imgurl) {
         changeImage(imagedata);
-        console.log("Changed image");
+        
       } else {
         uploadNewImage(imagedata);
-        console.log("New image upload");
+        
       }
     }
   }, [props.route.params.params?.photo]);
@@ -67,8 +65,8 @@ const Edituploadedbook = (props) => {
   const user = useSelector((state) => state.user);
 
   const editbooks = () => {
-    console.log("edit books function call",Bookdata.book_id,name,author,typeof(price),year,bookCondition,transaction_type);
-
+    
+    console.log('editted');
     fetch("https://booksapp2021.herokuapp.com/Book/Lent/Edit", {
       method: "PUT",
       headers: {
@@ -90,6 +88,7 @@ const Edituploadedbook = (props) => {
         return response.json();
       })
       .then((data) => {
+        console.log(data);
         if (data.status) {
           Alert.alert("Success", "Book Details Updated", [
             {
@@ -105,7 +104,16 @@ const Edituploadedbook = (props) => {
           if (data.message === "Could not verify") {
             dispatch(logoutUser());
           } else {
-            console.log(data);
+            Alert.alert("Error", "Book Details can't be updated", [
+              {
+                text: "Ok",
+                onPress: () =>
+                  props.navigation.navigate("Mainpage", {
+                    screen: "Home",
+                    params: { refreshing: false },
+                  }),
+              },
+            ]);
           }
         }
       })
@@ -126,18 +134,18 @@ const Edituploadedbook = (props) => {
         <View style={styles.inputfields}>
           <TextInput
             style={styles.inputtextbox}
-            theme={{ colors: { text: textColor, placeholder: textColor } }}
+            theme={{ colors: { text: textcolor, placeholder: textcolor } }}
             placeholder={Bookdata.book_name}
             value={name}
-            underlineColor={textColor}
+            underlineColor={textcolor}
             onChangeText={(text) => setName(text)}
           />
           <TextInput
             style={styles.inputtextbox}
-            theme={{ colors: { text: textColor, placeholder: textColor } }}
+            theme={{ colors: { text: textcolor, placeholder: textcolor } }}
             placeholder={Bookdata.book_author}
             value={author}
-            underlineColor={textColor}
+            underlineColor={textcolor}
             onChangeText={(text) => setAuthor(text)}
           />
 
@@ -145,9 +153,9 @@ const Edituploadedbook = (props) => {
             <TextInput
               style={[styles.inputtextbox, styles.subcontainer]}
               theme={{
-                colors: { text: textColor, placeholder: textColor },
+                colors: { text: textcolor, placeholder: textcolor },
               }}
-              underlineColor={textColor}
+              underlineColor={textcolor}
               placeholder="Year"
               value={String(year)}
               onChangeText={(text) => setYear(text.replace(/[^0-9]/g, ""))}
@@ -157,9 +165,9 @@ const Edituploadedbook = (props) => {
             <TextInput
               style={[styles.inputtextbox, styles.subcontainer]}
               theme={{
-                colors: { text: textColor, placeholder: textColor },
+                colors: { text: textcolor, placeholder: textcolor },
               }}
-              underlineColor={textColor}
+              underlineColor={textcolor}
               placeholder="Price"
               value={String(price)}
               onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ""))}
@@ -184,7 +192,7 @@ const Edituploadedbook = (props) => {
             placeholder={{
               label: category,
               value: category,
-              color: textColor,
+              color: textcolor,
             }}
             useNativeAndroidPickerStyle={false}
             style={customPickerStyles}
@@ -201,7 +209,7 @@ const Edituploadedbook = (props) => {
               buttonColor={"#E96A59"}
               onPress={(value) => {
                 setTransaction_type(value);
-                console.log(value);
+                
               }}
             />
           </View>
@@ -226,7 +234,7 @@ const Edituploadedbook = (props) => {
                 uri: imgurl,
               }}
               onLoad={() => {
-                console.log("Loaded");
+                
               }}
             />
           </View>
@@ -267,7 +275,7 @@ const Edituploadedbook = (props) => {
                 style={[
                   styles.checkboxText,
                   {
-                    color: bookCondition === "Bad" ? "#ffffff" : textColor,
+                    color: bookCondition === "Bad" ? "#ffffff" : textcolor,
                   },
                 ]}
               >
@@ -290,7 +298,7 @@ const Edituploadedbook = (props) => {
                 style={[
                   styles.checkboxText,
                   {
-                    color: bookCondition === "Fair" ? "#ffffff" : textColor,
+                    color: bookCondition === "Fair" ? "#ffffff" : textcolor,
                   },
                 ]}
               >
@@ -313,7 +321,7 @@ const Edituploadedbook = (props) => {
                 style={[
                   styles.checkboxText,
                   {
-                    color: bookCondition === "Good" ? "#ffffff" : textColor,
+                    color: bookCondition === "Good" ? "#ffffff" : textcolor,
                   },
                 ]}
               >
@@ -336,7 +344,7 @@ const Edituploadedbook = (props) => {
                 style={[
                   styles.checkboxText,
                   {
-                    color: bookCondition === "Great" ? "#ffffff" : textColor,
+                    color: bookCondition === "Great" ? "#ffffff" : textcolor,
                   },
                 ]}
               >
@@ -352,31 +360,29 @@ const Edituploadedbook = (props) => {
                 style={[
                   styles.shopDetails,
                   styles.shopDistance,
-                  { color: textColor },
+                  { color: textcolor },
                 ]}
               >
                 12 km
               </Text>
-              <Text style={[styles.shopDetails, { color: textColor }]}>
+              <Text style={[styles.shopDetails, { color: textcolor }]}>
                 {Bookdata.store.store_name}
               </Text>
             </View>
           </View>
 
           <View>
-            <Text style={[styles.storeDetails, { color: textColor }]}>
+            <Text style={[styles.storeDetails, { color: textcolor }]}>
               {Bookdata.store.store_incharge}{" "}
             </Text>
-            <Text style={[styles.storeDetails, { color: textColor }]}>
+            <Text style={[styles.storeDetails, { color: textcolor }]}>
               {Bookdata.store.store_address}{" "}
             </Text>
-            <Text style={[styles.storeDetails, { color: textColor }]}>
+            <Text style={[styles.storeDetails, { color: textcolor }]}>
               {Bookdata.store.store_number}
             </Text>
           </View>
         </View>
-
-        {/* {selected} */}
       </View>
 
       <View
@@ -388,9 +394,7 @@ const Edituploadedbook = (props) => {
           flex: 2,
         }}
       >
-        {/* <Text style={{ fontFamily: "DMSans" }}>
-          You'll get {!price ? 0 : userBookPrice}
-        </Text> */}
+  
         <Button
           theme={{ roundness: 120 }}
           style={{

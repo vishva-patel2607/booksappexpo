@@ -76,15 +76,11 @@ const Login = (props) => {
             );
           } else {
 
-            console.log(data);
+            
             if (data.message === "User is not verified") {
               setToken(data.response.token);
               setEmail(data.response.email);
-              console.log(
-                data.response.email,
-                data.response.token,
-                "User is not verified"
-              );
+              
               Alert.alert(
                 "Verification email has been sent to your email",
                 "Please Check!"[
@@ -102,7 +98,7 @@ const Login = (props) => {
             } else {
               setloading(false);
               setError(data.message);
-              console.log(data.message);
+              
             }
           }
         })

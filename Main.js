@@ -24,10 +24,6 @@ const Stack = createStackNavigator();
 
 
 import Bookscreen from './Pages/Bookscreen.js';
-import SearchRoute from '/Users/vishvapatel/Desktop/booksapp/booksappexpo/Pages/Search.js';
-import UploadRoute from '/Users/vishvapatel/Desktop/booksapp/booksappexpo/Pages/Upload.js';
-import UserRoute from '/Users/vishvapatel/Desktop/booksapp/booksappexpo/Pages/User.js'
-import HomeRoute from '/Users/vishvapatel/Desktop/booksapp/booksappexpo/Pages/Home.js';
 import Camerascreen from './Pages/Camerascreen';
 
 
@@ -47,7 +43,7 @@ class Loggedin extends Component{
     }
   }
   render(){
-    console.log(this.state.token);
+    
     return(
       <>
 

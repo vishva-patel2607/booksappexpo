@@ -174,7 +174,7 @@ export default function Alert() {
   };
 
   useEffect(() => {
-    console.log("rendering");
+    
     fetch("https://booksapp2021.herokuapp.com/Book/Alerts", {
       method: "GET",
       headers: {
@@ -188,9 +188,9 @@ export default function Alert() {
         return response.json();
       })
       .then((data) => {
-        console.log(data, "data");
+        
         if (data.status) {
-          console.log(data.response.books,'book alerts');
+          
           setData(data.response.books);
 
           setCount(data.response.books.length);
@@ -203,7 +203,7 @@ export default function Alert() {
         }
       })
       .catch((error) => {
-        console.log(error);
+        
       });
   }, []);
 

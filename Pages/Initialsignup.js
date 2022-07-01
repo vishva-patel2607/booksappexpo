@@ -76,7 +76,7 @@ const InitialSignUp = (props) => {
         .then((data) => {
           setloading(false);
           if (data.status) {
-            console.log(data.message);
+            
             props.navigation.navigate("Signup", {
               username: username,
               password: password,
@@ -87,7 +87,7 @@ const InitialSignUp = (props) => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     }
   };
