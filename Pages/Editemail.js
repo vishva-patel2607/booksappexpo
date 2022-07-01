@@ -10,18 +10,20 @@ import { logoutUser } from "../actions";
 import Backbutton from "../Components/Backbutton";
 import { styles } from "../Styles/Editemail.js";
 import ActionButton from "../Components/Actionbutton";
+import { useTheme } from "@react-navigation/native";
 import { TextInput, Text } from "react-native-paper";
 import {emailRegex} from '../Components/Checks';
-import {useTheme} from '@react-navigation/native';
+import { ThemeContext } from "../Components/Theme";
 
 const EditEmail = (props) => {
-  const {colors} = useTheme();
+  const { Theme } = React.useContext(ThemeContext);
+  const { colors } = useTheme();
   const user = useSelector((state) => state.user);
   const [newemail, setNewemail] = useState("");
   const [error, setError] = useState("");
   const dispatch = useDispatch();
 
-
+  let textColor = Theme === "Light" ? "#0D1936" : "#ECEFEE";
   const editemail = () => {
     if (newemail.length === 0) {
       alert("Please enter Email");
@@ -85,16 +87,18 @@ const EditEmail = (props) => {
         </Text>
       </View>
       <View style={{ marginLeft: 19, flex: 12 }}>
+        <View style={{
+          height:59,
+          overflow:'hidden'
+        }}>
         <TextInput
           style={styles.inputtextbox}
           theme={{
             colors: {
-              primary: "#EEECEF",
-              placeholder: "#8e8e8e",
+              primary: colors.background,
             },
             roundness: 120,
           }}
-          mode="flat"
           placeholder="New Email"
           value={newemail}
           onChangeText={(text) => setNewemail(text)}
@@ -103,6 +107,7 @@ const EditEmail = (props) => {
           underlineColor="transparent"
           maxLength={10}
         />
+        </View>
         <View style={{ marginTop: 25 }}>
           <ActionButton
             title="SAVE"

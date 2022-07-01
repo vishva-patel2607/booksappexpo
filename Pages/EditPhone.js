@@ -9,6 +9,7 @@ import { styles } from "../Styles/EditPhone";
 import ActionButton from '../Components/Actionbutton';
 import { ThemeContext } from "../Components/Theme";
 
+
 const EditPhone = (props) => {
   
   const user = useSelector((state) => state.user);
@@ -79,12 +80,12 @@ const EditPhone = (props) => {
         </Text>
       </View>
       <View style={{ marginLeft: 19, flex: 12 }}>
+        <View style={{overflow:'hidden',height:59}}>
         <TextInput
           style={styles.inputtextbox}
           theme={{
             colors: {
-              primary: "#EEECEF",
-              placeholder: "#8e8e8e",
+              primary: colors.background
             },
             roundness: 120,
           }}
@@ -96,6 +97,7 @@ const EditPhone = (props) => {
           underlineColor="transparent"
           maxLength={10}
         />
+        </View>
 
         <View style={{ marginTop: 25 }}>
           <ActionButton

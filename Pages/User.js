@@ -1,6 +1,6 @@
 import { ActivityIndicator } from "react-native-paper";
 import { Switch, Button } from "react-native-paper";
-
+import { ProgressBar } from "react-native-paper";
 import { ThemeContext } from "../Components/Theme";
 import React, { useState, useEffect } from "react";
 import ActionButton from "../Components/Actionbutton";
@@ -10,6 +10,7 @@ import PhoneIcon from "../Svg/Phoneuser";
 import EmailIcon from "../Svg/Emailuser";
 import Birthday from "../Svg/Birthday";
 import Edit from "../Svg/Edit";
+import UserProgress from "../Components/ProgressBar";
 import {
   SafeAreaView,
   View,
@@ -83,7 +84,7 @@ const UserRoute = (props) => {
           <BooksApp />
         </View>
         <View style={{ flexDirection: "column", flex: 10, marginLeft: 5 }}>
-          <View style={{ flexDirection: "column", flex: 6 }}>
+          <View style={{ flexDirection: "column", flex: 5 }}>
             <View
               style={{
                 flexDirection: "row",
@@ -203,11 +204,11 @@ const UserRoute = (props) => {
           </View>
           <View
             style={{
-              flex: 4,
+              flex: 2,
               flexDirection: "row",
               justifyContent: "space-between",
-              alignItems: "center",
-              marginLeft: 15,
+              alignItems: "flex-start",
+              marginHorizontal: 15,
               paddingHorizontal: 5,
             }}
           >
@@ -218,9 +219,10 @@ const UserRoute = (props) => {
               trackColor={{ true: "white", false: "blue" }}
               value={switchon}
               onValueChange={switchchanged}
-              style={{ marginRight: 25 }}
+              style={{ marginRight: 10 }}
             />
           </View>
+          <UserProgress  userscore={userobj.userscore/100}/>
         </View>
 
         <View
@@ -246,9 +248,9 @@ const UserRoute = (props) => {
               style={{ marginTop: 15 }}
             />
           </View>
-          <View style={{ marginBottom: 6 }}>
+          {/* <View style={{ marginBottom: 6 }}>
             <ActionButton title="Deactivate account" fontS="14" />
-          </View>
+          </View> */}
           <View style={{ marginLeft: 5, marginTop: 10 }}>
             <StaticText text="Contact us" />
             <View style={{ marginTop: 5 }}>

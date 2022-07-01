@@ -220,7 +220,7 @@ export default function Alert() {
       useScrollView={true}
       activeSlideOffset={2}
       enableMomentum={true}
-decelerationRate={0.8}
+      decelerationRate={0.8}
       onSnapToItem={(index) => setIndex(index)}
     />
   );

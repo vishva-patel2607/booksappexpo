@@ -4,11 +4,10 @@ export const styles = StyleSheet.create({
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      marginTop: 22,
     },
     modalView: {
       width: "70%",
-      margin: 10,
+      // height:'70%'
       backgroundColor: "white",
       borderRadius: 20,
       padding: 15,

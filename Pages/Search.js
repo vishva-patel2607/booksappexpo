@@ -117,12 +117,13 @@ const SearchRoute = (props) => {
     <Pressable
       // key={idx}
        onPress={() => props.navigation.navigate('Bookscreen',{book:item})}
+       style={{marginTop:10}}
     >
       <View
         style={{
           flexDirection: "row",
           marginHorizontal: 16,
-          marginTop: 6,
+          
           flex: 1,
           justifyContent: "space-between",
         }}
@@ -621,18 +622,20 @@ const SearchRoute = (props) => {
           )}
         </View>
       </View>
-      <Divider
+      {/* <Divider
         style={{
           marginTop: 10,
           backgroundColor: color,
           height: 0.6,
         }}
-      />
+      /> */}
       <View
         style={{
           flexDirection: "row",
           justifyContent: "flex-start",
           flexWrap: "wrap",
+          marginTop:10,
+          marginHorizontal:5,
         }}
       >
         {[...filterlist, ...pricefilterlist].map((val, id) => (
@@ -672,7 +675,7 @@ const SearchRoute = (props) => {
           </View>
         ))}
       </View>
-      {([...filterlist].length !== 0 ||
+      {/* {([...filterlist].length !== 0 ||
         [...pricefilterlist].length !== 0 ||
         [...distancefilterlist].length !== 0) && (
         <Divider
@@ -682,7 +685,7 @@ const SearchRoute = (props) => {
             height: 0.6,
           }}
         />
-      )}
+      )} */}
 
       <FlatList
         data={Receiveddata}

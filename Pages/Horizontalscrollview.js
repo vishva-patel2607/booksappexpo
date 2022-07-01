@@ -7,7 +7,7 @@ import StaticText from "../Components/StaticText";
 const Horizontalscrollview = (props) => {
   const [loading, showLoading] = useState(false);
   return (
-    <ScrollView style={styles.cardscroll} horizontal={true}>
+    <ScrollView style={styles.cardscroll} horizontal={true} showsHorizontalScrollIndicator={false}>
       {props.booklist.map((book, idx) => (
         <Pressable
           key={idx}

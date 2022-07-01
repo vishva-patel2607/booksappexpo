@@ -21,10 +21,218 @@ const Alertbookscreen = (props) => {
   const [distance, setDistance] = useState("");
   const { book } = props.route.params;
   const user = useSelector((state) => state.user);
-  let buttontype = book.book_transaction_default === "BORROWED_BOOK_NOT_RETURNED" ? "Claim lost" : "Remove"
-  
-  
+  let buttontype =
+    book.book_transaction_default === "BORROWED_BOOK_NOT_RETURNED"
+      ? "Claim lost"
+      : "Remove";
+
   let textColor = Theme === "Light" ? "#0D1936" : "#ECEFEE";
+
+  const markaslost = () => {
+    fetch(`https://booksapp2021.herokuapp.com/Book/Borrowed/Lost`, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "x-access-token": user.token,
+      },
+      body: JSON.stringify({
+        book_id: book.book_id,
+      }),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.status) {
+          Alert.alert("Success", data.message, [
+            {
+              text: "Ok",
+              onPress: () =>
+                props.navigation.navigate("Mainpage", {
+                  screen: "Home",
+                  params: { refreshing: true },
+                }),
+            },
+          ]);
+        } else {
+          if (data.message === "Could not verify") {
+            dispatch(logoutUser());
+          } else {
+            Alert.alert("Note", data.message, [
+              {
+                text: "Ok",
+              },
+            ]);
+          }
+        }
+      });
+  };
+
+  const removebook = () => {
+    if (book.usernumber === user.accountNumber) {
+      if (book.book_transaction_type === "lend") {
+        fetch(`https://booksapp2021.herokuapp.com/Book/Lent/Remove`, {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "x-access-token": user.token,
+          },
+          body: JSON.stringify({
+            book_id: book.book_id,
+          }),
+        })
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            if (data.status) {
+              Alert.alert("Success", data.message, [
+                {
+                  text: "Ok",
+                  onPress: () =>
+                    props.navigation.navigate("Mainpage", {
+                      screen: "Home",
+                      params: { refreshing: true },
+                    }),
+                },
+              ]);
+            } else {
+              if (data.message === "Could not verify") {
+                dispatch(logoutUser());
+              } else {
+                Alert.alert("Note", data.message, [
+                  {
+                    text: "Ok",
+                  },
+                ]);
+              }
+            }
+          });
+      } else {
+        fetch(`https://booksapp2021.herokuapp.com/Book/Sold/Remove`, {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "x-access-token": user.token,
+          },
+          body: JSON.stringify({
+            book_id: book.book_id,
+          }),
+        })
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            if (data.status) {
+              Alert.alert("Success", data.message, [
+                {
+                  text: "Ok",
+                  onPress: () =>
+                    props.navigation.navigate("Mainpage", {
+                      screen: "Home",
+                      params: { refreshing: true },
+                    }),
+                },
+              ]);
+            } else {
+              if (data.message === "Could not verify") {
+                dispatch(logoutUser());
+              } else {
+                Alert.alert("Note", data.message, [
+                  {
+                    text: "Ok",
+                  },
+                ]);
+              }
+            }
+          });
+      }
+    } else {
+      if (book.book_transaction_type === "lend") {
+        console.log("Data");
+        fetch(`https://booksapp2021.herokuapp.com/Book/Borrowed/Remove`, {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "x-access-token": user.token,
+          },
+          body: JSON.stringify({
+            book_id: book.book_id,
+          }),
+        })
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            if (data.status) {
+              Alert.alert("Success", data.message, [
+                {
+                  text: "Ok",
+                  onPress: () =>
+                    props.navigation.navigate("Mainpage", {
+                      screen: "Home",
+                      params: { refreshing: true },
+                    }),
+                },
+              ]);
+            } else {
+              if (data.message === "Could not verify") {
+                dispatch(logoutUser());
+              } else {
+                Alert.alert("Note", data.message, [
+                  {
+                    text: "Ok",
+                  },
+                ]);
+              }
+            }
+          });
+      } else {
+        fetch(`https://booksapp2021.herokuapp.com/Book/Bought/Remove`, {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "x-access-token": user.token,
+          },
+          body: JSON.stringify({
+            book_id: book.book_id,
+          }),
+        })
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            if (data.status) {
+              Alert.alert("Success", data.message, [
+                {
+                  text: "Ok",
+                  onPress: () =>
+                    props.navigation.navigate("Mainpage", {
+                      screen: "Home",
+                      params: { refreshing: true },
+                    }),
+                },
+              ]);
+            } else {
+              if (data.message === "Could not verify") {
+                dispatch(logoutUser());
+              } else {
+                Alert.alert("Note", data.message, [
+                  {
+                    text: "Ok",
+                  },
+                ]);
+              }
+            }
+          });
+      }
+    }
+  };
 
   const setLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -212,7 +420,7 @@ const Alertbookscreen = (props) => {
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   textStyle: {

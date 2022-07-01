@@ -489,6 +489,7 @@ const HomeRoute = (props) => {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        showsVerticalScrollIndicator={false}
       >
         <BAheader />
         <BookConditions />

@@ -44,6 +44,9 @@ const Barcode = ({ setIsbn, FetchBookfromISBN, showQR, setShowQR }) => {
             width: "70%",
             marginLeft: "auto",
             marginRight: "auto",
+            height:"80%",
+            
+            
           }}
         >
           <BarCodeScanner
@@ -51,8 +54,8 @@ const Barcode = ({ setIsbn, FetchBookfromISBN, showQR, setShowQR }) => {
             style={[
               StyleSheet.absoluteFillObject,
               {
-                height: windowHeight,
                 
+                borderRadius:20,
                 width: "100%",
                 zIndex: 1000,
               },

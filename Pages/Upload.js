@@ -395,7 +395,7 @@ const UploadRoute = (props) => {
         flex: 1,
         
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-        opacity: visible || showQR ? 0.35 : 1,
+        opacity: visible || showQR ? 0.1 : 1,
       }}
     >
       <View style={{flex:1}}>
@@ -422,7 +422,7 @@ const UploadRoute = (props) => {
                 position: "absolute",
                 height: "100%",
                 width: "100%",
-                marginTop: 100,
+                justifyContent:'center',
                 opacity: showQR ? 0.7 : 0,
                 zIndex: 1000,
               }}
@@ -432,7 +432,7 @@ const UploadRoute = (props) => {
                 onPress={() => setShowQR(false)}
                 style={{
                   alignSelf: "flex-end",
-                  marginRight: "15%",
+                  marginRight: "9%",
                 }}
               >
                 <Closemodal />
@@ -682,7 +682,7 @@ const UploadRoute = (props) => {
                       onPress={() => setVisible(false)}
                       style={{
                         alignSelf: "flex-end",
-                        marginRight: "18%",
+                        marginRight: "10%",
                       }}
                     >
                       <Closemodal />

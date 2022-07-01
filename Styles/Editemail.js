@@ -14,6 +14,7 @@ export const styles = StyleSheet.create({
       borderRadius: 120,
       height: 50,
       paddingLeft: 10,
+      overflow:'hidden'
     },
   
     submitbutton: {
