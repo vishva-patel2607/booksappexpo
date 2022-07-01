@@ -161,6 +161,7 @@ const Storemodal = (props) => {
               margin: 10,
               alignSelf: "center",
               justifyContent: "center",
+              backgroundColor:'#E96A59'
             }}
             labelStyle={{
               fontSize: 16,
@@ -185,7 +186,7 @@ const Storemodal = (props) => {
     return (
       <SafeAreaView style={{flex:1, paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0}}>
         <View style={styles.activityindicator}>
-          <ActivityIndicator animating={true} size={100} />
+          <ActivityIndicator animating={true} size={100} color='#E96A59' />
         </View>
       </SafeAreaView>
     );

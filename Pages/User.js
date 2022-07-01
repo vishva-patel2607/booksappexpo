@@ -264,7 +264,7 @@ const UserRoute = (props) => {
     return (
       <SafeAreaView>
         <View style={styles.activityindicator}>
-          <ActivityIndicator animating={true} size={100} />
+          <ActivityIndicator animating={true} size={100} color='#E96A59' />
         </View>
       </SafeAreaView>
     );

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Alert } from "react-native";
 import {
   SafeAreaView,
   View,
@@ -14,7 +15,7 @@ import Backbutton from "./Backbutton";
 import { Text, Button } from "react-native-paper";
 import * as Location from "expo-location";
 import { getPreciseDistance } from "geolib";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 
 const Alertbookscreen = (props) => {
   const { textcolor } = React.useContext(ThemeContext);
@@ -295,7 +296,6 @@ const Alertbookscreen = (props) => {
           bookprice={book.book_price}
           bookyear={book.book_year}
         />
-        {/* </View> */}
         <View>
           <Image
             source={{ uri: book.book_img }}
@@ -396,7 +396,8 @@ const Alertbookscreen = (props) => {
         </MapView>
       </View>
       <View style={{ justifyContent: "flex-end", flex: 1 }}>
-        <Pressable style={{ justifyContent: "flex-end", alignSelf: "center" }}>
+        <Pressable style={{ justifyContent: "flex-end", alignSelf: "center" }} 
+        onPress={buttontype==='Claim lost' ? markaslost : removebook}>
           <Button
             theme={{ roundness: 120 }}
             style={{
@@ -405,6 +406,7 @@ const Alertbookscreen = (props) => {
               margin: 10,
               alignSelf: "center",
               justifyContent: "center",
+              backgroundColor:'#E96A59'
             }}
             labelStyle={{
               fontSize: 16,

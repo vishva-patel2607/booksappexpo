@@ -27,6 +27,7 @@ import Seperator from "../Components/Seperator";
 const SearchRoute = (props) => {
   const { colors } = useTheme();
   const { Theme } = useContext(ThemeContext);
+  let color = Theme === 'Light' ? '#0D1936' : '#ECEFEE'
   const [longitude, setLongitude] = useState();
   const [showcategoryoption, setShowcategoryoption] = useState(false);
   const [showpricedown, setShowpricedown] = useState(false);
@@ -156,7 +157,7 @@ const SearchRoute = (props) => {
                 
               }}
             >
-              <ActivityIndicator size="small" />
+              <ActivityIndicator size="small" color="#E96A59" />
             </View>
           )}
           <Image

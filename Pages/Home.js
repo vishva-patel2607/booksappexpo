@@ -12,7 +12,7 @@ import Constants from "expo-constants";
 import Newbooks from "../Components/Newbooks";
 import * as Notifications from "expo-notifications";
 import Alert from "../Components/Alerts";
-
+import {styles} from '../Styles/Homestyles';
 const HomeRoute = (props) => {
   const [devicePushToken, setDevicePushToken] = useState("");
   const [notification, setNotification] = useState(false);
@@ -24,7 +24,6 @@ const HomeRoute = (props) => {
   const [boughtbooks, setBoughtbooks] = useState([]);
   const [pickupbooks, setPickupbooks] = useState([]);
   const [dropoffbooks, setDropoffbooks] = useState([]);
-  const [previoustransactions, setPrevioustransactions] = useState([]);
   const [soldbooks, setSoldbooks] = useState([]);
   const [count, setCount] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
@@ -139,7 +138,7 @@ const HomeRoute = (props) => {
       });
 
     responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
+      Notifications.addNotificationResponseReceivedListener(() => {
         
       });
 
@@ -249,7 +248,7 @@ const HomeRoute = (props) => {
           }
         }
       })
-      .catch((error) => {
+      .catch(() => {
         
       });
 
@@ -280,7 +279,7 @@ const HomeRoute = (props) => {
           }
         }
       })
-      .catch((error) => {
+      .catch(() => {
         
       });
 
@@ -311,7 +310,7 @@ const HomeRoute = (props) => {
           }
         }
       })
-      .catch((error) => {
+      .catch(() => {
         
       });
 
@@ -341,7 +340,7 @@ const HomeRoute = (props) => {
           }
         }
       })
-      .catch((error) => {
+      .catch(() => {
         
       });
 
@@ -372,7 +371,7 @@ const HomeRoute = (props) => {
           }
         }
       })
-      .catch((error) => {
+      .catch(() => {
         
       });
 
@@ -439,7 +438,7 @@ const HomeRoute = (props) => {
           }
         }
       })
-      .catch((error) => {
+      .catch(() => {
         
       });
 
@@ -472,7 +471,7 @@ const HomeRoute = (props) => {
           }
         }
       })
-      .catch((error) => {
+      .catch(() => {
         
       });
   }, [count]);
@@ -517,26 +516,6 @@ const HomeRoute = (props) => {
   );
 };
 
-const styles = StyleSheet.create({
-  AndroidSafeArea: {
-    flex: 1,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight  : 0,
-  },
-  submitbutton: {
-    fontSize: 18,
-    height: 40,
-    width: 300,
-    alignSelf: "center",
-    borderRadius: 10,
-    color: "white",
-  },
-  statistics: {
-    textAlign: "left",
-    marginTop: 20,
-  },
-  cardview: {
-    flex: 1,
-  },
-});
+
 
 export default React.memo(HomeRoute);

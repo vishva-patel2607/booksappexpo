@@ -15,7 +15,7 @@ import Backbutton from "../Components/Backbutton";
 import * as Location from "expo-location";
 import { getPreciseDistance } from "geolib";
 import { ThemeContext } from "../Components/Theme.js";
-
+import { useTheme } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Title, Text, ActivityIndicator } from "react-native-paper";
 import MapView, { Marker } from "react-native-maps";
@@ -39,7 +39,7 @@ const BookDetail = (props) => {
 const Bookdetail = (props) => {
   
   const {textcolor} = React.useContext(ThemeContext);
-  
+  const {colors} = useTheme();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [imageloading, setImageloading] = useState(false);
@@ -342,7 +342,7 @@ const Bookdetail = (props) => {
             >
               {imageloading && (
                <View style={{justifyContent:'center',alignItems:'center',alignContent:'center',zIndex:0,position:'absolute',marginTop:10}}>
-               <ActivityIndicator size="small" />
+               <ActivityIndicator size="small" color='#E96A59' />
                </View>
               )}
               {<Image

@@ -19,7 +19,7 @@ function RenderActionButton({Click,fontS,title}) {
           width: 215,
           height: 40,
           alignItems: "flex-start",
-
+          backgroundColor:'#E96A59',
           justifyContent: "center",
         }}
         labelStyle={{

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, Image, Dimensions, StyleSheet } from "react-native";
+import { Text, View, Image, Dimensions, StyleSheet,Pressable } from "react-native";
 import { Button } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../actions";
@@ -10,7 +10,7 @@ import Bubbles from "../Svg/Bubbles";
 const SLIDER_WIDTH = Dimensions.get("window").width;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 1);
 import { useNavigation } from '@react-navigation/native';
-export default function Alert() {
+function Alert() {
   const [data, setData] = useState([]);
   const navigation = useNavigation(); 
   const [index,setIndex] = useState();
@@ -130,6 +130,9 @@ export default function Alert() {
               >
                 {buttontype}
               </Button>
+              <Pressable onPress={() => navigation.navigate("Alertbookscreen", { book: item })}  style={({ pressed }) => [
+              pressed ? { opacity: 0.9 } : {},
+              ]}>
               <Button
                 mode="contained"
                 style={{
@@ -144,10 +147,10 @@ export default function Alert() {
                   fontWeight: "700",
                   color: "#ECEFEE",
                 }}
-                onPress={() => navigation.navigate("Alertbookscreen", { book: item })}
               >
                 View
               </Button>
+              </Pressable>
             </View>
           </View>
         </View>
@@ -218,13 +221,15 @@ export default function Alert() {
       scrollInterpolator={scrollInterpolator}
       slideInterpolatedStyle={animatedStyles}
       useScrollView={true}
-      activeSlideOffset={2}
+      activeSlideOffset={1}
       enableMomentum={true}
-      decelerationRate={0.8}
+      decelerationRate={0.99}
       onSnapToItem={(index) => setIndex(index)}
     />
   );
 }
+
+export default React.memo(Alert);
 
 const styles = StyleSheet.create({
   carouselContainer: {

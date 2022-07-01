@@ -546,7 +546,7 @@ const UploadRoute = (props) => {
               {props.route.params?.photo && imgurl ? (
                 <View style={{ width: "100%", height: "100%" }}>
                   {imageloading && (
-                    <ActivityIndicator style={{ marginTop: 20 }} />
+                    <ActivityIndicator style={{ marginTop: 20 }} color='#E96A59' />
                   )}
                   <Image
                     style={{
@@ -891,6 +891,7 @@ const UploadRoute = (props) => {
               height: 40,
               marginBottom: 10,
               alignSelf: "center",
+              backgroundColor:'#E96A59'
             }}
             labelStyle={{
               fontSize: 16,

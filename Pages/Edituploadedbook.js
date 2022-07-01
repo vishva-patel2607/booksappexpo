@@ -66,7 +66,6 @@ const Edituploadedbook = (props) => {
 
   const editbooks = () => {
     
-    console.log('editted');
     fetch("https://booksapp2021.herokuapp.com/Book/Lent/Edit", {
       method: "PUT",
       headers: {
@@ -88,7 +87,6 @@ const Edituploadedbook = (props) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         if (data.status) {
           Alert.alert("Success", "Book Details Updated", [
             {
@@ -118,7 +116,7 @@ const Edituploadedbook = (props) => {
         }
       })
       .catch((error) => {
-        console.log(error);
+        alert(error);
       });
   };
 
@@ -403,6 +401,7 @@ const Edituploadedbook = (props) => {
             margin: 10,
             alignSelf: "center",
             justifyContent: "flex-end",
+            backgroundColor:'#E96A59'
           }}
           labelStyle={{
             fontSize: 16,

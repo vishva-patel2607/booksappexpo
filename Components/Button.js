@@ -16,6 +16,7 @@ import { PropTypes } from "prop-types";
           height: 50,
           alignItems: "center",
           justifyContent: "center",
+          backgroundColor:'#E96A59'
         }}
         labelStyle={{
           fontSize: 20,

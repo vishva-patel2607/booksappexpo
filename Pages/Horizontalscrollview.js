@@ -33,7 +33,7 @@ const Horizontalscrollview = (props) => {
            
            {loading && 
            <View style={{justifyContent:'center',alignItems:'center',alignContent:'center',zIndex:0,position:'absolute'}}>
-             <ActivityIndicator size="small" />
+             <ActivityIndicator size="small" color="#E96A59" />
              </View>}
              {
               <Image
