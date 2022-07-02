@@ -81,7 +81,7 @@ const Storemodal = (props) => {
     return (
       <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0 }}>
         <View>
-          <Pressable onPress={() => props.navigation.navigate("Upload")}>
+          <Pressable onPress={() => props.navigation.goBack()}>
             <Backbutton />
           </Pressable>
           <Text

@@ -144,7 +144,7 @@ const Signup = (props) => {
     <SafeAreaView style={styles.loginlayout}>
       
       <View style={{ flex: 1, alignSelf: "flex-start", marginLeft: 10 }}>
-        <Pressable onPress={() => props.navigation.navigate("InitialSignup")}>
+        <Pressable onPress={() => props.navigation.goBack()}>
           <Backbutton />
         </Pressable>
       </View>

@@ -69,7 +69,7 @@ const CamerScreen = (props) => {
           Platform.OS === "android" ? StatusBar.currentHeight : 0,
       }}
     >
-      <Pressable onPress={() => props.navigation.navigate("Upload")} style={{marginBottom:10}}>
+      <Pressable onPress={() => props.navigation.goBack()} style={{marginBottom:10}}>
         <Backbutton />
       </Pressable>
       <View style={styles.container}>

@@ -19,8 +19,6 @@ const Forgotpassword = (props) => {
   const [username, setUsername] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
   const {textcolor} = React.useContext(ThemeContext);
 
   useEffect(() => {
@@ -68,7 +66,7 @@ const Forgotpassword = (props) => {
   return (
     <SafeAreaView style={styles.layout}>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
-        <Pressable onPress={() => props.navigation.navigate("Login")}>
+        <Pressable onPress={() => props.navigation.goBack()}>
           <Backbutton />
         </Pressable>
       </View>
@@ -101,7 +99,7 @@ const Forgotpassword = (props) => {
           autoCapitalize="none"
           autoCorrect={false}
           underlineColor="transparent"
-          ll
+          
         />
 
         <Button
@@ -112,6 +110,7 @@ const Forgotpassword = (props) => {
             height: 40,
             marginTop: 25,
             alignItems: "flex-start",
+            backgroundColor:'#E96A59'
           }}
           labelStyle={{
             fontSize: 16,

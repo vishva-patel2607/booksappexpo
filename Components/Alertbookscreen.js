@@ -15,7 +15,7 @@ import Backbutton from "./Backbutton";
 import { Text, Button } from "react-native-paper";
 import * as Location from "expo-location";
 import { getPreciseDistance } from "geolib";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 const Alertbookscreen = (props) => {
   const { textcolor } = React.useContext(ThemeContext);
@@ -26,8 +26,6 @@ const Alertbookscreen = (props) => {
     book.book_transaction_default === "BORROWED_BOOK_NOT_RETURNED"
       ? "Claim lost"
       : "Remove";
-
-
 
   const markaslost = () => {
     fetch(`https://booksapp2021.herokuapp.com/Book/Borrowed/Lost`, {
@@ -153,7 +151,6 @@ const Alertbookscreen = (props) => {
       }
     } else {
       if (book.book_transaction_type === "lend") {
-        
         fetch(`https://booksapp2021.herokuapp.com/Book/Borrowed/Remove`, {
           method: "DELETE",
           headers: {
@@ -257,12 +254,33 @@ const Alertbookscreen = (props) => {
   };
 
   useEffect(() => {
-    let unmounted = false;
-    if (!unmounted) {
-      setLocation();
-    }
+    let mounted = true;
+    
+      (async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+
+        if (status !== "granted") {
+          setErrorMsg("Permission to access location was denied");
+          return;
+        }
+        let loc = await Location.getCurrentPositionAsync({});
+        let lat = loc.coords.latitude;
+        let long = loc.coords.longitude;
+        const DISTANCE =
+          getPreciseDistance(
+            { latitude: lat, longitude: long },
+            {
+              latitude: book.book_store_info.store_latitude,
+              longitude: book.book_store_info.store_longitude,
+            }
+          ) / 1000;
+        if(mounted){
+        setDistance(DISTANCE.toString().slice(0, 4));
+        }
+      })();
+
     return () => {
-      unmounted = true;
+      mounted = false;
     };
   }, []);
 
@@ -274,7 +292,7 @@ const Alertbookscreen = (props) => {
       }}
     >
       <View style={{ justifyContent: "flex-start" }}>
-        <Pressable onPress={() => props.navigation.navigate("Home")}>
+        <Pressable onPress={() => props.navigation.goBack()}>
           <Backbutton />
         </Pressable>
       </View>
@@ -396,8 +414,10 @@ const Alertbookscreen = (props) => {
         </MapView>
       </View>
       <View style={{ justifyContent: "flex-end", flex: 1 }}>
-        <Pressable style={{ justifyContent: "flex-end", alignSelf: "center" }} 
-        onPress={buttontype==='Claim lost' ? markaslost : removebook}>
+        <Pressable
+          style={{ justifyContent: "flex-end", alignSelf: "center" }}
+          onPress={buttontype === "Claim lost" ? markaslost : removebook}
+        >
           <Button
             theme={{ roundness: 120 }}
             style={{
@@ -406,7 +426,7 @@ const Alertbookscreen = (props) => {
               margin: 10,
               alignSelf: "center",
               justifyContent: "center",
-              backgroundColor:'#E96A59'
+              backgroundColor: "#E96A59",
             }}
             labelStyle={{
               fontSize: 16,

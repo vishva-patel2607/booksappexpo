@@ -147,7 +147,7 @@ const Bookscreen = (props) => {
       }}
     >
       <View style={{ justifyContent: "flex-start" }}>
-        <Pressable onPress={() => props.navigation.navigate("Search")}>
+        <Pressable onPress={() => props.navigation.goBack()}>
           <Backbutton />
         </Pressable>
       </View>
@@ -288,6 +288,7 @@ const Bookscreen = (props) => {
               margin: 10,
               alignSelf: "center",
               justifyContent: "center",
+              backgroundColor:'#E96A59'
             }}
             labelStyle={{
               fontSize: 14,

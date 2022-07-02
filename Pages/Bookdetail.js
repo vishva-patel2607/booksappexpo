@@ -314,7 +314,7 @@ const Bookdetail = (props) => {
         opacity:modalVisible === true ? 0.35 : 1
       }}
     >
-      <Pressable onPress={() => props.navigation.navigate("Home")}>
+      <Pressable onPress={() => props.navigation.goBack()}>
         <Backbutton />
       </Pressable>
       <ScrollView>
@@ -439,7 +439,7 @@ const Bookdetail = (props) => {
                           style={[
                             styles.buttonmodal,
                             {
-                              color: (textcolor = '#0D1936' 
+                              color: (textcolor === '#0D1936' 
                                 ? "#FFFFFF"
                                 : "#0036F4"),
                             },

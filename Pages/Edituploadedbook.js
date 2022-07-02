@@ -124,7 +124,7 @@ const Edituploadedbook = (props) => {
   return (
     <SafeAreaView style={{ flex: 1, flexDirection: "column" }}>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
-        <Pressable onPress={() => props.navigation.navigate("Bookdetail")}>
+        <Pressable onPress={() => props.navigation.goBack()}>
           <Backbutton />
         </Pressable>
       </View>

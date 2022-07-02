@@ -86,7 +86,7 @@ const Changepassword = (props) => {
   return (
     <SafeAreaView style={styles.layout}>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
-        <Pressable onPress={() => props.navigation.navigate("User")}>
+        <Pressable onPress={() => props.navigation.goBack()}>
           <Backbutton />
         </Pressable>
       </View>

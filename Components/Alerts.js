@@ -10,6 +10,7 @@ import Bubbles from "../Svg/Bubbles";
 const SLIDER_WIDTH = Dimensions.get("window").width;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 1);
 import { useNavigation } from '@react-navigation/native';
+import { Alerttypes } from "./Alertypes";
 function Alert() {
   const [data, setData] = useState([]);
   const navigation = useNavigation(); 
@@ -23,6 +24,7 @@ function Alert() {
   const renderItem = ({ item }) => {
     let buttontype = item.book_transaction_default === "BORROWED_BOOK_NOT_RETURNED" ? "Claim lost" : "Remove"
     let textalign = item.book_transaction_default === "BORROWED_BOOK_NOT_RETURNED" ? "flex-start" : "center"
+    let defaulttext = Alerttypes[item.book_transaction_default]
     return (
       <>
         <View
@@ -76,7 +78,7 @@ function Alert() {
                   }}
                   numberOfLines={2}
                 >
-                  {item.book_transaction_default}
+                  {defaulttext}
                 </Text>
                 <Text
                   style={{
