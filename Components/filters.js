@@ -1,9 +1,11 @@
 
 
-export let Distance =
+export let Condition =
 [
-    { id: 1, name: "near to far" },
-    { id: 2, name: "far to near" },
+    { id: 1, name: "Great" },
+    { id: 2, name: "Good" },
+    { id: 3, name: "Fair" },
+    { id: 4, name: "Bad" },
 ];
 
 export let Price = [
@@ -18,7 +20,7 @@ export let Category = [
     { id: 8, name: "Crime/thriller" },
     { id: 9, name: "Self help" },
     { id: 10, name: "Humor" },
-    { id: 11, name: "Science Fiction" },
+    { id: 11, name: "Sci/Fi" },
     { id: 12, name: "Biography" },
     { id: 13, name: "History" },
     { id: 14, name: "Religious" },

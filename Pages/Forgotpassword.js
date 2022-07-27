@@ -1,133 +1,140 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   View,
   StyleSheet,
   Alert,
+  Pressable,
+  Image,
+  StatusBar,
 } from "react-native";
-
+import Error from "../Components/Error";
+import { ThemeContext } from "../Components/Theme";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutUser } from "../actions";
-import {
-  Button,
-  TextInput,
-} from "react-native-paper";
-import { Platform, StatusBar } from "react-native";
+import Backbutton from "../Components/Backbutton";
+import { Button, TextInput, Text } from "react-native-paper";
 
-const ForgotPassword = (props) => {
-  const user = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-  const [phoneno, setphoneno] = useState("");
-  const [newpassword1, setNewpassword1] = useState("");
-  const [newpassword2, setNewpassword2] = useState("");
+const Forgotpassword = (props) => {
+  
+  const [username, setUsername] = useState("");
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const changepassword = () => {
-    var passwordRegex = new RegExp(
-      "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})"
-    );
-    if (phoneno.length === 0 || !/^\d+$/.test(phoneno)) {
-      alert("Check your Phonenumber");
-      return;
-    } else if (newpassword1.length === 0) {
-      alert("Enter your new password");
-      return;
-    } else if (newpassword2.length === 0) {
-      alert("Re-type your new password");
-      return;
-    } else if (
-      newpassword1 !== newpassword2 ||
-      !passwordRegex.test(newpassword1) ||
-      !passwordRegex.test(newpassword2)
-    ) {
-      alert(
-        "Check Password! \n\n Password must contains eight characters, at least one uppercase letter, one lowercase letter and one number \n\n And both passwords should match"
-      );
-      return;
-    } else {
-      fetch("https://booksapp2021.herokuapp.com/User/Changepassword", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "x-access-token": user.token,
-        },
-        body: JSON.stringify({
-          phoneno: phoneno,
-          newpassword: newpassword1,
-        }),
+  const {textcolor} = React.useContext(ThemeContext);
+
+  useEffect(() => {
+    let unmounted = false;
+
+    setTimeout(() => {
+      if (!unmounted) {
+        setError("");
+      }
+    }, 3000);
+    return () => {
+      unmounted = true;
+    };
+  }, [error]);
+  const forgotpassword = () => {
+    fetch("https://booksapp2021.herokuapp.com/User/Forgotpassword", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: username,
+      }),
+    })
+      .then((response) => {
+        return response.json();
       })
-        .then((response) => {
-          for (var pair of response.headers.entries()) {
-            if (pair[0] === "www-authenticate") {
-              dispatch(logoutUser());
-              return;
-            } else if (pair[0] === "www-changepassword") {
-              if (pair[1] === "Password Changed!") {
-                setError(pair[1]);
-                Alert.alert(error, "Please Login again to continue", [
-                  { text: "Login", onPress: () => dispatch(logoutUser()) },
-                ]);
-              } else {
-                setError(pair[1]);
-                return;
-              }
-            }
-          }
-        })
-        .catch((error) => console.log(error));
-    }
+      .then((data) => {
+        if (data.status) {
+          setMessage(data.message);
+          Alert.alert(message, "Kindly verify", [
+            { text: "Ok", onPress: () => props.navigation.navigate("Login") },
+          ]);
+        } else {
+          
+          setError(data.message);
+        }
+      })
+      .catch((error) => {
+        
+      });
   };
+
   return (
     <SafeAreaView style={styles.layout}>
-      <View style={styles.layout}>
+      <View style={{ justifyContent: "flex-start", flex: 1 }}>
+        <Pressable onPress={() => props.navigation.goBack()}>
+          <Backbutton />
+        </Pressable>
+      </View>
+      <View style={{ justifyContent: "center", flex: 1 }}>
+        <Text
+          style={{
+            fontSize: 22,
+            fontWeight: "700",
+            color: textcolor,
+            marginLeft: 22,
+            fontFamily: "DMSansbold",
+          }}
+        >
+          Forgot Password?
+        </Text>
+      </View>
+      <View style={{ marginLeft: 19, flex: 12 }}>
         <TextInput
           style={styles.inputtextbox}
-          label="Phoneno"
-          value={phoneno}
-          onChangeText={(text) => setphoneno(text)}
+          theme={{
+            colors: {
+              primary: "#EEECEF",
+              placeholder: "#8e8e8e",
+            },
+            roundness: 120,
+          }}
+          placeholder="Enter Username"
+          value={username}
+          onChangeText={(text) => setUsername(text)}
           autoCapitalize="none"
           autoCorrect={false}
-          keyboardType="number-pad"
-          maxLength={20}
-        />
-
-        <TextInput
-          style={styles.inputtextbox}
-          label="New Password"
-          value={newpassword1}
-          onChangeText={(text) => setNewpassword1(text)}
-          autoCapitalize="none"
-          autoCorrect={false}
-          maxLength={20}
-          secureTextEntry={true}
-        />
-
-        <TextInput
-          style={styles.inputtextbox}
-          label="Re-type New Password"
-          value={newpassword2}
-          onChangeText={(text) => setNewpassword2(text)}
-          autoCapitalize="none"
-          autoCorrect={false}
-          maxLength={20}
-          secureTextEntry={true}
+          underlineColor="transparent"
+          
         />
 
         <Button
+          theme={{ roundness: 120 }}
+          onPress={forgotpassword}
+          style={{
+            width: 215,
+            height: 40,
+            marginTop: 25,
+            alignItems: "flex-start",
+            backgroundColor:'#E96A59'
+          }}
+          labelStyle={{
+            fontSize: 16,
+            color: "white",
+            flexDirection: "row",
+            fontFamily: "DMSansbold",
+            paddingLeft: 8,
+          }}
           mode="contained"
-          style={styles.submitbutton}
-          labelStyle={styles.submitbutton}
-          onPress={changepassword}
         >
-          Change Password
+          SAVE
         </Button>
-        <Button onPress={() => props.navigation.navigate("Login")}>
-          Go to Login
-        </Button>
+        <View style={{ alignSelf: "center" }}>
+          {error !== "" && (
+            <View style={{ marginTop: 30 }}>
+              <Error text={error} />
+            </View>
+          )}
+        </View>
       </View>
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   error: {
     textAlign: "center",
@@ -137,7 +144,12 @@ const styles = StyleSheet.create({
   },
 
   inputtextbox: {
-    margin: 10,
+    marginTop: 15,
+    width: 215,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 120,
+    height: 50,
+    paddingLeft: 10,
   },
 
   submitbutton: {
@@ -151,4 +163,4 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
 });
-export default React.memo(ForgotPassword);
+export default React.memo(Forgotpassword);

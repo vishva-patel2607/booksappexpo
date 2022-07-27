@@ -1,19 +1,12 @@
 import { Text } from "react-native";
 import * as React from "react";
-import {useTheme} from '@react-navigation/native';
-import {
-  DMSans_400Regular,
-  DMSans_400Regular_Italic,
-  DMSans_500Medium,
-  DMSans_500Medium_Italic,
-  DMSans_700Bold,
-  DMSans_700Bold_Italic,
-} from "@expo-google-fonts/dm-sans";
+import { ThemeContext } from "./Theme";
 
-export default function StaticText(props) {
-  const {colors} = useTheme();
+function StaticText(props) {
+  const {textcolor} = React.useContext(ThemeContext);
+  
   return (
-    <Text style={{ fontSize: props.fontS, fontFamily: "DMSans",color:colors.text }}>
+    <Text style={{ fontSize: props.fontS, fontFamily: "DMSans",color:textcolor }}>
       {props.text}
     </Text>
   );
@@ -22,3 +15,4 @@ export default function StaticText(props) {
 StaticText.defaultProps = {
   fontSize: 14,
 };
+export default React.memo(StaticText);

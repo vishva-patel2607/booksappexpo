@@ -1,26 +1,24 @@
 import React, { useState } from "react";
-import {
-  SafeAreaView,
-  View,
-  StyleSheet,
-  Alert,
-  Pressable,
-  Image,
-} from "react-native";
-import { ThemeContext } from "../Components/Theme";
+import { SafeAreaView, View, Alert, Pressable } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../actions";
 import { useTheme } from "@react-navigation/native";
 import Backbutton from "../Components/Backbutton";
-import { Button, TextInput, Text } from "react-native-paper";
+import { TextInput, Text } from "react-native-paper";
+import { styles } from "../Styles/EditPhone";
+import ActionButton from '../Components/Actionbutton';
+import { ThemeContext } from "../Components/Theme";
+
 
 const EditPhone = (props) => {
-  const { colors } = useTheme();
+  
   const user = useSelector((state) => state.user);
   const [newphoneno, setNewphoneno] = useState("");
   const [error, setError] = useState("");
-  const { setTheme, Theme } = React.useContext(ThemeContext);
   const dispatch = useDispatch();
+  const { colors } = useTheme();
+  const {textcolor} = React.useContext(ThemeContext);
+
 
   const editphone = () => {
     if (newphoneno.length === 0 || !/^\d+$/.test(newphoneno)) {
@@ -43,7 +41,7 @@ const EditPhone = (props) => {
         })
         .then((data) => {
           if (data.status) {
-            console.log("Status true");
+            
             setError(data.message);
             Alert.alert(error, "Please log in again with your new Phone No.", [
               { text: "Login", onPress: () => dispatch(logoutUser()) },
@@ -55,7 +53,7 @@ const EditPhone = (props) => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     }
   };
@@ -63,30 +61,30 @@ const EditPhone = (props) => {
   return (
     <SafeAreaView style={styles.layout}>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
-        <Pressable onPress={() => props.navigation.navigate("User")}>
+        <Pressable onPress={() => props.navigation.goBack()}>
           <Backbutton />
         </Pressable>
       </View>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
         <Text
           style={{
-            fontSize: 25,
+            fontSize: 22,
             fontWeight: "700",
-            color: colors.text,
+            color: textcolor,
             marginLeft: 22,
+            fontFamily: "DMSansbold",
           }}
-          theme={{ fonts: { regular: "DM Sans" } }}
         >
           CHANGE PHONE
         </Text>
       </View>
       <View style={{ marginLeft: 19, flex: 12 }}>
+        <View style={{overflow:'hidden',height:59}}>
         <TextInput
           style={styles.inputtextbox}
           theme={{
             colors: {
-              primary: "#EEECEF",
-              placeholder: "#8e8e8e",
+              primary: colors.background
             },
             roundness: 120,
           }}
@@ -98,57 +96,18 @@ const EditPhone = (props) => {
           underlineColor="transparent"
           maxLength={10}
         />
+        </View>
 
-        <Text style={styles.error}>{error}</Text>
-        <Button
-          theme={{ roundness: 120 }}
-          onPress={editphone}
-          style={{
-            width: 215,
-            height: 40,
-            alignItems: "flex-start",
-            justifyContent: "center",
-          }}
-          labelStyle={{
-            fontSize: 16,
-            color: "white",
-            flexDirection: "row",
-            fontFamily: "DMSansbold",
-          }}
-          mode="contained"
-        >
-          SAVE
-        </Button>
+        <View style={{ marginTop: 25 }}>
+          <ActionButton
+            title="SAVE"
+            Click={editphone}
+            fontS="14"
+            style={{ marginTop: 25 }}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  error: {
-    textAlign: "center",
-    fontSize: 20,
-    color: "red",
-    padding: 20,
-  },
-
-  inputtextbox: {
-    marginTop: 11,
-    width: 215,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 120,
-    height: 50,
-    paddingLeft: 10,
-  },
-
-  submitbutton: {
-    margin: 10,
-    fontSize: 20,
-    color: "white",
-  },
-
-  layout: {
-    flex: 1,
-  },
-});
 export default React.memo(EditPhone);

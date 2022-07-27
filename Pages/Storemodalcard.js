@@ -1,19 +1,15 @@
-
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  Pressable
-} from "react-native";
+import { View ,Pressable } from "react-native";
+import { ThemeContext } from "../Components/Theme";
 import { useTheme } from "@react-navigation/native";
-import { Platform, StatusBar ,Text} from "react-native";
+import {  Text } from "react-native";
 // import DateTimePicker from "@react-native-community/datetimepicker";
 
- import MapView, { Marker } from "react-native-maps";
-
+import MapView, { Marker } from "react-native-maps";
 
 const Storemodalcard = (props) => {
-  const {colors} = useTheme();
+  const {textcolor} = React.useContext(ThemeContext);
+  const { colors } = useTheme();
   const [showMap, setShowMap] = useState(false);
   const [storeInchargeName, setStoreInchargeName] = useState(
     props.storeInchargeName
@@ -25,14 +21,14 @@ const Storemodalcard = (props) => {
   const [contactNo, setContactNo] = useState(props.contactNo);
   const [Latitude, setLatitude] = useState(props.latitude);
   const [Longitude, setLongitude] = useState(props.longitude);
-  const [mapRegion, setmapRegion] = useState({
+  
+  const mapRegion = {
     latitude: Latitude,
     longitude: Longitude,
     latitudeDelta: 0,
     longitudeDelta: 0,
-  });
-
-  let text = showMap?"Hide Map":"View Map"
+  };
+  let text = showMap ? "Hide Map" : "View Map";
   useEffect(() => {
     setStoreInchargeName(props.storeInchargeName);
     setShopName(props.shopName);
@@ -58,7 +54,12 @@ const Storemodalcard = (props) => {
     map = (
       <View>
         <MapView
-          style={{ alignSelf: "stretch", height: 200,marginTop:10,borderRadius:10 }}
+          style={{
+            alignSelf: "stretch",
+            height: 200,
+            marginTop: 10,
+            borderRadius: 10,
+          }}
           region={mapRegion}
           showsUserLocation={true}
           minZoomLevel={10}
@@ -68,67 +69,94 @@ const Storemodalcard = (props) => {
         >
           <Marker coordinate={mapRegion} title={shopName} />
         </MapView>
-
       </View>
     );
   } else {
     map = null;
   }
   return (
-    <><View style={{ flexDirection: 'row', justifyContent: 'space-around',marginTop:6 }}>
-      <View style={{
-        flex: 2,
-        marginRight: 10
-      }}>
-        <Text style={{
-          borderWidth: 2,
-          paddingVertical: 6,
-          fontWeight: "500",
-          borderColor: "#0036F4",
-          borderRadius: 18,
-          textAlign: "center",
-          fontFamily: 'DMSans',
-          color:colors.text
-        }}>
-          {distance} kms
-        </Text>
+    <>
+      <Pressable
+        onPress={() => {
+          props.Selectshop(props.id);
+          props.Selectshopoption(props.Indshop);
+        }}
 
-      </View>
-      <View style={{ flex: 5 }}>
-        <Text style={{
-          borderWidth: 2,
-          paddingVertical: 6,
-          fontWeight: "700",
-          borderColor: "#0036F4",
-          borderRadius: 18,
-          textAlign: "center",
-          fontFamily: 'DMSans',
-          color:colors.text
-        }}>
-          {shopName}
-        </Text>
-
-      </View>
-    </View>
-    <View style={{flexDirection:'row',marginTop:9,justifyContent:'space-between'}}>
-      <View style={{flexDirection:'column',alignSelf:'flex-end'}}>
-        <Text style={{fontFamily:'DMSans',color:colors.text}}>{storeInchargeName}</Text>
-        <Text style={{fontFamily:'DMSans',color:colors.text}}>{address}</Text>
-        <Text style={{fontFamily:'DMSans',color:colors.text}}>{contactNo}</Text>
-      </View>
-      <View style={{alignSelf:'flex-end',justifyContent:'flex-end'}}>
-        <Pressable onPress={() => setShowMap(!showMap)}>
-        <Text style={{color:colors.mapcolor}}>
-          {text}
+        style={{  padding: 10 }}
+      >
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-around",
+          marginTop: 6,
+        }}
+      >
+        <View
+          style={{
+            flex: 2,
+            marginRight: 10,
+          }}
+        >
+          <Text
+            style={{
+              borderWidth: 2,
+              paddingVertical: 6,
+              fontWeight: "500",
+              borderColor: "#0036F4",
+              borderRadius: 18,
+              textAlign: "center",
+              fontFamily: "DMSans",
+              color: textcolor,
+            }}
+          >
+            {distance} kms
           </Text>
+        </View>
+        <View style={{ flex: 5 }}>
+          <Text
+            style={{
+              borderWidth: 2,
+              paddingVertical: 6,
+              fontWeight: "700",
+              borderColor: "#0036F4",
+              borderRadius: 18,
+              textAlign: "center",
+              fontFamily: "DMSans",
+              color: textcolor,
+            }}
+          >
+            {shopName}
+          </Text>
+        </View>
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          marginTop: 9,
+          justifyContent: "space-between",
+        }}
+      >
+        <View style={{ flexDirection: "column", alignSelf: "flex-end",marginLeft:2 }}>
+          <Text style={{ fontFamily: "DMSans", color: textcolor }}>
+            {storeInchargeName}
+          </Text>
+          <Text style={{ fontFamily: "DMSans", color: textcolor }}>
+            {address}
+          </Text>
+          <Text style={{ fontFamily: "DMSans", color: textcolor }}>
+            {contactNo}
+          </Text>
+        </View>
+        <View style={{ alignSelf: "flex-end", justifyContent: "flex-end" }}>
+          <Pressable onPress={() => setShowMap(!showMap)} style={{marginRight:5}}>
+            <Text style={{ color: colors.mapcolor }}>{text}</Text>
           </Pressable>
+        </View>
       </View>
-
-      </View>
-      {map}</>
+      {map}
+      </Pressable>
+    </>
   );
 };
 
-
 export default React.memo(Storemodalcard);
-

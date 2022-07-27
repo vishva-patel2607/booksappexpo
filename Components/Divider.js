@@ -1,17 +1,19 @@
 import * as React from 'react';
 import {View} from 'react-native';
-import { useTheme } from '@react-navigation/native';
+import { ThemeContext } from './Theme';
 
-export default function Divider(){
-    const {colors} = useTheme();
+ function Divider(){
+   const {textcolor} = React.useContext(ThemeContext);
     return(
+
         <View
         style={{
-          marginTop: 17,
-          height: 1,
+          marginTop: 10,
+          height: 0.6,
           backgroundColor:
-            colors.text === "#000000" ? "#6E7A7D" : colors.text,
+            textcolor === "#0D1936" ? "#6E7A7D" : textColor,
         }}
       />
     )
 }
+export default React.memo(Divider);

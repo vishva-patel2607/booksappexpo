@@ -22,4 +22,4 @@ const BookConditions = (props) => {
   }
   return <></>;
 };
-export default BookConditions;
+export default React.memo(BookConditions);

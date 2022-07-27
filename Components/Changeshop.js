@@ -8,7 +8,7 @@ import Svg, {
   } from 'react-native-svg';
   
 
-  export default function Changeshop() {
+function Changeshop() {
     return (
         <Svg width="221" height="46" viewBox="0 0 221 46" fill="none" xmlns="http://www.w3.org/2000/svg">
         <G filter="url(#filter0_d_374_1140)">
@@ -24,3 +24,4 @@ import Svg, {
         
     )
 }
+export default React.memo(Changeshop);

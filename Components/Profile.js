@@ -3,7 +3,7 @@ import { Image, View } from "react-native";
 import { ThemeContext } from "./Theme";
 import Svg, { Path } from "react-native-svg";
 
-export default function Profile() {
+ function Profile() {
   const {setTheme,Theme} = React.useContext(ThemeContext);
   return (
     <View>
@@ -53,3 +53,4 @@ export default function Profile() {
     </View>
   );
 }
+export default React.memo(Profile);

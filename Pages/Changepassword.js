@@ -8,39 +8,36 @@ import {
   Text,
   Image,
   Pressable,
+  StatusBar,
 } from "react-native";
 import { ThemeContext } from "../Components/Theme";
 import { useDispatch, useSelector } from "react-redux";
 import Backbutton from "../Components/Backbutton";
 import { Button, TextInput } from "react-native-paper";
 import { logoutUser } from "../actions";
+import ActionButton from "../Components/Actionbutton";
 
 const Changepassword = (props) => {
-  const { colors } = useTheme();
-  const user = useSelector((state) => state.user);
+  
   const dispatch = useDispatch();
 
   const [oldpassword, setOldpassword] = useState("");
   const [newpassword1, setNewpassword1] = useState("");
   const [newpassword2, setNewpassword2] = useState("");
-  const { setTheme, Theme } = React.useContext(ThemeContext);
+  const { textcolor } = React.useContext(ThemeContext);
   const [error, setError] = useState("");
+  const { colors } = useTheme();
+  const user = useSelector((state) => state.user);
 
   const changepassword = () => {
     var passwordRegex = new RegExp(
       "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})"
     );
 
-    if (oldpassword.length === 0 || !passwordRegex.test(oldpassword)) {
-      alert("Check your old Password!");
+    if (oldpassword.length === 0 || newpassword1.length === 0 || newpassword2.length === 0 ) {
+      alert("Please fill all the fields!");
       return;
-    } else if (newpassword1.length === 0) {
-      alert("Enter your new password");
-      return;
-    } else if (newpassword2.length === 0) {
-      alert("Re-type your new password");
-      return;
-    } else if (
+    }  else if (
       newpassword1 !== newpassword2 ||
       !passwordRegex.test(newpassword1) ||
       !passwordRegex.test(newpassword2)
@@ -66,7 +63,7 @@ const Changepassword = (props) => {
           return response.json();
         })
         .then((data) => {
-          console.log("Going in ");
+          
           if (data.status) {
             setError(data.message);
             Alert.alert(error, "Please log in again with your new password", [
@@ -81,7 +78,7 @@ const Changepassword = (props) => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     }
   };
@@ -89,7 +86,7 @@ const Changepassword = (props) => {
   return (
     <SafeAreaView style={styles.layout}>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
-        <Pressable onPress={() => props.navigation.navigate("User")}>
+        <Pressable onPress={() => props.navigation.goBack()}>
           <Backbutton />
         </Pressable>
       </View>
@@ -98,7 +95,7 @@ const Changepassword = (props) => {
           style={{
             fontSize: 25,
             fontWeight: "700",
-            color: colors.text,
+            color: textcolor,
             marginLeft: 22,
           }}
           theme={{ fonts: { regular: "DM Sans" } }}
@@ -107,85 +104,76 @@ const Changepassword = (props) => {
         </Text>
       </View>
       <View style={{ marginLeft: 19, flex: 12 }}>
-        <TextInput
-          style={styles.inputtextbox}
-          theme={{
-            colors: {
-              primary: colors.background,
-              placeholder: "#8e8e8e",
-            },
-            roundness: 120,
-          }}
-          // theme={{ colors: { primary: "transparent" } }}
-          placeholder="Old Password"
-          secureTextEntry={true}
-          value={oldpassword}
-          onChangeText={(text) => setOldpassword(text)}
-          autoCapitalize="none"
-          autoCorrect={false}
-          underlineColor="transparent"
-          maxLength={20}
-        />
+        <View style={{ height: 59, overflow: "hidden" }}>
+          <TextInput
+            style={styles.inputtextbox}
+            theme={{
+              colors: {
+                primary: colors.background,
+                placeholder: "#8e8e8e",
+              },
+              roundness: 120,
+            }}
+            // theme={{ colors: { primary: "transparent" } }}
+            placeholder="Old Password"
+            secureTextEntry={true}
+            value={oldpassword}
+            onChangeText={(text) => setOldpassword(text)}
+            autoCapitalize="none"
+            autoCorrect={false}
+            underlineColor="transparent"
+            maxLength={20}
+          />
+        </View>
+        <View style={{ height: 59, overflow: "hidden" }}>
+          <TextInput
+            style={styles.inputtextbox}
+            theme={{
+              colors: {
+                primary: colors.background,
+                placeholder: "#8e8e8e",
+              },
+              roundness: 120,
+            }}
+            placeholder="New password"
+            value={newpassword1}
+            onChangeText={(text) => setNewpassword1(text)}
+            autoCapitalize="none"
+            underlineColor="transparent"
+            autoCorrect={false}
+            secureTextEntry={true}
+            maxLength={20}
+          />
+        </View>
 
-        <TextInput
-          style={styles.inputtextbox}
-          theme={{
-            colors: {
-              primary: colors.background,
-              placeholder: "#8e8e8e",
-            },
-            roundness: 120,
-          }}
-          placeholder="New password"
-          value={newpassword1}
-          onChangeText={(text) => setNewpassword1(text)}
-          autoCapitalize="none"
-          underlineColor="transparent"
-          autoCorrect={false}
-          secureTextEntry={true}
-          maxLength={20}
-        />
-
-        <TextInput
-          style={styles.inputtextbox}
-          theme={{
-            colors: {
-              primary: colors.background,
-              placeholder: "#8e8e8e",
-            },
-            roundness: 120,
-          }}
-          placeholder="Retype New Password"
-          value={newpassword2}
-          onChangeText={(text) => setNewpassword2(text)}
-          autoCapitalize="none"
-          underlineColor="transparent"
-          autoCorrect={false}
-          secureTextEntry={true}
-          maxLength={20}
-        />
-
+        <View style={{ height: 59, overflow: "hidden" }}>
+          <TextInput
+            style={styles.inputtextbox}
+            theme={{
+              colors: {
+                primary: colors.background,
+                placeholder: "#8e8e8e",
+              },
+              roundness: 120,
+            }}
+            placeholder="Retype New Password"
+            value={newpassword2}
+            onChangeText={(text) => setNewpassword2(text)}
+            autoCapitalize="none"
+            underlineColor="transparent"
+            autoCorrect={false}
+            secureTextEntry={true}
+            maxLength={20}
+          />
+        </View>
         <Text style={styles.error}>{error}</Text>
-        <Button
-          theme={{ roundness: 120 }}
-          onPress={changepassword}
-          style={{
-            width: 215,
-            height: 40,
-            alignItems: "flex-start",
 
-            justifyContent: "center",
-          }}
-          labelStyle={{
-            fontSize: 16,
-            color: "white",
-            flexDirection: "row",
-            fontFamily: "DMSansbold",
-          }}
-          mode="contained"
-        >
-          SAVE
-        </Button>
+        <ActionButton
+              title="SAVE"
+              Click={changepassword}
+              fontS="14"
+              style={{ marginTop: 15 }}
+            />
       </View>
     </SafeAreaView>
   );
@@ -216,6 +204,7 @@ const styles = StyleSheet.create({
 
   layout: {
     flex: 1,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight  : 0,
   },
 });
 

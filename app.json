@@ -31,6 +31,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
+      "softwareKeyboardLayoutMode": "pan",
       "permissions": [
         "CAMERA",
         "ACCESS_FINE_LOCATION",

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -6,25 +6,63 @@ import {
   Pressable,
   Alert,
   StyleSheet,
+  StatusBar,
 } from "react-native";
-import { useTheme } from "@react-navigation/native";
+import * as Location from "expo-location";
 import { ThemeContext } from "../Components/Theme";
 import Queryinfo from "../Components/Queryinfo";
 import MapView, { Marker } from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
 import Backbutton from "../Components/Backbutton";
-import { Text, Button, Colors } from "react-native-paper";
+import { Text, Button, ActivityIndicator } from "react-native-paper";
 const Bookscreen = (props) => {
-  const { colors } = useTheme();
-  const [book, setBook] = useState(props.route.params.book);
+  const [imageloading, setImageloading] = useState(false);
+  const [distance,setDistance] = useState("");
+  const {textcolor} = React.useContext(ThemeContext);
+  const [latitude, setLatitude] = useState();
+  const [longitude, setLongitude] = useState();
+  const {book } = props.route.params;
+  let store_latitude = book.store.store_latitude;
+  let store_longitude = book.store.store_longitude;
+  
 
-  const { setTheme, Theme } = React.useContext(ThemeContext);
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let loc = await Location.getCurrentPositionAsync({});
+      setLatitude(loc.coords.latitude);
+      setLongitude(loc.coords.longitude);
+      
+    });
+    setLatitude((latitude * Math.PI) / 180);
+    setLongitude((longitude * Math.PI) / 180);
+    store_latitude = (store_latitude * Math.PI) / 180;
+    store_longitude = (store_longitude * Math.PI) / 180;
+    let lon = store_longitude - longitude;
+    let lat = store_latitude - latitude;
+    let a =
+      Math.pow(Math.sin(lat / 2), 2) +
+      Math.cos(latitude) *
+        Math.cos(store_latitude) *
+        Math.pow(Math.sin(lon / 2), 2);
+
+    let c = 2 * Math.asin(Math.sqrt(a));
+    let r = 6371;
+    setDistance((parseInt(c*r)).toString())
+
+  }, []);
+
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
   const addtopickup = () => {
     if (book.transaction_type === "lend") {
-      console.log('lend');
+      
       fetch("https://booksapp2021.herokuapp.com/Book/Borrowed/Add", {
         method: "PUT",
         headers: {
@@ -41,23 +79,27 @@ const Bookscreen = (props) => {
         })
         .then((data) => {
           if (data.status) {
-            if (data.message === "Pickup added") {
-             console.log('Pickup added');
+            Alert.alert("Success", data.message, [
+              {
+                text: "Ok",
+                onPress: () =>
+                  props.navigation.navigate("Mainpage", {
+                    screen: "Home",
+                    params: { refreshing: true },
+                  }),
+              },
+            ]);
+          } else {
+            if (data.message === "Could not verify") {
+              dispatch(logoutUser());
             } else {
-              Alert.alert("Error in removing pickup", [
+              Alert.alert("Note", data.message, [
                 {
                   text: "Ok",
                 },
               ]);
             }
-          } else {
-            if (data.message === "Could not verify") {
-              dispatch(logoutUser());
-            }
           }
-        })
-        .catch((error) => {
-          console.log(error);
         });
     } else {
       fetch("https://booksapp2021.herokuapp.com/Book/Bought/Add", {
@@ -77,16 +119,7 @@ const Bookscreen = (props) => {
         .then((data) => {
           if (data.status) {
             if (data.message === "Pickup added") {
-              Alert.alert("Success", "Book added to Pickup", [
-                {
-                  text: "Ok",
-                  onPress: () =>
-                    props.navigation.navigate("Mainpage", {
-                      screen: "Home",
-                      params: { refreshing: true },
-                    }),
-                },
-              ]);
+              
             } else {
               Alert.alert("Error in adding pickup", [
                 {
@@ -101,14 +134,20 @@ const Bookscreen = (props) => {
           }
         })
         .catch((error) => {
-          console.log('error');
+          
         });
     }
   };
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        paddingTop:
+          Platform.OS === "android" ? StatusBar.currentHeight  : 0,
+      }}
+    >
       <View style={{ justifyContent: "flex-start" }}>
-        <Pressable onPress={() => props.navigation.navigate("Search")}>
+        <Pressable onPress={() => props.navigation.goBack()}>
           <Backbutton />
         </Pressable>
       </View>
@@ -117,7 +156,8 @@ const Bookscreen = (props) => {
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          marginHorizontal: 12,
+          marginLeft: 14,
+          marginRight: 12,
           marginTop: 37,
         }}
       >
@@ -131,10 +171,19 @@ const Bookscreen = (props) => {
         />
         {/* </View> */}
         <View>
+          
           <Image
             source={{ uri: book.book_img }}
             resizeMode="cover"
-            style={{ height: 150, width: 150, borderRadius: 10 }}
+            style={{ height: 130, width: 100, borderRadius: 10 }}
+            onLoadStart={() => {
+              setImageloading(true);
+              
+            }}
+            onLoadEnd={() => {
+              setImageloading(false);
+              
+            }}
           />
         </View>
       </View>
@@ -161,17 +210,17 @@ const Bookscreen = (props) => {
               borderRadius: 18,
               textAlign: "center",
               fontFamily: "DMSans",
-              color: colors.text,
+              color: textcolor,
             }}
           >
-            {book.store_distance}
+            {book.store_distance} km(s)
           </Text>
         </View>
         <View style={{ flex: 5 }}>
           <Text
             style={{
               borderWidth: 2,
-              color: colors.text,
+              color: textcolor,
               paddingVertical: 6,
               fontWeight: "700",
               borderColor: "#0036F4",
@@ -188,17 +237,18 @@ const Bookscreen = (props) => {
         style={{
           flexDirection: "column",
           alignItems: "flex-start",
-          marginLeft: 12,
+          marginLeft: 14,
+
           marginTop: 9,
         }}
       >
-        <Text style={[styles.textStyle, { color: colors.text }]}>
+        <Text style={[styles.textStyle, { color: textcolor }]}>
           {book.store.store_incharge}
         </Text>
-        <Text style={[styles.textStyle, { color: colors.text }]}>
+        <Text style={[styles.textStyle, { color: textcolor }]}>
           {book.store.store_address}
         </Text>
-        <Text style={[styles.textStyle, { color: colors.text }]}>
+        <Text style={[styles.textStyle, { color: textcolor }]}>
           {book.store.store_number}
         </Text>
       </View>
@@ -208,7 +258,7 @@ const Bookscreen = (props) => {
           region={{
             latitude: book.store.store_latitude,
             longitude: book.store.store_longitude,
-            latitudeDelta: 0.10,
+            latitudeDelta: 0.1,
             longitudeDelta: 0.15,
           }}
           showsUserLocation={true}
@@ -221,7 +271,7 @@ const Bookscreen = (props) => {
             coordinate={{
               latitude: book.store.store_latitude,
               longitude: book.store.store_longitude,
-              latitudeDelta: 0.10,
+              latitudeDelta: 0.1,
               longitudeDelta: 0.15,
             }}
             title={book.store_name}
@@ -238,6 +288,7 @@ const Bookscreen = (props) => {
               margin: 10,
               alignSelf: "center",
               justifyContent: "center",
+              backgroundColor:'#E96A59'
             }}
             labelStyle={{
               fontSize: 14,

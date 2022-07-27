@@ -1,10 +1,16 @@
 import { ActivityIndicator } from "react-native-paper";
 import { Switch, Button } from "react-native-paper";
-
+import { ProgressBar } from "react-native-paper";
 import { ThemeContext } from "../Components/Theme";
 import React, { useState, useEffect } from "react";
 import ActionButton from "../Components/Actionbutton";
 import StaticText from "../Components/StaticText";
+import UserIcon from "../Svg/Useruser";
+import PhoneIcon from "../Svg/Phoneuser";
+import EmailIcon from "../Svg/Emailuser";
+import Birthday from "../Svg/Birthday";
+import Edit from "../Svg/Edit";
+import UserProgress from "../Components/ProgressBar";
 import {
   SafeAreaView,
   View,
@@ -21,69 +27,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../actions";
 
 const UserRoute = (props) => {
-  
-  const { setTheme, Theme } = React.useContext(ThemeContext);
-  let userimage =
-    Theme === "Light" ? (
-      <Image source={require("../assets/user.png")} />
-    ) : (
-      <Image source={require("../assets/userdark.png")} />
-    );
-  let emailimage =
-    Theme === "Light" ? (
-      <Image source={require("../assets/email.png")} />
-    ) : (
-      <Image source={require("../assets/emaildark.png")} />
-    );
-  let phoneimage =
-    Theme === "Light" ? (
-      <Image source={require("../assets/Phone.png")} />
-    ) : (
-      <Image source={require("../assets/Phonedark.png")} />
-    );
-  let birthdayimage =
-    Theme === "Light" ? (
-      <Image source={require("../assets/Birthday.png")} />
-    ) : (
-      <Image source={require("../assets/birthdatedark.png")} />
-    );
-  let editimage =
-    Theme === "Light" ? (
-      <Image
-        source={require("../assets/Edit.png")}
-        style={{ marginRight: 25 }}
-      />
-    ) : (
-      <Image
-        source={require("../assets/Editdisabled.png")}
-        style={{ marginRight: 25 }}
-      />
-    );
-
-  let disablededitimage = Theme === 'Light' ? (
-    <Image
-        source={require("../assets/Editdisabled.png")}
-        style={{ marginRight: 25 }}
-      />
-  ):(
-    <Image
-        source={require("../assets/Edit.png")}
-        style={{ marginRight: 25 }}
-      />
-  )
+  const { setTheme, Theme,textcolor,setTextColor } = React.useContext(ThemeContext);
   const dispatch = useDispatch();
   const [LoadingData, setLoadingData] = useState(false);
   const [userobj, setUserobj] = useState(props.user);
-  const [switchon, setSwitchon] = useState(Theme==='Light'?false:true);
-  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
+  const [switchon, setSwitchon] = useState(Theme === "Light" ? false : true);
   const user = useSelector((state) => state.user);
 
   const switchchanged = () => {
     setSwitchon(!switchon);
     setTheme(Theme === "Light" ? "Dark" : "Light");
+    setTextColor(textcolor === "#0D1936"? "#ECEFEE" : "#0D1936")
   };
   useEffect(() => {
-    console.log(user.token);
+    
     setLoadingData(false);
     fetch("https://booksapp2021.herokuapp.com/User", {
       method: "POST",
@@ -98,20 +55,20 @@ const UserRoute = (props) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
+        
         if (data.status) {
-          console.log("True");
+          
           setUserobj(data.response.user);
           setLoadingData(true);
         } else {
-          console.log(data.status);
+          
           if (data.message === "Could not verify") {
             dispatch(logoutUser());
           }
         }
       })
       .catch((error) => {
-        console.log(error);
+        
       });
   }, []);
 
@@ -126,111 +83,133 @@ const UserRoute = (props) => {
         <View style={{ flex: 2, justifyContent: "flex-start" }}>
           <BooksApp />
         </View>
-        <View style={{ flexDirection: "column", flex: 10, marginLeft: 15 }}>
-          <View style={{ flexDirection: "column", flex: 6 }}>
+        <View style={{ flexDirection: "column", flex: 10, marginLeft: 5 }}>
+          <View style={{ flexDirection: "column", flex: 5 }}>
             <View
               style={{
                 flexDirection: "row",
-                justifyContent: "space-around",
               }}
             >
-              {userimage}
-              <View style={{ flexDirection: "column", marginLeft: -20 }}>
-                <StaticText text={userobj.firstname + " " + userobj.lastname} />
-                {/* <Text>{userobj.firstname + " " + userobj.lastname}</Text> */}
-                <View
-                  style={{ borderBottomColor: "#6E7A7D", borderBottomWidth: 1 }}
-                />
-                <Image source={require("../assets/Line.png")} />
+              <View
+                style={{ width: "75%", flexDirection: "row", marginLeft: 15 }}
+              >
+                <UserIcon />
+                <View style={{ flexDirection: "column", marginLeft: 20 }}>
+                  <StaticText
+                    text={userobj.firstname + " " + userobj.lastname}
+                  />
+                  {/* <Text>{userobj.firstname + " " + userobj.lastname}</Text> */}
+                  <View
+                    style={{
+                      borderBottomColor: "#6E7A7D",
+                      borderBottomWidth: 1,
+                    }}
+                  />
+                  <Image source={require("../assets/Line.png")} />
+                </View>
               </View>
-              {disablededitimage}
             </View>
-            <View
-              style={{
-                flexDirection: "row",
-                marginTop: 25,
-                justifyContent: "space-around",
-              }}
-            >
-              {emailimage}
-              <View style={{ flexDirection: "column", marginLeft: -20 }}>
-                <StaticText text={userobj.email} />
-                <View
-                  style={{ borderBottomColor: "#6E7A7D", borderBottomWidth: 1 }}
-                />
-                <Image source={require("../assets/Line.png")} />
-              </View>
-              <Pressable
-                onPress={() => {
-                  props.navigation.navigate("EditEmail");
+            <View style={{ flexDirection: "row" }}>
+              <View
+                style={{
+                  width: "75%",
+                  flexDirection: "row",
+                  marginLeft: 15,
+                  marginTop: 25,
                 }}
               >
-                {editimage}
-              </Pressable>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                marginTop: 25,
-                justifyContent: "space-around",
-              }}
-            >
-              {phoneimage}
-              <View style={{ flexDirection: "column", marginLeft: -20 }}>
-                <StaticText text={userobj.phonenumber} />
-                <View
-                  style={{ borderBottomColor: "#6E7A7D", borderBottomWidth: 1 }}
-                />
-                <Image
-                  source={require("../assets/Line.png")}
-                  style={{ height: 5 }}
-                />
+                <EmailIcon />
+                <View style={{ flexDirection: "column", marginLeft: 20 }}>
+                  <StaticText text={userobj.email} />
+                  <View
+                    style={{
+                      borderBottomColor: "#6E7A7D",
+                      borderBottomWidth: 1,
+                    }}
+                  />
+                  <Image source={require("../assets/Line.png")} />
+                </View>
               </View>
-              <Pressable
-                onPress={() => {
-                  props.navigation.navigate("EditPhone");
+              <View style={{ alignSelf: "flex-end", marginLeft: 15 }}>
+                <Pressable
+                  onPress={() => {
+                    props.navigation.navigate("EditEmail");
+                  }}
+                >
+                  <Edit />
+                </Pressable>
+              </View>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+              <View
+                style={{
+                  width: "75%",
+                  flexDirection: "row",
+                  marginLeft: 15,
+                  marginTop: 25,
                 }}
               >
-                {editimage}
-              </Pressable>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                marginTop: 25,
-                justifyContent: "space-around",
-              }}
-            >
-              {birthdayimage}
-              <View style={{ flexDirection: "column", marginLeft: -20 }}>
-                <StaticText
-                  text={
-                    userobj.dob.split(" ")[1] +
-                    "/ " +
-                    userobj.dob.split(" ")[2] +
-                    "/ " +
-                    userobj.dob.split(" ")[3]
-                  }
-                />
-                <View
-                  style={{ borderBottomColor: "#6E7A7D", borderBottomWidth: 1 }}
-                />
-                <Image
-                  source={require("../assets/Line.png")}
-                  style={{ height: 5 }}
-                />
+                <PhoneIcon />
+                <View style={{ flexDirection: "column", marginLeft: 20 }}>
+                  <StaticText text={userobj.phonenumber} />
+                  <View
+                    style={{
+                      borderBottomColor: "#6E7A7D",
+                      borderBottomWidth: 1,
+                    }}
+                  />
+                  <Image source={require("../assets/Line.png")} />
+                </View>
               </View>
-              {disablededitimage}
+              <View style={{ alignSelf: "flex-end", marginLeft: 15 }}>
+                <Pressable
+                  onPress={() => {
+                    props.navigation.navigate("EditPhone");
+                  }}
+                >
+                  <Edit />
+                </Pressable>
+              </View>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+              <View
+                style={{
+                  width: "75%",
+                  flexDirection: "row",
+                  marginLeft: 15,
+                  marginTop: 25,
+                }}
+              >
+                <Birthday />
+                <View style={{ flexDirection: "column", marginLeft: 20 }}>
+                  <StaticText
+                    text={
+                      userobj.dob.split(" ")[1] +
+                      "/ " +
+                      userobj.dob.split(" ")[2] +
+                      "/ " +
+                      userobj.dob.split(" ")[3]
+                    }
+                  />
+                  <View
+                    style={{
+                      borderBottomColor: "#6E7A7D",
+                      borderBottomWidth: 1,
+                    }}
+                  />
+                  <Image source={require("../assets/Line.png")} />
+                </View>
+              </View>
             </View>
           </View>
           <View
             style={{
-              flex: 4,
+              flex: 2,
               flexDirection: "row",
               justifyContent: "space-between",
-              alignItems: "center",
-              marginLeft: 15,
-              paddingHorizontal:5,
+              alignItems: "flex-start",
+              marginHorizontal: 15,
+              paddingHorizontal: 5,
             }}
           >
             <View style={{ justifyContent: "flex-start", marginTop: 10 }}>
@@ -240,9 +219,10 @@ const UserRoute = (props) => {
               trackColor={{ true: "white", false: "blue" }}
               value={switchon}
               onValueChange={switchchanged}
-              style={{ marginRight: 25 }}
+              style={{ marginRight: 10 }}
             />
           </View>
+          <UserProgress  userscore={userobj.userscore/100}/>
         </View>
 
         <View
@@ -253,28 +233,12 @@ const UserRoute = (props) => {
           }}
         >
           <View style={{ marginBottom: 6 }}>
-            <Pressable
-              onPress={() => props.navigation.navigate("Changepassword")}
-            >
-              <Button
-                theme={{ roundness: 50 }}
-                style={{
-                  width: 215,
-                  height: 40,
-                  alignItems: "flex-start",
-                  justifyContent: "center",
-                }}
-                labelStyle={{
-                  fontSize: 16,
-                  color: "white",
-                  flexDirection: "row",
-                  fontFamily: "DMSansbold",
-                }}
-                mode="contained"
-              >
-                Change Password
-              </Button>
-            </Pressable>
+            <ActionButton
+              title="Change Password"
+              Click={() => props.navigation.navigate("Changepassword")}
+              fontS="14"
+              style={{ marginTop: 15 }}
+            />
           </View>
           <View style={{ marginBottom: 6 }}>
             <ActionButton
@@ -284,10 +248,10 @@ const UserRoute = (props) => {
               style={{ marginTop: 15 }}
             />
           </View>
-          <View style={{ marginBottom: 6 }}>
+          {/* <View style={{ marginBottom: 6 }}>
             <ActionButton title="Deactivate account" fontS="14" />
-          </View>
-          <View style={{ marginLeft: 2,marginTop:10 }}>
+          </View> */}
+          <View style={{ marginLeft: 5, marginTop: 10 }}>
             <StaticText text="Contact us" />
             <View style={{ marginTop: 5 }}>
               <StaticText text="Privacy policy" />
@@ -300,7 +264,7 @@ const UserRoute = (props) => {
     return (
       <SafeAreaView>
         <View style={styles.activityindicator}>
-          <ActivityIndicator animating={true} size={100} />
+          <ActivityIndicator animating={true} size={100} color='#E96A59' />
         </View>
       </SafeAreaView>
     );
@@ -340,4 +304,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UserRoute;
+export default React.memo(UserRoute);

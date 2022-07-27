@@ -3,7 +3,7 @@ import { Image, View } from "react-native";
 import { ThemeContext } from "./Theme";
 import Svg, { Path } from "react-native-svg";
 
-export default function Email() {
+ function Email() {
   const {setTheme,Theme} = React.useContext(ThemeContext);
   return (
     <View>
@@ -23,3 +23,4 @@ export default function Email() {
   );
 }
 
+export default React.memo(Email);

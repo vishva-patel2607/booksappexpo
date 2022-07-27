@@ -1,26 +1,16 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import {
-  SafeAreaView,
-  ScrollView,
-  View,
   StyleSheet,
   Alert,
 } from "react-native";
-import { Platform, StatusBar, RefreshControl } from "react-native";
-import { logoutUser, setUser } from "../actions";
 import {
   Title,
   Text,
-  Headline,
-  Card,
   Button,
   TextInput,
 } from "react-native-paper";
 
-import Horizontalscrollview from "./Horizontalscrollview";
-import { useDispatch, useSelector } from "react-redux";
-import { set } from "react-native-reanimated";
 
 const EmailVerification = (props) => {
   const [email, setEmail] = useState(props.route.params.email);
@@ -29,7 +19,7 @@ const EmailVerification = (props) => {
   const [newemail, setNewemail] = useState("");
 
   changeemail = () => {
-    var emailRegex = new RegExp(
+    let emailRegex = new RegExp(
       /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
     );
     if (email.length === 0 || !emailRegex.test(email.trim().toLowerCase())) {

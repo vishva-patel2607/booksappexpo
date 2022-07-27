@@ -1,72 +1,54 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "@react-navigation/native";
 import {
   SafeAreaView,
   StatusBar,
-  StyleSheet,
   View,
   Alert,
-  Image,
   Pressable,
   KeyboardAvoidingView,
 } from "react-native";
 import RenderButton from "../Components/Button";
-import { TextInput, Text } from "react-native-paper";
-import { ThemeContext } from "../Components/Theme";
+import { TextInput } from "react-native-paper";
 import StaticText from "../Components/StaticText";
 import { useDispatch } from "react-redux";
+import Error from "../Components/Error";
 import { setUser } from "../actions";
 import StaticBooksApp from "../Components/StaticBooksApp";
+import UserIcon from "../Svg/User";
+import PasswordIcon from "../Svg/Password";
+import { styles } from "../Styles/Loginstyles";
 
 const Login = (props) => {
   const { colors } = useTheme();
-  const [bordercolor, setBordercolor] = useState("black");
-  const {setTheme,Theme} = React.useContext(ThemeContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [token, setToken] = useState("");
+  const [loading,setloading] = useState("");
   const dispatch = useDispatch();
+
   const [email, setEmail] = useState("");
   //const selector = useSelector();
 
-  forgotpassword = () => {
-    if (username !== "") {
-      fetch("https://booksapp2021.herokuapp.com/User/Forgotpassword", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: username,
-        }),
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          if (data.status) {
-            Alert.alert(
-              "Password reset link to change you password has been sent to your registered email",
-              "Please Check!"[
-                {
-                  text: "OK",
-                }
-              ]
-            );
-          } else {
-            setError(data.message);
-          }
-        });
-    }
-  };
-  loginrequest = () => {
-    // let tokenvalue = "";
-    // var truevalue = true;
-    if (username !== "" && password !== "") {
-      console.log("API");
+  useEffect(() => {
+    let unmounted = false;
 
+    setTimeout(() => {
+      if(!unmounted){
+      setError("")
+      }
+    },3000)
+    return () => {
+      unmounted = true;
+    }
+
+  },[error])
+  
+
+  loginrequest = () => {
+    setloading(true);
+    if (username !== "" && password !== "") {
       fetch("https://booksapp2021.herokuapp.com/User/Login", {
         method: "POST",
         headers: {
@@ -82,6 +64,7 @@ const Login = (props) => {
           return response.json();
         })
         .then((data) => {
+          setloading(false);
           if (data.status) {
             dispatch(
               setUser(
@@ -92,15 +75,12 @@ const Login = (props) => {
               )
             );
           } else {
-            console.log(data);
+
+            
             if (data.message === "User is not verified") {
               setToken(data.response.token);
               setEmail(data.response.email);
-              console.log(
-                data.response.email,
-                data.response.token,
-                "User is not verified"
-              );
+              
               Alert.alert(
                 "Verification email has been sent to your email",
                 "Please Check!"[
@@ -116,41 +96,66 @@ const Login = (props) => {
                   data.response.email
               );
             } else {
+              setloading(false);
               setError(data.message);
-              console.log(data.message);
+              
             }
           }
         })
         .catch((error) => {
-          console.log(error);
+          alert(error);
         });
+    }
+    else
+    {
+      alert("Please fill all the fields");
     }
   };
 
   return (
-    <SafeAreaView style={{flex: 1,
-      alignItems: "center",
-      paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-      backgroundColor:colors.background}}>
-      <KeyboardAvoidingView behavior="padding">
-        <View style={{ flex: 4, flexDirection: "column", marginTop: 30,alignItems:'center' }}>
-        <StaticBooksApp />
+    <SafeAreaView
+      style={{
+        flex: 1,
+        alignItems: "center",
+        paddingTop:
+        Platform.OS === "android" ? StatusBar.currentHeight  : 0,
+        backgroundColor: colors.background,
+      }}
+    >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : null}
+        keyboardVerticalOffset={Platform.select({ ios: 0, android: 500 })}
+      >
+        <View
+          style={{
+            flex: 4,
+            flexDirection: "column",
+            marginTop: 30,
+            alignItems: "center",
+          }}
+        >
+          <StaticBooksApp />
         </View>
-        <View style={{ flex: 18, flexDirection: "column", borderRadius: 120 }}>
+        <View
+          style={{ flex: 18, flexDirection: "column", borderColor: "#ECEFEE" }}
+        >
+          <View style={{
+        height: 59,
+        overflow:'hidden',
+        
+        }}>
           <TextInput
             style={styles.inputtextbox}
             theme={{
               colors: {
                 primary: colors.background,
-                placeholder: "#8e8e8e",
+               
               },
               roundness: 120,
             }}
-            // theme={{ roundness: 20 }}
-            // label="Username"
+            
             placeholder="Username"
             value={username}
-       
             onChangeText={(text) => setUsername(text)}
             autoCapitalize="none"
             autoCompleteType="username"
@@ -160,24 +165,26 @@ const Login = (props) => {
               <TextInput.Icon
                 name={() => (
                   <View style={{ justifyContent: "center" }}>
-                    <Image source={require("../assets/user.png")} />
+                    <UserIcon />
                   </View>
                 )}
               />
             }
           />
-          <View style={{ borderRadius: 120 }}>
+          </View>
+          <View style={{overflow:'hidden',height:59}} >
             <TextInput
               theme={{
                 colors: {
                   primary: colors.background,
-                  placeholder: "#8e8e8e",
+                  underlineColor:'transparent'
+                  
                 },
                 roundness: 120,
               }}
-
               style={styles.inputtextbox}
               placeholder="Password"
+              
               value={password}
               onChangeText={(text) => setPassword(text)}
               autoCapitalize="none"
@@ -190,7 +197,7 @@ const Login = (props) => {
                 <TextInput.Icon
                   name={() => (
                     <View style={{ justifyContent: "center" }}>
-                      <Image source={require("../assets/password.png")} />
+                      <PasswordIcon />
                     </View>
                   )}
                 />
@@ -199,15 +206,21 @@ const Login = (props) => {
           </View>
           <View style={{ marginTop: 10 }}>
             <Pressable
-              onPress={() => {
-                forgotpassword;
+               onPress={() => {
+                props.navigation.navigate("ForgotPassword");
               }}
             >
               <StaticText text="   Forgot Password?" />
             </Pressable>
           </View>
 
-          <Text style={styles.error}>{error}</Text>
+          <View style={{ alignSelf: "center" }}>
+            {error !== "" && (
+              <View style={{ marginTop: 30 }}>
+                <Error text={error} />
+              </View>
+            )}
+          </View>
         </View>
 
         <View
@@ -215,46 +228,22 @@ const Login = (props) => {
           style={{
             flex: 4,
             alignItems: "center",
-            justifyContent: "space-evenly",
+            justifyContent: "flex-end",
           }}
         >
           <RenderButton title="LogIn" Click={loginrequest} />
-          {/* <Button onPress={forgotpassword}>Forgot Password</Button> */}
-          {/* </View> */}
-
-          {/* <View
-          behavior="position"
-          style={{
-            flex: 3,
-            alignItems: "center",
-            justifyContent: "flex-start",
-          }}
-        > */}
-          <Pressable onPress={() => props.navigation.navigate("InitialSignup")}>
+          <Pressable
+            onPress={() => props.navigation.navigate("InitialSignup")}
+            style={{ marginTop: 10 }}
+          >
             <StaticText text="Don't have an account? SignUp" />
           </Pressable>
         </View>
+        <View style={{ marginTop:10}}></View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  error: {
-    textAlign: "center",
-    fontSize: 20,
-    color: "red",
-    padding: 20,
-  },
-
-  inputtextbox: {
-    marginTop: 11,
-    width: 270,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 120,
-    height: 50,
-  },
-
-});
 
 export default React.memo(Login);

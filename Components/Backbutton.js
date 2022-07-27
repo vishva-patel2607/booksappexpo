@@ -3,7 +3,7 @@ import { Image, View } from "react-native";
 import { ThemeContext } from "./Theme";
 import Svg, { Path } from "react-native-svg";
 
-export default function Backbutton() {
+ function Backbutton() {
   const { Theme, setTheme } = React.useContext(ThemeContext);
   return (
     <View style={{ marginLeft: 16, marginTop: 14 }}>
@@ -53,3 +53,4 @@ export default function Backbutton() {
     </View>
   );
 }
+export default React.memo(Backbutton);

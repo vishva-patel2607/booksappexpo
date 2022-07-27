@@ -1,15 +1,14 @@
-Storemodal;
 import React, { useState, useEffect } from "react";
 import { ThemeContext } from "../Components/Theme";
 import {
   SafeAreaView,
   ScrollView,
   View,
-  StyleSheet,
   Pressable,
   Image,
 } from "react-native";
 import { logoutUser } from "../actions";
+import {styles} from '../Styles/Storemodalcardstyles.js';
 import { Platform, StatusBar } from "react-native";
 import { Button, ActivityIndicator, Text } from "react-native-paper";
 import Storemodalcard from "./Storemodalcard";
@@ -23,11 +22,11 @@ const Storemodal = (props) => {
   const [longitude, setLongitude] = useState();
   const [latitude, setLatitude] = useState();
   const [selectedShop, setSelectedShop] = useState(null);
+  const [selectedshopoption,setSelectedShopOption] = useState(null);
   const [shops, setShops] = useState([]);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const { setTheme, Theme } = React.useContext(ThemeContext);
-
   const setLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -63,7 +62,7 @@ const Storemodal = (props) => {
         })
         .then((data) => {
           if (data.status) {
-            console.log(data.response.stores);
+            
             setShops(data.response.stores);
           } else {
             if (data.message === "Could not verify") {
@@ -72,7 +71,7 @@ const Storemodal = (props) => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
       setLoading(true);
     }
@@ -80,9 +79,9 @@ const Storemodal = (props) => {
 
   if (loading && shops != null) {
     return (
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0 }}>
         <View>
-          <Pressable onPress={() => props.navigation.navigate("Upload")}>
+          <Pressable onPress={() => props.navigation.goBack()}>
             <Backbutton />
           </Pressable>
           <Text
@@ -103,16 +102,16 @@ const Storemodal = (props) => {
           {shops.map((shop, idx) => {
             if (
               selectedShop != null &&
-              selectedShop.store_id === shop.store_id
+              selectedShop === shop.store_id
             ) {
+              
               return (
                 <View
                   key={idx}
                   style={{
-                    padding: 10,
                     borderRadius: 10,
-                    backgroundColor: "#D5DDEE",
-                    marginTop: 20,
+                    backgroundColor: Theme === 'Light' ? '#D5DDEE': '#6E797C',
+                    marginTop: 10,
                   }}
                 >
                   <Storemodalcard
@@ -123,17 +122,17 @@ const Storemodal = (props) => {
                     distance={shop.store_distance}
                     contactNo={shop.store_number}
                     latitude={shop.store_latitude}
+                    Indshop = {shop}
                     longitude={shop.store_longitude}
+                    id={shop.store_id}
+                    Selectshop = {(selectedShop) => setSelectedShop(selectedShop)}
+                    Selectshopoption = {(selectedshopoption) => setSelectedShopOption(selectedshopoption)}
                   />
                 </View>
               );
             } else {
               return (
-                <Pressable
-                  key={idx}
-                  onPress={() => setSelectedShop(shop)}
-                  style={{ marginTop: 20 }}
-                >
+                <View key={idx}>
                   <Storemodalcard
                     shopName={shop.store_name}
                     storeInchargeName={shop.store_incharge}
@@ -143,8 +142,12 @@ const Storemodal = (props) => {
                     contactNo={shop.store_number}
                     latitude={shop.store_latitude}
                     longitude={shop.store_longitude}
+                    id={shop.store_id}
+                    Indshop = {shop}
+                    Selectshop = {(selectedShop) => setSelectedShop(selectedShop)}
+                    Selectshopoption = {(selectedshopoption) => setSelectedShopOption(selectedshopoption)}
                   />
-                </Pressable>
+               </View>
               );
             }
           })}
@@ -158,6 +161,7 @@ const Storemodal = (props) => {
               margin: 10,
               alignSelf: "center",
               justifyContent: "center",
+              backgroundColor:'#E96A59'
             }}
             labelStyle={{
               fontSize: 16,
@@ -168,7 +172,7 @@ const Storemodal = (props) => {
             onPress={() =>
               props.navigation.navigate("Mainpage", {
                 screen: "Upload",
-                params: { shop: selectedShop },
+                params: { shop: selectedshopoption },
               })
             }
             mode="contained"
@@ -180,107 +184,15 @@ const Storemodal = (props) => {
     );
   } else {
     return (
-      <SafeAreaView>
+      <SafeAreaView style={{flex:1, paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0}}>
         <View style={styles.activityindicator}>
-          <ActivityIndicator animating={true} size={100} />
+          <ActivityIndicator animating={true} size={100} color='#E96A59' />
         </View>
       </SafeAreaView>
     );
   }
 };
 
-const styles = StyleSheet.create({
-  textbox: {
-    textAlign: "center",
-    padding: 10,
-    fontSize: 20,
-  },
 
-  error: {
-    textAlign: "center",
-    fontSize: 20,
-    color: "red",
-    padding: 20,
-  },
-
-  inputtextbox: {
-    margin: 10,
-  },
-
-  submitbutton: {
-    flex: 1,
-    margin: 10,
-    fontSize: 20,
-    color: "white",
-  },
-
-  uploadimage: {
-    flex: 1,
-    justifyContent: "center",
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-  },
-  layout: {
-    flex: 1,
-    justifyContent: "center",
-  },
-
-  container1: {
-    flexDirection: "row",
-  },
-
-  container11: {
-    flex: 2,
-    marginLeft: 10,
-    marginBottom: 10,
-    marginTop: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 5,
-    borderWidth: 1,
-  },
-
-  container12: {
-    flex: 5,
-  },
-
-  container2: {
-    justifyContent: "center",
-  },
-
-  container3: {
-    flexDirection: "column",
-  },
-
-  containerStyle: {
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "white",
-    padding: 10,
-    width: "80%",
-    height: "90%",
-    borderRadius: 20,
-  },
-
-  modal: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  storemodalcardaddress: {
-    flex: 3,
-    backgroundColor: "#EDEDF0",
-    padding: 10,
-    borderTopLeftRadius: 10,
-  },
-
-  storemodalcarddistance: {
-    flex: 1,
-    backgroundColor: "#7CABF0",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 5,
-    borderTopRightRadius: 10,
-  },
-});
 
 export default React.memo(Storemodal);

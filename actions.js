@@ -37,8 +37,8 @@ export const setUser =
         payload: { user: user },
       });
     } catch (error) {
-      console.log("error");
-      console.log(error);
+      
+      
       dispatch({
         type: "SET_USER",
         payload: { user: initialState.user },
@@ -69,7 +69,7 @@ export const logoutUser = () => async (dispatch) => {
   let checkSecureStorage = await SecureStore.isAvailableAsync();
   if (checkSecureStorage) {
     await SecureStore.deleteItemAsync("user");
-    console.log("logout user");
+    
     dispatch({
       type: "LOGOUT_USER",
     });

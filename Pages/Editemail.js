@@ -2,28 +2,33 @@ import React, { useState } from "react";
 import {
   SafeAreaView,
   View,
-  StyleSheet,
   Alert,
   Pressable,
-  Image,
 } from "react-native";
-import { ThemeContext } from "../Components/Theme";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../actions";
 import Backbutton from "../Components/Backbutton";
-import { Button, TextInput, Text } from "react-native-paper";
+import { styles } from "../Styles/Editemail.js";
+import ActionButton from "../Components/Actionbutton";
+import { useTheme } from "@react-navigation/native";
+import { TextInput, Text } from "react-native-paper";
+import {emailRegex} from '../Components/Checks';
+import { ThemeContext } from "../Components/Theme";
 
 const EditEmail = (props) => {
+  const { textcolor } = React.useContext(ThemeContext);
+  const { colors } = useTheme();
   const user = useSelector((state) => state.user);
   const [newemail, setNewemail] = useState("");
   const [error, setError] = useState("");
   const dispatch = useDispatch();
-  const { setTheme, Theme } = React.useContext(ThemeContext);
 
   const editemail = () => {
-    if (newphoneno.length === 0 || !/^\d+$/.test(newphoneno)) {
-      alert("Check your Phonenumber");
+    if (newemail.length === 0) {
+      alert("Please enter Email");
       return;
+    }else if(!emailRegex.test(newemail.trim().toLowerCase())){
+      alert('Check your Email');
     } else {
       fetch("https://booksapp2021.herokuapp.com/User/Changeemail", {
         method: "PUT",
@@ -41,7 +46,7 @@ const EditEmail = (props) => {
         })
         .then((data) => {
           if (data.status) {
-            console.log("Status true");
+            
             setError(data.message);
             Alert.alert(
               error,
@@ -55,7 +60,7 @@ const EditEmail = (props) => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     }
   };
@@ -63,34 +68,36 @@ const EditEmail = (props) => {
   return (
     <SafeAreaView style={styles.layout}>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
-        <Pressable onPress={() => props.navigation.navigate("User")}>
+        <Pressable onPress={() => props.navigation.goBack()}>
           <Backbutton />
         </Pressable>
       </View>
       <View style={{ justifyContent: "flex-start", flex: 1 }}>
         <Text
           style={{
-            fontSize: 25,
+            fontSize: 22,
             fontWeight: "700",
-            color: "#0D1936",
+            color: textcolor,
             marginLeft: 22,
+            fontFamily: "DMSansbold",
           }}
-          theme={{ fonts: { regular: "DM Sans" } }}
         >
           CHANGE EMAIL
         </Text>
       </View>
       <View style={{ marginLeft: 19, flex: 12 }}>
+        <View style={{
+          height:59,
+          overflow:'hidden'
+        }}>
         <TextInput
           style={styles.inputtextbox}
           theme={{
             colors: {
-              primary: "#EEECEF",
-              placeholder: "#8e8e8e",
+              primary: colors.background,
             },
             roundness: 120,
           }}
-          mode="flat"
           placeholder="New Email"
           value={newemail}
           onChangeText={(text) => setNewemail(text)}
@@ -99,58 +106,18 @@ const EditEmail = (props) => {
           underlineColor="transparent"
           maxLength={10}
         />
-
-        <Text style={styles.error}>{error}</Text>
-        <Button
-          theme={{ roundness: 120 }}
-          onPress={editemail}
-          style={{
-            width: 215,
-            height: 40,
-            alignItems: "flex-start",
-
-            justifyContent: "center",
-          }}
-          labelStyle={{
-            fontSize: 16,
-            color: "white",
-            flexDirection: "row",
-            fontFamily: "DMSansbold",
-          }}
-          mode="contained"
-        >
-          SAVE
-        </Button>
+        </View>
+        <View style={{ marginTop: 25 }}>
+          <ActionButton
+            title="SAVE"
+            Click={editemail}
+            fontS="14"
+            style={{ marginTop: 25 }}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  error: {
-    textAlign: "center",
-    fontSize: 20,
-    color: "red",
-    padding: 20,
-  },
-
-  inputtextbox: {
-    marginTop: 11,
-    width: 215,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 120,
-    height: 50,
-    paddingLeft: 10,
-  },
-
-  submitbutton: {
-    margin: 10,
-    fontSize: 20,
-    color: "white",
-  },
-
-  layout: {
-    flex: 1,
-  },
-});
 export default React.memo(EditEmail);
