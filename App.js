@@ -9,7 +9,13 @@ import Navigation from "./main pages/Navigation";
 import Appreducer from "./reducer";
 import thunk from "redux-thunk";
 import NetInfo from "@react-native-community/netinfo";
+import {LogBox} from "react-native";
 
+LogBox.ignoreLogs([
+"ViewPropTypes will be removed",
+"EventEmitter.removeListener",
+'"requestPermissionsAsync()" is now deprecated'
+])
 const initialState = {
   user: {
     accountUsername: "JhonnyAppleseed",

@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from "react";
 import {
-  SafeAreaView,
   View,
-  Text,
-  Image,
   StyleSheet,
-  Pressable,
-  Button,
 } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import { Dimensions } from "react-native";
 
 const Barcode = ({ setIsbn, FetchBookfromISBN, showQR, setShowQR }) => {
-  const windowHeight = 400;
 
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -22,7 +15,7 @@ const Barcode = ({ setIsbn, FetchBookfromISBN, showQR, setShowQR }) => {
     alert(`ISBN code scanned successfully!`);
     setShowQR(false);
     setIsbn(data);
-    FetchBookfromISBN();
+    FetchBookfromISBN(data);
     if (showQR) setScanned(false);
   };
 

@@ -18,7 +18,7 @@ const CamerScreen = (props) => {
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestPermissionsAsync();
+      const { status } = await Camera.requestCameraPermissionsAsync();
       setPermission(status === "granted");
       const status1 = await ImagePicker.requestMediaLibraryPermissionsAsync();
       setGallerypermission(status1.status === "granted");

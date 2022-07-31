@@ -158,7 +158,7 @@ const Bookscreen = (props) => {
           justifyContent: "space-between",
           marginLeft: 14,
           marginRight: 12,
-          marginTop: 37,
+          marginTop: 20,
         }}
       >
         {/* <View style={{marginLeft:12,backgroundColor:'black'}}> */}
